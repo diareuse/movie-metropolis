@@ -2,6 +2,7 @@ plugins {
     id 'application-conventions'
     id 'di-conventions'
     id 'google-conventions'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -47,5 +48,10 @@ dependencies {
     implementation 'com.google.firebase:firebase-perf-ktx'
 
     implementation "com.google.accompanist:accompanist-navigation-animation:0.27.0"
+
+    implementation "io.ktor:ktor-client-core:[2,3["
+    implementation "io.ktor:ktor-client-cio:[2,3["
+    implementation "io.ktor:ktor-client-content-negotiation:[2,3["
+    implementation "io.ktor:ktor-serialization-kotlinx-json:[2,3["
 
 }
