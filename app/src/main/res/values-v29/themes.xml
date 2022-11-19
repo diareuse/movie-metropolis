@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MovieMetropolis.Foundation.Compat">
+        <item name="android:enforceStatusBarContrast">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
+        <item name="android:windowLightStatusBar">@bool/light_mode</item>
+        <item name="android:windowLightNavigationBar">@bool/light_mode</item>
+    </style>
+
+</resources>

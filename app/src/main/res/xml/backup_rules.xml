@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include
+        domain="sharedpref"
+        path="wiki.depasquale.cursola.storage.xml" />
+    <include
+        domain="database"
+        path="wiki.depasquale.cursola.exchange-rate" />
+</full-backup-content>

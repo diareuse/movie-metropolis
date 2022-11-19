@@ -1,0 +1,44 @@
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+
+if (!keystorePropertiesFile.exists())
+    return
+
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+
+    signingConfigs {
+
+        root {
+            storeFile rootProject.file("keystore.jks")
+            storePassword keystoreProperties["store.password"]
+        }
+
+        debug {
+            initWith(root)
+            keyAlias keystoreProperties["key.debug.name"]
+            keyPassword keystoreProperties["key.debug.password"]
+        }
+
+        release {
+            initWith(root)
+            keyAlias keystoreProperties["key.release.name"]
+            keyPassword keystoreProperties["key.release.password"]
+        }
+
+    }
+
+    buildTypes {
+
+        release {
+            signingConfig = signingConfigs.release
+        }
+
+        debug {
+            signingConfig = signingConfigs.debug
+        }
+
+    }
+
+}

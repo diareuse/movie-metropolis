@@ -1,0 +1,26 @@
+plugins {
+    id "com.google.dagger.hilt.android"
+}
+
+kapt {
+    correctErrorTypes true
+}
+
+hilt {
+    enableAggregatingTask = true
+}
+
+dependencies {
+    def vHilt = "2.44"
+
+    implementation "com.google.dagger:hilt-android:$vHilt"
+    implementation "androidx.hilt:hilt-navigation-compose:[1,2["
+    implementation "androidx.hilt:hilt-work:[1,2["
+    kapt "com.google.dagger:hilt-compiler:$vHilt"
+
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$vHilt"
+    kaptAndroidTest "com.google.dagger:hilt-compiler:$vHilt"
+
+    testImplementation "com.google.dagger:hilt-android-testing:$vHilt"
+    kaptTest "com.google.dagger:hilt-compiler:$vHilt"
+}

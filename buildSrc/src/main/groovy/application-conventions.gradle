@@ -1,0 +1,36 @@
+plugins {
+    id 'com.android.application'
+    id 'common-conventions'
+    id 'signing-conventions'
+}
+
+def calendar = Calendar.getInstance()
+def year = calendar.get(Calendar.YEAR)
+def month = calendar.get(Calendar.MONTH) + 1
+def dateVersion = "$year.$month"
+
+android {
+
+    namespace "movie.metropolis.app"
+
+    defaultConfig {
+        applicationId "wiki.depasquale.vivillon"
+        versionCode 1
+        versionName dateVersion
+    }
+
+    buildTypes {
+
+        release {
+            shrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+
+        untracked {
+            initWith release
+            matchingFallbacks = ["release"]
+        }
+
+    }
+
+}
