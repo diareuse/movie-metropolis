@@ -6,7 +6,7 @@ data class Showing(
     val id: String,
     val cinema: Cinema,
     val startsAt: Date,
-    val bookingUrl: String,
+    val bookingUrl: String, // add "access-token" and current token as header to webview when opening
     val isEnabled: Boolean, // ie. is not sold out
     val auditorium: String
 )
