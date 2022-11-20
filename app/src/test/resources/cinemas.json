@@ -1,0 +1,797 @@
+{
+  "results": [
+    {
+      "@name": "liberec",
+      "@path": "/10101/liberec",
+      "@id": "413fb99d-1f11-4a22-ac3c-127910202829",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "460 01",
+      "firstSectionTitle": "Forum Liberec",
+      "publicTransportInfo": "<p><strong>Tram:</strong> F&uuml;gnerova tram station: lines 2, 3, 5, 11</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1037",
+      "addressLine1_cz": "Forum Liberec",
+      "displayName_cz": "Liberec",
+      "postalCode": "460 01",
+      "publicTransportInfo_cz": "<p>Tramvajov&aacute; zast&aacute;vka F&uuml;gnerova - tram</p>\n",
+      "addressLine1": "Soukenné nám. 2a/669",
+      "priceFiles_cz": [
+        "jcr:15daf6b7-3f77-4ea3-ba31-38cf45326b74"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "15.0554457307",
+      "description_cz": "Multiplex Cinema City v Liberci byl otevřen v září 2010 jako první plně digitalizované multikino v ČR, v samém srdci Liberce s vynikající dostupností MHD i autem. Multiplex je součástí OC Forum. Má 5 sálů, které jsou všechny vybaveny prostorovým zvukem Dolby Digital, klimatizací, pohodlnými sedačkami a několika řadami dvousedaček pro zamilované. Všechny sály jsou vybaveny kvalitními digitálními projektory Barco. Dva sály jsou vybaveny 3D technologií Master Image a stříbrnými širokoúhlými plátny, pro kvalitní zobrazení titulů ve formátu 3D.  Nové moderní multikino se stalo vyhledávaným místem pro chvíle odpočinku. Divákům je k dispozici také občerstvení s možností posezení ve foyer.",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR"
+      ],
+      "addressLine2_cz": "Soukenné náměstí 2a/669",
+      "disclaimer": "",
+      "informationEndDate": "2019-06-30T22:00:00.000Z",
+      "informationType": "info",
+      "cinemaImage": "jcr:825a5619-9762-4953-b219-99cae2511d28",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Liberec opened in September 2010 as the first completely digitalized multiplex in the Czech Republic. It is situated right in the heart of Liberec in the Fórum Liberec shopping center. The cinema consists of 5 air-conditioned halls equipped with comfortable seats and a few rows of double seats for couples in love.  The multiplex is a modern and cosy one and has become a sought-after place for relaxation and entertainment. There is also a cinema lobby with comfortable seating where visitors can watch trailers and catch up on upcoming movies while having a cup of coffee or something to please their sweet tooth.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.",
+      "pageUrl": "/liberec",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>Vjezd do parkovac&iacute;ho domu z&nbsp;ulice Blažkova a&nbsp;Dr. Milady Hor&aacute;kov&eacute;.</p>\n",
+      "city_cz": "Liberec",
+      "byCarInfo": "<p>from Blažkova and Dr. Milady Hor&aacute;kov&eacute; street<br />\nIn the evening after 20:30, customers have to use a night entrance from the 2nd floor of the parking lot, direction to Foodcourt.</p>\n\n<p><strong>Parking: </strong>2,5 hours of free parking in a parking house. Cinema City customers will get 2,5 hours of free parking more after the validation on Cinema City box-office.</p>\n",
+      "tabScreenHirePartiesEnabled": "true",
+      "informationStartDate": "2019-07-29T22:00:00.000Z",
+      "priceFiles": [
+        "jcr:27511957-2533-4a99-9cd7-8e377a22471d"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.7662747925",
+      "displayName": "Liberec, Fórum Liberec",
+      "city": "Liberec",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "letnany",
+      "@path": "/10101/letnany",
+      "@id": "4666933c-b4e1-4edd-ae1a-ac6ac7d2f69a",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "199 00",
+      "firstSectionTitle": "Obchodní centrum Letňany",
+      "publicTransportInfo": "<p><strong>Metro:</strong> Letňany metro station (line C), then&nbsp;the bus.</p>\n\n<p><strong>Bus:</strong> 110, 136, 140, 201, 209, 351, 377 - Tupolevova or Fryčovick&aacute; station (5 minutes by walk from the cinema)</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "addressLine1_cz": "Obchodní centrum Letňany",
+      "externalCode": "1030",
+      "displayName_cz": "Praha Letňany",
+      "publicTransportInfo_cz": "<p>Metrem trasa C ze zast&aacute;vky Letňany (zde přestup na BUS).</p>\n\n<p>Autobusov&eacute; linky: 110, 136, 140, 201, 209 ,351, 377 do zast&aacute;vky Tupolevova, nebo Fryčovick&aacute; (cca 5 minut chůze od kina).</p>\n",
+      "postalCode": "199 00",
+      "priceFiles_cz": [
+        "jcr:aa8e4bcd-6e98-4a90-8bce-ad1dffaa5421"
+      ],
+      "addressLine1": "Veselská 663",
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D",
+        "HFR"
+      ],
+      "description_cz": "Multikino Cinema City Letňany bylo otevřeno v říjnu 2002. V roce 2015 kino proběhlo celkovou rekonstrukcí a zároveň zde přibyly 4 nové sály. Cinema City Letňany se tak stalo multiplexem s největším počtem sedaček 2644. Je umístěno v Obchodním centru Letňany a naši diváci zde naleznou největší kinosál v Praze s kapacitou 475 míst s panoramatickým plátnem.  Multikino Letňany disponují celkem 12 kinosály. Vychutnat si svůj zážitek z filmu můžete u dobrého šálku kávy v naší kavárně, která se nachází ve foyer.    Cinema City využívá kvalitní projekční techniku od belgického výrobce Barco, která zaručuje ostrý a jasný obraz. Ve spojení s vynikající zvukovou technikou Dolby audio systém s křišťálově čistým a dobře vyváženým zvukem si vychutnáte dokonalý filmový zážitek.",
+      "longitude": "14.5028758049",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "addressLine2_cz": "Veselská 663",
+      "cinemaImage": "jcr:bf570aae-ec11-46dc-ba71-f0abf34ad147",
+      "informationType": "info",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Letňany was opened in October 2002. This multiplex, located one of most popular shopping centers of Prague and the Czech Republic - Obchodní centrum Letňany, soon became a favorite hotspot for all movie lovers. The multiplex consists of 12 fully air-conditioned motion-picture theaters equipped with the best possible projection technology. One of the most distinct features of Cinema City Letňany is the largest hall with its panoramic screen, which gives the viewers a whole new experience of movie watching. Enhance your movie experience further by having a hot cup of coffee in our cinema café, or even an ice cream sundae on a hot Prague summer day.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.",
+      "pageUrl": "/letnany",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021 ",
+      "byCarInfo_cz": "<p>ulic&iacute; Veselsk&aacute;, nebo ulic&iacute; Tupolevova. V&nbsp;obou&nbsp; př&iacute;padech je k&nbsp;dispozici bezplatn&eacute; parkov&aacute;n&iacute; u obchodn&iacute;ho centra.</p>\n\n<p>Venkovn&iacute; parkov&aacute;n&iacute; zdarma, bez časov&eacute;ho omezen&iacute;. Podzemn&iacute; gar&aacute;že jsou tak&eacute; zdarma &ndash;otevřen&eacute; 9:30 &ndash; 00:30.</p>\n",
+      "byCarInfo": "<p>from Veselsk&aacute; or Tupolevova street</p>\n\n<p><strong>Parking:</strong> Free parking outside and also inside the shopping center. (inside parking is opened from 9:30 to 00:30)</p>\n",
+      "city_cz": "Praha 9 - Letňany",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:a37ea9a4-a4be-4b06-90a8-2a30c97a9aae"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.1369096188",
+      "city": "Praha 9 - Letňany",
+      "displayName": "Prague Letňany, OC Letňany",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "flora",
+      "@path": "/10101/flora",
+      "@id": "494f06fc-f80a-41da-b11d-c2e9799f32a9",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "130 00",
+      "firstSectionTitle": "Atrium Flora",
+      "publicTransportInfo": "<p><strong>Metro:</strong> Flora metro station (line A)</p>\n\n<p><strong>Tram:</strong> Flora tram station: 10, 16, 11, 5 (1 minute by walkt from the cinema)</p>\n\n<p><strong>Bus:</strong> Flora bus stop: 136, 175&nbsp;(1 minute by walkt from the cinema)</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1052",
+      "displayName_cz": "Praha Flora",
+      "publicTransportInfo_cz": "<p><strong>Metro A - </strong>zast&aacute;vka Flora (vstup do OC př&iacute;mo z&nbsp;metra)</p>\n\n<p><strong>Tramvaj 10, 16, 11, 5 - </strong>zast&aacute;vka Flora (vzd&aacute;lenost od OC 1 minuta)</p>\n\n<p><strong>Autobus &nbsp;136 a 175 - </strong>zast&aacute;vka Flora (vzd&aacute;lenost od OC 1 minuta)</p>\n",
+      "postalCode": "130 00",
+      "priceFiles_cz": [
+        "jcr:24913672-57a1-4114-9e47-88df9256d54d"
+      ],
+      "addressLine1": "Vinohradská 151",
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D",
+        "IMAX",
+        "HFR"
+      ],
+      "description_cz": "Multiplex Cinema City Flora byl otevřen v roce 2003 a je umístěn v centru Prahy na Vinohradech v nákupním centru Palác Flora. Vybrat si můžete ze široké nabídky klasických filmů, které promítáme v 8 plně klimatizovaných kinosálech. Cinema City Flora využívá kvalitní projekční techniku od belgického výrobce Barco, která je zárukou ostrého a jasného obrazu. Ve spojení s vynikající zvukovou technikou Dolby audio systém s křišťálově čistým a dobře vyváženým zvukem si vychutnáte dokonalý filmový zážitek. Naše kino se může pochlubit jako jediné v České republice trojrozměrným kinem IMAX®. Vychutnat si můžete jak dokumentární filmy natočené IMAX® kamerou, tak hollywoodské celovečerní trháky.",
+      "longitude": "14.4610091000",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR"
+      ],
+      "disclaimer": "",
+      "cinemaImage": "jcr:bf77f2f9-e790-4e43-b00c-b2a00cd5bfea",
+      "informationType": "info",
+      "nearbyCienmas": [
+        "Prague Slovanský dům",
+        "Prague Nový Smíchov"
+      ],
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Flora opened in the year 2003 and is located in the residential center of Prague, Vinohrady, in the popular shopping center Atrium Flora. It consists of 8 motion-picture theaters equipped with the best possible projection technology.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco and from Kinoton and Christie, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.  The cinema boasts of the only IMAX® theater in the Czech Republic – its most distinctive feature.  The IMAX® brand is world famous and stands for the highest-quality, most immersive motion picture entertainment. IMAX® 3D delivers the greatest brightness, clarity and depth creating unmatched experiences and images that leap off the screen and into your lap. The cutting edge audio technology enhances what you hear which helps you to see and feel the IMAX® Impact. IMAX® takes you to never imagined frontiers of entertainment.  It unlocks new dimensions of wonder that awaken the senses, leaving you spellbound.",
+      "pageUrl": "/flora",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>Vjezd z ulice Jič&iacute;nsk&aacute;</p>\n\n<p>Parkov&aacute;n&iacute; př&iacute;mo v&nbsp;OC ( parkov&aacute;n&iacute; po-p&aacute; 1 hod. ZDARMA - při koupi vstupenek na pokladně prodlouženo o dal&scaron;&iacute;&nbsp;3 hod. ZDARMA, so &ndash; ne a&nbsp;sv&aacute;tky 3 hod. ZDARMA &ndash; při koupi vstupenek na pokladně prodlouženo o&nbsp;dal&scaron;&iacute; 3 hod. ZDARMA)</p>\n",
+      "byCarInfo": "<p>From J&iacute;č&iacute;nsk&aacute; street</p>\n\n<p><strong>Parking:</strong><br />\n&nbsp; &nbsp; &nbsp;- entrance Monday - Friday 8:00 - 18:00 (1 hour for free)<br />\n&nbsp; &nbsp; &nbsp;- entrance Monday - Friday 18:00 - 8:00 (3 hours for free)<br />\n&nbsp; &nbsp; &nbsp;- entrance on Weekend or bank holiday - 3 hours for free</p>\n\n<p>Cinema visitors get 3 hours of free parking more after the validation on cinema box-office.</p>\n\n<p>&nbsp;</p>\n",
+      "city_cz": "Praha 3 - Žižkov",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:c5692a1a-d587-4ad5-b2e5-a451ef95cbe0"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.0789968000",
+      "city": "Praha 3 - Žižkov",
+      "displayName": "Prague Flora, Atrium Flora",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "slovanskydum",
+      "@path": "/10101/slovanskydum",
+      "@id": "da06eb8a-5c31-4c92-86d6-0e08d141d2ed",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "110 00",
+      "firstSectionTitle": "Cinema City Slovanský dům",
+      "publicTransportInfo": "<p><strong>Metro:</strong> N&aacute;měst&iacute; Republiky - line B (3 minutes), Můstek - line A/B (4 minutes), Hlavn&iacute; n&aacute;draž&iacute; - line C (6 minutes)</p>\n\n<p><strong>Tram:</strong>: Jindř&iacute;&scaron;sk&aacute; (2 minutes) - tram 5, 6, 9, N&aacute;měst&iacute; Republiky (3 minutes) - tram 3. 6. 8. 15. 26 or bus 207</p>\n\n<p><strong>At night:</strong> Night tram 91, 94, 96 or Night bus 911, 905, 907</p>\n\n<p>&nbsp;</p>\n\n<p>&nbsp;</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1033",
+      "addressLine1_cz": "Cinema City Slovanský dům",
+      "displayName_cz": "Praha Slovanský dům",
+      "postalCode": "110 00",
+      "publicTransportInfo_cz": "<p>Metro: zast&aacute;vky N&aacute;měst&iacute; Republiky (3minuty) , Můstek ( 4minuty) a&nbsp;Hlavn&iacute; N&aacute;draž&iacute; (6 minut)</p>\n\n<p>Zast&aacute;vka tramvaje: Jindři&scaron;sk&aacute; (2 minuty), tram&nbsp; spoje 5,6 a&nbsp;9. Zast&aacute;vka N&aacute;měst&iacute; Republiky, spoje 3,6,8,15,26 a&nbsp;autobus 207. D&aacute;le nočn&iacute; spoje autobusy 911, 905 a 907 a&nbsp;tramvaje 91,94 a&nbsp;96.</p>\n",
+      "addressLine1": "Na Příkopě 22",
+      "priceFiles_cz": [
+        "jcr:19464bcd-2bf3-4c14-bb1c-9153aaa1ead5"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "description_cz": "Cinema City Slovanský dům je jediné multikino, které se nachází přímo v centru Prahy. Bylo otevřeno v roce 2000 a díky svému umístění je nejvyhledávanějším kulturním cílem. Multikino se rozkládá hned v několika patrech unikátní budovy Slovanského domu. V roce 2015 proběhla rozsáhlá rekonstrukce multikina. Příjemné prostředí kavárny v horním patře Vám umožní na chvilku vypnout od okolního shonu a vychutnat si šálek lahodné kávy před nadcházejícím představením.  Druhý bar se nachází v dolním patře kina. V naší nabídce naleznete čerstvý popcorn či nachos se dvěma druhy omáček a různé druhy sladkostí. U nás si na chuť přijde zkrátka každý. Věříme, že si Vaší návštěvu užijete.",
+      "longitude": "14.4274028000",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "addressLine2_cz": "Na Příkopě 22",
+      "cinemaImage": "jcr:fc8efac6-ae68-4f8b-b566-c9cc06111687",
+      "informationType": "info",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Slovanský dům is the only multiplex right in the center of Prague. It was opened in the year 2000 and thanks to its location it 's the most popular cultural destination. The multiplex spans over a few floors of the unique Slovanský dům. In the upper floor of the cinema, you can sit and wait in our pleasant foyer by the newly reconstructed bar till the start of your film. The second bar is located in the lower floor, where you can buy refreshment for yourself or for your children, same as in all our other Cinema City multiplexes. From fresh popcorn or nachos to sweets, you can choose from any of these and more at our bar. Everyone can find something of their liking at our cinema.  In total we have 10 cinema halls, all of them are digital and 8 of them can project 3D movies. The biggest halls, 1-3, are located in the upper floor, while halls 4-10 are located in the lower floor.  Helpful and nice staff will always be of service to you during your visit to our cinema.",
+      "pageUrl": "/slovanskydum",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>Senov&aacute;žn&eacute; n&aacute;měst&iacute;, ulice Na př&iacute;kopě</p>\n\n<p>Parkov&aacute;n&iacute; nen&iacute; možn&eacute; v&nbsp;prostor&aacute;ch kina.</p>\n",
+      "byCarInfo": "<p>Entrance from Senov&aacute;žn&eacute; n&aacute;měst&iacute; or Na př&iacute;kopě street</p>\n\n<p><strong>Parking:</strong> Parking is not available</p>\n",
+      "city_cz": "Praha 1",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:a37ea9a4-a4be-4b06-90a8-2a30c97a9aae"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.0863837000",
+      "displayName": "Prague Slovanský dům",
+      "city": "Prague 1",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "smichov",
+      "@path": "/10101/smichov",
+      "@id": "6e8e62d8-d810-4b3c-b846-f3662808e561",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "150 00",
+      "firstSectionTitle": "Obchodní centrum Nový Smíchov",
+      "publicTransportInfo": "<p><strong>Metro:</strong> Anděl metro station (line B) - 5 minutes by walk from the cinema</p>\n\n<p><strong>Tram:</strong> Anděl tram station - lines 1, 4, 5, 7, 9, 11, 12, 13, 20, 21, 29, 98, 99,&nbsp;</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1031",
+      "addressLine1_cz": "Obchodní centrum Nový Smíchov",
+      "displayName_cz": "Praha Nový Smíchov",
+      "postalCode": "150 00 ",
+      "publicTransportInfo_cz": "<p>stanice metra Anděl &ndash; OC vzd&aacute;len&eacute; 5 minut</p>\n\n<p>stranice tramvaje a&nbsp;autobusů je Anděl v&nbsp;ulici Plzeňsk&aacute;. &ndash; zast&aacute;vka je př&iacute;mo před OC. nebo 3 minuty od OC z&nbsp;ulice N&aacute;dražn&iacute;.</p>\n",
+      "addressLine1": "Plzeňská 8",
+      "priceFiles_cz": [
+        "jcr:655b6fa7-a0a6-4151-a6a2-5fd157443d06"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D",
+        "4DX",
+        "HFR"
+      ],
+      "longitude": "14.4025397301",
+      "description_cz": "Multikino Cinema City Nový Smíchov  se nachází ve 2. patře Obchodního centra Nový Smíchov, které patří mezi nejnavštěvovanější obchodní centra v České Republice. Je zde 12 kinosálů, přičemž jeden z nich je sál 4DX, kde si může zákazník vychutnat film s pohyblivými sedačkami a efekty jako je vůně, vítr, voda a další.  Široká nabídka nápojů, čerstvého popcornu a sladkostí je zde samozřejmostí. Filmový zážitek si můžete zpříjemnit  také v kavárně, kde Vám naši kavárníci rádi přichystají kávu dle Vašeho výběru nebo si může pochutnat na zdravém a čerstvém fresh juice z pomerančů nebo grepu. Široká nabídka nealkoholických nápojů v naší kavárně také nebude chybět.",
+      "facilitiesAccessibility": [
+        "Disabled-parking",
+        "Disabled-access",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "addressLine2_cz": "Plzeňská 8",
+      "cinemaImage": "jcr:7d2db264-ff3d-417b-b88d-0d8f95a6ca82",
+      "informationType": "info",
+      "nearbyCienmas": [
+        "Prague Slovanský dům"
+      ],
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Nový Smíchov opened in the year 2001 and is one of the most favorite cinemas in the whole of Czech Republic. It is located on the 3rd floor of the OC Nový Smíchov shopping center, one of the most visited shopping centers in the Czech Republic. Cinema City Nový Smíchov consists of 12 fully air-conditioned halls and the most prominent aspect of the cinema is the hall with the second largest movie screen in Prague (186.7 m2) after IMAX®, which has the largest screen in the country. Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience. Indulge yourself in a wide range of products at our cinema bar where we have everything from fresh popcorn in different flavors to nachos, sweets, and drinks. Why only stop at the cinema bar though, have a seat in our cinema café and enjoy a cup of coffee or any other non-alcoholic beverage.",
+      "pageUrl": "/novysmichov",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>z&nbsp;ulic Radlick&aacute; a Kartouzsk&aacute;</p>\n",
+      "city_cz": "Praha 5",
+      "byCarInfo": "<p>from Radlick&aacute; or Kartouzsk&aacute; street</p>\n\n<p><strong>Parking:</strong> Large parking in a&nbsp;garage, 4&nbsp;hours for free (2&nbsp;hours from the shopping centre and 2 hours more for cinema visitors - must valid the parking card on cinema box-office). On the weekend, there are 5 hours for free from the shopping center (don&#39;t need the validation).</p>\n",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:c2def75f-4703-43fa-8a31-b057b061e291"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.0741426369",
+      "city": "Praha 5",
+      "displayName": "Prague Nový Smíchov, OC Nový Smíchov",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "ostrava",
+      "@path": "/10101/ostrava",
+      "@id": "a65fdedd-bce9-4d89-be78-62bf72c8017f",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "702 00",
+      "firstSectionTitle": "OC Forum Nová Karolina",
+      "publicTransportInfo": "<p><strong>Tram:</strong> Karolina tram station: 1,2,4,6,8,9,10,11,12,18 (5 minutes by walk)</p>\n\n<p><strong>Bus:</strong> Karolina u L&aacute;vky Trolleybus station&nbsp;: 105 zast&aacute;vka Karolina u&nbsp;L&aacute;vky (3 minutes by walk)</p>\n\n<p><strong>Train:</strong> Ostrava střed train station (10 minutes by walk)</p>\n\n<p>Autobusem: &Uacute;středn&iacute; autobusov&eacute; n&aacute;draž&iacute; Ostrava &Uacute;AN &ndash; po l&aacute;vce přibližně 15 minut</p>\n",
+      "emailAddress1_cz": "info@cinemacity@imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "addressLine1_cz": "OC Forum Nová Karolína",
+      "externalCode": "1055",
+      "displayName_cz": "Ostrava",
+      "publicTransportInfo_cz": "<p>Tramvaj&iacute; č. 1,2,4,6,8,9,10,11,12,18 zast&aacute;vka Karolina &ndash; od hlavn&iacute;ho vchodu n&aacute;kupn&iacute;ho centra je to pě&scaron;ky 5 minut</p>\n\n<p>Trolejbusem č. 105 zast&aacute;vka Karolina u&nbsp;L&aacute;vky &ndash; přibližn&aacute; vzd&aacute;lenosti 3 minuty</p>\n\n<p>Vlakem: zast&aacute;vka Ostrava střed &ndash; přibližn&aacute; vzd&aacute;lenost je 10 minut</p>\n\n<p>Autobusem: &Uacute;středn&iacute; autobusov&eacute; n&aacute;draž&iacute; Ostrava &Uacute;AN &ndash; po l&aacute;vce přibližně 15 minut</p>\n",
+      "postalCode": "702 00",
+      "priceFiles_cz": [
+        "jcr:61317249-14c7-49ff-b635-1e8ea541abec"
+      ],
+      "addressLine1": "Jantarová 3344/4",
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "18.2888768873",
+      "description_cz": "Kino se nachází v nákupním centru Forum Nová Karolina, které se řadí mezi nejmodernější centrum v Moravskoslezském kraji. Návštěvníci si mohou vychutnat jedinečný filmový zážitek s prvotřídním zvukem a obrazem, díky projekční technice belgické společnosti Barco. Nachází se zde osm digitalizovaných sálů s projekcí 2D a 3D technologie Master Image s celkovou kapacitou 1 195 míst. Celé kino je rozděleno do tří podlaží. Největší sál má kapacitu 309 míst a velikost plátna  je  6,8 m x 15,76 m. Zákazníci si k filmu mohou zakoupit výborný, čerstvě uvařený popcorn nebo nachos s pikantní sýrovou omáčkou či salsou. Nejen návštěvníci, ale i filmový nadšenci mohou navštívit naši útulnou kavárnu s výbornou kávou a užívat si tak filmové prostředí kina.  ",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "informationType": "info",
+      "cinemaImage": "jcr:9a174770-b609-4921-9ae2-7e971aa7e89c",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Nová Karolina is located in the city center near the central railway and bus station.  Cinema City, winner of \"Best cinema operator in Europe for the year 2011\", offers services of the highest quality. A unique cinematic experience of 2D and 3D films awaits viewers in 8 digitalized halls.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.  Cinema visitors can also enjoy a wide variety of sweet desserts and a crisp cup of coffee in our cozy cinema café. Popcorn lovers can enjoy their favorite flavors, along with nachos and other goodies that the bar has to offer.",
+      "pageUrl": "/ostrava",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>Nejsnadněj&scaron;&iacute; př&iacute;jezd k&nbsp;centru je po silnic&iacute;ch M&iacute;steck&aacute; a Fr&yacute;deck&aacute; nebo po ulici 28. ř&iacute;jna směrem do centra.</p>\n",
+      "byCarInfo": "<p>from M&iacute;steck&aacute; and Fr&yacute;deck&aacute; street or by 28. ř&iacute;jna street (towards the centre)</p>\n\n<p><strong>Parking:</strong> Large underground garage in the shopping centre with the capacity of 1500 cars. Free parking during the weekend, durink weekdays are 2 hours for free and 2 hours more for cinema visitors (after the validation on cinema box-office).</p>\n",
+      "city_cz": "Ostrava",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:d01993b2-277e-4aa3-b9ac-6b90205e22eb"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "49.8312277257",
+      "displayName": "Ostrava, Nová Karolina",
+      "city": "Ostrava",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "plzen",
+      "@path": "/10101/plzen",
+      "@id": "cc9c6235-f6b6-465b-bc0d-5bef46b22eb3",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "301 00",
+      "firstSectionTitle": "Obchodní centrum Plzeň Plaza",
+      "publicTransportInfo": "<p><strong>Tram:</strong> Palack&eacute;ho n&aacute;městi tram station: line 2, Sady Pětatřic&aacute;tn&iacute;ků tramstation: lines 1, 4 (4 minutes by walk)</p>\n\n<p><strong>Bus:</strong> V sadech Pětatř&iacute;c&aacute;tn&iacute;ků bus stop: lines 20, 27, 28, 34, 41, 56 (5 minutes by walk)</p>\n\n<p>U Pr&aacute;ce and Tylova trolleybus stop: lines 11, 12, 15, 16, 17 and then one station with tram nr. 4 to Sady pětatřic&aacute;tn&iacute;ků tram stop&nbsp;</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1054",
+      "displayName_cz": "Plzeň",
+      "postalCode": "301 00",
+      "publicTransportInfo_cz": "<p><strong>Tramvaj: </strong>Př&iacute;m&aacute; tramvajov&aacute; zast&aacute;vka Palack&eacute;ho n&aacute;měst&iacute; (Tramvaj č.2), zast&aacute;vka Sady Pětatřic&aacute;tn&iacute;ků vzd&aacute;lena cca 5 mniut chůze (tramvaj č. 1 a&nbsp;4)</p>\n\n<p><strong>Autobusem</strong>: linkami 20, 27, 28, 34, 41, 56 - zast&aacute;vka V sadech Pětařic&aacute;tn&iacute;ků, odtud cca 5 min. pě&scaron;ky<br />\n<strong>Trolejbusem</strong>: linkami č. 11, 12, 15, 16, 17 - zast&aacute;vky U Pr&aacute;ce a Tylova, odtud jedna stanice tram č. 4 do zast&aacute;vky Sady Pětatřic&aacute;tn&iacute;ků</p>\n",
+      "addressLine1": "Radčická 2",
+      "priceFiles_cz": [
+        "jcr:5e4c51da-e8e3-473d-b844-9721b80fd979"
+      ],
+      "addressLine2": "1st floor - foodcourt",
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D",
+        "4DX"
+      ],
+      "description_cz": "Mulitkino se nachází v 1. nadzemním podlaží obchodního domu naproti food courtu. Kino zajišťuje kvalitní projekci na 10 promítacích sálech. 6 sálu s technologií Dolby Digital 3D a 1 sál 4DX. V kině je možnost občerstvení na novém popcornovém baru nebo na protilehlé kavárně s  20 místy k sezení.",
+      "longitude": "13.3689094232",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "addressLine2_cz": "1. patro - food court",
+      "informationType": "info",
+      "cinemaImage": "jcr:ce1c3e8a-f6db-4bf7-bb21-03cb2923936e",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Plzeň was opened in the year 2008 in the popular shopping center Plzeň Plaza. It is the first cinema in the Czech Republic offering visitors not only a cinema bar for popcorn, nachos, candies, chocolates and drinks, but also a cinema café.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.",
+      "pageUrl": "/plzen",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "addressLine3_cz": "Radčická 2",
+      "byCarInfo_cz": "<p>vjezdy z&nbsp;ulic Přemyslova a&nbsp;J&iacute;zdeck&aacute;</p>\n",
+      "byCarInfo": "<p>from Přemyslova and J&iacute;zdeck&aacute; street</p>\n\n<p><strong>Parking</strong>: 1 hour for free on outside or 3 hours for free on inside parkink. Cinema City customers will get 3&nbsp;more hours for free after the validation on the Cinema City box-office.</p>\n",
+      "city_cz": "Plzeň",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:f42c08e6-16b1-4f98-bbaf-d99548dad8d7"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "49.7492977273",
+      "city": "Plzeň",
+      "displayName": "Plzeň, Plzeň Plaza",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "chodov",
+      "@path": "/10101/chodov",
+      "@id": "3073d799-d65b-4148-9553-bc43e7d82e69",
+      "@nodeType": "mgnl:cinema",
+      "firstSectionTitle": "Westfield Chodov",
+      "publicTransportInfo": "<p><strong>Metro:</strong> Chodov metro station - Westfield Shopping Centre is placed right on the Chodov metro station</p>\n\n<p><strong>Bus: </strong>115, 135, 177, 193, 197, 511, H1 &ndash; Chodov station</p>\n",
+      "disclaimer_cz": "",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1056",
+      "displayName_cz": "Chodov",
+      "postalCode": "148 00",
+      "publicTransportInfo_cz": "<p>Stanice Chodov metra linky C<br />\nN&aacute;kupn&iacute; Centrum Chodov je postaveno př&iacute;mo nad st&aacute;vaj&iacute;c&iacute; stanic&iacute; metra Chodov se dvěma v&yacute;stupy</p>\n\n<p>Autobusov&eacute; linky 115, 135, 177, 193, 197, 511, H1 &ndash; zast&aacute;vka Chodov</p>\n",
+      "addressLine1": "Westfield Chodov",
+      "priceFiles_cz": [
+        "jcr:6b0f371b-9348-47dd-b457-6138219f4594"
+      ],
+      "addressLine2": "Roztylská 2321/19",
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D",
+        "4DX",
+        "VIP",
+        "Dolby"
+      ],
+      "longitude": "14.4909962000",
+      "description_cz": "Megaplex Cinema City se nachází v nové části Centra Chodov. Jedná se o první megaplex svého druhu na území České republiky. Disponuje 18ti sály s nejmodernějšími technologiemi. Každý sál je vybaven laserovým projektorem Barco (nejmodernější projekční technologií na světě). Tři největší sály disponují technologií prostorového zvuku Dolby Atmos. V megaplexu je umístěna i VIP sekce s možností neomezené konzumace jídla a pití, vybavena luxusními polohovatelnými křesly.  ",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "cinemaImage_cz": "jcr:7e3a40d0-f4ee-4a17-962c-622bf50d191b",
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "cinemaImage": "jcr:7e3a40d0-f4ee-4a17-962c-622bf50d191b",
+      "informationType": "info",
+      "nearbyCienmas": [
+        "Chodov",
+        "Galaxie",
+        "Slovanský dům",
+        "Zličín"
+      ],
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Chodov is placed in the new part of Westfield Shopping Centre. It's the first Megaplex in Czech Republic. Cinema City Chodov is consisted of 18 halls with newest technology. There is a Barco Laser projecton in each hall and also Dolby Atmos technology in three biggest halls.  You can also enjoy unlimited consumption of popcorn, nachos and drinks in our VIP section where are also luxurious electric control armchairs.  ",
+      "pageUrl": "/chodov",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "byCarInfo_cz": "<p>Sjezd z 0. km d&aacute;lnice D1, (Praha - Brno, Brno - Praha), směr N&aacute;kupn&iacute; z&oacute;na&nbsp;<br />\nvjezd z ulice U Kunratick&eacute;ho lesa&nbsp;</p>\n",
+      "byCarInfo": "<p>Exit from D1 Highway. (Praha - Brno, Brno - Praha),&nbsp; direction: N&aacute;kupn&iacute; z&oacute;na.&nbsp;Please use the entrance from U kunratick&eacute;ho lesa street.&nbsp;</p>\n\n<p><strong>Parking:</strong> Cinema City customers get 3 hours for free from shoppinng centre and will get 3 more hours for free after the validation on Cinema City box office.</p>\n\n<p>In the case of evening shows, please use red or blue parking, or the parking on the roof of the Westfield Chodov, which is the nearest to the cinema entrance.</p>\n",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:413403b5-6143-4835-b056-61f3b7bccf37"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.0320692000",
+      "displayName": "Prague Chodov, Westfield Chodov",
+      "city": "Prague 4",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "olympia",
+      "@path": "/10101/olympia",
+      "@id": "58afee42-d69f-4e88-8171-58aaf6508b95",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "664 42",
+      "firstSectionTitle": "Olympia Brno",
+      "publicTransportInfo": "<p><strong>BUS:</strong> Olympia Shopping center has its own bus line, which goes from &Uacute;zk&aacute; bus station&nbsp;-&gt; v Kom&aacute;rně bus station -&gt; OC Olympia.<br />\n&Uacute;zk&aacute; bus station is near to Vaňkovka shopping center (5 minutes by walk from the Main station)</p>\n\n<p><u>Please note</u>: The last bus leaves the Olympia shopping center at 22:15, after this time,&nbsp;you have to call a taxi.</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "addressLine1_cz": "Olympia Brno",
+      "externalCode": "1034",
+      "displayName_cz": "Brno Olympia",
+      "publicTransportInfo_cz": "<ul>\n\t<li>Obchodn&iacute; centrum dopravuje zaji&scaron;ťuje dopravu sv&yacute;mi autobusy.</li>\n\t<li>N&aacute;stupn&iacute; z&aacute;st&aacute;vka &Uacute;zk&aacute; -&gt;&nbsp; pot&eacute; je možn&eacute; přisednout i&nbsp;v Kom&aacute;rově -&gt; OC Olympia</li>\n\t<li>Zast&aacute;vka &Uacute;zk&aacute; je u&nbsp;OC Galerie Vaňkovka, kter&eacute; je přibližně 5 min chůze od Hlavn&iacute; n&aacute;draž&iacute;</li>\n\t<li>Bylo by dobr&eacute; zm&iacute;nit, že posledn&iacute; autobus odj&iacute;žd&iacute; z&nbsp;OC na &Uacute;zkou 0:30, pot&eacute; je potřeba si zavolat taxi</li>\n</ul>\n",
+      "postalCode": "664 42",
+      "addressLine1": "U Dálnice 777",
+      "priceFiles_cz": [
+        "jcr:c6529835-3df5-48d2-9b59-71f13b5f83e8"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "16.6331237555",
+      "description_cz": "Kino se nachází v obchodním a nákupním centru Olympia. Máme zde 10 plně klimatizovaných sálů, které pojmou 2248 lidí. Do všech sálů je zajištěn bezbariérový přístup pro tělesně postižené. Filmové zážitky si můžete vychutnat v nejvyžším rožlišení jak ve formátu 2D tak 3D. V kině se nachazí teké bar s širokou nabídkou produktů jako např. popcorn, nachos, oříšky či velké množství různých druhů sladkostí. ",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR"
+      ],
+      "addressLine2_cz": "U Dálnice 777",
+      "informationEndDate": "2022-07-01T22:00:00.000Z",
+      "cinemaImage": "jcr:8ee0c55e-ed26-4935-938c-5c9e278decd4",
+      "informationType": "alert",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Olympia, which is today a traditional target for movie lovers, was opened in October 1999 as the first modern multiplex in the Czech Republic. It is situated in the Olympia shopping centre in the southern outskirts of the city of Brno, with a direct link to the Prague – Brno highway (in the direction to Bratislava).  There are 10 fully air-conditioned halls which can accommodate altogether 2248 spectators. Visitors can choose from our large variety of crunchy popcorn, iced drinks, and sweets at the bar.",
+      "pageUrl": "/olympia",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "+420 255 742 021",
+      "byCarInfo_cz": "<ul>\n\t<li>um&iacute;stěno na jižn&iacute;m okraji města Brna, v př&iacute;m&eacute; n&aacute;vaznosti na sjezd z d&aacute;lnice Praha - Brno směr Bratislava.</li>\n\t<li>OC je hned vedle d&aacute;lnice, takže stač&iacute; se zařadit do odbočovac&iacute;ho pruhu a&nbsp;nelze to minout</li>\n\t<li>Parkov&aacute;n&iacute; nen&iacute; časově omezeno, možnost venkovn&iacute;ho i&nbsp;vnitřn&iacute;ho st&aacute;n&iacute;. V&scaron;e bez poplatků</li>\n</ul>\n",
+      "city_cz": "Brno - Modřice",
+      "byCarInfo": "<p>Exit from the D1 highway - direction to Bratislava, Olympia Shopping center is right next to the highway.</p>\n\n<p>&nbsp;</p>\n",
+      "tabScreenHirePartiesEnabled": "true",
+      "informationStartDate": "2022-03-08T22:00:00.000Z",
+      "priceFiles": [
+        "jcr:dba7aff2-aacd-45c7-a85e-41723623b1fd"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "49.1377612520",
+      "city": "Brno - Modřice",
+      "displayName": "Brno Olympia, OC Olympia Brno",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "pardubice",
+      "@path": "/10101/pardubice",
+      "@id": "fa8d51a5-b094-4c24-b463-a70b4239134b",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "530 02",
+      "firstSectionTitle": "Cinema City Pardubice",
+      "publicTransportInfo": "<p><strong>Trolleybus:</strong> Masarykovo n&aacute;měst&iacute; trolleybus station - lines 1, 2, 3, 4, 11, 13, 33</p>\n\n<p><strong>Bus</strong>: Palack&eacute;ho tř&iacute;da bus station - lines 14, 15, 18, 24, 98, 99</p>\n\n<p>&nbsp;</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1053",
+      "displayName_cz": "Pardubice",
+      "postalCode": "530 02",
+      "publicTransportInfo_cz": "<p>Zast&aacute;vka trolejbusu Masarykovo n&aacute;městi - linky&nbsp;1, 2, 3, 4, 11, 13, 33</p>\n\n<p>Autobusov&aacute; zast&aacute;vka Palack&eacute;ho tř&iacute;da - linky&nbsp;14, 15, 18, 24, 98, 99</p>\n",
+      "addressLine1": "Atrium Palác Pardubice ",
+      "priceFiles_cz": [
+        "jcr:2fe70a01-7a50-4a4e-a396-3b25e5458256"
+      ],
+      "addressLine2": "Masarykovo nám. 2799 ",
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "15.7687845826",
+      "description_cz": "Multikino Cinema City Pardubice bylo otevřeno v roce 2009 v nákupním centru Palác Pardubice. Skládá z 8 plně klimatizovaných sálů, z toho 5 sálů nabízí 3D technologii. Vychutnat si maximální filmový zážitek Vám dopřejí pohodlné sedačky ve všech našich sálech. Kombinace vysoké opěrky hlavy a vhodně tvarovaného sedadla ve Vás vyvolají pocit komfortu. Po celou dobu návštěvy jsou Vám k dispozici naši zaměstnanci, kteří rádi pomohou a poradí, ať už s nákupem lístků, výběrem občerstvení, či usazením na Vaše místa. Cinema City využívá kvalitní projekční techniku od belgického výrobce Barco, která zaručuje ostrý a jasný obraz. Ve spojení s vynikající zvukovou technikou Dolby audio systém s křišťálově čistým a dobře vyváženým zvukem si vychutnáte dokonalý filmový zážitek.",
+      "facilitiesAccessibility": [
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Disabled-access"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR"
+      ],
+      "addressLine2_cz": "Atrium Palác Pardubice",
+      "informationType": "info",
+      "cinemaImage": "jcr:7ca9a5b5-b5f4-4826-becc-118f90b08bdb",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Pardubice opened in the year 2009 in the popular shopping center Palác Pardubice. The multiplex consists of 8 fully air-conditioned motion-picture theaters equipped with the best possible projection technology.  To make you enjoy your cinema experience to the fullest we have special, comfortable seats in all our halls. The combination of a high headrest with a suitable seat shape allow you to really enjoy the film to the maximum.  Going to the cinema is never complete without some popcorn and snacks. Our cinema bar offers a wide range of products - everything from fresh popcorn in different flavors to nachos, sweets, and drinks. With the super Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.",
+      "pageUrl": "/pardubice",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "addressLine3_cz": "Masarykovo nám 2799",
+      "byCarInfo_cz": "<p>Př&iacute;jezd z ulic K polabin&aacute;m a Masarykovo n&aacute;městi</p>\n\n<p>Parkov&aacute;n&iacute; je na 1 hodinu zdarma, na pokladně kina prodlužujeme na 3 hodiny zdarma.</p>\n",
+      "byCarInfo": "<p>from Masarykovo n&aacute;měst&iacute; or K Polabin&aacute;m street</p>\n\n<p><strong>Parking</strong>: 1 hour for free, cinema customers get 3&nbsp;hours more after the validation on Cinema City box office.</p>\n",
+      "city_cz": "Pardubice",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:89c9f1e4-444c-4af1-99a5-28800d906b71"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.0376068591",
+      "displayName": "Pardubice, Atrium Palác Pardubice",
+      "city": "Pardubice",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "ustinadlabem",
+      "@path": "/10101/ustinadlabem",
+      "@id": "87f00e13-097d-406b-a619-a94e1347a49d",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "400 01",
+      "firstSectionTitle": "OC Forum",
+      "publicTransportInfo": "<p><strong>Bus:</strong> M&iacute;rov&eacute; n&aacute;městi bus station - lines 11, 2</p>\n\n<p><strong>Trolleybus</strong>: M&iacute;rov&eacute; n&aacute;měst&iacute; troleybus station - lines 43, 46, 51, 52, 53, 54, 55, 56, 57, 62</p>\n\n<p>3 minutes by walk from the Main station</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "externalCode": "1036",
+      "addressLine1_cz": "OC Fórum",
+      "displayName_cz": "Ústí nad Labem",
+      "postalCode": "400 01",
+      "publicTransportInfo_cz": "<p>Autobusov&aacute; zast&aacute;vka M&iacute;rov&eacute; n&aacute;měst&iacute;: linky 11, 2</p>\n\n<p>Trolejbusov&aacute; zast&aacute;vka M&iacute;rov&eacute; n&aacute;měst&iacute;: linky&nbsp;43, 46, 51, 52, 53, 54, 55, 56, 57, 62</p>\n",
+      "addressLine1": "Bílinská 6",
+      "priceFiles_cz": [
+        "jcr:a7b80f0f-c763-4304-b973-b8f939250d82"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "14.0387651324",
+      "description_cz": "Pětisálové multikino Ústí nad Labem bylo otevřeno v roce 2010 a nachází se v samotném středu města, v OC Fórum. Díky své lokaci je snadno dostupné všemi dopravními prostředky. V našem multikině si můžete vychutnat jedinečný zážitek z projekcí ve 2D i ve 3D formátu a přitom si pochutnat na čerstvém popcornu.. V horkých letních dnech Vám poskytne příjemné osvěžení ledová káva z naší kavárny. Pokud hledáte místo klidu a pohody, pak je multikino Ústí nad Labem ta správná volba. Cinema City využívá kvalitní projekční techniku od belgického výrobce Barco, která zaručuje ostrý a jasný obraz. Ve spojení s vynikající zvukovou technikou Dolby audio systém s křišťálově čistým a dobře vyváženým zvukem si vychutnáte dokonalý filmový zážitek.",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Free-wi-fi",
+        "Guide-dogs-allowed"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "addressLine2_cz": "Bílinská 6",
+      "informationEndDate": "2022-07-13T00:00:00.000Z",
+      "informationType": "info",
+      "cinemaImage": "jcr:6b37a2ea-9a0f-4e33-87c5-b996624339ae",
+      "tabFacilitiesEnabled": "true",
+      "description": "The multiplex in Ústí nad Labem opened in the year 2010 and is located right in the city center in the Forum Ústí nad Labem shopping center and thanks to its location, is easily accessible for locals as well as for holiday visitors. Here you can enjoy the unique 2D and 3D movie experience with our delicious, fresh popcorn. During the hot summer days, we offer you fresh frappes from our cinema café. If you are looking for a place of peace and relaxation, then our Cinema City Ústí nad Labem is the right choice for you.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.",
+      "pageUrl": "/ustinadlabem",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>autem po ulici &bdquo; U trati&ldquo; z&nbsp;obou stran, d&aacute;le zahnout na ulici Mal&aacute; Hradebn&iacute;</p>\n\n<p>Parkov&aacute;n&iacute;: O v&iacute;kendu 3 hodiny, ve v&scaron;edn&iacute; dny 1,5 hodiny zdarma v r&aacute;mci Obchodn&iacute;ho centra Forum. Pro z&aacute;kazn&iacute;ky kina se parkov&aacute;n&iacute; prodlužuje o 2 hodiny nav&iacute;c, je ale nutn&eacute; nechat si potvrdit parkovac&iacute; kartu na pokladne kina.</p>\n\n<p><span style=\"color: rgb(34, 34, 34); font-family: Arial, sans-serif; font-size: 12px;\">Nedoporučujeme použ&iacute;t podzemn&iacute; parkovi&scaron;tě, kter&eacute; se zav&iacute;r&aacute; již va 22:00h. Parkovi&scaron;tě ve třet&iacute;m a&nbsp;čtvrt&eacute;m patře je otevřeno nonstop.</span></p>\n\n<p>&nbsp;</p>\n",
+      "city_cz": "Ústí nad Labem",
+      "byCarInfo": "<p>From U Trati street and than Mal&aacute; Hradebn&iacute; street.</p>\n\n<p><strong>Parking</strong>: Free parking for 3 hours during the weekend and 1,5 hours during the week. Cinema visitors get 3 hours of free parking more after the validation on Cinema City box office.&nbsp;Please note that from 7th&nbsp;until 14th of July 2021, the upper car park of the shopping center will be closed due to the reconstruction.</p>\n\n<p><font color=\"#222222\" face=\"Arial, sans-serif\"><span style=\"font-size: 12px;\">Underground parking is closed at 22:00. Better to use other parking (on the 3<sup>rd</sup> and 4<sup>th</sup> floor).</span></font></p>\n",
+      "tabScreenHirePartiesEnabled": "true",
+      "informationStartDate": "2022-07-01T00:00:00.000Z",
+      "priceFiles": [
+        "jcr:31c855b5-3192-44b5-aad6-27438f23e6fc"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.6587623368",
+      "displayName": "Ústí nad Labem, Forum Ústí nad Labem",
+      "city": "Ústí nad Labem",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "velkyspalicek",
+      "@path": "/10101/velkyspalicek",
+      "@id": "1615a0ca-1309-4e97-b28a-4750054b2962",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "602 00",
+      "firstSectionTitle": "Cinema City Velký Špalíček",
+      "publicTransportInfo": "<p><strong>Tram:&nbsp;</strong>&Scaron;ilingrovo n&aacute;měst&iacute; Tram station - lines 12, 5, 6<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Hlavn&iacute; n&aacute;draž&iacute; Tram statinon - lines 1, 2, 4, 8, 9, 10, 12<br />\n&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;N&aacute;měst&iacute; Svobody &amp;&nbsp;Zeln&yacute; trh Tram station - lines&nbsp;4, 9</p>\n\n<p><strong>Trolleybus:</strong> Hlavn&iacute; n&aacute;draž&iacute; Trolleybus station - lines 31, 33</p>\n\n<p><strong>Bus</strong>: Hlavn&iacute; n&aacute;draž&iacute; Bus station - line 76&nbsp;</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "addressLine1_cz": "Cinema City Velký Špalíček",
+      "externalCode": "1035",
+      "displayName_cz": "Brno Velký Špalíček",
+      "publicTransportInfo_cz": "<p>Tramvaj č. 12, 5, 6 - zast&aacute;vka &Scaron;ilingrovo n&aacute;měst&iacute;</p>\n\n<p>Tramvaj č. 1, 2, 4, 8, 9, 10, 12 - zast&aacute;vka Hlavn&iacute; n&aacute;draž&iacute;</p>\n\n<p>Tramvaj č. 4, 9 - zast&aacute;vky&nbsp;N&aacute;měst&iacute; Svobody &amp;&nbsp;Zeln&yacute; trh</p>\n\n<p>Trolejbus č. 31, 33 zast&aacute;vka Hlavn&iacute; n&aacute;draž&iacute;</p>\n\n<p>Autobus č. 76 zast&aacute;vka Hlavn&iacute; n&aacute;draž&iacute;</p>\n",
+      "postalCode": "602 00",
+      "addressLine1": "Mečová 2",
+      "priceFiles_cz": [
+        "jcr:c6529835-3df5-48d2-9b59-71f13b5f83e8"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "16.6072270274",
+      "description_cz": "Multikino Cinema City Velký Špalíček bylo otevřeno v srpnu 2001 a díky svému umístění v centru Brna významně rozšiřuje nabídku pro trávení voleného času. Na konci roku 2014 proběhlo kino kompletní rekonstrukcí  a je tak jedním z našich nejmodernějších multiplexů. Všechny kinosály jsou plně digitalizované. Počet kinosálů 7, kapacita 1398 míst. Cinema City využívá kvalitní projekční techniku od belgického výrobce Barco, která zaručuje ostrý a jasný obraz. Ve spojení s vynikající zvukovou technikou Dolby audio systém s křišťálově čistým a dobře vyváženým zvukem si vychutnáte dokonalý filmový zážitek.",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR",
+        "Cafe"
+      ],
+      "addressLine2_cz": "Mečová 2",
+      "informationType": "info",
+      "cinemaImage": "jcr:421251d9-737e-4a8e-bbdd-03293060f9a9",
+      "tabFacilitiesEnabled": "true",
+      "description": "Cinema City Velký Špalíček opened in August 2001 and thanks to its location in the center of Brno, it significantly expanded the leisure activity possibilities. The multiplex is often used for hosting film premieres and other cultural events. All cinemas are fully digitalized and there are 7 halls with a capacity of 1413 seats. Customers can enjoy a nice cup of coffee before the start of their film in our cinema café and also catch up on trailers of upcoming blockbusters.  Cinema City uses the top-most quality projection equipment from the Belgian manufacturer Barco, guaranteeing a sharp and crisp picture. Combined with the superb Dolby audio system with its crystal clear and well-balanced sound makes for a perfect cinematic experience.",
+      "pageUrl": "/velkyspalicek",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>Vjezd do centra je do 16hodin omezen. Po 16hodině je vjezd do historick&eacute;ho centra možn&yacute; i&nbsp;bez v&yacute;jimky od magistr&aacute;tu.</p>\n\n<p>Podzemn&iacute; parkovi&scaron;tě pro veřejnost&nbsp;je otevřeno denně v&nbsp;obchodn&iacute; centru Velk&yacute; &Scaron;pal&iacute;ček od 8.00 do 24.00 hodin. Cena 30,-Kč /1<br />\nPozn. : Kino s&nbsp;parkov&aacute;n&iacute;m nem&aacute; nic společn&eacute;ho, parkov&aacute;n&iacute; nen&iacute; pro z&aacute;kazn&iacute;ky zdarma, ani ho nijak neprodlužujeme na pokladně kina.</p>\n",
+      "byCarInfo": "<p>Parking for the public is accessible without permission of Brno municipality during the whole day (Solničn&iacute;&nbsp;street, Vesel&aacute; street, Dominik&aacute;nsk&aacute; street, and Dominik&aacute;nsk&eacute; n&aacute;měst&iacute;). Other ways through the city center can be used only with the permission of Brno municipality.&nbsp;<br />\n&nbsp;</p>\n\n<p><strong>Parking:</strong> Underground parking costs 30 CZK/hour and is opened 8:00 - 24:00.</p>\n",
+      "city_cz": "Brno",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:10a10497-9c4f-45fd-b60b-ac2859e0b222"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "49.1931771370",
+      "city": "Brno",
+      "displayName": "Velký Špalíček, OC Velký Špalíček",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    },
+    {
+      "@name": "zlicin",
+      "@path": "/10101/zlicin",
+      "@id": "1b7aaada-8ee5-4e22-8c1c-78cdd3755a1e",
+      "@nodeType": "mgnl:cinema",
+      "postalCode_cz": "155 21",
+      "firstSectionTitle": "Cinema City Zličín",
+      "publicTransportInfo": "<p><strong>Metro:</strong> Zlič&iacute;n (metrostation line B)</p>\n\n<p><strong>Bus:</strong> Zlič&iacute;n Bus station - lines:&nbsp;100, 130, 180, 306, 307, 308, 309, 310, 311, 324, 336, 347, 358, 380, 384, 386,&nbsp;952, 957</p>\n",
+      "emailAddress1_cz": "info@cinemacity-imax.cz",
+      "tabGettingHereParkingEnabled": "true",
+      "addressLine1_cz": "Cinema City Zličín",
+      "externalCode": "1051",
+      "displayName_cz": "Praha Zličín",
+      "postalCode": "155 21",
+      "publicTransportInfo_cz": "<p>konečn&aacute; stanice metra B Zlič&iacute;n</p>\n\n<p>Autobusy 100, 130, 180, 306, 307, 308, 309, 310, 311, 324, 336, 347, 358, 380, 384, 386</p>\n\n<p>Nočn&iacute; autobusy 952, 957</p>\n",
+      "addressLine1": "Řevnická 121/1",
+      "priceFiles_cz": [
+        "jcr:19464bcd-2bf3-4c14-bb1c-9153aaa1ead5"
+      ],
+      "facilitiesScreensTicketing": [
+        "2D",
+        "3D"
+      ],
+      "longitude": "14.2872154713",
+      "description_cz": "Moderní, špičkově vybavený multiplex se nachází v jednom z největších a nejnavštěvovanějších obchodních a zábavních center u nás, v nákupní galerii Metropole Zličín. Samotný areál kina se nachází ve druhém mezipatře, přímo naproti food-courtu. K modernímu kinu neodmyslitelně patří také velký popcorn a pořádně vychlazené pití - to si, stejně jako přehršel dalších dobrot, můžete koupit na baru ve foyer kina, kde také můžete počkat na začátek svého filmu, uvelebeni na velkých kožených pohovkách.   A co Vás čeká dále? 10 kinosálů vybavených, stejně jako ve všech multikinech Cinema City, špičkovou projekční technikou belgické značky BARCO, příjemní a ochotní zaměstnanci, kteří Vám vždy rádi poradí a pomohou a v neposlední řadě moderní interiér dotvářející příjemnou specifickou atmosféru celého kina",
+      "facilitiesAccessibility": [
+        "Disabled-access",
+        "Disabled-parking",
+        "Guide-dogs-allowed",
+        "Free-wi-fi"
+      ],
+      "facilitiesSnacksDrinks": [
+        "BAR"
+      ],
+      "addressLine2_cz": "Řevnická 121/1",
+      "cinemaImage": "jcr:5501310d-1b62-4d17-b331-0435d1ab7b70",
+      "informationType": "info",
+      "nearbyCienmas": [
+        "Prague Slovanský dům",
+        "Prague Chodov",
+        "Galaxie",
+        "Prague Letňany",
+        "Prague Flora",
+        "Prague Nový Smíchov"
+      ],
+      "tabFacilitiesEnabled": "true",
+      "description": "Modern multiplex with high-end projection equipment is located in one of the biggest and most visited shopping malls in the Czech Republic – in the Metropole Zličín shopping gallery. Cinema is located on the 2nd mezzanine, in front of the large food court. Obviously, as in all modern cinemas, you can buy popcorn with ice-cold drinks and many kinds of sweets satisfying your tastes in the cinema foyer bar and wait for your movie screening, settled comfortably in large leather sofas.  And what can you expect? Ten motion-picture theatres equipped with the top Belgian BARCO projection technology as in all Cinema City multiplexes, nice staff always willing to advice and help you, and last but not least, modern interior rounding off the pleasant atmosphere of the cinema.",
+      "pageUrl": "/zlicin",
+      "emailAddress1": "info@cinemacity.cz",
+      "tabSummaryPricesEnabled": "true",
+      "disabledAccessInfo_cz": "",
+      "phoneNumber1_cz": "255 742 021",
+      "byCarInfo_cz": "<p>Obchodn&iacute; centrum Metropole Zlič&iacute;n m&aacute; vlastn&iacute; parkovi&scaron;tě do kter&eacute;ho je vjezd z&nbsp;ulice Řevnick&aacute;.</p>\n\n<p>Parkov&aacute;n&iacute;: 3 hodiny parkov&aacute;n&iacute; zdarma pro n&aacute;v&scaron;těvn&iacute;ky obchodn&iacute;ho centra (o v&iacute;kendech a sv&aacute;tc&iacute;ch 5 hodin zdarma) a 2 hodiny nav&iacute;c pro n&aacute;v&scaron;těvn&iacute;ky kina (plat&iacute; pouze při potvrzen&iacute; parkovac&iacute; karty na pokladně multikina).</p>\n",
+      "byCarInfo": "<p>from Řevnick&aacute; street</p>\n\n<p><strong>Parking:</strong> 3 hours free parking for shopping centre visitors (during weekends and holidays 5 hours). For cinema visitors 2 more hours after the validation on the cinema box office.</p>\n",
+      "city_cz": "Praha 5",
+      "tabScreenHirePartiesEnabled": "true",
+      "priceFiles": [
+        "jcr:a37ea9a4-a4be-4b06-90a8-2a30c97a9aae"
+      ],
+      "blockOnlineSales": "false",
+      "latitude": "50.0539253402",
+      "displayName": "Prague Zličín, Metropole Zličín",
+      "city": "Prague 5",
+      "tabFilmsEnabled": "true",
+      "@nodes": []
+    }
+  ]
+}

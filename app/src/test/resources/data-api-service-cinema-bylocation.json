@@ -1,0 +1,28 @@
+{
+  "body": [
+    {
+      "theatreCode": "1056",
+      "straightLineDistance": 2.667
+    },
+    {
+      "theatreCode": "1052",
+      "straightLineDistance": 7.869
+    },
+    {
+      "theatreCode": "1033",
+      "straightLineDistance": 10.028
+    },
+    {
+      "theatreCode": "1031",
+      "straightLineDistance": 10.502
+    },
+    {
+      "theatreCode": "1030",
+      "straightLineDistance": 12.981
+    },
+    {
+      "theatreCode": "1051",
+      "straightLineDistance": 17.31
+    }
+  ]
+}

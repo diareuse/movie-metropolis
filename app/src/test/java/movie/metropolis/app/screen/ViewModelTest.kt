@@ -29,9 +29,4 @@ abstract class ViewModelTest {
         prepare()
     }
 
-    protected fun file(name: String) = Thread.currentThread().contextClassLoader
-        ?.getResourceAsStream(name)
-        ?.use { it.readBytes() }
-        ?.let(::String).orEmpty()
-
 }
