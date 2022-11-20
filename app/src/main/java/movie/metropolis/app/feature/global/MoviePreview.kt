@@ -3,7 +3,7 @@ package movie.metropolis.app.feature.global
 import java.util.Date
 import kotlin.time.Duration
 
-data class MovieUpcoming(
+data class MoviePreview(
     override val id: String,
     override val name: String,
     override val url: String,
