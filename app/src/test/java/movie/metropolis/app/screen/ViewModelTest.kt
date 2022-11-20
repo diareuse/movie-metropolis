@@ -11,19 +11,27 @@ import org.junit.Before
 
 abstract class ViewModelTest {
 
-    private lateinit var user: UserFeature
-    private lateinit var event: EventFeature
-    private lateinit var config: MockEngineConfig
+    protected lateinit var responder: UrlResponder
+    protected lateinit var user: UserFeature
+    protected lateinit var event: EventFeature
+    protected lateinit var config: MockEngineConfig
 
     abstract fun prepare()
 
     @Before
     fun prepareInternal() {
         config = MockEngineConfig()
+        responder = UrlResponder()
+        config.addHandler(responder)
         val client = NetworkModule().client(MockEngine(config))
         event = EventFeatureModule().feature(client)
         user = UserFeatureModule().feature(client)
         prepare()
     }
+
+    protected fun file(name: String) = Thread.currentThread().contextClassLoader
+        ?.getResourceAsStream(name)
+        ?.use { it.readBytes() }
+        ?.let(::String).orEmpty()
 
 }
