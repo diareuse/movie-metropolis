@@ -9,7 +9,8 @@ import java.util.Date
 
 @Serializable
 internal data class CustomerResponse(
-    @SerialName("customer") val customer: Customer
+    @SerialName("customer") val customer: Customer,
+    @SerialName("accessToken") val token: TokenResponse?
 ) {
 
     @Serializable
@@ -20,15 +21,15 @@ internal data class CustomerResponse(
         @SerialName("email") val email: String,
         @SerialName("phoneNumber") val phone: String,
         @Serializable(DateSerializer::class)
-        @SerialName("birthDate") val birthAt: Date,
-        @SerialName("favouriteCinemaId") val favoriteCinema: String,
+        @SerialName("birthDate") val birthAt: Date?,
+        @SerialName("favouriteCinemaId") val favoriteCinema: String?,
         @SerialName("consents") val consent: ConsentRemote,
         @SerialName("memberships") val membership: Membership
     )
 
     @Serializable
     data class Membership(
-        @SerialName("eClub") val club: Club,
+        @SerialName("eClub") val club: Club?,
         @SerialName("basic") val basic: Map<String, @Contextual Any?>
     )
 
