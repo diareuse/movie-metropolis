@@ -26,12 +26,8 @@ internal interface UserService {
 
 }
 
-enum class ImageSize(val size: String) {
-    Medium("md"), Large("lg")
-}
-
 @Serializable
-data class BookingResponse(
+internal data class BookingResponse(
     @SerialName("id") val id: String,
     @SerialName("eventName") val name: String,
     @Serializable(TimestampSerializer::class)
@@ -45,14 +41,14 @@ data class BookingResponse(
 )
 
 @Serializable
-data class CustomerPointsResponse(
+internal data class CustomerPointsResponse(
     @SerialName("totalPoints") val total: Double,
     @SerialName("pointsToExpire") val expire: Double,
     @Serializable(LocalTimestampSerializer::class)
     @SerialName("expirationDate") val expiresAt: Date
 )
 
-sealed class TokenRequest {
+internal sealed class TokenRequest {
 
     @Serializable
     data class Login(
@@ -72,17 +68,17 @@ sealed class TokenRequest {
 }
 
 @Serializable
-data class TokenResponse(
+internal data class TokenResponse(
     @SerialName("access_token") val accessToken: String,
     @SerialName("token_type") val type: String,
     @SerialName("refresh_token") val refreshToken: String,
     @SerialName("expires_in") val expiresIn: Long
 )
 
-typealias CinemaId = String
+internal typealias CinemaId = String
 
 @Serializable
-data class CustomerDataRequest(
+internal data class CustomerDataRequest(
     @SerialName("consents") val consent: ConsentRemote,
     @SerialName("email") val email: String,
     @SerialName("favouriteCinemaId") val favoriteCinema: CinemaId,
@@ -95,13 +91,13 @@ data class CustomerDataRequest(
 )
 
 @Serializable
-data class ConsentRemote(
+internal data class ConsentRemote(
     @SerialName("marketingConsent") val marketing: Boolean,
     @SerialName("premiumMarketingConsent") val marketingPremium: Boolean
 )
 
 @Serializable
-data class CustomerResponse(
+internal data class CustomerResponse(
     @SerialName("customer") val customer: Customer
 ) {
 
@@ -147,7 +143,7 @@ data class CustomerResponse(
 
 }
 
-abstract class KDateSerializer : KSerializer<Date> {
+internal abstract class KDateSerializer : KSerializer<Date> {
 
     final override val descriptor: SerialDescriptor
         get() = PrimitiveSerialDescriptor(type, PrimitiveKind.STRING)
@@ -165,7 +161,7 @@ abstract class KDateSerializer : KSerializer<Date> {
 
 }
 
-class TimestampSerializer : KDateSerializer() {
+internal class TimestampSerializer : KDateSerializer() {
 
     override val type: String = "timestamp+timezone"
     override val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZ", Locale.ROOT).apply {
@@ -174,7 +170,7 @@ class TimestampSerializer : KDateSerializer() {
 
 }
 
-class LocalTimestampSerializer : KDateSerializer() {
+internal class LocalTimestampSerializer : KDateSerializer() {
 
     override val type = "timestamp"
     override val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).apply {
@@ -183,14 +179,14 @@ class LocalTimestampSerializer : KDateSerializer() {
 
 }
 
-class DateSerializer : KDateSerializer() {
+internal class DateSerializer : KDateSerializer() {
 
     override val type = "date"
     override val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
 
 }
 
-class LocaleSerializer : KSerializer<Locale> {
+internal class LocaleSerializer : KSerializer<Locale> {
 
     override val descriptor = PrimitiveSerialDescriptor("locale", PrimitiveKind.STRING)
 

@@ -27,7 +27,7 @@ internal interface EventService {
 }
 
 @Serializable
-data class ExtendedMovieResponse(
+internal data class ExtendedMovieResponse(
     @SerialName("key") val id: Key,
     @SerialName("link") val url: String,
     @Serializable(YearSerializer::class)
@@ -78,19 +78,19 @@ data class ExtendedMovieResponse(
 
 }
 
-enum class ShowingType(val value: String) {
+internal enum class ShowingType(val value: String) {
 
     Current("SHOWING"), Upcoming("FUTURE")
 
 }
 
 @Serializable
-data class MovieDetailsResponse(
+internal data class MovieDetailsResponse(
     @SerialName("filmDetails") val details: MovieDetailResponse
 )
 
 @Serializable
-data class MovieDetailResponse(
+internal data class MovieDetailResponse(
     @SerialName("id") val id: String,
     @SerialName("name") val name: String,
     @SerialName("originalName") val nameOriginal: String,
@@ -135,7 +135,7 @@ data class MovieDetailResponse(
 
 }
 
-class StringAsIntSerializer : KSerializer<Int> {
+internal class StringAsIntSerializer : KSerializer<Int> {
 
     override val descriptor = PrimitiveSerialDescriptor("stringAsInt", PrimitiveKind.STRING)
 
@@ -151,24 +151,24 @@ class StringAsIntSerializer : KSerializer<Int> {
 
 
 @Serializable
-data class NearbyCinemaResponse(
+internal data class NearbyCinemaResponse(
     @SerialName("theatreCode") val cinemaId: String,
     @SerialName("straightLineDistance") val distanceKms: Double
 )
 
 @Serializable
-data class BodyResponse<T>(
+internal data class BodyResponse<T>(
     @SerialName("body") val body: T
 )
 
 @Serializable
-data class MovieEventResponse(
+internal data class MovieEventResponse(
     @SerialName("films") val movies: List<MovieResponse>,
     @SerialName("events") val events: List<EventResponse>
 )
 
 @Serializable
-data class MovieResponse(
+internal data class MovieResponse(
     @SerialName("id") val id: String,
     @SerialName("name") val name: String,
     @Serializable(MinutesDurationSerializer::class)
@@ -182,7 +182,7 @@ data class MovieResponse(
 )
 
 @Serializable
-data class EventResponse(
+internal data class EventResponse(
     @SerialName("id") val id: String,
     @SerialName("filmId") val movieId: String,
     @SerialName("cinemaId") val cinemaId: String,
@@ -194,7 +194,7 @@ data class EventResponse(
     @SerialName("auditorium") val auditorium: String
 )
 
-class MinutesDurationSerializer : KSerializer<Duration> {
+internal class MinutesDurationSerializer : KSerializer<Duration> {
 
     override val descriptor = PrimitiveSerialDescriptor("minutes", PrimitiveKind.LONG)
 
@@ -208,7 +208,7 @@ class MinutesDurationSerializer : KSerializer<Duration> {
 
 }
 
-abstract class KDateSerializer : KSerializer<Date> {
+internal abstract class KDateSerializer : KSerializer<Date> {
 
     final override val descriptor: SerialDescriptor
         get() = PrimitiveSerialDescriptor(type, PrimitiveKind.STRING)
@@ -226,7 +226,7 @@ abstract class KDateSerializer : KSerializer<Date> {
 
 }
 
-class YearSerializer : KDateSerializer() {
+internal class YearSerializer : KDateSerializer() {
 
     override val type: String = "year"
     override val formatter = SimpleDateFormat("yyyy", Locale.ROOT).apply {
@@ -235,7 +235,7 @@ class YearSerializer : KDateSerializer() {
 
 }
 
-class LocalTimestampSerializer : KDateSerializer() {
+internal class LocalTimestampSerializer : KDateSerializer() {
 
     override val type = "timestamp"
     override val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).apply {

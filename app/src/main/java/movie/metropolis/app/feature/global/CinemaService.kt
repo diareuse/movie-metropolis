@@ -15,12 +15,12 @@ internal interface CinemaService {
 }
 
 @Serializable
-data class ResultsResponse<T>(
+internal data class ResultsResponse<T>(
     @SerialName("results") val results: T
 )
 
 @Serializable
-data class CinemaResponse(
+internal data class CinemaResponse(
     @SerialName("postalCode") val postalCode: String,
     @SerialName("externalCode") val id: String,
     @SerialName("addressLine1") val addressLine: String,
@@ -34,7 +34,7 @@ data class CinemaResponse(
     @SerialName("city") val city: String
 )
 
-class StringAsDoubleSerializer : KSerializer<Double> {
+internal class StringAsDoubleSerializer : KSerializer<Double> {
 
     override val descriptor = PrimitiveSerialDescriptor("stringAsDouble", PrimitiveKind.STRING)
 
