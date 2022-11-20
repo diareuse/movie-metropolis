@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -11,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieViewModel @Inject constructor(
-    private val id: String
+    private val handle: SavedStateHandle
 ) : ViewModel() {
 
     val detail: Flow<Loadable<MovieDetailView>> = TODO()
