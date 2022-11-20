@@ -9,7 +9,6 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import movie.metropolis.app.feature.user.LocaleSerializer
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,6 +22,20 @@ internal interface EventService {
     suspend fun getNearbyCinemas(lat: Double, lng: Double): BodyResponse<NearbyCinemaResponse>
     suspend fun getDetail(distributorCode: String): BodyResponse<MovieDetailsResponse>
     suspend fun getMoviesByType(type: ShowingType): BodyResponse<ExtendedMovieResponse>
+
+}
+
+internal class LocaleSerializer : KSerializer<Locale> {
+
+    override val descriptor = PrimitiveSerialDescriptor("locale", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): Locale {
+        return Locale(decoder.decodeString().replace("_", "-"))
+    }
+
+    override fun serialize(encoder: Encoder, value: Locale) {
+        encoder.encodeString(value.toLanguageTag().replace("-", "_"))
+    }
 
 }
 
