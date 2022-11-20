@@ -8,9 +8,10 @@ data class User(
     val email: String,
     val phone: String,
     val birthAt: Date?,
-    val favoriteCinemaId: String,
+    val favoriteCinemaId: String?,
     val consent: Consent,
-    val membership: Membership?
+    val membership: Membership?,
+    val points: Double
 ) {
 
     data class Consent(
