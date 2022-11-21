@@ -2,6 +2,8 @@ package movie.metropolis.app.feature.user.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.Date
+import kotlin.time.Duration.Companion.seconds
 
 @Serializable
 internal data class TokenResponse(
@@ -9,4 +11,9 @@ internal data class TokenResponse(
     @SerialName("token_type") val type: String,
     @SerialName("refresh_token") val refreshToken: String,
     @SerialName("expires_in") val expiresIn: Long
-)
+) {
+
+    val expiresAt
+        get() = Date().apply { time += expiresIn.seconds.inWholeMilliseconds }
+
+}
