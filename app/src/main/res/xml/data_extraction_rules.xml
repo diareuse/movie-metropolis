@@ -3,17 +3,17 @@
     <cloud-backup>
         <include
             domain="sharedpref"
-            path="wiki.depasquale.cursola.storage.xml" />
+            path="*" />
         <include
             domain="database"
-            path="wiki.depasquale.cursola.exchange-rate" />
+            path="*" />
     </cloud-backup>
     <device-transfer>
         <include
             domain="sharedpref"
-            path="wiki.depasquale.cursola.storage.xml" />
+            path="*" />
         <include
             domain="database"
-            path="wiki.depasquale.cursola.exchange-rate" />
+            path="*" />
     </device-transfer>
 </data-extraction-rules>
