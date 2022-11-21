@@ -10,9 +10,17 @@ import java.util.Date
 
 internal interface EventService {
 
-    suspend fun getEventsInCinema(cinema: String, date: Date): BodyResponse<MovieEventResponse>
-    suspend fun getNearbyCinemas(lat: Double, lng: Double): BodyResponse<NearbyCinemaResponse>
-    suspend fun getDetail(distributorCode: String): BodyResponse<MovieDetailsResponse>
-    suspend fun getMoviesByType(type: ShowingType): BodyResponse<ExtendedMovieResponse>
+    suspend fun getEventsInCinema(
+        cinema: String,
+        date: Date
+    ): Result<BodyResponse<MovieEventResponse>>
+
+    suspend fun getNearbyCinemas(
+        lat: Double,
+        lng: Double
+    ): Result<BodyResponse<NearbyCinemaResponse>>
+
+    suspend fun getDetail(id: String): Result<BodyResponse<MovieDetailsResponse>>
+    suspend fun getMoviesByType(type: ShowingType): Result<BodyResponse<ExtendedMovieResponse>>
 
 }

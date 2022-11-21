@@ -5,6 +5,6 @@ import movie.metropolis.app.feature.global.model.ResultsResponse
 
 internal interface CinemaService {
 
-    suspend fun getCinemas(): ResultsResponse<List<CinemaResponse>>
+    suspend fun getCinemas(): Result<ResultsResponse<List<CinemaResponse>>>
 
 }
