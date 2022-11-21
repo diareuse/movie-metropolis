@@ -22,8 +22,12 @@ class ProfileViewModel @Inject constructor() : ViewModel() {
     val phone = MutableStateFlow("")
     val birthDate = MutableStateFlow(null as Date?)
     val favorite = MutableStateFlow(null as String?)
-    val hasMarketing = MutableStateFlow(false)
+    val hasMarketing = MutableStateFlow(null as Boolean?)
     val passwordCurrent = MutableStateFlow("")
     val passwordNew = MutableStateFlow("")
+
+    fun save() {
+        TODO()
+    }
 
 }
