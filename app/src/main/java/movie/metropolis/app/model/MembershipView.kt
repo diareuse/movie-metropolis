@@ -9,4 +9,5 @@ interface MembershipView {
     val memberFrom: String
     val memberUntil: String
     val daysRemaining: String
+    val points: Double
 }
