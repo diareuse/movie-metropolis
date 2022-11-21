@@ -5,18 +5,25 @@ import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
 import io.ktor.http.Url
+import kotlinx.coroutines.delay
 
 typealias Responder = suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData
 
 class UrlResponder : Responder {
 
+    private var nextDelay: Long = 0
     private val responses = mutableMapOf<Url, String>()
 
     fun onUrlRespond(url: Url, name: String) {
         responses[url] = file(name).ifEmpty { name }
     }
 
+    fun delayBy(millis: Long) {
+        nextDelay = millis
+    }
+
     override suspend fun invoke(p1: MockRequestHandleScope, p2: HttpRequestData): HttpResponseData {
+        delay(nextDelay)
         return p1.respondOk(responses.getValue(p2.url))
     }
 
