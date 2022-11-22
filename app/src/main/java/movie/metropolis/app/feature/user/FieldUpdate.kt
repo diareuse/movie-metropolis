@@ -20,6 +20,9 @@ sealed class FieldUpdate {
     }
 
     data class Phone(val value: String) : FieldUpdate()
-    data class Password(val value: String) : FieldUpdate()
+    data class Password(
+        val old: String,
+        val new: String
+    ) : FieldUpdate()
 
 }
