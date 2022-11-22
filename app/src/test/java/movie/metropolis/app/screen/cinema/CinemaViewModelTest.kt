@@ -4,16 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import movie.metropolis.app.model.MovieBookingView
-import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.UrlResponder
 import movie.metropolis.app.screen.ViewModelTest
+import movie.metropolis.app.screen.getOrThrow
 import org.junit.Test
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 import kotlin.time.Duration.Companion.hours
 
 class CinemaViewModelTest : ViewModelTest() {
@@ -33,10 +31,9 @@ class CinemaViewModelTest : ViewModelTest() {
             "quickbook-film-events-in-cinema-at-date.json"
         )
         val loadable = viewModel.items
-            .dropWhile { it is Loadable.Loading }
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<List<MovieBookingView>>>(loadable)
-        val result = loadable.result
+        val result = loadable.getOrThrow()
         assertEquals(19, result.size, "Expected 19 elements, but was: $result")
     }
 
@@ -48,19 +45,18 @@ class CinemaViewModelTest : ViewModelTest() {
         )
         viewModel.selectedDate.value = tomorrow
         val loadable = viewModel.items
-            .dropWhile { it is Loadable.Loading }
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<List<MovieBookingView>>>(loadable)
-        val result = loadable.result
+        val result = loadable.getOrThrow()
         assertEquals(19, result.size, "Expected 19 elements, but was: $result")
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun items_failsGracefully() = runTest {
-        val loadable = viewModel.items
-            .dropWhile { it is Loadable.Loading }
+        viewModel.items
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Error<*>>(loadable)
+            .getOrThrow()
     }
 
     companion object {
