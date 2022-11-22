@@ -1,30 +1,29 @@
 package movie.metropolis.app.screen
 
 import io.ktor.client.engine.mock.MockRequestHandleScope
-import io.ktor.client.engine.mock.respondOk
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.Url
-import kotlinx.coroutines.delay
+import io.ktor.http.headersOf
 
 typealias Responder = suspend MockRequestHandleScope.(HttpRequestData) -> HttpResponseData
 
 class UrlResponder : Responder {
 
-    private var nextDelay: Long = 0
     private val responses = mutableMapOf<Url, String>()
 
     fun onUrlRespond(url: Url, name: String) {
         responses[url] = file(name).ifEmpty { name }
     }
 
-    fun delayBy(millis: Long) {
-        nextDelay = millis
-    }
-
     override suspend fun invoke(p1: MockRequestHandleScope, p2: HttpRequestData): HttpResponseData {
-        delay(nextDelay)
-        return p1.respondOk(responses.getValue(p2.url))
+        return p1.respond(
+            content = responses.getValue(p2.url),
+            status = HttpStatusCode.OK,
+            headers = headersOf("content-type", "application/json")
+        )
     }
 
     private fun file(name: String) = Thread.currentThread().contextClassLoader
@@ -54,10 +53,10 @@ class UrlResponder : Responder {
             Url("$Domain/cz/$DataService/v1/10101/films/by-showing-type/${type}?lang=en&ordering=asc")
 
         val Password =
-            Url("$Domain/cz/$CustomerService/v1/password?reCaptcha=abc")
+            Url("$Domain/cz/$CustomerService/v1/password?reCaptcha=null")
 
         val Register =
-            Url("$Domain/cz/$CustomerService/v1/customers?reCaptcha=abc")
+            Url("$Domain/cz/$CustomerService/v1/customers?reCaptcha=null")
 
         val Customer =
             Url("$Domain/cz/$CustomerService/v1/customers/current")

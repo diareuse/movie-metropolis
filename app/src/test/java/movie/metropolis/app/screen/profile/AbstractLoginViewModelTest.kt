@@ -1,8 +1,8 @@
 package movie.metropolis.app.screen.profile
 
 import androidx.lifecycle.SavedStateHandle
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
 import movie.metropolis.app.model.LoginMode
 import movie.metropolis.app.screen.Loadable
@@ -16,29 +16,27 @@ abstract class AbstractLoginViewModelTest : ViewModelTest() {
     abstract val mode: LoginMode
 
     override fun prepare() {
-        viewModel = LoginViewModel(SavedStateHandle(mapOf("mode" to mode.name)))
+        viewModel = LoginViewModel(SavedStateHandle(mapOf("mode" to mode.name)), user)
     }
 
     @Test
     fun state_returnsLoaded() = runTest {
         val loadable = viewModel.state.first()
-        assertIs<Loadable.Loaded<Boolean>>(loadable)
+        assertIs<Loadable.Loaded<Boolean>>(loadable, loadable.toString())
     }
 
     @Test
     fun state_returnsLoading() = runTest {
         viewModel.send()
         val loadable = viewModel.state.first()
-        assertIs<Loadable.Loading<Boolean>>(loadable)
+        assertIs<Loadable.Loading<Boolean>>(loadable, loadable.toString())
     }
 
     @Test
     fun state_returnsError() = runTest {
-        responder.delayBy(100)
         viewModel.send()
-        advanceTimeBy(200)
-        val loadable = viewModel.state.first()
-        assertIs<Loadable.Error<Boolean>>(loadable)
+        val loadable = viewModel.state.dropWhile { it is Loadable.Loading }.first()
+        assertIs<Loadable.Error<Boolean>>(loadable, loadable.toString())
     }
 
 }
