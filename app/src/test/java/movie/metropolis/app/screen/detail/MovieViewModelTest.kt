@@ -4,14 +4,10 @@ import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import movie.metropolis.app.model.ImageView
-import movie.metropolis.app.model.MovieDetailView
-import movie.metropolis.app.model.VideoView
-import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.UrlResponder
 import movie.metropolis.app.screen.ViewModelTest
+import movie.metropolis.app.screen.getOrThrow
 import org.junit.Test
-import kotlin.test.assertIs
 
 class MovieViewModelTest : ViewModelTest() {
 
@@ -29,18 +25,18 @@ class MovieViewModelTest : ViewModelTest() {
             UrlResponder.Detail(movie),
             "data-api-service-films-byDistributorCode.json"
         )
-        val loadable = viewModel.detail
-            .dropWhile { it is Loadable.Loading }
+        viewModel.detail
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<MovieDetailView>>(loadable)
+            .getOrThrow()
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun detail_failsGracefully() = runTest {
-        val loadable = viewModel.detail
-            .dropWhile { it is Loadable.Loading }
+        viewModel.detail
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Error<*>>(loadable)
+            .getOrThrow()
     }
 
     @Test
@@ -49,18 +45,18 @@ class MovieViewModelTest : ViewModelTest() {
             UrlResponder.Detail(movie),
             "data-api-service-films-byDistributorCode.json"
         )
-        val loadable = viewModel.trailer
-            .dropWhile { it is Loadable.Loading }
+        viewModel.trailer
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<VideoView>>(loadable)
+            .getOrThrow()
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun trailer_failsGracefully() = runTest {
-        val loadable = viewModel.trailer
-            .dropWhile { it is Loadable.Loading }
+        viewModel.trailer
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Error<*>>(loadable)
+            .getOrThrow()
     }
 
     @Test
@@ -69,18 +65,18 @@ class MovieViewModelTest : ViewModelTest() {
             UrlResponder.Detail(movie),
             "data-api-service-films-byDistributorCode.json"
         )
-        val loadable = viewModel.poster
-            .dropWhile { it is Loadable.Loading }
+        viewModel.poster
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<ImageView>>(loadable)
+            .getOrThrow()
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun poster_failsGracefully() = runTest {
-        val loadable = viewModel.poster
-            .dropWhile { it is Loadable.Loading }
+        viewModel.poster
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Error<*>>(loadable)
+            .getOrThrow()
     }
 
 }

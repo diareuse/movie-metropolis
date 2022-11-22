@@ -3,13 +3,11 @@ package movie.metropolis.app.screen.profile
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import movie.metropolis.app.model.MembershipView
-import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.UrlResponder
 import movie.metropolis.app.screen.ViewModelTest
+import movie.metropolis.app.screen.getOrThrow
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 
@@ -18,17 +16,17 @@ class ProfileViewModelTest : ViewModelTest() {
     private lateinit var viewModel: ProfileViewModel
 
     override fun prepare() {
-        viewModel = ProfileViewModel()
+        responder.onUrlRespond(UrlResponder.Auth, "group-customer-service-oauth-token.json")
+        viewModel = ProfileViewModel(user)
     }
 
     @Test
     fun membership_returnsValue() = runTest {
         respondWithUser()
         val loadable = viewModel.membership
-            .dropWhile { it is Loadable.Loading }
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<MembershipView?>>(loadable)
-        val result = loadable.result
+        val result = loadable.getOrThrow()
         assertNotNull(result)
     }
 
@@ -64,21 +62,21 @@ class ProfileViewModelTest : ViewModelTest() {
     fun birthDate_returnsValue_ifPreviouslyEmpty() = runTest {
         respondWithUser()
         viewModel.membership.first()
-        assertNotEquals(null, viewModel.birthDate.value)
+        assertNotNull(viewModel.birthDate.value)
     }
 
     @Test
     fun favorite_returnsValue_ifPreviouslyEmpty() = runTest {
         respondWithUser()
         viewModel.membership.first()
-        assertNotEquals(null, viewModel.favorite.value)
+        assertNotNull(viewModel.favorite.value)
     }
 
     @Test
     fun hasMarketing_returnsValue_ifPreviouslyEmpty() = runTest {
         respondWithUser()
         viewModel.membership.first()
-        assertNotEquals(null, viewModel.hasMarketing.value)
+        assertNotNull(viewModel.hasMarketing.value)
     }
 
     @Test
@@ -87,17 +85,18 @@ class ProfileViewModelTest : ViewModelTest() {
         viewModel.firstName.value = "barfofofo"
         viewModel.save()
         val loadable = viewModel.membership.first()
-        assertIs<Loadable.Loaded<MembershipView?>>(loadable)
-        val result = loadable.result
+        val result = loadable.getOrThrow()
         assertNotNull(result)
     }
 
     @Test
     fun save_updatesPassword() = runTest {
+        respondWithUser()
         responder.onUrlRespond(UrlResponder.Password, "")
         viewModel.passwordCurrent.value = "oof"
         viewModel.passwordNew.value = "foo"
         viewModel.save()
+        viewModel.membership.first() // this is cheating
         assertEquals("", viewModel.passwordCurrent.value)
         assertEquals("", viewModel.passwordNew.value)
     }

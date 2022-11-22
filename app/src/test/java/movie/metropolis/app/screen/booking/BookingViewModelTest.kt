@@ -1,16 +1,13 @@
 package movie.metropolis.app.screen.booking
 
-import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.test.runTest
-import movie.metropolis.app.model.BookingView
-import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.UrlResponder
 import movie.metropolis.app.screen.ViewModelTest
+import movie.metropolis.app.screen.getOrThrow
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertIs
 
 class BookingViewModelTest : ViewModelTest() {
 
@@ -24,10 +21,9 @@ class BookingViewModelTest : ViewModelTest() {
     fun expired_returnsList() = runTest {
         responder.onUrlRespond(UrlResponder.Booking, "group-customer-service-bookings.json")
         val loadable = viewModel.expired
-            .takeWhile { it !is Loadable.Loading<*> }
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Loaded<List<BookingView>>>(loadable)
-        val result = loadable.result
+        val result = loadable.getOrThrow()
         assertEquals(10, result.size, "Expected to contain 10 elements, was: $result")
     }
 
@@ -35,28 +31,26 @@ class BookingViewModelTest : ViewModelTest() {
     fun active_returnsList() = runTest {
         responder.onUrlRespond(UrlResponder.Booking, "group-customer-service-bookings.json")
         val loadable = viewModel.active
-            .takeWhile { it !is Loadable.Loading<*> }
-            .filterIsInstance<Loadable.Loaded<List<BookingView>>>()
-            .first().result
-        assertIs<Loadable.Loaded<List<BookingView>>>(loadable)
-        val result = loadable.result
+            .dropWhile { it.isLoading }
+            .first()
+        val result = loadable.getOrThrow()
         assertEquals(1, result.size, "Expected to contain 1 element, was: $result")
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun expired_failsGracefully() = runTest {
-        val result = viewModel.active
-            .takeWhile { it !is Loadable.Loading<*> }
+        viewModel.active
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Error<List<BookingView>>>(result)
+            .getOrThrow()
     }
 
-    @Test
+    @Test(expected = Throwable::class)
     fun active_failsGracefully() = runTest {
-        val result = viewModel.active
-            .takeWhile { it !is Loadable.Loading<*> }
+        viewModel.active
+            .dropWhile { it.isLoading }
             .first()
-        assertIs<Loadable.Error<List<BookingView>>>(result)
+            .getOrThrow()
     }
 
 }

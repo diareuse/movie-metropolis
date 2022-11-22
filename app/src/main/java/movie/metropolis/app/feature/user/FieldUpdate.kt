@@ -23,6 +23,8 @@ sealed class FieldUpdate {
     data class Password(
         val old: String,
         val new: String
-    ) : FieldUpdate()
+    ) : FieldUpdate() {
+        val isValid get() = old.isNotBlank() && new.isNotBlank() && new != old
+    }
 
 }
