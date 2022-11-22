@@ -20,6 +20,7 @@ import movie.metropolis.app.feature.user.model.PasswordRequest
 import movie.metropolis.app.feature.user.model.RegistrationRequest
 import movie.metropolis.app.feature.user.model.TokenRequest
 import movie.metropolis.app.feature.user.model.TokenResponse
+import java.util.Locale
 
 internal class UserServiceImpl(
     private val client: HttpClient,
@@ -28,7 +29,7 @@ internal class UserServiceImpl(
 
     override suspend fun register(request: RegistrationRequest) = kotlin.runCatching {
         client.post {
-            url("/v1/customers")
+            url("v1/customers")
             parameter("reCaptcha", BuildConfig.Captcha)
             setBody(request)
             basicAuth(BuildConfig.BasicUser, BuildConfig.BasicPass)
@@ -37,14 +38,14 @@ internal class UserServiceImpl(
 
     override suspend fun getToken(request: TokenRequest) = kotlin.runCatching {
         client.submitForm(request.toParameters()) {
-            url("/oauth/token")
+            url("oauth/token")
             basicAuth(BuildConfig.BasicUser, BuildConfig.BasicPass)
         }.body<TokenResponse>()
     }
 
     override suspend fun updatePassword(request: PasswordRequest) = kotlin.runCatching {
         client.put {
-            url("/v1/password")
+            url("v1/password")
             parameter("reCaptcha", BuildConfig.Captcha)
             setBody(request)
             bearerAuth(checkNotNull(account.token))
@@ -53,29 +54,32 @@ internal class UserServiceImpl(
 
     override suspend fun updateUser(request: CustomerDataRequest) = kotlin.runCatching {
         client.put {
-            url("/v1/customers/current")
+            url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.body<CustomerResponse>()
     }
 
     override suspend fun getPoints() = kotlin.runCatching {
         client.get {
-            url("/v1/customer/points")
+            url("v1/customer/points")
             bearerAuth(checkNotNull(account.token))
         }.body<CustomerPointsResponse>()
     }
 
     override suspend fun getUser() = kotlin.runCatching {
         client.get {
-            url("/v1/customers/current")
+            url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.body<CustomerResponse.Customer>()
     }
 
     override suspend fun getBookings() = kotlin.runCatching {
         client.get {
-            url("/v1/bookings")
+            url("v1/bookings")
             bearerAuth(checkNotNull(account.token))
+            url {
+                parameters.append("lang", Locale.getDefault().language)
+            }
         }.body<List<BookingResponse>>()
     }
 
