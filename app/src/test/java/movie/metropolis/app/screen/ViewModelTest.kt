@@ -3,9 +3,11 @@ package movie.metropolis.app.screen
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockEngineConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.setMain
 import movie.metropolis.app.di.NetworkModule
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.di.EventFeatureModule
 import movie.metropolis.app.feature.user.UserAccount
 import movie.metropolis.app.feature.user.UserCredentials
 import movie.metropolis.app.feature.user.UserFeature
@@ -27,18 +29,20 @@ abstract class ViewModelTest {
 
     @Before
     fun prepareInternal() {
+        Dispatchers.setMain(UnconfinedTestDispatcher())
         config = MockEngineConfig()
         responder = UrlResponder()
         config.addHandler(responder)
         val engine = MockEngine(config)
         val network = NetworkModule()
-        prepareEvent(network.clientData(engine), network.clientRoot(engine))
-        prepareUser(network.clientCustomer(engine))
+        val root = network.clientRoot(engine)
+        prepareEvent(network.clientData(root), root)
+        prepareUser(network.clientCustomer(root))
         prepare()
     }
 
     private fun prepareEvent(clientData: HttpClient, clientRoot: HttpClient) {
-        event = EventFeatureModule().feature(clientData)
+        //event = EventFeatureModule().feature(clientData)
     }
 
     private fun prepareUser(client: HttpClient) {
