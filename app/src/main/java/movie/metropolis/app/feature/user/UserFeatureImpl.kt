@@ -9,12 +9,33 @@ import movie.metropolis.app.feature.user.model.CustomerDataRequest
 import movie.metropolis.app.feature.user.model.CustomerPointsResponse
 import movie.metropolis.app.feature.user.model.CustomerResponse
 import movie.metropolis.app.feature.user.model.PasswordRequest
+import movie.metropolis.app.feature.user.model.RegistrationRequest
+import movie.metropolis.app.feature.user.model.TokenRequest
 import kotlin.time.Duration.Companion.minutes
 
 internal class UserFeatureImpl(
     private val service: UserService,
     private val account: UserAccount
 ) : UserFeature {
+
+    override suspend fun signIn(method: SignInMethod) = when (method) {
+        is SignInMethod.Login -> service.getToken(
+            TokenRequest.Login(
+                username = method.email,
+                password = method.password
+            )
+        ).map {}
+
+        is SignInMethod.Registration -> service.register(
+            RegistrationRequest(
+                email = method.email,
+                firstName = method.firstName,
+                lastName = method.lastName,
+                password = method.password,
+                phone = method.phone
+            )
+        ).map {}
+    }
 
     override suspend fun update(data: Iterable<FieldUpdate>) = getUser(
         user = {

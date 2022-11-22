@@ -4,9 +4,9 @@ typealias LoadableList<Type> = Loadable<List<Type>>
 
 sealed class Loadable<Type> {
 
-    class Loading<Type>(val initial: Type?) : Loadable<Type>()
-    class Loaded<Type>(val result: Type) : Loadable<Type>()
-    class Error<Type>(val error: Throwable) : Loadable<Type>()
+    data class Loading<Type>(val initial: Type?) : Loadable<Type>()
+    data class Loaded<Type>(val result: Type) : Loadable<Type>()
+    data class Error<Type>(val error: Throwable) : Loadable<Type>()
 
     companion object {
 

@@ -14,7 +14,7 @@ internal data class RegistrationRequest(
     @SerialName("locale") val locale: Locale = Locale.getDefault(),
     @SerialName("password") val password: String,
     @SerialName("phoneNumber") val phone: String,
-    @SerialName("consents") val consent: ConsentRemote,
+    @SerialName("consents") val consent: ConsentRemote = ConsentRemote(false),
     @SerialName("terms") val terms: Terms = Terms(),
     @SerialName("type") val type: String = "basic"
 ) {
