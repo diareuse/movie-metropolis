@@ -16,9 +16,9 @@ class NetworkModule {
 
     @ClientRoot
     @Provides
-    fun client(
+    fun clientRoot(
         engine: HttpClientEngine
-    ) = HttpClient(engine) {
+    ): HttpClient = HttpClient(engine) {
         defaultRequest {
             url("https://www.cinemacity.cz/mrest")
             url {
@@ -31,7 +31,7 @@ class NetworkModule {
     @Provides
     fun clientData(
         engine: HttpClientEngine
-    ) = HttpClient(engine) {
+    ): HttpClient = HttpClient(engine) {
         defaultRequest {
             url("https://www.cinemacity.cz/cz/data-api-service/v1")
             url {
@@ -44,7 +44,7 @@ class NetworkModule {
     @Provides
     fun clientCustomer(
         engine: HttpClientEngine
-    ) = HttpClient(engine) {
+    ): HttpClient = HttpClient(engine) {
         defaultRequest {
             url("https://www.cinemacity.cz/cz/group-customer-service")
             url {
