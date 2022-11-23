@@ -121,7 +121,7 @@ internal class UserFeatureImpl(
             email = customer.email,
             phone = customer.phone,
             birthAt = customer.birthAt,
-            favoriteCinemaId = TODO(),
+            favorite = TODO(),
             consent = consent,
             membership = membership,
             points = points.await().getOrThrow().total
