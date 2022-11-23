@@ -7,11 +7,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import movie.metropolis.app.feature.global.Cinema
+import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.user.FieldUpdate
 import movie.metropolis.app.feature.user.User
 import movie.metropolis.app.feature.user.UserFeature
@@ -29,7 +32,8 @@ import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val feature: UserFeature
+    private val feature: UserFeature,
+    private val event: EventFeature
 ) : ViewModel() {
 
     private val stateMachine = StateMachine<Loadable<User>>(viewModelScope, Loadable.loading()) {
@@ -43,7 +47,7 @@ class ProfileViewModel @Inject constructor(
             email.update { user.email }
             phone.update { user.phone }
             birthDate.update { user.birthAt }
-            favorite.update { user.favoriteCinemaId }
+            favorite.update { user.favorite?.let(::CinemaSimpleViewFromFeature) }
             hasMarketing.update { user.consent.marketing }
             passwordCurrent.update { "" }
             passwordNew.update { "" }
@@ -54,12 +58,17 @@ class ProfileViewModel @Inject constructor(
         .onStart { stateMachine.submit { feature.getUser().asLoadable() } }
         .map { it.map { user -> user.membership?.let { MembershipViewFeature(user) } } }
 
+    val cinemas = flow { emit(event.getCinemas(null)) }
+        .map { it.map { it.map(::CinemaSimpleViewFromFeature) } }
+        .map { it.asLoadable() }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+
     val firstName = MutableStateFlow("")
     val lastName = MutableStateFlow("")
     val email = MutableStateFlow("")
     val phone = MutableStateFlow("")
     val birthDate = MutableStateFlow(null as Date?)
-    val favorite = MutableStateFlow(null as String?)
+    val favorite = MutableStateFlow(null as CinemaSimpleView?)
     val hasMarketing = MutableStateFlow(null as Boolean?)
     val passwordCurrent = MutableStateFlow("")
     val passwordNew = MutableStateFlow("")
@@ -71,7 +80,7 @@ class ProfileViewModel @Inject constructor(
             compare(lastName, user.lastName, FieldUpdate.Name::Last),
             compare(email, user.email, FieldUpdate::Email),
             compare(phone, user.phone, FieldUpdate::Phone),
-            compare(favorite, user.favoriteCinemaId, FieldUpdate::Cinema),
+            compare(favorite.value?.id, user.favorite?.id) { FieldUpdate.Cinema(it) },
             compare(hasMarketing, user.consent.marketing, FieldUpdate.Consent::Marketing),
             FieldUpdate.Password(passwordCurrent.value, passwordNew.value).takeIf { it.isValid }
         )
@@ -84,9 +93,18 @@ class ProfileViewModel @Inject constructor(
         updated: StateFlow<T?>,
         remote: T?,
         factory: (T) -> FieldUpdate
+    ): FieldUpdate? = compare(
+        updated = updated.value,
+        remote = remote,
+        factory = factory
+    )
+
+    private fun <T : Any> compare(
+        updated: T?,
+        remote: T?,
+        factory: (T) -> FieldUpdate
     ): FieldUpdate? {
-        val value = updated.value
-        if (value != remote && value != null) return factory(value)
+        if (updated != remote && updated != null) return factory(updated)
         return null
     }
 
@@ -94,6 +112,25 @@ class ProfileViewModel @Inject constructor(
         if (it.isSuccess) body(it.getOrThrow())
     }
 
+}
+
+data class CinemaSimpleViewFromFeature(
+    private val cinema: Cinema
+) : CinemaSimpleView {
+
+    override val id: String
+        get() = cinema.id
+    override val name: String
+        get() = cinema.name
+    override val city: String
+        get() = cinema.city
+
+}
+
+interface CinemaSimpleView {
+    val id: String
+    val name: String
+    val city: String
 }
 
 data class MembershipViewFeature(

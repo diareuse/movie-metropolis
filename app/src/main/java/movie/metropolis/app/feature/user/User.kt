@@ -9,7 +9,7 @@ data class User(
     val email: String,
     val phone: String,
     val birthAt: Date?,
-    val favoriteCinemaId: Cinema?,
+    val favorite: Cinema?,
     val consent: Consent,
     val membership: Membership?,
     val points: Double
