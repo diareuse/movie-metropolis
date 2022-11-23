@@ -18,9 +18,9 @@ internal interface EventService {
     suspend fun getNearbyCinemas(
         lat: Double,
         lng: Double
-    ): Result<BodyResponse<NearbyCinemaResponse>>
+    ): Result<BodyResponse<List<NearbyCinemaResponse>>>
 
     suspend fun getDetail(id: String): Result<BodyResponse<MovieDetailsResponse>>
-    suspend fun getMoviesByType(type: ShowingType): Result<BodyResponse<ExtendedMovieResponse>>
+    suspend fun getMoviesByType(type: ShowingType): Result<BodyResponse<List<ExtendedMovieResponse>>>
 
 }

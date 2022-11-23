@@ -1,5 +1,6 @@
 package movie.metropolis.app.feature.user
 
+import movie.metropolis.app.feature.global.Cinema
 import java.util.Date
 
 data class User(
@@ -8,7 +9,7 @@ data class User(
     val email: String,
     val phone: String,
     val birthAt: Date?,
-    val favoriteCinemaId: String?,
+    val favoriteCinemaId: Cinema?,
     val consent: Consent,
     val membership: Membership?,
     val points: Double

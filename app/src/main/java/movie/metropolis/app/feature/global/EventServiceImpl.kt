@@ -45,6 +45,7 @@ internal class EventServiceImpl(
     override suspend fun getDetail(id: String) = kotlin.runCatching {
         client.get {
             url("/10101/films/byDistributorCode/$id")
+            parameter("lang", Locale.getDefault().language)
         }.body<BodyResponse<MovieDetailsResponse>>()
     }
 
@@ -52,6 +53,7 @@ internal class EventServiceImpl(
         client.get {
             url("/10101/films/by-showing-type/${type.value}")
             parameter("ordering", "asc")
+            parameter("lang", Locale.getDefault().language)
         }.body<BodyResponse<ExtendedMovieResponse>>()
     }
 
