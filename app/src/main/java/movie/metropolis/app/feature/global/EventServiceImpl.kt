@@ -39,7 +39,7 @@ internal class EventServiceImpl(
             parameter("lat", lat)
             parameter("long", lng)
             parameter("unit", "KILOMETERS")
-        }.body<BodyResponse<NearbyCinemaResponse>>()
+        }.body<BodyResponse<List<NearbyCinemaResponse>>>()
     }
 
     override suspend fun getDetail(id: String) = kotlin.runCatching {
@@ -54,7 +54,7 @@ internal class EventServiceImpl(
             url("/10101/films/by-showing-type/${type.value}")
             parameter("ordering", "asc")
             parameter("lang", Locale.getDefault().language)
-        }.body<BodyResponse<ExtendedMovieResponse>>()
+        }.body<BodyResponse<List<ExtendedMovieResponse>>>()
     }
 
 }
