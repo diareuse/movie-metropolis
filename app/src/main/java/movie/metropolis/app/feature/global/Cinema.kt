@@ -7,5 +7,5 @@ interface Cinema {
     val city: String
     val address: Iterable<String>
     val location: Location
-    val distance: Float?
+    val distance: Double?
 }
