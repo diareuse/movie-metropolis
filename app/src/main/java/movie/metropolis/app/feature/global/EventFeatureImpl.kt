@@ -36,10 +36,16 @@ internal class EventFeatureImpl(
         return when (location) {
             null -> cinemas
             else -> {
-                val ids = event.getNearbyCinemas(location.latitude, location.longitude)
-                    .map { it.body.map { it.cinemaId } }
-                    .getOrElse { cinemas.getOrDefault(emptyList()).map { it.id } }
-                cinemas.map { it.filter { it.id in ids } }
+                val nearby = event.getNearbyCinemas(location.latitude, location.longitude)
+                    .map { it.body }
+                    .getOrDefault(emptyList())
+                if (cinemas.isFailure || nearby.isEmpty()) return cinemas
+                val cinemas = cinemas.getOrThrow()
+                val mapped = nearby.mapNotNull { nearby ->
+                    cinemas.firstOrNull { it.id == nearby.cinemaId }
+                        ?.copy(distance = nearby.distanceKms)
+                }
+                Result.success(mapped)
             }
         }
     }
@@ -135,7 +141,8 @@ internal data class MovieDetailFromResponse(
 }
 
 internal data class CinemaFromResponse(
-    private val response: CinemaResponse
+    private val response: CinemaResponse,
+    override val distance: Double? = null
 ) : Cinema {
 
     override val id: String
