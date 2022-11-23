@@ -16,7 +16,6 @@ import movie.metropolis.app.feature.user.UserCredentialsImpl
 import movie.metropolis.app.feature.user.UserFeature
 import movie.metropolis.app.feature.user.UserFeatureImpl
 import movie.metropolis.app.feature.user.UserService
-import movie.metropolis.app.feature.user.UserServiceBlocking
 import movie.metropolis.app.feature.user.UserServiceImpl
 import movie.metropolis.app.feature.user.UserServiceReauthorize
 import movie.metropolis.app.feature.user.UserServiceSaving
@@ -42,7 +41,6 @@ internal class UserFeatureModule {
     ): UserService {
         var service: UserService
         service = UserServiceImpl(client, account)
-        service = UserServiceBlocking(service)
         service = UserServiceSaving(service, credentials, account)
         service = UserServiceReauthorize(service, credentials, account)
         return service

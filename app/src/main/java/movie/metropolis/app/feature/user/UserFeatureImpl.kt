@@ -95,7 +95,6 @@ internal class UserFeatureImpl(
         points: Deferred<Result<CustomerPointsResponse>>
     ): User {
         val customer = user.await().getOrThrow()
-        val pointsTotal = points.await().getOrThrow().total
         val consent = User.Consent(
             marketing = customer.consent.marketing,
             premium = customer.consent.marketingPremium ?: false
@@ -113,10 +112,10 @@ internal class UserFeatureImpl(
             email = customer.email,
             phone = customer.phone,
             birthAt = customer.birthAt,
-            favoriteCinemaId = customer.favoriteCinema,
+            favoriteCinemaId = TODO(),
             consent = consent,
             membership = membership,
-            points = pointsTotal
+            points = points.await().getOrThrow().total
         )
     }
 
