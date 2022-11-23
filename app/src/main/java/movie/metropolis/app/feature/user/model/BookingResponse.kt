@@ -4,6 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import movie.metropolis.app.feature.user.serializer.TimestampSerializer
 import java.util.Date
+import kotlin.time.Duration.Companion.hours
 
 @Serializable
 internal data class BookingResponse(
@@ -17,4 +18,9 @@ internal data class BookingResponse(
     @SerialName("eventMasterCode") val eventMasterCode: String,
     @SerialName("cinemaId") val cinemaId: String,
     @SerialName("eventId") val eventId: String
-)
+) {
+
+    val isExpired
+        get() = Date().after(Date(startsAt.time + 3.hours.inWholeMilliseconds))
+
+}

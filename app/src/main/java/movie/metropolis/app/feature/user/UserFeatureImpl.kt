@@ -3,7 +3,10 @@ package movie.metropolis.app.feature.user
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import movie.metropolis.app.feature.global.CinemaFromResponse
+import movie.metropolis.app.feature.global.CinemaService
 import movie.metropolis.app.feature.user.FieldUpdate.*
+import movie.metropolis.app.feature.user.model.BookingDetailResponse
 import movie.metropolis.app.feature.user.model.BookingResponse
 import movie.metropolis.app.feature.user.model.CustomerDataRequest
 import movie.metropolis.app.feature.user.model.CustomerPointsResponse
@@ -11,11 +14,13 @@ import movie.metropolis.app.feature.user.model.CustomerResponse
 import movie.metropolis.app.feature.user.model.PasswordRequest
 import movie.metropolis.app.feature.user.model.RegistrationRequest
 import movie.metropolis.app.feature.user.model.TokenRequest
+import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 
 internal class UserFeatureImpl(
     private val service: UserService,
-    private val account: UserAccount
+    private val account: UserAccount,
+    private val cinema: CinemaService
 ) : UserFeature {
 
     override suspend fun signIn(method: SignInMethod) = when (method) {
@@ -59,7 +64,20 @@ internal class UserFeatureImpl(
     }
 
     override suspend fun getBookings(): Result<Iterable<Booking>> {
-        return service.getBookings().map { it.map(::Booking) }
+        val cinemas = cinema.getCinemas().map { it.results }
+            .getOrDefault(emptyList())
+            .map(::CinemaFromResponse)
+        return service.getBookings().map {
+            it.map { booking ->
+                when (booking.isExpired) {
+                    true -> BookingExpiredFromResponse(booking, cinemas)
+                    else -> when (val detail = service.getBooking(booking.id).getOrNull()) {
+                        null -> BookingExpiredFromResponse(booking, cinemas)
+                        else -> BookingActiveFromResponse(booking, detail, cinemas)
+                    }
+                }
+            }
+        }
     }
 
     override suspend fun getToken(): Result<String> {
@@ -70,15 +88,6 @@ internal class UserFeatureImpl(
     }
 
     // ---
-
-    private fun Booking(item: BookingResponse) = Booking(
-        id = item.id,
-        name = item.name,
-        startsAt = item.startsAt,
-        paidAt = item.paidAt,
-        distributorCode = item.eventMasterCode,
-        eventId = item.eventId
-    )
 
     private suspend fun getUser(
         user: suspend () -> Result<CustomerResponse.Customer>,
@@ -130,5 +139,78 @@ internal class UserFeatureImpl(
         is Name.Last -> model.copy(lastName = field.value)
         is Phone -> model.copy(phone = field.value)
         else -> model
+    }
+}
+
+internal data class BookingExpiredFromResponse(
+    private val response: BookingResponse,
+    override val cinema: movie.metropolis.app.feature.global.Cinema
+) : Booking.Expired {
+
+    constructor(
+        response: BookingResponse,
+        cinemas: List<movie.metropolis.app.feature.global.Cinema>
+    ) : this(
+        response,
+        cinemas.first { it.id == response.cinemaId }
+    )
+
+    override val id: String
+        get() = response.id
+    override val name: String
+        get() = response.name
+    override val startsAt: Date
+        get() = response.startsAt
+    override val paidAt: Date
+        get() = response.paidAt
+    override val distributorCode: String
+        get() = response.eventMasterCode
+    override val eventId: String
+        get() = response.eventId
+
+}
+
+internal data class BookingActiveFromResponse(
+    private val response: BookingResponse,
+    private val detail: BookingDetailResponse,
+    override val cinema: movie.metropolis.app.feature.global.Cinema
+) : Booking.Active {
+
+    constructor(
+        response: BookingResponse,
+        detail: BookingDetailResponse,
+        cinemas: List<movie.metropolis.app.feature.global.Cinema>
+    ) : this(
+        response,
+        detail,
+        cinemas.first { it.id == response.cinemaId }
+    )
+
+    override val id: String
+        get() = response.id
+    override val name: String
+        get() = response.name
+    override val startsAt: Date
+        get() = response.startsAt
+    override val paidAt: Date
+        get() = response.paidAt
+    override val distributorCode: String
+        get() = response.eventMasterCode
+    override val eventId: String
+        get() = response.eventId
+    override val hall: String
+        get() = detail.hall
+    override val seats: List<Booking.Active.Seat>
+        get() = detail.tickets.map(::SeatFromResponse)
+
+    private data class SeatFromResponse(
+        private val ticket: BookingDetailResponse.Ticket
+    ) : Booking.Active.Seat {
+
+        override val row: String
+            get() = ticket.row
+        override val seat: String
+            get() = ticket.seat
+
     }
 }

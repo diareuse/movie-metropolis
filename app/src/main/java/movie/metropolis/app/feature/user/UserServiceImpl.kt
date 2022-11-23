@@ -12,6 +12,7 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import movie.metropolis.app.BuildConfig
+import movie.metropolis.app.feature.user.model.BookingDetailResponse
 import movie.metropolis.app.feature.user.model.BookingResponse
 import movie.metropolis.app.feature.user.model.CustomerDataRequest
 import movie.metropolis.app.feature.user.model.CustomerPointsResponse
@@ -81,6 +82,16 @@ internal class UserServiceImpl(
                 parameters.append("lang", Locale.getDefault().language)
             }
         }.body<List<BookingResponse>>()
+    }
+
+    override suspend fun getBooking(id: String) = kotlin.runCatching {
+        client.get {
+            url("v1/bookings/$id")
+            bearerAuth(checkNotNull(account.token))
+            url {
+                parameters.append("lang", Locale.getDefault().language)
+            }
+        }.body<BookingDetailResponse>()
     }
 
 }

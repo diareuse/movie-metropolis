@@ -1,5 +1,6 @@
 package movie.metropolis.app.feature.user
 
+import movie.metropolis.app.feature.user.model.BookingDetailResponse
 import movie.metropolis.app.feature.user.model.BookingResponse
 import movie.metropolis.app.feature.user.model.CustomerDataRequest
 import movie.metropolis.app.feature.user.model.CustomerPointsResponse
@@ -19,5 +20,6 @@ internal interface UserService {
     suspend fun getPoints(): Result<CustomerPointsResponse>
     suspend fun getUser(): Result<CustomerResponse.Customer>
     suspend fun getBookings(): Result<List<BookingResponse>>
+    suspend fun getBooking(id: String): Result<BookingDetailResponse>
 
 }
