@@ -40,6 +40,10 @@ internal class UserServiceReauthorize(
         origin.getBookings()
     }
 
+    override suspend fun getBooking(id: String) = requireToken {
+        origin.getBooking(id)
+    }
+
     private suspend inline fun <T> requireToken(body: () -> Result<T>): Result<T> {
         if (account.expiresWithin(1.minutes)) {
             val result = getToken(TokenRequest.Refresh(refreshToken))
