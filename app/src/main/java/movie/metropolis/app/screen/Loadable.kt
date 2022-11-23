@@ -54,3 +54,12 @@ inline fun <T, R> Loadable<T>.map(mapper: (T) -> R) = when {
     isSuccess -> Loadable.success(mapper(getOrThrow()))
     else -> this as Loadable<R>
 }
+
+inline fun <T, R : Any> Loadable<T>.mapNotNull(mapper: (T) -> R?) = when {
+    isSuccess -> when (val value = mapper(getOrThrow())) {
+        null -> Loadable.failure(NullPointerException("Mapped value is null"))
+        else -> Loadable.success(value)
+    }
+
+    else -> this as Loadable<R>
+}
