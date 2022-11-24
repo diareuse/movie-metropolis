@@ -15,7 +15,7 @@ internal class CinemaServiceImpl(
 
     override suspend fun getCinemas() = kotlin.runCatching {
         client.get {
-            url("/cinema")
+            url("cinema")
             parameter("lang", Locale.getDefault().language)
         }.body<ResultsResponse<List<CinemaResponse>>>()
     }

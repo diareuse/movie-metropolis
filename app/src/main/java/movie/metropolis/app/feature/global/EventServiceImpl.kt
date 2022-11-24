@@ -26,7 +26,7 @@ internal class EventServiceImpl(
         date: Date
     ) = kotlin.runCatching {
         client.get {
-            url("/quickbook/10101/film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
+            url("quickbook/10101/film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
         }.body<BodyResponse<MovieEventResponse>>()
     }
 
@@ -35,7 +35,7 @@ internal class EventServiceImpl(
         lng: Double
     ) = kotlin.runCatching {
         client.get {
-            url("/10101/cinema/bylocation")
+            url("10101/cinema/bylocation")
             parameter("lat", lat)
             parameter("long", lng)
             parameter("unit", "KILOMETERS")
@@ -44,14 +44,14 @@ internal class EventServiceImpl(
 
     override suspend fun getDetail(id: String) = kotlin.runCatching {
         client.get {
-            url("/10101/films/byDistributorCode/$id")
+            url("10101/films/byDistributorCode/$id")
             parameter("lang", Locale.getDefault().language)
         }.body<BodyResponse<MovieDetailsResponse>>()
     }
 
     override suspend fun getMoviesByType(type: ShowingType) = kotlin.runCatching {
         client.get {
-            url("/10101/films/by-showing-type/${type.value}")
+            url("10101/films/by-showing-type/${type.value}")
             parameter("ordering", "asc")
             parameter("lang", Locale.getDefault().language)
         }.body<BodyResponse<List<ExtendedMovieResponse>>>()

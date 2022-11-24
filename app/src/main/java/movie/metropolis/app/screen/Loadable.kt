@@ -3,7 +3,7 @@ package movie.metropolis.app.screen
 typealias LoadableList<Type> = Loadable<List<Type>>
 
 @JvmInline
-value class Loadable<Result>(private val value: Any?) {
+value class Loadable<out Result>(private val value: Any?) {
 
     val isLoading get() = value is Loading
     val isFailure get() = value is Failure
