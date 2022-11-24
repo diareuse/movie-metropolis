@@ -1,11 +1,9 @@
 package movie.metropolis.app.screen.listing
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,59 +23,53 @@ import kotlin.random.Random.Default.nextBytes
 
 @Composable
 fun MoviesScreen(
+    padding: PaddingValues,
     viewModel: ListingViewModel = hiltViewModel()
 ) {
     val current by viewModel.current.collectAsState()
     val upcoming by viewModel.upcoming.collectAsState()
     MoviesScreen(
+        padding = padding,
         current = current,
         upcoming = upcoming
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MoviesScreen(
     current: Loadable<List<MovieView>>,
     upcoming: Loadable<List<MovieView>>,
+    padding: PaddingValues = PaddingValues(0.dp),
     onClickVideo: (String) -> Unit = {}
 ) {
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(title = {
-                Text("Movies")
-            })
+    LazyColumn(contentPadding = padding) {
+        item {
+            Text(
+                text = "Upcoming",
+                modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                style = MaterialTheme.typography.titleLarge
+            )
         }
-    ) { padding ->
-        LazyColumn(contentPadding = padding) {
-            item {
-                Text(
-                    text = "Upcoming Movies",
-                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-            item {
-                MoviePager(
-                    items = upcoming,
-                    isShowing = false,
-                    onClickVideo = onClickVideo
-                )
-            }
-            item {
-                Text(
-                    text = "Showing right now",
-                    modifier = Modifier.padding(start = 24.dp, end = 24.dp),
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
-            item {
-                MoviePager(
-                    items = current,
-                    isShowing = true,
-                    onClickVideo = onClickVideo
-                )
-            }
+        item {
+            MoviePager(
+                items = upcoming,
+                isShowing = false,
+                onClickVideo = onClickVideo
+            )
+        }
+        item {
+            Text(
+                text = "Available",
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        item {
+            MoviePager(
+                items = current,
+                isShowing = true,
+                onClickVideo = onClickVideo
+            )
         }
     }
 }
