@@ -96,7 +96,7 @@ fun HomeScreen(
             NavigationBar(
                 containerColor = Color.Transparent,
                 modifier = Modifier
-                    .shadow(16.dp)
+                    .shadow(32.dp)
                     .background(MaterialTheme.colorScheme.surface)
             ) {
                 SelectableNavigationBarItem(

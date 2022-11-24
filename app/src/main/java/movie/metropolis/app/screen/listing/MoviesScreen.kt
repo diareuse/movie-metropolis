@@ -45,22 +45,8 @@ private fun MoviesScreen(
     LazyColumn(contentPadding = padding) {
         item {
             Text(
-                text = "Upcoming",
+                text = "Now Available",
                 modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                style = MaterialTheme.typography.titleLarge
-            )
-        }
-        item {
-            MoviePager(
-                items = upcoming,
-                isShowing = false,
-                onClickVideo = onClickVideo
-            )
-        }
-        item {
-            Text(
-                text = "Available",
-                modifier = Modifier.padding(start = 24.dp, end = 24.dp),
                 style = MaterialTheme.typography.titleLarge
             )
         }
@@ -68,6 +54,20 @@ private fun MoviesScreen(
             MoviePager(
                 items = current,
                 isShowing = true,
+                onClickVideo = onClickVideo
+            )
+        }
+        item {
+            Text(
+                text = "Upcoming",
+                modifier = Modifier.padding(start = 24.dp, end = 24.dp),
+                style = MaterialTheme.typography.titleLarge
+            )
+        }
+        item {
+            MoviePager(
+                items = upcoming,
+                isShowing = false,
                 onClickVideo = onClickVideo
             )
         }
