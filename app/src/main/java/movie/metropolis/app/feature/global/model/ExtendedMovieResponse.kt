@@ -1,10 +1,10 @@
 package movie.metropolis.app.feature.global.model
 
-import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import movie.metropolis.app.feature.global.serializer.LocalTimestampSerializer
 import movie.metropolis.app.feature.global.serializer.LocaleSerializer
+import movie.metropolis.app.feature.global.serializer.MediaSerializer
 import movie.metropolis.app.feature.global.serializer.MinutesDurationSerializer
 import movie.metropolis.app.feature.global.serializer.StringAsIntSerializer
 import movie.metropolis.app.feature.global.serializer.YearSerializer
@@ -23,7 +23,7 @@ internal data class ExtendedMovieResponse(
     @Serializable(MinutesDurationSerializer::class)
     @SerialName("length") val duration: Duration,
     @SerialName("exportCodes") val distributorCodes: List<String>,
-    @SerialName("media") val media: List<@Polymorphic Media>,
+    @SerialName("media") val media: List<@Serializable(MediaSerializer::class) Media>,
     @SerialName("i18nFieldsMap") val metadata: Map<@Serializable(LocaleSerializer::class) Locale, Metadata>
 ) {
 
@@ -35,7 +35,6 @@ internal data class ExtendedMovieResponse(
     sealed class Media {
 
         @Serializable
-        @SerialName("Image")
         data class Image(
             @Serializable(StringAsIntSerializer::class)
             @SerialName("dimensionWidth") val width: Int,
@@ -45,11 +44,13 @@ internal data class ExtendedMovieResponse(
         ) : Media()
 
         @Serializable
-        @SerialName("Video")
         data class Video(
             @SerialName("url") val url: String,
             @SerialName("subType") val type: String
         ) : Media()
+
+        @Serializable
+        object Noop : Media()
 
     }
 
@@ -59,7 +60,7 @@ internal data class ExtendedMovieResponse(
         @SerialName("synopsis") val synopsis: String,
         @SerialName("directors") val directors: String,
         @SerialName("cast") val cast: String?,
-        @SerialName("production") val countryOfOrigin: String
+        @SerialName("production") val countryOfOrigin: String?
     )
 
 }
