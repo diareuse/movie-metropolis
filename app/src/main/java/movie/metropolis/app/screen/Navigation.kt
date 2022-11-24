@@ -2,9 +2,12 @@ package movie.metropolis.app.screen
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -75,22 +78,25 @@ fun HomeScreen(
     val (selected, onChanged) = rememberSaveable { mutableStateOf(0) }
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    val text = when (selected) {
-                        0 -> "Movies"
-                        1 -> "Cinemas"
-                        2 -> "Tickets"
-                        3 -> "You"
-                        else -> ""
-                    }
-                    Text(text)
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface
+            Column {
+                CenterAlignedTopAppBar(
+                    title = {
+                        val text = when (selected) {
+                            0 -> "Movies"
+                            1 -> "Cinemas"
+                            2 -> "Tickets"
+                            3 -> "You"
+                            else -> ""
+                        }
+                        Text(text)
+                    },
+                    colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface
+                    )
                 )
-            )
+                Divider(modifier = Modifier.padding(horizontal = 24.dp))
+            }
         },
         bottomBar = {
             NavigationBar(
