@@ -43,17 +43,21 @@ dependencies {
     implementation "androidx.security:security-crypto:[1,2["
     implementation "com.google.android.material:material:[1,2["
 
-    implementation platform("com.google.firebase:firebase-bom:31.0.3")
-    implementation "com.google.firebase:firebase-analytics-ktx"
-    implementation "com.google.firebase:firebase-crashlytics-ktx"
-    implementation 'com.google.firebase:firebase-perf-ktx'
+    //implementation platform("com.google.firebase:firebase-bom:31.0.3")
+    //implementation "com.google.firebase:firebase-analytics-ktx"
+    //implementation "com.google.firebase:firebase-crashlytics-ktx"
+    //implementation 'com.google.firebase:firebase-perf-ktx'
 
     implementation "com.google.accompanist:accompanist-navigation-animation:0.27.0"
 
     implementation "io.ktor:ktor-client-core:[2,3["
     implementation "io.ktor:ktor-client-cio:[2,3["
+    implementation "io.ktor:ktor-client-logging:[2,3["
     implementation "io.ktor:ktor-client-content-negotiation:[2,3["
     implementation "io.ktor:ktor-serialization-kotlinx-json:[2,3["
     testImplementation "io.ktor:ktor-client-mock:[2,3["
+
+    implementation "com.google.accompanist:accompanist-pager:0.27.0"
+    implementation "com.google.accompanist:accompanist-placeholder-material:0.27.0"
 
 }
