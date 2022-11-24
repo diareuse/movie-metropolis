@@ -51,13 +51,14 @@ fun MovieItem(
     video: VideoView?,
     poster: ImageView?,
     onClickVideo: (String) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     MovieItemLayout(
         modifier = modifier,
         posterAspectRatio = poster?.aspectRatio ?: (4f / 3),
         poster = {
-            MoviePoster(url = poster?.url)
+            MoviePoster(url = poster?.url, onClick = onClick)
             if (video != null) Image(
                 modifier = Modifier
                     .size(48.dp)
@@ -77,7 +78,7 @@ fun MovieItem(
 @Composable
 fun MovieItem() {
     MovieItemLayout(
-        poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize()) },
+        poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize(), onClick = {}) },
         text = {
             MovieSubText(text = "2021", isLoading = true)
             Spacer(Modifier.size(4.dp))
@@ -120,7 +121,11 @@ fun MovieItemLayout(
 }
 
 @Composable
-fun MoviePoster(url: String?, modifier: Modifier = Modifier) {
+fun MoviePoster(
+    url: String?,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     AsyncImage(
         modifier = modifier
             .fillMaxSize()
@@ -129,7 +134,8 @@ fun MoviePoster(url: String?, modifier: Modifier = Modifier) {
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = MaterialTheme.shapes.small,
                 highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.background)
-            ),
+            )
+            .clickable(enabled = url != null, onClick = onClick),
         model = url ?: "",
         contentDescription = "",
         contentScale = ContentScale.Crop
@@ -189,7 +195,8 @@ private fun Preview() {
                 0.6741573f,
                 "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5145S2R-lg.jpg"
             ),
-            onClickVideo = {}
+            onClickVideo = {},
+            onClick = {}
         )
     }
 }
