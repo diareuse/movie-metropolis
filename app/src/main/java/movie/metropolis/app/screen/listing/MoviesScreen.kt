@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.listing
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +25,8 @@ import kotlin.random.Random.Default.nextBytes
 @Composable
 fun MoviesScreen(
     padding: PaddingValues,
+    onClickVideo: (String) -> Unit,
+    onClickMovie: (String) -> Unit,
     viewModel: ListingViewModel = hiltViewModel()
 ) {
     val current by viewModel.current.collectAsState()
@@ -31,7 +34,9 @@ fun MoviesScreen(
     MoviesScreen(
         padding = padding,
         current = current,
-        upcoming = upcoming
+        upcoming = upcoming,
+        onClickVideo = onClickVideo,
+        onClick = onClickMovie
     )
 }
 
@@ -39,10 +44,14 @@ fun MoviesScreen(
 private fun MoviesScreen(
     current: Loadable<List<MovieView>>,
     upcoming: Loadable<List<MovieView>>,
-    padding: PaddingValues = PaddingValues(0.dp),
-    onClickVideo: (String) -> Unit = {}
+    onClickVideo: (String) -> Unit,
+    onClick: (String) -> Unit,
+    padding: PaddingValues = PaddingValues(0.dp)
 ) {
-    LazyColumn(contentPadding = padding) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = padding
+    ) {
         item {
             Text(
                 text = "Now Available",
@@ -54,7 +63,8 @@ private fun MoviesScreen(
             MoviePager(
                 items = current,
                 isShowing = true,
-                onClickVideo = onClickVideo
+                onClickVideo = onClickVideo,
+                onClick = onClick
             )
         }
         item {
@@ -68,7 +78,8 @@ private fun MoviesScreen(
             MoviePager(
                 items = upcoming,
                 isShowing = false,
-                onClickVideo = onClickVideo
+                onClickVideo = onClickVideo,
+                onClick = onClick
             )
         }
     }
@@ -80,8 +91,10 @@ private fun MoviesScreen(
 private fun Preview(@PreviewParameter(ListMovieViewProvider::class) movies: List<MovieView>) {
     Theme {
         MoviesScreen(
-            Loadable.loading(),
-            Loadable.success(movies)
+            current = Loadable.loading(),
+            upcoming = Loadable.success(movies),
+            onClickVideo = {},
+            onClick = {}
         )
     }
 }

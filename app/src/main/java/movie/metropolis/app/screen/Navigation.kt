@@ -49,7 +49,13 @@ fun Navigation(
     ) {
         composable("/home") {
             HomeScreen(
-                movies = { MoviesScreen(it) },
+                movies = {
+                    MoviesScreen(
+                        padding = it,
+                        onClickVideo = {},
+                        onClickMovie = { id -> controller.navigate("/movies/${id}") }
+                    )
+                },
                 cinemas = { CinemasScreen(it) },
                 booking = { BookingScreen(it) },
                 user = { UserScreen(it) }

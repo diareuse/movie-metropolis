@@ -23,7 +23,8 @@ import movie.metropolis.app.theme.Theme
 fun MoviePager(
     items: Loadable<List<MovieView>>,
     isShowing: Boolean,
-    onClickVideo: (String) -> Unit
+    onClickVideo: (String) -> Unit,
+    onClick: (String) -> Unit
 ) {
     when {
         items.isLoading -> Row(
@@ -40,6 +41,7 @@ fun MoviePager(
         items.isSuccess -> MoviePager(
             items = items.getOrNull().orEmpty(),
             isShowing = isShowing,
+            onClick = onClick,
             onClickVideo = onClickVideo
         )
     }
@@ -50,6 +52,7 @@ private fun MoviePager(
     items: List<MovieView>,
     isShowing: Boolean,
     onClickVideo: (String) -> Unit,
+    onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
@@ -63,7 +66,8 @@ private fun MoviePager(
                 subtext = if (isShowing) item.releasedAt else item.availableFrom,
                 video = item.video,
                 poster = item.poster,
-                onClickVideo = onClickVideo
+                onClickVideo = onClickVideo,
+                onClick = { onClick(item.id) }
             )
         }
     }
@@ -80,12 +84,14 @@ private fun Preview(
             MoviePager(
                 items = Loadable.loading(),
                 isShowing = false,
-                onClickVideo = {}
+                onClickVideo = {},
+                onClick = {}
             )
             MoviePager(
                 items = Loadable.success(movies),
                 isShowing = false,
-                onClickVideo = {}
+                onClickVideo = {},
+                onClick = {}
             )
         }
     }
