@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
@@ -100,6 +101,7 @@ fun MovieItemLayout(
         ) {
             Box(
                 modifier = Modifier
+                    .shadow(24.dp)
                     .clip(MaterialTheme.shapes.medium)
                     .fillMaxHeight()
                     .aspectRatio(posterAspectRatio)
@@ -179,6 +181,7 @@ fun MovieTitleText(
 private fun Preview() {
     Theme {
         MovieItem(
+            modifier = Modifier.padding(16.dp),
             name = "Black Adam",
             subtext = "12. 11. 2022",
             video = VideoView("https://www.youtube.com/watch?v=X0tOpBuYasI"),
