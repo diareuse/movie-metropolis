@@ -86,7 +86,7 @@ internal data class MoviePreviewFromResponse(
     override val screeningFrom: Date
         get() = response.screeningFrom
     override val media: Iterable<Media>
-        get() = response.media.map(::MediaFromResponse)
+        get() = response.media.mapNotNull(::MediaFromResponse)
     override val description: String
         get() = metadata.synopsis
     override val directors: Iterable<String>
@@ -94,11 +94,12 @@ internal data class MoviePreviewFromResponse(
     override val cast: Iterable<String>
         get() = metadata.cast?.split(", ", ",").orEmpty()
     override val countryOfOrigin: String
-        get() = metadata.countryOfOrigin
+        get() = metadata.countryOfOrigin.orEmpty()
 
     private fun MediaFromResponse(media: ExtendedMovieResponse.Media) = when (media) {
         is ExtendedMovieResponse.Media.Image -> Media.Image(media.width, media.height, media.url)
         is ExtendedMovieResponse.Media.Video -> Media.Video(media.url)
+        else -> null
     }
 }
 
