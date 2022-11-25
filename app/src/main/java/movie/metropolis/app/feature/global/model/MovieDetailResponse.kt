@@ -1,8 +1,8 @@
 package movie.metropolis.app.feature.global.model
 
-import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import movie.metropolis.app.feature.global.serializer.DetailMediaSerializer
 import movie.metropolis.app.feature.global.serializer.LocalTimestampSerializer
 import movie.metropolis.app.feature.global.serializer.MinutesDurationSerializer
 import movie.metropolis.app.feature.global.serializer.StringAsIntSerializer
@@ -30,27 +30,28 @@ internal data class MovieDetailResponse(
     @SerialName("categoryIds") val categories: List<Int>,
     @SerialName("screeningAttributes") val screeningTags: List<String>,
     @SerialName("ageRestrictionLink") val restrictionUrl: String,
-    @SerialName("mediaList") val media: List<@Polymorphic Media>
+    @SerialName("mediaList") val media: List<@Serializable(DetailMediaSerializer::class) Media>
 ) {
 
     sealed class Media {
 
         @Serializable
-        @SerialName("Image")
         data class Image(
             @Serializable(StringAsIntSerializer::class)
             @SerialName("dimensionWidth") val width: Int, //serialize as string
             @Serializable(StringAsIntSerializer::class)
             @SerialName("dimensionHeight") val height: Int,
-            @SerialName("") val url: String
+            @SerialName("url") val url: String
         ) : Media()
 
         @Serializable
-        @SerialName("Video")
         data class Video(
             @SerialName("subType") val type: String, //trailer is known
             @SerialName("url") val url: String
         ) : Media()
+
+        @Serializable
+        object Noop : Media()
 
     }
 
