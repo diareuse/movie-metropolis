@@ -67,6 +67,8 @@ class MovieViewModel @Inject constructor(
         }
     }
 
+    // todo add listing showings by date
+
 }
 
 data class MovieDetailViewFromFeature(
