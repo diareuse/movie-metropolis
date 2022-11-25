@@ -2,9 +2,9 @@ package movie.metropolis.app.feature.global.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import movie.metropolis.app.feature.global.serializer.ExtendedMediaSerializer
 import movie.metropolis.app.feature.global.serializer.LocalTimestampSerializer
 import movie.metropolis.app.feature.global.serializer.LocaleSerializer
-import movie.metropolis.app.feature.global.serializer.MediaSerializer
 import movie.metropolis.app.feature.global.serializer.MinutesDurationSerializer
 import movie.metropolis.app.feature.global.serializer.StringAsIntSerializer
 import movie.metropolis.app.feature.global.serializer.YearSerializer
@@ -23,7 +23,7 @@ internal data class ExtendedMovieResponse(
     @Serializable(MinutesDurationSerializer::class)
     @SerialName("length") val duration: Duration,
     @SerialName("exportCodes") val distributorCodes: List<String>,
-    @SerialName("media") val media: List<@Serializable(MediaSerializer::class) Media>,
+    @SerialName("media") val media: List<@Serializable(ExtendedMediaSerializer::class) Media>,
     @SerialName("i18nFieldsMap") val metadata: Map<@Serializable(LocaleSerializer::class) Locale, Metadata>
 ) {
 

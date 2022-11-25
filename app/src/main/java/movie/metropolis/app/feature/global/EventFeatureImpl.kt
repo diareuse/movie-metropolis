@@ -135,11 +135,12 @@ internal data class MovieDetailFromResponse(
     override val ageRestrictionUrl: String
         get() = response.restrictionUrl
     override val media: Iterable<Media>
-        get() = response.media.map(::MediaFromResponse)
+        get() = response.media.mapNotNull(::MediaFromResponse)
 
     private fun MediaFromResponse(media: MovieDetailResponse.Media) = when (media) {
         is MovieDetailResponse.Media.Image -> Media.Image(media.width, media.height, media.url)
         is MovieDetailResponse.Media.Video -> Media.Video(media.url)
+        else -> null
     }
 
 }
