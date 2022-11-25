@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -18,6 +17,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import movie.metropolis.app.feature.global.Cinema
+import movie.metropolis.app.feature.global.CinemaWithShowings
 import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.global.Location
 import movie.metropolis.app.feature.global.Media
@@ -39,6 +39,8 @@ import movie.metropolis.app.screen.listing.VideoViewFromFeature
 import movie.metropolis.app.screen.listing.toStringComponents
 import movie.metropolis.app.screen.map
 import movie.metropolis.app.screen.mapNotNull
+import movie.metropolis.app.screen.onFailure
+import movie.metropolis.app.screen.onSuccess
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -55,16 +57,25 @@ class MovieViewModel @Inject constructor(
     private val user: UserFeature
 ) : ViewModel() {
 
+    private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
     private val id = handle.get<String>("movie").orEmpty()
     private val movieDetail = flow { emit(event.getDetail(MovieFromId(id))) }
         .map { it.asLoadable() }
-        .shareIn(viewModelScope, SharingStarted.Lazily)
+        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     private val startDate = movieDetail.map { it.map { it.screeningFrom } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
-    val selectedDate = MutableStateFlow(null as Date?)
-    val location = MutableStateFlow(null as LocationSnapshot?)
+    private val selectedDate = MutableStateFlow(null as Date?)
+    val location = MutableStateFlow(
+        Location(
+            50.0789968000,
+            14.4610091000
+        ).toSnapshot() as LocationSnapshot?
+    )//(null as LocationSnapshot?)
+
+    val selectedDay = selectedDate
+        .map { it?.let(dateFormat::format).orEmpty() }
 
     val detail = movieDetail
         .map { it.map(::MovieDetailViewFromFeature) }
@@ -102,6 +113,7 @@ class MovieViewModel @Inject constructor(
                 .dropWhile { it.isLoading }
                 .map { it.getOrNull() }
                 .filterNotNull()
+                .map { if (it.before(Date())) Date() else it }
                 .collect { selectedDate.compareAndSet(null, it) }
         }
         viewModelScope.launch {
@@ -112,13 +124,16 @@ class MovieViewModel @Inject constructor(
         }
     }
 
+    @Suppress("RemoveExplicitTypeArguments")
     private fun loadShowings(date: Date, location: LocationSnapshot) = flow {
         emit(Loadable.loading())
-        val detail = movieDetail
-            .dropWhile { it.isLoading }
-            .firstOrNull()
-            ?.getOrNull() ?: return@flow emit(Loadable.failure(IllegalStateException()))
-        emit(event.getShowings(detail, date, location.toLocation()).asLoadable())
+        movieDetail.collect {
+            it.onSuccess { detail ->
+                emit(event.getShowings(detail, date, location.toLocation()).asLoadable())
+            }.onFailure { error ->
+                emit(Loadable.failure<CinemaWithShowings>(error))
+            }
+        }
     }.map {
         it.map {
             it.map { (cinema, showings) ->
@@ -137,7 +152,7 @@ class MovieViewModel @Inject constructor(
 
     fun onSelectPreviousDay() {
         val date = selectedDate.value ?: return
-        val startDay = startDate.value.getOrNull() ?: return
+        val startDay = startDate.value.getOrNull()?.coerceAtLeast(Date()) ?: return
         val calendar = Calendar.getInstance()
         calendar.time = date
         calendar.add(Calendar.DAY_OF_YEAR, -1)
@@ -158,14 +173,15 @@ data class CinemaBookingViewFromResponse(
 ) : CinemaBookingView {
     override val cinema: CinemaView
         get() = CinemaViewFromFeature(location)
-    override val availability: List<CinemaBookingView.Availability>
-        get() = booking.map(::AvailabilityFromFeature)
+    override val availability: Map<String, List<CinemaBookingView.Availability>>
+        get() = booking.groupBy { it.label }
+            .mapValues { (_, values) -> values.map(::AvailabilityFromFeature) }
 
     data class AvailabilityFromFeature(
         private val showing: Showing
     ) : CinemaBookingView.Availability {
 
-        private val timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
+        private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
         override val id: String
             get() = showing.id

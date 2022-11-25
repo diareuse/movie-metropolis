@@ -88,7 +88,7 @@ data class MovieBookingViewFromFeature(
         private val showing: Showing
     ) : MovieBookingView.Availability {
 
-        private val timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
+        private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
         override val id: String
             get() = showing.id

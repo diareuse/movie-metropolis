@@ -16,11 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -30,6 +33,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import movie.metropolis.app.R
+import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
@@ -54,11 +59,17 @@ fun MovieScreen(
     val poster by viewModel.poster.collectAsState(initial = Loadable.loading())
     val trailer by viewModel.trailer.collectAsState(initial = Loadable.loading())
     val detail by viewModel.detail.collectAsState()
+    val selectedDate by viewModel.selectedDay.collectAsState("")
+    val showings by viewModel.showings.collectAsState()
     MovieScreen(
         detail = detail,
         poster = poster,
         trailer = trailer,
-        onBackClick = onBackClick
+        showings = showings,
+        selectedDate = selectedDate,
+        onBackClick = onBackClick,
+        onClickNextDay = viewModel::onSelectNextDay,
+        onClickPreviousDay = viewModel::onSelectPreviousDay
     )
 }
 
@@ -68,6 +79,10 @@ private fun MovieScreen(
     detail: Loadable<MovieDetailView>,
     poster: Loadable<ImageView>,
     trailer: Loadable<VideoView>,
+    showings: Loadable<List<CinemaBookingView>>,
+    selectedDate: String,
+    onClickPreviousDay: () -> Unit,
+    onClickNextDay: () -> Unit,
     onBackClick: () -> Unit
 ) {
     MovieScreenLayout(
@@ -149,7 +164,7 @@ private fun MovieScreen(
                     )
                     EllipsisText(
                         text = detail?.cast?.joinToString()
-                            ?: "Foobar Boobar, Foobar Boobar, Foobar Boobar, Foobar Boobar",
+                            ?: "Foobar Boobar, Foobar Boobar",
                         maxLines = 3,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.placeholder(detail == null)
@@ -162,6 +177,27 @@ private fun MovieScreen(
                 maxLines = 5,
                 modifier = Modifier.placeholder(detail == null)
             )
+            Spacer(Modifier.height(16.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onClickPreviousDay, enabled = selectedDate.isNotEmpty()) {
+                    Icon(painterResource(id = R.drawable.ic_left), null)
+                }
+                Text(
+                    text = selectedDate,
+                    modifier = Modifier.weight(1f),
+                    textAlign = TextAlign.Center
+                )
+                IconButton(onClick = onClickNextDay, enabled = selectedDate.isNotEmpty()) {
+                    Icon(painterResource(id = R.drawable.ic_right), null)
+                }
+            }
+            for (showing in showings.getOrNull().orEmpty()) {
+                ShowingItem(
+                    title = showing.cinema.name,
+                    showings = showing.availability,
+                    onClick = {}
+                )
+            }
         }
     }
 }
@@ -182,7 +218,11 @@ private fun Preview(
                 )
             ),
             trailer = Loadable.loading(),
-            onBackClick = {}
+            selectedDate = "12. 3. 2024",
+            onClickPreviousDay = {},
+            onClickNextDay = {},
+            onBackClick = {},
+            showings = Loadable.loading()
         )
     }
 }

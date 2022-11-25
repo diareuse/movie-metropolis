@@ -48,7 +48,7 @@ data class BookingViewExpiredFromFeature(
 ) : BookingView.Expired {
 
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-    private val timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
+    private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
     override val id: String
         get() = booking.id
@@ -81,7 +81,7 @@ data class BookingViewActiveFromFeature(
 ) : BookingView.Active {
 
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-    private val timeFormat = DateFormat.getTimeInstance(DateFormat.MEDIUM)
+    private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
     override val id: String
         get() = booking.id

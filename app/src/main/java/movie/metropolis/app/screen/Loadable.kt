@@ -50,6 +50,14 @@ fun <T> Loadable<T>.getOrThrow(): T {
     throw exceptionOrNull() ?: return getOrNull() as T
 }
 
+inline fun <T> Loadable<T>.onSuccess(body: (T) -> Unit) = apply {
+    if (isSuccess) body(checkNotNull(getOrNull()))
+}
+
+inline fun <T> Loadable<T>.onFailure(body: (Throwable) -> Unit) = apply {
+    if (isFailure) body(checkNotNull(exceptionOrNull()))
+}
+
 inline fun <T, R> Loadable<T>.map(mapper: (T) -> R) = when {
     isSuccess -> Loadable.success(mapper(getOrThrow()))
     else -> this as Loadable<R>
