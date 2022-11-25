@@ -68,7 +68,7 @@ fun Navigation(
             CinemaScreen()
         }
         composable("/movies/{movie}") {
-            MovieScreen()
+            MovieScreen(onBackClick = controller::navigateUp)
         }
     }
 }

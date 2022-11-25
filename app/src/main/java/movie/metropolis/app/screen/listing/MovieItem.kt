@@ -36,13 +36,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.placeholder
-import com.google.accompanist.placeholder.shimmer
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.theme.Theme
+import movie.metropolis.app.view.ShapeToken
+import movie.metropolis.app.view.placeholder
 
 @Composable
 fun MovieItem(
@@ -123,19 +122,14 @@ fun MovieItemLayout(
 @Composable
 fun MoviePoster(
     url: String?,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     AsyncImage(
         modifier = modifier
             .fillMaxSize()
-            .placeholder(
-                visible = url == null,
-                color = MaterialTheme.colorScheme.surfaceVariant,
-                shape = MaterialTheme.shapes.small,
-                highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.background)
-            )
-            .clickable(enabled = url != null, onClick = onClick),
+            .placeholder(url == null, ShapeToken.Medium)
+            .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() }),
         model = url ?: "",
         contentDescription = "",
         contentScale = ContentScale.Crop
@@ -149,12 +143,7 @@ fun MovieSubText(
     isLoading: Boolean = false
 ) {
     Text(
-        modifier = modifier.placeholder(
-            visible = isLoading,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.small,
-            highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.background)
-        ),
+        modifier = modifier.placeholder(isLoading),
         text = text,
         style = MaterialTheme.typography.bodySmall
     )
@@ -167,12 +156,7 @@ fun MovieTitleText(
     isLoading: Boolean = false
 ) {
     Text(
-        modifier = modifier.placeholder(
-            visible = isLoading,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-            shape = MaterialTheme.shapes.small,
-            highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.background)
-        ),
+        modifier = modifier.placeholder(visible = isLoading),
         text = text,
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Bold,
