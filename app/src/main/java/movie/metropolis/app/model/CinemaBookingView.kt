@@ -6,7 +6,7 @@ import androidx.compose.runtime.Stable
 interface CinemaBookingView {
 
     val cinema: CinemaView
-    val availability: List<Availability>
+    val availability: Map<String, List<Availability>>
 
     interface Availability {
         val id: String

@@ -9,4 +9,5 @@ interface Showing {
     val bookingUrl: String // add "access-token" and current token as header to webview when opening
     val isEnabled: Boolean // ie. is not sold out
     val auditorium: String
+    val label: String
 }

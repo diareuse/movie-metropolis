@@ -42,15 +42,15 @@ internal class EventFeatureImpl(
         location: Location
     ): Result<CinemaWithShowings> = coroutineScope {
         val cinemas = getCinemas(location).getOrDefault(emptyList())
-        val showings2 = mutableListOf<Deferred<Pair<Cinema, Iterable<Showing>>>>()
+        val showings = mutableListOf<Deferred<Pair<Cinema, Iterable<Showing>>>>()
         for (cinema in cinemas) {
-            showings2 += async {
+            showings += async {
                 cinema to getShowings(cinema, at)
                     .map { it[it.keys.find { it.id == movie.id }] ?: emptyList() }
                     .getOrDefault(emptyList())
             }
         }
-        Result.success(showings2.awaitAll().toMap())
+        Result.success(showings.awaitAll().toMap())
     }
 
     override suspend fun getCinemas(location: Location?): Result<Iterable<Cinema>> {
@@ -222,5 +222,6 @@ internal data class ShowingFromResponse(
         get() = !showing.soldOut && Date().before(startsAt)
     override val auditorium: String
         get() = showing.auditorium
-
+    override val label: String
+        get() = showing.label
 }
