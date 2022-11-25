@@ -8,6 +8,7 @@ import movie.metropolis.app.feature.global.model.MovieResponse
 import movie.metropolis.app.feature.global.model.ShowingType
 import java.util.Date
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.time.Duration
 
 internal class EventFeatureImpl(
@@ -57,11 +58,13 @@ internal class EventFeatureImpl(
     override suspend fun getCurrent(): Result<Iterable<MoviePreview>> {
         return event.getMoviesByType(ShowingType.Current)
             .map { it.body.map(::MoviePreviewFromResponse) }
+            .map { it.sortedBy { abs(Date().time - it.screeningFrom.time) } }
     }
 
     override suspend fun getUpcoming(): Result<Iterable<MoviePreview>> {
         return event.getMoviesByType(ShowingType.Upcoming)
             .map { it.body.map(::MoviePreviewFromResponse) }
+            .map { it.sortedBy { abs(Date().time - it.screeningFrom.time) } }
     }
 }
 
