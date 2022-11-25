@@ -81,6 +81,7 @@ internal class UserFeatureImpl(
     }
 
     override suspend fun getToken(): Result<String> {
+        if (!account.isLoggedIn) return Result.failure(IllegalStateException())
         if (account.isExpired || account.expiresWithin(1.minutes)) {
             service.getPoints() // this just refreshes the token
         }

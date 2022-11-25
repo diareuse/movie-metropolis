@@ -1,5 +1,9 @@
 package movie.metropolis.app.feature.global
 
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import movie.metropolis.app.feature.global.model.CinemaResponse
 import movie.metropolis.app.feature.global.model.EventResponse
 import movie.metropolis.app.feature.global.model.ExtendedMovieResponse
@@ -30,6 +34,23 @@ internal class EventFeatureImpl(
                 }
                 .toMap()
         }
+    }
+
+    override suspend fun getShowings(
+        movie: Movie,
+        at: Date,
+        location: Location
+    ): Result<CinemaWithShowings> = coroutineScope {
+        val cinemas = getCinemas(location).getOrDefault(emptyList())
+        val showings2 = mutableListOf<Deferred<Pair<Cinema, Iterable<Showing>>>>()
+        for (cinema in cinemas) {
+            showings2 += async {
+                cinema to getShowings(cinema, at)
+                    .map { it[it.keys.find { it.id == movie.id }] ?: emptyList() }
+                    .getOrDefault(emptyList())
+            }
+        }
+        Result.success(showings2.awaitAll().toMap())
     }
 
     override suspend fun getCinemas(location: Location?): Result<Iterable<Cinema>> {
