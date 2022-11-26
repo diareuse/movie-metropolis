@@ -265,10 +265,19 @@ class CinemaBookingViewProvider :
 
     private data class CinemaBookingViewPreview(
         override val cinema: CinemaView = CinemaViewPreview(),
-        override val availability: Map<String, List<CinemaBookingView.Availability>> = mapOf(
-            "2D" to List(nextInt(1, 5)) { AvailabilityPreview() }
+        override val availability: Map<CinemaBookingView.LanguageAndType, List<CinemaBookingView.Availability>> = mapOf(
+            LanguageAndTypePreview() to List(nextInt(1, 5)) { AvailabilityPreview() }
         )
     ) : CinemaBookingView
+
+    private data class LanguageAndTypePreview(
+        override val language: String = listOf(
+            "English (Czech)",
+            "Czech",
+            "Hungarian (Czech)"
+        ).random(),
+        override val type: String = listOf("2D", "3D", "3D | 4DX", "2D | VIP").random()
+    ) : CinemaBookingView.LanguageAndType
 
     private data class CinemaViewPreview(
         override val id: String = String(nextBytes(10)),

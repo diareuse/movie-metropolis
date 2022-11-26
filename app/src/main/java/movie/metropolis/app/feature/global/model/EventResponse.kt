@@ -19,19 +19,14 @@ internal data class EventResponse(
     @SerialName("auditorium") val auditorium: String
 ) {
 
-    val label: String
-        get() {
-            val tagBuilder = StringBuilder()
-            tagBuilder.append(labelScreeningType)
-            tagBuilder.appendLine()
-            when {
-                DubbedTag in tags -> tagBuilder.append(labelDubbed)
-                SubbedTag in tags -> tagBuilder.append(labelSubbed)
-            }
-            return tagBuilder.toString()
+    val language: String
+        get() = when {
+            DubbedTag in tags -> labelDubbed
+            SubbedTag in tags -> labelSubbed
+            else -> "-"
         }
 
-    private val labelScreeningType
+    val type
         get() = buildList {
             if (ScreeningType2D in tags) add("2D")
             if (ScreeningType3D in tags) add("3D")
@@ -43,17 +38,19 @@ internal data class EventResponse(
 
     private val labelDubbed
         get() = tags.firstAround(Dubbing, "-").orEmpty()
-            .let(::Locale).displayName
+            .let(::Locale).let {
+                it.displayName.ifEmpty { it.language.uppercase() }
+            }
 
     private val labelSubbed
         get() = buildString {
             val original = tags.firstAround(Original, "-").orEmpty()
-                .let(::Locale).displayName
-            append(original)
+                .let(::Locale)
+            append(original.displayName.ifEmpty { original.language.uppercase() })
             append(" (")
             val subs = tags.firstAround(Subbed, "-").orEmpty()
-                .let(::Locale).displayName
-            append(subs)
+                .let(::Locale)
+            append(subs.displayName.ifEmpty { subs.language.uppercase() })
             append(")")
         }
 
@@ -67,9 +64,9 @@ internal data class EventResponse(
     companion object {
         const val SubbedTag = "subbed"
         const val DubbedTag = "dubbed"
-        const val Subbed = "first-subbed-lang"
-        const val Dubbing = "dubbed-lang"
-        const val Original = "original-lang"
+        const val Subbed = "first-subbed-lang-"
+        const val Dubbing = "dubbed-lang-"
+        const val Original = "original-lang-"
         const val ScreeningType2D = "2d"
         const val ScreeningType3D = "3d"
         const val ScreeningTypeDolbyAtmos = "dolby-atmos"
