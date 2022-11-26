@@ -6,18 +6,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,9 +31,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaBookingView
+import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
@@ -50,6 +51,9 @@ import movie.metropolis.app.screen.listing.MoviePoster
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.EllipsisText
 import movie.metropolis.app.view.placeholder
+import java.util.Date
+import kotlin.random.Random.Default.nextBytes
+import kotlin.random.Random.Default.nextInt
 
 @Composable
 fun MovieScreen(
@@ -59,17 +63,18 @@ fun MovieScreen(
     val poster by viewModel.poster.collectAsState(initial = Loadable.loading())
     val trailer by viewModel.trailer.collectAsState(initial = Loadable.loading())
     val detail by viewModel.detail.collectAsState()
-    val selectedDate by viewModel.selectedDay.collectAsState("")
+    val startDate by viewModel.startDate.collectAsState()
+    val selectedDate by viewModel.selectedDate.collectAsState()
     val showings by viewModel.showings.collectAsState()
     MovieScreen(
         detail = detail,
         poster = poster,
         trailer = trailer,
         showings = showings,
+        selectionAvailableStart = startDate.getOrNull(),
         selectedDate = selectedDate,
         onBackClick = onBackClick,
-        onClickNextDay = viewModel::onSelectNextDay,
-        onClickPreviousDay = viewModel::onSelectPreviousDay
+        onSelectedDateUpdated = { viewModel.selectedDate.value = it }
     )
 }
 
@@ -80,9 +85,9 @@ private fun MovieScreen(
     poster: Loadable<ImageView>,
     trailer: Loadable<VideoView>,
     showings: Loadable<List<CinemaBookingView>>,
-    selectedDate: String,
-    onClickPreviousDay: () -> Unit,
-    onClickNextDay: () -> Unit,
+    selectionAvailableStart: Date?,
+    selectedDate: Date?,
+    onSelectedDateUpdated: (Date) -> Unit,
     onBackClick: () -> Unit
 ) {
     MovieScreenLayout(
@@ -101,103 +106,132 @@ private fun MovieScreen(
             )
         }
     ) { scrollBehavior, padding ->
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
-                .verticalScroll(rememberScrollState())
-                .padding(padding)
-                .padding(24.dp)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = padding + PaddingValues(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            val detail = detail.getOrNull()
-            Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                val poster = poster.getOrNull()
-                Box(
-                    modifier = Modifier
-                        .shadow(24.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .height(225.dp)
-                        .aspectRatio(poster?.aspectRatio ?: 0.67f)
-                ) {
-                    MoviePoster(url = poster?.url)
-                    val trailer = trailer.getOrNull()
-                    if (trailer != null) Image(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clickable(role = Role.Button) { },
-                        painter = painterResource(id = R.drawable.ic_play),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color.White)
-                    )
-                }
-                Column {
-                    Text(
-                        text = detail?.name ?: "Movie Name",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.placeholder(detail == null)
-                    )
-                    Text(
-                        text = detail?.nameOriginal ?: "Original Movie name",
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.placeholder(detail == null)
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = detail?.duration ?: "1h 30m",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.placeholder(detail == null)
-                    )
-                    Text(
-                        text = "%s (%s)".format(
-                            detail?.countryOfOrigin ?: "USA",
-                            detail?.releasedAt ?: "2022"
-                        ),
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.placeholder(detail == null)
-                    )
-                    Spacer(Modifier.height(8.dp))
-                    Text(
-                        text = detail?.directors?.joinToString() ?: "Foobar Boobar",
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.placeholder(detail == null)
-                    )
-                    EllipsisText(
-                        text = detail?.cast?.joinToString()
-                            ?: "Foobar Boobar, Foobar Boobar",
-                        maxLines = 3,
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.placeholder(detail == null)
-                    )
-                }
-            }
-            Spacer(modifier = Modifier.height(24.dp))
-            EllipsisText(
-                text = detail?.description ?: "Description to be loaded here",
-                maxLines = 5,
-                modifier = Modifier.placeholder(detail == null)
-            )
-            Spacer(Modifier.height(16.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onClickPreviousDay, enabled = selectedDate.isNotEmpty()) {
-                    Icon(painterResource(id = R.drawable.ic_left), null)
-                }
-                Text(
-                    text = selectedDate,
-                    modifier = Modifier.weight(1f),
-                    textAlign = TextAlign.Center
+            item {
+                DetailWithDescription(
+                    detail = detail,
+                    poster = poster,
+                    trailer = trailer
                 )
-                IconButton(onClick = onClickNextDay, enabled = selectedDate.isNotEmpty()) {
-                    Icon(painterResource(id = R.drawable.ic_right), null)
-                }
             }
-            for (showing in showings.getOrNull().orEmpty()) {
+            if (selectionAvailableStart != null && selectedDate != null) item {
+                DatePickerRow(
+                    start = selectionAvailableStart,
+                    selected = selectedDate,
+                    onClickDate = onSelectedDateUpdated
+                )
+            }
+            items(showings.getOrNull().orEmpty(), key = { it.cinema.id }) {
                 ShowingItem(
-                    title = showing.cinema.name,
-                    showings = showing.availability,
+                    title = it.cinema.name,
+                    showings = it.availability,
                     onClick = {}
                 )
             }
+        }
+    }
+}
+
+@Composable
+private operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
+    val dir = LocalLayoutDirection.current
+    return PaddingValues(
+        start = calculateStartPadding(dir) + other.calculateStartPadding(dir),
+        top = calculateTopPadding() + other.calculateTopPadding(),
+        end = calculateEndPadding(dir) + other.calculateEndPadding(dir),
+        bottom = calculateBottomPadding() + other.calculateBottomPadding(),
+    )
+}
+
+@Composable
+fun DetailWithDescription(
+    detail: Loadable<MovieDetailView>,
+    poster: Loadable<ImageView>,
+    trailer: Loadable<VideoView>
+) {
+    if (!detail.isFailure) Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
+        DetailPosterRow(detail = detail, poster = poster, trailer = trailer)
+        EllipsisText(
+            text = detail.getOrNull()?.description ?: "There was an error loading this detail.",
+            maxLines = 5,
+            modifier = Modifier.placeholder(detail.isLoading)
+        )
+    }
+}
+
+@Composable
+fun DetailPosterRow(
+    detail: Loadable<MovieDetailView>,
+    poster: Loadable<ImageView>,
+    trailer: Loadable<VideoView>
+) {
+    val detailView = detail.getOrNull()
+    Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
+        val posterView = poster.getOrNull()
+        Box(
+            modifier = Modifier
+                .shadow(24.dp)
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surface)
+                .height(225.dp)
+                .aspectRatio(posterView?.aspectRatio ?: 0.67f),
+            contentAlignment = Alignment.Center
+        ) {
+            MoviePoster(url = posterView?.url)
+            val trailerView = trailer.getOrNull()
+            if (trailerView != null) Image(
+                modifier = Modifier
+                    .size(48.dp)
+                    .clickable(role = Role.Button) { },
+                painter = painterResource(id = R.drawable.ic_play),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(Color.White)
+            )
+        }
+        Column {
+            Text(
+                text = detailView?.name ?: "Movie Name",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.placeholder(detail.isLoading)
+            )
+            Text(
+                text = detailView?.nameOriginal ?: "Original Movie name",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.placeholder(detail.isLoading)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = detailView?.duration ?: "1h 30m",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.placeholder(detail.isLoading)
+            )
+            Text(
+                text = "%s (%s)".format(
+                    detailView?.countryOfOrigin ?: "USA",
+                    detailView?.releasedAt ?: "2022"
+                ),
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.placeholder(detail.isLoading)
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = detailView?.directors?.joinToString() ?: "Foobar Boobar",
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.placeholder(detail.isLoading)
+            )
+            EllipsisText(
+                text = detailView?.cast?.joinToString()
+                    ?: "Foobar Boobar, Foobar Boobar",
+                maxLines = 3,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.placeholder(detail.isLoading)
+            )
         }
     }
 }
@@ -206,7 +240,8 @@ private fun MovieScreen(
 @Composable
 private fun Preview(
     @PreviewParameter(MovieDetailViewProvider::class)
-    detail: MovieDetailView
+    detail: MovieDetailView,
+    showings: List<CinemaBookingView> = CinemaBookingViewProvider().values.toList()
 ) {
     Theme {
         MovieScreen(
@@ -218,11 +253,11 @@ private fun Preview(
                 )
             ),
             trailer = Loadable.loading(),
-            selectedDate = "12. 3. 2024",
-            onClickPreviousDay = {},
-            onClickNextDay = {},
+            selectedDate = Date(),
             onBackClick = {},
-            showings = Loadable.loading()
+            showings = Loadable.success(showings),
+            selectionAvailableStart = Date(),
+            onSelectedDateUpdated = {}
         )
     }
 }
@@ -259,5 +294,37 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel finibus augue. Praesent porta, nibh rhoncus ultrices tempus, metus lacus facilisis lorem, id venenatis nisl mi non massa. Vestibulum eu ipsum leo. Mauris et sagittis tortor. Fusce dictum cursus quam in ornare. Curabitur posuere ligula sem, et tincidunt lorem commodo vitae. Fusce mollis elementum dignissim. Fusce suscipit massa maximus metus gravida, vitae posuere sem semper. Nullam auctor venenatis elementum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus nibh sem, volutpat nec egestas convallis, ultricies quis massa. Duis quis placerat neque, eu bibendum arcu. ",
         override val availableFrom: String = "23. 4. 2022"
     ) : MovieDetailView
+
+}
+
+class CinemaBookingViewProvider :
+    CollectionPreviewParameterProvider<CinemaBookingView>(
+        listOf(
+            CinemaBookingViewPreview(),
+            CinemaBookingViewPreview()
+        )
+    ) {
+
+    private data class CinemaBookingViewPreview(
+        override val cinema: CinemaView = CinemaViewPreview(),
+        override val availability: Map<String, List<CinemaBookingView.Availability>> = mapOf(
+            "2D" to List(nextInt(1, 5)) { AvailabilityPreview() }
+        )
+    ) : CinemaBookingView
+
+    private data class CinemaViewPreview(
+        override val id: String = String(nextBytes(10)),
+        override val name: String = "Some Cinema",
+        override val address: List<String> = listOf("Foo bar 12/3"),
+        override val city: String = "City",
+        override val distance: String? = null
+    ) : CinemaView
+
+    private data class AvailabilityPreview(
+        override val id: String = String(nextBytes(10)),
+        override val url: String = "https://foo.bar",
+        override val startsAt: String = "12:10",
+        override val isEnabled: Boolean = true
+    ) : CinemaBookingView.Availability
 
 }
