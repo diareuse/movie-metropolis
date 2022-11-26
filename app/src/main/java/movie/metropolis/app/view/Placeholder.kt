@@ -20,7 +20,16 @@ enum class ShapeToken {
         }
 }
 
-fun Modifier.placeholder(visible: Boolean, shape: ShapeToken = ShapeToken.Small) = composed {
+fun Modifier.imagePlaceholder(visible: Boolean, shape: ShapeToken = ShapeToken.Medium) = composed {
+    placeholder(
+        visible = visible,
+        color = MaterialTheme.colorScheme.surface,
+        shape = shape.shape,
+        highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.surfaceVariant)
+    )
+}
+
+fun Modifier.textPlaceholder(visible: Boolean, shape: ShapeToken = ShapeToken.Small) = composed {
     padding(if (visible) 2.dp else 0.dp).placeholder(
         visible = visible,
         color = MaterialTheme.colorScheme.surfaceVariant,

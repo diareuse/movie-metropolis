@@ -125,7 +125,7 @@ class MovieViewProvider :
     ) : MovieView
 
     private data class PreviewImage(
-        override val aspectRatio: Float = 3f / 5,
+        override val aspectRatio: Float = DefaultPosterAspectRatio,
         override val url: String = listOf(
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5145S2R-lg.jpg",
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5219S2R-lg.jpg",
