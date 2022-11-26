@@ -63,19 +63,17 @@ class MovieViewModel @Inject constructor(
         .map { it.asLoadable() }
         .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
-    private val startDate = movieDetail.map { it.map { it.screeningFrom } }
+    val startDate = movieDetail.map { it.map { it.screeningFrom } }
+        .map { loadable -> loadable.map { if (it.before(Date())) Date() else it } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
-    private val selectedDate = MutableStateFlow(null as Date?)
+    val selectedDate = MutableStateFlow(null as Date?)
     val location = MutableStateFlow(
         Location(
             50.0789968000,
             14.4610091000
         ).toSnapshot() as LocationSnapshot?
     )//(null as LocationSnapshot?)
-
-    val selectedDay = selectedDate
-        .map { it?.let(dateFormat::format).orEmpty() }
 
     val detail = movieDetail
         .map { it.map(::MovieDetailViewFromFeature) }
