@@ -40,8 +40,8 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.theme.Theme
-import movie.metropolis.app.view.ShapeToken
-import movie.metropolis.app.view.placeholder
+import movie.metropolis.app.view.imagePlaceholder
+import movie.metropolis.app.view.textPlaceholder
 
 @Composable
 fun MovieItem(
@@ -55,7 +55,7 @@ fun MovieItem(
 ) {
     MovieItemLayout(
         modifier = modifier,
-        posterAspectRatio = poster?.aspectRatio ?: (4f / 3),
+        posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
         poster = {
             MoviePoster(url = poster?.url, onClick = onClick)
             if (video != null) Image(
@@ -91,7 +91,7 @@ fun MovieItemLayout(
     poster: @Composable BoxScope.() -> Unit,
     text: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
-    posterAspectRatio: Float = 3f / 5,
+    posterAspectRatio: Float = DefaultPosterAspectRatio,
 ) {
     Column(modifier = modifier.width(IntrinsicSize.Min)) {
         Row(
@@ -128,7 +128,7 @@ fun MoviePoster(
     AsyncImage(
         modifier = modifier
             .fillMaxSize()
-            .placeholder(url == null, ShapeToken.Medium)
+            .imagePlaceholder(url == null)
             .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() }),
         model = url ?: "",
         contentDescription = "",
@@ -143,7 +143,7 @@ fun MovieSubText(
     isLoading: Boolean = false
 ) {
     Text(
-        modifier = modifier.placeholder(isLoading),
+        modifier = modifier.textPlaceholder(isLoading),
         text = text,
         style = MaterialTheme.typography.bodySmall
     )
@@ -156,7 +156,7 @@ fun MovieTitleText(
     isLoading: Boolean = false
 ) {
     Text(
-        modifier = modifier.placeholder(visible = isLoading),
+        modifier = modifier.textPlaceholder(visible = isLoading),
         text = text,
         style = MaterialTheme.typography.bodyMedium,
         fontWeight = FontWeight.Bold,
@@ -176,7 +176,7 @@ private fun Preview() {
             subtext = "12. 11. 2022",
             video = VideoView("https://www.youtube.com/watch?v=X0tOpBuYasI"),
             poster = ImageView(
-                0.6741573f,
+                DefaultPosterAspectRatio,
                 "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5145S2R-lg.jpg"
             ),
             onClickVideo = {},
@@ -184,6 +184,8 @@ private fun Preview() {
         )
     }
 }
+
+const val DefaultPosterAspectRatio = 0.67375886f
 
 private fun VideoView(url: String) = object : VideoView {
     override val url: String

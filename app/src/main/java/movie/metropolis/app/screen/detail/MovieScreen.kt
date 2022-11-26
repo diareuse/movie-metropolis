@@ -42,9 +42,11 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.EllipsisText
-import movie.metropolis.app.view.placeholder
+import movie.metropolis.app.view.imagePlaceholder
+import movie.metropolis.app.view.textPlaceholder
 import java.util.Date
 import kotlin.random.Random.Default.nextBytes
 import kotlin.random.Random.Default.nextInt
@@ -103,13 +105,14 @@ private fun MovieScreen(
                     modifier = Modifier
                         .shadow(32.dp)
                         .fillMaxWidth()
-                        .aspectRatio(poster.getOrNull()?.aspectRatio ?: 0.67f)
+                        .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
                         .clip(
                             MaterialTheme.shapes.large.copy(
                                 topStart = CornerSize(0.dp),
                                 topEnd = CornerSize(0.dp)
                             )
                         )
+                        .imagePlaceholder(poster.getOrNull() == null)
                         .background(MaterialTheme.colorScheme.surface),
                     model = poster.getOrNull()?.url,
                     contentDescription = null,
@@ -161,7 +164,7 @@ fun DetailPosterRow(
         Text(
             text = detailView?.name ?: "Movie Name",
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.placeholder(detail.isLoading)
+            modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(8.dp))
         Text(
@@ -171,25 +174,25 @@ fun DetailPosterRow(
                 detailView?.releasedAt ?: "2022"
             ),
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.placeholder(detail.isLoading)
+            modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = detailView?.directors?.joinToString() ?: "Foobar Boobar",
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.placeholder(detail.isLoading)
+            modifier = Modifier.textPlaceholder(detailView == null)
         )
         EllipsisText(
             text = detailView?.cast?.joinToString() ?: "Foobar Boobar, Foobar Boobar",
             maxLines = 3,
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.placeholder(detail.isLoading)
+            modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(24.dp))
         EllipsisText(
             text = detailView?.description ?: "There was an error loading this detail.",
             maxLines = 5,
-            modifier = Modifier.placeholder(detail.isLoading)
+            modifier = Modifier.textPlaceholder(detailView == null)
         )
     }
 }
@@ -207,7 +210,7 @@ private fun Preview(
             poster = Loadable.success(
                 ImageViewPreview(
                     url = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
-                    aspectRatio = 0.67f
+                    aspectRatio = DefaultPosterAspectRatio
                 )
             ),
             trailer = Loadable.loading(),
