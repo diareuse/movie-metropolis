@@ -7,11 +7,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,20 +25,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.theme.Theme
 
 @Composable
 fun ShowingItem(
     title: String,
-    showings: Map<String, List<CinemaBookingView.Availability>>,
+    showings: Map<CinemaBookingView.LanguageAndType, List<CinemaBookingView.Availability>>,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -43,12 +49,41 @@ fun ShowingItem(
         modifier = modifier,
         items = showings,
         key = { it.id },
-        title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) }
+        title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        section = { ShowingItemSection(type = it.type, language = it.language) }
     ) {
         ShowingItemTime(
             modifier = Modifier.clickable { onClick(it.url) },
             time = it.startsAt
         )
+    }
+}
+
+@Composable
+fun ShowingItemSection(type: String, language: String) {
+    Column {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                painter = painterResource(id = R.drawable.ic_screening_type),
+                contentDescription = null
+            )
+            Text(type)
+        }
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(16.dp),
+                painter = painterResource(id = R.drawable.ic_language),
+                contentDescription = null
+            )
+            Text(language, style = MaterialTheme.typography.bodySmall)
+        }
     }
 }
 
@@ -74,10 +109,11 @@ fun ShowingItemTime(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun <T> ShowingLayout(
-    items: Map<String, List<T>>,
+fun <T, T2> ShowingLayout(
+    items: Map<T2, List<T>>,
     key: (T) -> Any,
     title: @Composable () -> Unit,
+    section: @Composable (T2) -> Unit,
     modifier: Modifier = Modifier,
     item: @Composable (T) -> Unit,
 ) {
@@ -99,14 +135,13 @@ fun <T> ShowingLayout(
                 for ((label, collection) in items) Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp),
-                        text = label,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Box(Modifier.padding(horizontal = 16.dp)) {
+                        CompositionLocalProvider(
+                            LocalTextStyle provides MaterialTheme.typography.titleMedium
+                        ) {
+                            section(label)
+                        }
+                    }
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -145,9 +180,10 @@ fun <T> ShowingLayout(
 private fun Preview() {
     Theme {
         ShowingLayout(
-            items = mapOf("2D" to listOf("11:11", "12:34", "22:22")),
+            items = mapOf(("2D" to "English (Czech)") to listOf("11:11", "12:34", "22:22")),
             key = { it },
-            title = { Text("My Cinema") }
+            title = { Text("My Cinema") },
+            section = { ShowingItemSection(type = it.first, language = it.second) }
         ) {
             ShowingItemTime(time = it)
         }

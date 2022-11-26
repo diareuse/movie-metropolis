@@ -222,6 +222,9 @@ internal data class ShowingFromResponse(
         get() = !showing.soldOut && Date().before(startsAt)
     override val auditorium: String
         get() = showing.auditorium
-    override val label: String
-        get() = showing.label
+    override val language: String
+        get() = showing.language
+    override val type: String
+        get() = showing.type
+
 }
