@@ -18,6 +18,6 @@ internal class CinemaServiceImpl(
             url("cinema")
             parameter("lang", Locale.getDefault().language)
         }.body<ResultsResponse<List<CinemaResponse>>>()
-    }
+    }.onFailure { it.printStackTrace() }
 
 }
