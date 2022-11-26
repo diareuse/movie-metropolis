@@ -124,8 +124,9 @@ fun <T, T2> ShowingLayout(
         }
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.secondary,
-            shape = MaterialTheme.shapes.medium
+            color = MaterialTheme.colorScheme.surface,
+            shape = MaterialTheme.shapes.medium,
+            tonalElevation = 1.dp
         ) {
             Column(
                 modifier = Modifier
