@@ -3,6 +3,7 @@ package movie.metropolis.app.screen.detail
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -48,7 +49,10 @@ fun DatePickerRow(
     }
     val selected = remember(selected) { selected.normalize() }
     val disabledValues = remember(disabledValues) { disabledValues.map { it.normalize() } }
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = 24.dp)
+    ) {
         items(dates, key = { it }) {
             DatePickerItem(
                 date = formatter.format(it),
@@ -94,7 +98,7 @@ private fun DatePickerItem(
         ).takeUnless { selected }
     ) {
         Text(
-            modifier = Modifier.padding(8.dp, 4.dp),
+            modifier = Modifier.padding(12.dp, 8.dp),
             text = date,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,

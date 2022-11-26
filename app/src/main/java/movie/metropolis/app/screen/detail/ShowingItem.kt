@@ -79,10 +79,10 @@ fun <T> ShowingLayout(
     modifier: Modifier = Modifier,
     item: @Composable (T) -> Unit,
 ) {
-    Box {
+    Box(modifier = modifier) {
         var paddingTop by rememberSaveable { mutableStateOf(0) }
         Surface(
-            modifier = modifier
+            modifier = Modifier
                 .padding(top = with(LocalDensity.current) { paddingTop.toDp() })
                 .fillMaxWidth(),
             color = MaterialTheme.colorScheme.secondary,
