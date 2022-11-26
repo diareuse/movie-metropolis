@@ -1,6 +1,8 @@
 package movie.metropolis.app.screen.detail
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -46,7 +48,7 @@ fun DatePickerRow(
     }
     val selected = remember(selected) { selected.normalize() }
     val disabledValues = remember(disabledValues) { disabledValues.map { it.normalize() } }
-    LazyRow {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         items(dates, key = { it }) {
             DatePickerItem(
                 date = formatter.format(it),
@@ -85,7 +87,11 @@ private fun DatePickerItem(
         color = color,
         contentColor = contentColorFor(color).let {
             if (enabled) it else it.copy(alpha = .5f)
-        }
+        },
+        border = BorderStroke(
+            1.dp,
+            MaterialTheme.colorScheme.outlineVariant
+        ).takeUnless { selected }
     ) {
         Text(
             modifier = Modifier.padding(8.dp, 4.dp),

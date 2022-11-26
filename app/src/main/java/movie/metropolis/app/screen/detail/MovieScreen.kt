@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.detail
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -78,7 +80,7 @@ fun MovieScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun MovieScreen(
     detail: Loadable<MovieDetailView>,
@@ -111,7 +113,7 @@ private fun MovieScreen(
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = padding + PaddingValues(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             item {
                 DetailWithDescription(
@@ -120,6 +122,7 @@ private fun MovieScreen(
                     trailer = trailer
                 )
             }
+            item { Divider() }
             if (selectionAvailableStart != null && selectedDate != null) item {
                 DatePickerRow(
                     start = selectionAvailableStart,
@@ -129,6 +132,7 @@ private fun MovieScreen(
             }
             items(showings.getOrNull().orEmpty(), key = { it.cinema.id }) {
                 ShowingItem(
+                    modifier = Modifier.animateItemPlacement(),
                     title = it.cinema.name,
                     showings = it.availability,
                     onClick = {}
