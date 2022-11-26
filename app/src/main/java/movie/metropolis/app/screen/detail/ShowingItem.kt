@@ -1,7 +1,6 @@
 package movie.metropolis.app.screen.detail
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -21,17 +19,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
@@ -49,7 +40,7 @@ fun ShowingItem(
         modifier = modifier,
         items = showings,
         key = { it.id },
-        title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        title = { Text(title) },
         section = { ShowingItemSection(type = it.type, language = it.language) }
     ) {
         ShowingItemTime(
@@ -117,18 +108,27 @@ fun <T, T2> ShowingLayout(
     modifier: Modifier = Modifier,
     item: @Composable (T) -> Unit,
 ) {
-    Box(modifier = modifier) {
-        var paddingTop by rememberSaveable { mutableStateOf(0) }
-        Surface(
+    Column(modifier = modifier) {
+        Box(
             modifier = Modifier
-                .padding(top = with(LocalDensity.current) { paddingTop.toDp() })
-                .fillMaxWidth(),
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp)
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
+                title()
+            }
+        }
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.secondary,
             shape = MaterialTheme.shapes.medium
         ) {
             Column(
                 modifier = Modifier
-                    .padding(top = with(LocalDensity.current) { paddingTop.toDp() })
                     .padding(vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
@@ -154,24 +154,6 @@ fun <T, T2> ShowingLayout(
                 }
             }
         }
-        Box(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .background(
-                    MaterialTheme.colorScheme.surface,
-                    CircleShape
-                )//MaterialTheme.shapes.small)
-                .padding(horizontal = 8.dp, vertical = 2.dp)
-                .onSizeChanged { paddingTop = it.height / 2 }
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            ) {
-                title()
-            }
-        }
     }
 }
 
@@ -180,7 +162,10 @@ fun <T, T2> ShowingLayout(
 private fun Preview() {
     Theme {
         ShowingLayout(
-            items = mapOf(("2D" to "English (Czech)") to listOf("11:11", "12:34", "22:22")),
+            items = mapOf(
+                ("2D" to "English (Czech)") to listOf("11:11", "12:34", "22:22"),
+                ("3D" to "English") to listOf("11:11", "12:34", "22:22"),
+            ),
             key = { it },
             title = { Text("My Cinema") },
             section = { ShowingItemSection(type = it.first, language = it.second) }
