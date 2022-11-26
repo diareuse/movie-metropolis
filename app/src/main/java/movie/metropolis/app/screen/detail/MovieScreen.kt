@@ -113,18 +113,26 @@ private fun MovieScreen(
                             )
                         )
                         .imagePlaceholder(poster.getOrNull() == null)
-                        .background(MaterialTheme.colorScheme.surface),
+                        .background(MaterialTheme.colorScheme.surface)
+                        .animateItemPlacement(),
                     model = poster.getOrNull()?.url,
                     contentDescription = null,
                     contentScale = ContentScale.Crop
                 )
             }
             item {
-                DetailPosterRow(detail = detail)
+                DetailPosterRow(modifier = Modifier.animateItemPlacement(), detail = detail)
             }
-            item { Divider(Modifier.padding(horizontal = 32.dp)) }
+            item {
+                Divider(
+                    Modifier
+                        .padding(horizontal = 32.dp)
+                        .animateItemPlacement()
+                )
+            }
             if (selectionAvailableStart != null && selectedDate != null) item {
                 DatePickerRow(
+                    modifier = Modifier.animateItemPlacement(),
                     start = selectionAvailableStart,
                     selected = selectedDate,
                     onClickDate = onSelectedDateUpdated
@@ -157,10 +165,11 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
 
 @Composable
 fun DetailPosterRow(
-    detail: Loadable<MovieDetailView>
+    detail: Loadable<MovieDetailView>,
+    modifier: Modifier = Modifier,
 ) {
     val detailView = detail.getOrNull()
-    Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+    Column(modifier = modifier.padding(horizontal = 24.dp)) {
         Text(
             text = detailView?.name ?: "Movie Name",
             style = MaterialTheme.typography.titleLarge,

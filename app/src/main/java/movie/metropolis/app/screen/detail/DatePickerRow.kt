@@ -31,10 +31,11 @@ import kotlin.time.Duration.Companion.days
 fun DatePickerRow(
     start: Date,
     selected: Date,
+    onClickDate: (Date) -> Unit,
+    modifier: Modifier = Modifier,
     end: Date = Date(start.time + 30.days.inWholeMilliseconds),
     disabledValues: List<Date> = emptyList(),
     formatter: DateFormat = SimpleDateFormat("MMM'\n'd", Locale.getDefault()),
-    onClickDate: (Date) -> Unit
 ) {
     val start = remember(start) { start.normalize() }
     val dates = remember(start, end) {
@@ -50,6 +51,7 @@ fun DatePickerRow(
     val selected = remember(selected) { selected.normalize() }
     val disabledValues = remember(disabledValues) { disabledValues.map { it.normalize() } }
     LazyRow(
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(horizontal = 24.dp)
     ) {
