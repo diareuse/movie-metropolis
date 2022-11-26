@@ -21,7 +21,7 @@ internal data class MovieDetailResponse(
     @Serializable(YearSerializer::class)
     @SerialName("releaseYear") val releasedAt: Date,
     @SerialName("releaseCountry") val countryOfOrigin: String,
-    @SerialName("cast") val cast: String,
+    @SerialName("cast") val cast: String?,
     @SerialName("directors") val directors: String,
     @SerialName("synopsis") val synopsis: String,
     @Serializable(LocalTimestampSerializer::class)
