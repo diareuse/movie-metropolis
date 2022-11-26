@@ -103,6 +103,7 @@ class MovieViewModel @Inject constructor(
         if (date != null && location != null) date to location else null
     }.filterNotNull()
         .flatMapLatest { (date, location) -> loadShowings(date, location) }
+        .map { it.map { it.filter { it.availability.isNotEmpty() } } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
     init {
