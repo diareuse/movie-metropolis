@@ -10,13 +10,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,9 +34,11 @@ import movie.metropolis.app.theme.Theme
 fun ShowingItem(
     title: String,
     showings: Map<String, List<CinemaBookingView.Availability>>,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     ShowingLayout(
+        modifier = modifier,
         items = showings,
         key = { it.id },
         title = { Text(title) }
@@ -46,14 +55,14 @@ fun ShowingItemTime(
     time: String,
     modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier = Modifier
-            .clip(MaterialTheme.shapes.small)
-            .background(MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .then(modifier)
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shape = MaterialTheme.shapes.small
     ) {
         Text(
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             text = time,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
@@ -70,34 +79,59 @@ fun <T> ShowingLayout(
     modifier: Modifier = Modifier,
     item: @Composable (T) -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
-            .background(MaterialTheme.colorScheme.surfaceVariant)
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Bold
-            )
+    Box {
+        var paddingTop by rememberSaveable { mutableStateOf(0) }
+        Surface(
+            modifier = modifier
+                .padding(top = with(LocalDensity.current) { paddingTop.toDp() })
+                .fillMaxWidth(),
+            color = MaterialTheme.colorScheme.secondary,
+            shape = MaterialTheme.shapes.medium
         ) {
-            title()
-        }
-        for ((label, collection) in items) Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(label)
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            Column(
+                modifier = Modifier
+                    .padding(top = with(LocalDensity.current) { paddingTop.toDp() })
+                    .padding(vertical = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                items(collection, key) {
-                    Box(modifier = Modifier.animateItemPlacement()) {
-                        item(it)
+                for ((label, collection) in items) Column(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        modifier = Modifier.padding(12.dp, 0.dp),
+                        text = label,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(collection, key) {
+                            item(it)
+                        }
                     }
                 }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .background(
+                    MaterialTheme.colorScheme.surface,
+                    CircleShape
+                )//MaterialTheme.shapes.small)
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .onSizeChanged { paddingTop = it.height / 2 }
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
+                title()
             }
         }
     }
