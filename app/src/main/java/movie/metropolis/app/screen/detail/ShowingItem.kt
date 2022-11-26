@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.model.CinemaBookingView
@@ -41,7 +43,7 @@ fun ShowingItem(
         modifier = modifier,
         items = showings,
         key = { it.id },
-        title = { Text(title) }
+        title = { Text(title, maxLines = 1, overflow = TextOverflow.Ellipsis) }
     ) {
         ShowingItemTime(
             modifier = Modifier.clickable { onClick(it.url) },
@@ -95,19 +97,20 @@ fun <T> ShowingLayout(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 for ((label, collection) in items) Column(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        modifier = Modifier.padding(12.dp, 0.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                         text = label,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
                     LazyRow(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
                         items(collection, key) {
                             item(it)
