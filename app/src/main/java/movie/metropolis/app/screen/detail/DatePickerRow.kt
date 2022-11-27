@@ -88,7 +88,6 @@ private fun DatePickerItem(
         else -> MaterialTheme.colorScheme.surface
     }
     Surface(
-        modifier = Modifier.clickable(enabled = enabled, onClick = onClick),
         shape = MaterialTheme.shapes.small,
         color = color,
         contentColor = contentColorFor(color).let {
@@ -100,7 +99,9 @@ private fun DatePickerItem(
         ).takeUnless { selected }
     ) {
         Text(
-            modifier = Modifier.padding(12.dp, 8.dp),
+            modifier = Modifier
+                .clickable(enabled = enabled, onClick = onClick)
+                .padding(12.dp, 8.dp),
             text = date,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold,
