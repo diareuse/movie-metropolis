@@ -121,7 +121,6 @@ internal class UserFeatureImpl(
             lastName = customer.lastName,
             email = customer.email,
             phone = customer.phone,
-            birthAt = customer.birthAt,
             favorite = TODO(),
             consent = consent,
             membership = membership,
