@@ -54,7 +54,7 @@ interface UserAccount {
     var expirationDate: Date?
 
     val isExpired
-        get() = expirationDate?.after(Date()) ?: true
+        get() = Date().after(expirationDate ?: Date(Long.MAX_VALUE))
 
     fun expiresWithin(threshold: Duration): Boolean {
         val now = Date()
