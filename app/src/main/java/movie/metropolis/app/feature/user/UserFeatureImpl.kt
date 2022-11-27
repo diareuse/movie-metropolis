@@ -1,13 +1,17 @@
 package movie.metropolis.app.feature.user
 
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import movie.metropolis.app.feature.global.CinemaFromResponse
-import movie.metropolis.app.feature.global.CinemaService
-import movie.metropolis.app.feature.user.FieldUpdate.*
+import movie.metropolis.app.feature.global.EventFeature
+import movie.metropolis.app.feature.user.FieldUpdate.Cinema
+import movie.metropolis.app.feature.user.FieldUpdate.Consent
+import movie.metropolis.app.feature.user.FieldUpdate.Email
+import movie.metropolis.app.feature.user.FieldUpdate.Name
+import movie.metropolis.app.feature.user.FieldUpdate.Password
+import movie.metropolis.app.feature.user.FieldUpdate.Phone
 import movie.metropolis.app.feature.user.model.BookingDetailResponse
 import movie.metropolis.app.feature.user.model.BookingResponse
+import movie.metropolis.app.feature.user.model.ConsentRemote
 import movie.metropolis.app.feature.user.model.CustomerDataRequest
 import movie.metropolis.app.feature.user.model.CustomerPointsResponse
 import movie.metropolis.app.feature.user.model.CustomerResponse
@@ -20,7 +24,7 @@ import kotlin.time.Duration.Companion.minutes
 internal class UserFeatureImpl(
     private val service: UserService,
     private val account: UserAccount,
-    private val cinema: CinemaService
+    private val event: EventFeature
 ) : UserFeature {
 
     override suspend fun signIn(method: SignInMethod) = when (method) {
@@ -64,9 +68,7 @@ internal class UserFeatureImpl(
     }
 
     override suspend fun getBookings(): Result<Iterable<Booking>> {
-        val cinemas = cinema.getCinemas().map { it.results }
-            .getOrDefault(emptyList())
-            .map(::CinemaFromResponse)
+        val cinemas = event.getCinemas(null).map { it.toList() }.getOrDefault(emptyList())
         return service.getBookings().map {
             it.map { booking ->
                 when (booking.isExpired) {
@@ -94,38 +96,16 @@ internal class UserFeatureImpl(
         user: suspend () -> Result<CustomerResponse.Customer>,
         password: suspend () -> Result<Unit> = { Result.success(Unit) },
     ): Result<User> = coroutineScope {
-        val userResponse = async { user() }
+        val customer = async { user() }
         val points = async { service.getPoints() }
-        password().mapCatching { asUser(userResponse, points) }
-    }
-
-    @Throws(Throwable::class)
-    private suspend fun asUser(
-        user: Deferred<Result<CustomerResponse.Customer>>,
-        points: Deferred<Result<CustomerPointsResponse>>
-    ): User {
-        val customer = user.await().getOrThrow()
-        val consent = User.Consent(
-            marketing = customer.consent.marketing,
-            premium = customer.consent.marketingPremium ?: false
-        )
-        val membership = customer.membership.club?.let { club ->
-            User.Membership(
-                cardNumber = club.cardNumber,
-                memberFrom = club.joinedAt,
-                memberUntil = club.expiredAt
+        val cinemas = async { event.getCinemas(null).map { it.toList() } }
+        password().mapCatching {
+            UserFromRemote(
+                customer.await().getOrThrow(),
+                points.await().getOrThrow(),
+                cinemas.await().getOrThrow()
             )
         }
-        return User(
-            firstName = customer.firstName,
-            lastName = customer.lastName,
-            email = customer.email,
-            phone = customer.phone,
-            favorite = TODO(),
-            consent = consent,
-            membership = membership,
-            points = points.await().getOrThrow().total
-        )
     }
 
     // ---
@@ -140,6 +120,59 @@ internal class UserFeatureImpl(
         is Phone -> model.copy(phone = field.value)
         else -> model
     }
+}
+
+internal data class UserFromRemote(
+    private val customer: CustomerResponse.Customer,
+    private val customerPoints: CustomerPointsResponse,
+    override val favorite: movie.metropolis.app.feature.global.Cinema?
+) : User {
+
+    constructor(
+        customer: CustomerResponse.Customer,
+        points: CustomerPointsResponse,
+        cinemas: List<movie.metropolis.app.feature.global.Cinema>
+    ) : this(
+        customer = customer,
+        customerPoints = points,
+        favorite = cinemas.firstOrNull { it.id == customer.favoriteCinema }
+    )
+
+    override val firstName: String
+        get() = customer.firstName
+    override val lastName: String
+        get() = customer.lastName
+    override val email: String
+        get() = customer.email
+    override val phone: String
+        get() = customer.phone
+    override val consent: User.Consent
+        get() = ConsentFromRemote(customer.consent)
+    override val membership: User.Membership?
+        get() = customer.membership.club?.let(::MembershipFromRemote)
+    override val points: Double
+        get() = customerPoints.total
+
+    private data class ConsentFromRemote(
+        private val consent: ConsentRemote
+    ) : User.Consent {
+        override val marketing: Boolean
+            get() = consent.marketing
+        override val premium: Boolean
+            get() = consent.marketingPremium ?: false
+    }
+
+    private data class MembershipFromRemote(
+        private val club: CustomerResponse.Club
+    ) : User.Membership {
+        override val cardNumber: String
+            get() = club.cardNumber
+        override val memberFrom: Date
+            get() = club.joinedAt
+        override val memberUntil: Date
+            get() = club.expiredAt
+    }
+
 }
 
 internal data class BookingExpiredFromResponse(
