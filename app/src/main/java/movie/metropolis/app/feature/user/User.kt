@@ -8,7 +8,6 @@ data class User(
     val lastName: String,
     val email: String,
     val phone: String,
-    val birthAt: Date?,
     val favorite: Cinema?,
     val consent: Consent,
     val membership: Membership?,

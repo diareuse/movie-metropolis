@@ -45,7 +45,6 @@ class ProfileViewModel @Inject constructor(
             lastName.update { user.lastName }
             email.update { user.email }
             phone.update { user.phone }
-            birthDate.update { user.birthAt }
             favorite.update { user.favorite?.let(::CinemaSimpleViewFromFeature) }
             hasMarketing.update { user.consent.marketing }
             passwordCurrent.update { "" }
@@ -55,8 +54,11 @@ class ProfileViewModel @Inject constructor(
 
     val isLoggedIn = flow { emit(feature.getToken().isSuccess) }
 
-    val membership: Flow<Loadable<MembershipView?>> = user
+    val isLoading = stateMachine.state.map { it.isLoading }
+
+    val membership = user
         .map { it.map { user -> user.membership?.let { MembershipViewFeature(user) } } }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
     val cinemas = flow { emit(event.getCinemas(null)) }
         .map { it.map { it.map(::CinemaSimpleViewFromFeature) } }
@@ -67,7 +69,6 @@ class ProfileViewModel @Inject constructor(
     val lastName = MutableStateFlow("")
     val email = MutableStateFlow("")
     val phone = MutableStateFlow("")
-    val birthDate = MutableStateFlow(null as Date?)
     val favorite = MutableStateFlow(null as CinemaSimpleView?)
     val hasMarketing = MutableStateFlow(null as Boolean?)
     val passwordCurrent = MutableStateFlow("")

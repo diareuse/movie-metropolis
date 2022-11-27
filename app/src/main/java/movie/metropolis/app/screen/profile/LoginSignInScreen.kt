@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -24,7 +23,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,16 +33,13 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.theme.Theme
+import movie.metropolis.app.view.InputField
 
 @Composable
 fun LoginSignInScreen(
@@ -118,32 +113,25 @@ private fun LoginSignInScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.End
         ) {
-            val fieldShape = MaterialTheme.shapes.medium.copy(
-                bottomStart = CornerSize(0),
-                bottomEnd = CornerSize(0)
-            )
-            TextField(
+            InputField(
                 modifier = Modifier.fillMaxWidth(),
                 value = email,
                 onValueChange = onEmailChanged,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 isError = error,
-                shape = fieldShape,
                 readOnly = loading,
-                placeholder = { Text("john.doe@cinema.com") },
-                label = { Text("Email") }
+                placeholder = "john.doe@cinema.com",
+                label = "Email"
             )
-            TextField(
+            InputField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = onPasswordChanged,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 isError = error,
-                shape = fieldShape,
                 readOnly = loading,
-                visualTransformation = PasswordVisualTransformation(),
-                placeholder = { Text("p4$\$w0rd") },
-                label = { Text("Password") }
+                placeholder = "p4$\$w0rd",
+                label = "Password"
             )
             if (error) {
                 Text(
@@ -168,13 +156,6 @@ private fun LoginSignInScreen(
             }
         }
     }
-}
-
-class PasswordVisualTransformation : VisualTransformation {
-    override fun filter(text: AnnotatedString) = TransformedText(
-        text = AnnotatedString(text = text.map { '*' }.joinToString(separator = "")),
-        offsetMapping = OffsetMapping.Identity
-    )
 }
 
 @Preview(showBackground = true)
