@@ -212,7 +212,7 @@ data class MovieDetailViewFromFeature(
     override val duration: String
         get() = movie.duration.toStringComponents()
     override val countryOfOrigin: String
-        get() = movie.countryOfOrigin
+        get() = movie.countryOfOrigin.orEmpty()
     override val cast: List<String>
         get() = movie.cast.toList()
     override val directors: List<String>

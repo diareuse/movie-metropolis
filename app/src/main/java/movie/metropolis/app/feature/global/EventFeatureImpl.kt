@@ -146,7 +146,7 @@ internal data class MovieDetailFromResponse(
         get() = response.duration
     override val originalName: String
         get() = response.nameOriginal
-    override val countryOfOrigin: String
+    override val countryOfOrigin: String?
         get() = response.countryOfOrigin
     override val cast: Iterable<String>
         get() = response.cast?.split(", ", ",").orEmpty()

@@ -20,7 +20,7 @@ internal data class MovieDetailResponse(
     @SerialName("link") val url: String,
     @Serializable(YearSerializer::class)
     @SerialName("releaseYear") val releasedAt: Date,
-    @SerialName("releaseCountry") val countryOfOrigin: String,
+    @SerialName("releaseCountry") val countryOfOrigin: String?,
     @SerialName("cast") val cast: String?,
     @SerialName("directors") val directors: String,
     @SerialName("synopsis") val synopsis: String,
