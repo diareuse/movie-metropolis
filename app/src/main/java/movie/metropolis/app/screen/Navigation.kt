@@ -65,7 +65,12 @@ fun Navigation(
                     )
                 },
                 booking = { BookingScreen(it) },
-                user = { UserScreen(it) }
+                user = {
+                    UserScreen(
+                        padding = it,
+                        onNavigateToLogin = { controller.navigate("/user/login") }
+                    )
+                }
             )
         }
         composable("/user/login") {

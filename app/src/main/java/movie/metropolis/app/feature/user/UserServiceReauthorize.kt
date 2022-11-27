@@ -45,7 +45,9 @@ internal class UserServiceReauthorize(
     }
 
     private suspend inline fun <T> requireToken(body: () -> Result<T>): Result<T> {
-        if (account.expiresWithin(1.minutes)) {
+        if (!account.isLoggedIn) {
+            return Result.failure(SecurityException())
+        } else if (account.expiresWithin(1.minutes)) {
             val result = getToken(TokenRequest.Refresh(refreshToken))
             if (result.isFailure) return result as Result<T>
         } else if (account.isExpired) {
