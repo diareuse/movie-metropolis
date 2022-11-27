@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import movie.metropolis.app.feature.global.Cinema
@@ -54,8 +53,9 @@ class ProfileViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
+    val isLoggedIn = flow { emit(feature.getToken().isSuccess) }
+
     val membership: Flow<Loadable<MembershipView?>> = user
-        .onStart { stateMachine.submit { feature.getUser().asLoadable() } }
         .map { it.map { user -> user.membership?.let { MembershipViewFeature(user) } } }
 
     val cinemas = flow { emit(event.getCinemas(null)) }
@@ -72,6 +72,10 @@ class ProfileViewModel @Inject constructor(
     val hasMarketing = MutableStateFlow(null as Boolean?)
     val passwordCurrent = MutableStateFlow("")
     val passwordNew = MutableStateFlow("")
+
+    init {
+        stateMachine.submit { feature.getUser().asLoadable() }
+    }
 
     fun save() {
         val user = user.value.getOrNull() ?: return
