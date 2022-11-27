@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen.detail
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,11 +18,16 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaBookingView
@@ -98,7 +102,6 @@ fun ShowingItemTime(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <T, T2> ShowingLayout(
     items: Map<T2, List<T>>,
@@ -106,6 +109,7 @@ fun <T, T2> ShowingLayout(
     title: @Composable () -> Unit,
     section: @Composable (T2) -> Unit,
     modifier: Modifier = Modifier,
+    background: (@Composable () -> Unit)? = null,
     item: @Composable (T) -> Unit,
 ) {
     Column(modifier = modifier) {
@@ -126,30 +130,43 @@ fun <T, T2> ShowingLayout(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.surface,
             shape = MaterialTheme.shapes.medium,
-            tonalElevation = 1.dp
+            tonalElevation = if (background == null) 1.dp else 0.dp
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                for ((label, collection) in items) Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+            Box {
+                val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
+                val density = LocalDensity.current
+                Box(
+                    modifier = Modifier.size(
+                        width = with(density) { size.width.toDp() },
+                        height = with(density) { size.height.toDp() }
+                    )
                 ) {
-                    Box(Modifier.padding(horizontal = 16.dp)) {
-                        CompositionLocalProvider(
-                            LocalTextStyle provides MaterialTheme.typography.titleMedium
-                        ) {
-                            section(label)
-                        }
-                    }
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    background?.invoke()
+                }
+                Column(
+                    modifier = Modifier
+                        .onSizeChanged(onSizeChanged)
+                        .padding(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    for ((label, collection) in items) Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(collection, key) {
-                            item(it)
+                        Box(Modifier.padding(horizontal = 16.dp)) {
+                            CompositionLocalProvider(
+                                LocalTextStyle provides MaterialTheme.typography.titleMedium
+                            ) {
+                                section(label)
+                            }
+                        }
+                        LazyRow(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp)
+                        ) {
+                            items(collection, key) {
+                                item(it)
+                            }
                         }
                     }
                 }

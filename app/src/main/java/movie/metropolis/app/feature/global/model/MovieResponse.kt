@@ -14,7 +14,7 @@ internal data class MovieResponse(
     @Serializable(MinutesDurationSerializer::class)
     @SerialName("length") val duration: Duration,
     @SerialName("posterLink") val posterUrl: String,
-    @SerialName("videoLink") val videoUrl: String,
+    @SerialName("videoLink") val videoUrl: String?,
     @SerialName("link") val url: String,
     @Serializable(YearSerializer::class)
     @SerialName("releaseYear") val releasedAt: Date,
