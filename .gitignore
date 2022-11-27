@@ -7,6 +7,7 @@ local.properties
 *.apk
 data
 *.orig
+secrets.properties
 keystore.properties
 keystore.jks
 google-services.json
