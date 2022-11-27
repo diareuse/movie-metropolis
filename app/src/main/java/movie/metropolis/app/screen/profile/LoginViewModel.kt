@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen.profile
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,13 +12,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    state: SavedStateHandle,
     private val feature: UserFeature
 ) : ViewModel() {
 
-    private val stateMachine = StateMachine(viewModelScope, State()) { copy(loading = true) }
+    private val stateMachine = StateMachine(viewModelScope, State()) {
+        copy(loading = true, error = null)
+    }
 
-    val mode = LoginMode.valueOf(state.get<String>("mode").let(::requireNotNull))
+    val mode = MutableStateFlow(LoginMode.Login)
 
     val state = stateMachine.state
     val email = MutableStateFlow("")
@@ -29,7 +29,7 @@ class LoginViewModel @Inject constructor(
     val phone = MutableStateFlow("")
 
     fun send() {
-        val method = when (mode) {
+        val method = when (mode.value) {
             LoginMode.Login -> SignInMethod.Login(email.value, password.value)
             LoginMode.Registration -> SignInMethod.Registration(
                 email.value,

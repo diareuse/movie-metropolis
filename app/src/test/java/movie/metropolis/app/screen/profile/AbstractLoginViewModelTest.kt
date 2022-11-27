@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen.profile
 
-import androidx.lifecycle.SavedStateHandle
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import movie.metropolis.app.model.LoginMode
@@ -15,7 +14,7 @@ abstract class AbstractLoginViewModelTest : ViewModelTest() {
     abstract val mode: LoginMode
 
     override fun prepare() {
-        viewModel = LoginViewModel(SavedStateHandle(mapOf("mode" to mode.name)), user)
+        viewModel = LoginViewModel(user)
     }
 
     @Test
