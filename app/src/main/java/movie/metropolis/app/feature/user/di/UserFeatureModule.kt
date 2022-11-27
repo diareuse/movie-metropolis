@@ -9,7 +9,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
 import movie.metropolis.app.di.ClientCustomer
-import movie.metropolis.app.feature.global.CinemaService
+import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.user.UserAccount
 import movie.metropolis.app.feature.user.UserAccountImpl
 import movie.metropolis.app.feature.user.UserCredentials
@@ -29,9 +29,9 @@ internal class UserFeatureModule {
     fun feature(
         service: UserService,
         account: UserAccount,
-        cinema: CinemaService
+        event: EventFeature
     ): UserFeature {
-        return UserFeatureImpl(service, account, cinema)
+        return UserFeatureImpl(service, account, event)
     }
 
     @Provides
