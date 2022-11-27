@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 
 class StateMachine<State>(
@@ -21,7 +20,6 @@ class StateMachine<State>(
     val state = channel.consumeAsFlow()
         .filterNotNull()
         .runningLoadingFold(initial) { state, mutator -> mutator.run { state.mutate() } }
-        .onEach { println("${System.currentTimeMillis()} " + it.toString()) }
         .stateIn(scope, SharingStarted.Eagerly, initial)
 
     fun submit(mutator: Mutator<State>) {

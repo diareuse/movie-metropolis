@@ -41,6 +41,7 @@ import movie.metropolis.app.screen.profile.UserScreen
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
+    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     controller: NavHostController = rememberAnimatedNavController()
 ) {
     AnimatedNavHost(
@@ -68,7 +69,10 @@ fun Navigation(
             CinemaScreen()
         }
         composable("/movies/{movie}") {
-            MovieScreen(onBackClick = controller::navigateUp)
+            MovieScreen(
+                onBackClick = controller::navigateUp,
+                onPermissionsRequested = onPermissionsRequested
+            )
         }
     }
 }
