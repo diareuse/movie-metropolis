@@ -1,5 +1,6 @@
 package movie.metropolis.app.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
@@ -70,7 +71,10 @@ fun <T> InputField(
         onExpandedChange = { expanded = it }
     ) {
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded }
+                .menuAnchor(),
             value = converter(selected),
             onValueChange = {},
             readOnly = true,
