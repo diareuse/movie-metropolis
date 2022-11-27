@@ -20,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -170,8 +171,11 @@ private fun UserScreen(
                 Text(
                     text = it?.name ?: return@InputField,
                     modifier = Modifier
+                        .fillMaxWidth()
                         .clickable { onFavoriteChanged(it) }
-                        .padding(16.dp, 10.dp)
+                        .padding(16.dp, 10.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
             Row(
