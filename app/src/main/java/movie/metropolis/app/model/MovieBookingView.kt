@@ -6,7 +6,7 @@ import androidx.compose.runtime.Stable
 interface MovieBookingView {
 
     val movie: Movie
-    val availability: List<Availability>
+    val availability: Map<LanguageAndType, List<Availability>>
 
     interface Movie {
         val id: String
@@ -14,7 +14,7 @@ interface MovieBookingView {
         val releasedAt: String
         val duration: String
         val poster: String
-        val video: String
+        val video: String?
     }
 
     interface Availability {
@@ -22,7 +22,11 @@ interface MovieBookingView {
         val url: String
         val startsAt: String
         val isEnabled: Boolean
-        val cinema: CinemaView
+    }
+
+    interface LanguageAndType {
+        val type: String
+        val language: String
     }
 
 }

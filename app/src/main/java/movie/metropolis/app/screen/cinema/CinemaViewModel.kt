@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -20,6 +20,7 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
+import movie.metropolis.app.screen.getOrThrow
 import movie.metropolis.app.screen.listing.toStringComponents
 import movie.metropolis.app.screen.map
 import java.text.DateFormat
@@ -35,19 +36,27 @@ class CinemaViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val id = handle.get<String>("cinema").orEmpty()
+    private val cinemaInternal = flow { emit(event.getCinemas(null)) }
+        .map { it.mapCatching { it.first { it.id == id } } }
+        .map { it.asLoadable() }
+        .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
+
+    private val sharedCinema = cinemaInternal
+        .dropWhile { !it.isSuccess }
+        .map { it.getOrThrow() }
 
     val selectedDate = MutableStateFlow(Date())
-    val cinema = flow { emit(event.getCinemas(null)) }
-        .map { it.getOrDefault(emptyList()).firstOrNull { it.id == id } }
-        .filterNotNull()
-        .shareIn(viewModelScope, SharingStarted.Eagerly)
-    val items = selectedDate
-        .map { event.getShowings(cinema.first(), it).asLoadable() }
+    val cinema = cinemaInternal
+        .map { it.map(::CinemaViewFromFeature) }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val items = combine(selectedDate, sharedCinema) { date, cinema ->
+        event.getShowings(cinema, date).asLoadable()
+    }
         .map {
             it.map {
                 it.entries.map { (movie, showings) ->
                     MovieBookingViewFromFeature(movie, showings)
-                }
+                }.sortedByDescending { it.availability.entries.sumOf { it.value.size } }
             }
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
@@ -61,10 +70,26 @@ data class MovieBookingViewFromFeature(
 
     override val movie: MovieBookingView.Movie
         get() = MovieFromFeature(movieRef)
-    override val availability: List<MovieBookingView.Availability>
-        get() = showings.map(::AvailabilityFromFeature)
+    override val availability: Map<MovieBookingView.LanguageAndType, List<MovieBookingView.Availability>>
+        get() = showings
+            .groupBy(::LanguageAndTypeFromFeature)
+            .mapValues { (_, it) -> it.map(::AvailabilityFromFeature) }
 
-    data class MovieFromFeature(
+    private data class LanguageAndTypeFromFeature(
+        override val type: String,
+        override val language: String
+    ) : MovieBookingView.LanguageAndType {
+
+        constructor(
+            showing: Showing
+        ) : this(
+            showing.type,
+            showing.language
+        )
+
+    }
+
+    private data class MovieFromFeature(
         private val movie: MovieReference
     ) : MovieBookingView.Movie {
 
@@ -80,11 +105,11 @@ data class MovieBookingViewFromFeature(
             get() = movie.duration.toStringComponents()
         override val poster: String
             get() = movie.posterUrl
-        override val video: String
+        override val video: String?
             get() = movie.videoUrl
     }
 
-    data class AvailabilityFromFeature(
+    private data class AvailabilityFromFeature(
         private val showing: Showing
     ) : MovieBookingView.Availability {
 
@@ -98,8 +123,6 @@ data class MovieBookingViewFromFeature(
             get() = timeFormat.format(showing.startsAt)
         override val isEnabled: Boolean
             get() = showing.isEnabled
-        override val cinema: CinemaView
-            get() = CinemaViewFromFeature(showing.cinema)
     }
 
 }

@@ -205,7 +205,7 @@ internal data class MovieFromResponse(
         get() = movie.duration
     override val posterUrl: String
         get() = movie.posterUrl
-    override val videoUrl: String
+    override val videoUrl: String?
         get() = movie.videoUrl
 
 }
