@@ -168,10 +168,10 @@ private fun UserScreen(
                 converter = { it?.name.orEmpty() }
             ) {
                 Text(
-                    text = it?.city ?: return@InputField,
+                    text = it?.name ?: return@InputField,
                     modifier = Modifier
-                        .padding(16.dp, 10.dp)
                         .clickable { onFavoriteChanged(it) }
+                        .padding(16.dp, 10.dp)
                 )
             }
             Row(
