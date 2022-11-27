@@ -61,15 +61,18 @@ internal class EventFeatureImpl(
                 val nearby = event.getNearbyCinemas(location.latitude, location.longitude)
                     .map { it.body }
                     .getOrDefault(emptyList())
-                if (cinemas.isFailure || nearby.isEmpty()) return cinemas
-                val cinemas = cinemas.getOrThrow()
-                val mapped = nearby.mapNotNull { nearby ->
-                    cinemas.firstOrNull { it.id == nearby.cinemaId }
-                        ?.copy(distance = nearby.distanceKms)
+                if (cinemas.isFailure || nearby.isEmpty()) {
+                    cinemas
+                } else {
+                    val cinemas = cinemas.getOrThrow()
+                    val mapped = nearby.mapNotNull { nearby ->
+                        cinemas.firstOrNull { it.id == nearby.cinemaId }
+                            ?.copy(distance = nearby.distanceKms)
+                    }
+                    Result.success(mapped)
                 }
-                Result.success(mapped)
             }
-        }
+        }.map { it.sortedWith(compareBy(Cinema::distance, Cinema::city)) }
     }
 
     override suspend fun getDetail(movie: Movie): Result<MovieDetail> {

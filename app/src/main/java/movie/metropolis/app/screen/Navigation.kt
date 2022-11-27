@@ -57,7 +57,13 @@ fun Navigation(
                         onClickMovie = { id -> controller.navigate("/movies/${id}") }
                     )
                 },
-                cinemas = { CinemasScreen(it) },
+                cinemas = {
+                    CinemasScreen(
+                        padding = it,
+                        onPermissionRequested = onPermissionsRequested,
+                        onClickCinema = { id -> controller.navigate("/cinemas/$id") }
+                    )
+                },
                 booking = { BookingScreen(it) },
                 user = { UserScreen(it) }
             )
