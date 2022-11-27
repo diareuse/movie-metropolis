@@ -74,10 +74,13 @@ fun Navigation(
             )
         }
         composable("/user/login") {
-            LoginScreen(onNavigateHome = {
-                controller.popBackStack("/home", true)
-                controller.navigate("/home")
-            })
+            LoginScreen(
+                onNavigateHome = {
+                    controller.popBackStack("/home", true)
+                    controller.navigate("/home")
+                },
+                onBackClick = controller::navigateUp
+            )
         }
         composable("/cinemas/{cinema}") {
             CinemaScreen(

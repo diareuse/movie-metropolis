@@ -46,11 +46,11 @@ import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.theme.Theme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginSignInScreen(
     viewModel: LoginViewModel,
-    onNavigateHome: () -> Unit
+    onNavigateHome: () -> Unit,
+    onBackClick: () -> Unit
 ) {
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
@@ -58,31 +58,21 @@ fun LoginSignInScreen(
     LaunchedEffect(state.loggedIn) {
         if (state.loggedIn) onNavigateHome()
     }
-    LoginScreenLayout(
-        title = { Text("Welcome back!") },
-        onBackClick = { /*TODO*/ }
-    ) {
-        Column {
-            TextField(
-                value = email,
-                onValueChange = { viewModel.email.value = it },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
-            )
-            TextField(
-                value = password,
-                onValueChange = { viewModel.password.value = it },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-            Button(onClick = viewModel::send, enabled = !state.loading) {
-                Text("Log in")
-            }
-        }
-    }
+    LoginSignInScreen(
+        email = email,
+        password = password,
+        error = state.error != null,
+        loading = state.loading,
+        onEmailChanged = { viewModel.email.value = it },
+        onPasswordChanged = { viewModel.password.value = it },
+        onSendClick = viewModel::send,
+        onBackClick = onBackClick
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginSignInScreen(
+private fun LoginSignInScreen(
     email: String,
     password: String,
     error: Boolean,
@@ -139,7 +129,9 @@ fun LoginSignInScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 isError = error,
                 shape = fieldShape,
-                readOnly = loading
+                readOnly = loading,
+                placeholder = { Text("john.doe@cinema.com") },
+                label = { Text("Email") }
             )
             TextField(
                 modifier = Modifier.fillMaxWidth(),
@@ -149,7 +141,9 @@ fun LoginSignInScreen(
                 isError = error,
                 shape = fieldShape,
                 readOnly = loading,
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+                placeholder = { Text("p4$\$w0rd") },
+                label = { Text("Password") }
             )
             if (error) {
                 Text(
