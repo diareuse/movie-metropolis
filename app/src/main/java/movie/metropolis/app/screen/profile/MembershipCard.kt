@@ -2,10 +2,9 @@ package movie.metropolis.app.screen.profile
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,6 +27,8 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -51,14 +52,16 @@ fun MembershipCard(
     MembershipCardLayout(
         modifier = modifier,
         name = { Text("%s %s".format(firstName, lastName)) },
-        expiration = { Text(until) },
+        expiration = { Text("Expires: $until") },
         points = { Text("$points points") },
         barcode = {
             Barcode(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(MaterialTheme.shapes.medium)
-                    .height(64.dp),
+                    .background(MaterialTheme.colorScheme.surface)
+                    .height(64.dp)
+                    .padding(vertical = 8.dp),
                 code = cardNumber,
                 format = BarcodeFormat.CODE_128,
                 color = MaterialTheme.colorScheme.onSurface
@@ -71,7 +74,7 @@ fun MembershipCard(
 fun MembershipCard(modifier: Modifier = Modifier) {
     MembershipCardLayout(
         modifier = modifier,
-        name = { Text("John Doe", modifier = Modifier.textPlaceholder(true)) },
+        name = { Text("Jonathan Superlongname", modifier = Modifier.textPlaceholder(true)) },
         expiration = { Text("01. 01. 1111", modifier = Modifier.textPlaceholder(true)) },
         points = { Text("1234 points", modifier = Modifier.textPlaceholder(true)) },
         barcode = {
@@ -96,25 +99,38 @@ private fun MembershipCardLayout(
 ) {
     Surface(
         modifier = modifier,
-        tonalElevation = 1.dp,
+        color = MaterialTheme.colorScheme.tertiary,
         shape = MaterialTheme.shapes.large
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+        Column {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                text = "Club Membership",
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Surface(
+                modifier = modifier,
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+                shape = MaterialTheme.shapes.large,
+                shadowElevation = 16.dp
             ) {
-                CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.titleLarge) {
-                    name()
-                    Spacer(Modifier.weight(1f))
-                    expiration()
+                Column(
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Column(Modifier.padding(horizontal = 16.dp)) {
+                        CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.titleLarge) {
+                            name()
+                        }
+                        expiration()
+                        points()
+                    }
+                    Spacer(Modifier.height(16.dp))
+                    barcode()
                 }
             }
-            points()
-            Spacer(Modifier.height(8.dp))
-            barcode()
         }
     }
 }
@@ -124,8 +140,8 @@ private fun MembershipCardLayout(
 private fun Preview() {
     Theme {
         MembershipCard(
-            firstName = "John",
-            lastName = "Doe",
+            firstName = "Jonathan",
+            lastName = "SuperLongNamer",
             cardNumber = "1234612377231",
             until = "21.5.2053",
             points = "513.2"
