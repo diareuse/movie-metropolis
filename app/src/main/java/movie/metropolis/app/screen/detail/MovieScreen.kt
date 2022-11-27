@@ -55,6 +55,7 @@ import kotlin.random.Random.Default.nextInt
 @Composable
 fun MovieScreen(
     onBackClick: () -> Unit,
+    onBookingClick: (String) -> Unit,
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
@@ -76,7 +77,8 @@ fun MovieScreen(
         selectionAvailableStart = startDate.getOrNull(),
         selectedDate = selectedDate,
         onBackClick = onBackClick,
-        onSelectedDateUpdated = { viewModel.selectedDate.value = it }
+        onSelectedDateUpdated = { viewModel.selectedDate.value = it },
+        onBookingClick = onBookingClick
     )
 }
 
@@ -90,7 +92,8 @@ private fun MovieScreen(
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     onSelectedDateUpdated: (Date) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onBookingClick: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -151,7 +154,7 @@ private fun MovieScreen(
                         .padding(horizontal = 24.dp),
                     title = it.cinema.name,
                     showings = it.availability,
-                    onClick = {}
+                    onClick = onBookingClick
                 )
             }
         }
@@ -233,7 +236,8 @@ private fun Preview(
             onBackClick = {},
             showings = Loadable.success(showings),
             selectionAvailableStart = Date(),
-            onSelectedDateUpdated = {}
+            onSelectedDateUpdated = {},
+            onBookingClick = {}
         )
     }
 }

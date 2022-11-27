@@ -34,7 +34,9 @@ import java.util.Date
 
 @Composable
 fun CinemaScreen(
-    viewModel: CinemaViewModel = hiltViewModel()
+    viewModel: CinemaViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
+    onBookingClick: (String) -> Unit
 ) {
     val cinema by viewModel.cinema.collectAsState()
     val items by viewModel.items.collectAsState()
@@ -44,7 +46,8 @@ fun CinemaScreen(
         items = items,
         selectedDate = selectedDate,
         onSelectedDateChanged = { viewModel.selectedDate.value = it },
-        onBookingClick = {}
+        onBookingClick = onBookingClick,
+        onBackClick = onBackClick
     )
 }
 
@@ -55,7 +58,8 @@ private fun CinemaScreen(
     items: Loadable<List<MovieBookingView>>,
     selectedDate: Date,
     onSelectedDateChanged: (Date) -> Unit,
-    onBookingClick: (String) -> Unit
+    onBookingClick: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -70,7 +74,7 @@ private fun CinemaScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton({}) {
+                    IconButton(onBackClick) {
                         Icon(painterResource(id = R.drawable.ic_back), null)
                     }
                 }
