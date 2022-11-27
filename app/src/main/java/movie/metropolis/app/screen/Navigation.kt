@@ -72,12 +72,16 @@ fun Navigation(
             LoginScreen()
         }
         composable("/cinemas/{cinema}") {
-            CinemaScreen()
+            CinemaScreen(
+                onBackClick = controller::navigateUp,
+                onBookingClick = {}
+            )
         }
         composable("/movies/{movie}") {
             MovieScreen(
                 onBackClick = controller::navigateUp,
-                onPermissionsRequested = onPermissionsRequested
+                onPermissionsRequested = onPermissionsRequested,
+                onBookingClick = {}
             )
         }
     }
