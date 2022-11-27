@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.ImageView
@@ -54,6 +55,7 @@ import kotlin.random.Random.Default.nextInt
 @Composable
 fun MovieScreen(
     onBackClick: () -> Unit,
+    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
     val poster by viewModel.poster.collectAsState(initial = Loadable.loading())
@@ -62,6 +64,10 @@ fun MovieScreen(
     val startDate by viewModel.startDate.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
     val showings by viewModel.showings.collectAsState()
+    val location by rememberLocation(onPermissionsRequested)
+    SideEffect {
+        viewModel.location.value = location
+    }
     MovieScreen(
         detail = detail,
         poster = poster,

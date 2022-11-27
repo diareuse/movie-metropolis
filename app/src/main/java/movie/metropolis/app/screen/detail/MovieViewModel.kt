@@ -43,7 +43,6 @@ import movie.metropolis.app.screen.onFailure
 import movie.metropolis.app.screen.onSuccess
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import javax.inject.Inject
@@ -68,12 +67,7 @@ class MovieViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
     val selectedDate = MutableStateFlow(null as Date?)
-    val location = MutableStateFlow(
-        Location(
-            50.0789968000,
-            14.4610091000
-        ).toSnapshot() as LocationSnapshot?
-    )//(null as LocationSnapshot?)
+    val location = MutableStateFlow(null as LocationSnapshot?)
 
     val detail = movieDetail
         .map { it.map(::MovieDetailViewFromFeature) }
@@ -139,23 +133,6 @@ class MovieViewModel @Inject constructor(
                 CinemaBookingViewFromResponse(cinema, showings)
             }
         }
-    }
-
-    fun onSelectNextDay() {
-        val date = selectedDate.value ?: return
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DAY_OF_YEAR, 1)
-        selectedDate.value = calendar.time
-    }
-
-    fun onSelectPreviousDay() {
-        val date = selectedDate.value ?: return
-        val startDay = startDate.value.getOrNull()?.coerceAtLeast(Date()) ?: return
-        val calendar = Calendar.getInstance()
-        calendar.time = date
-        calendar.add(Calendar.DAY_OF_YEAR, -1)
-        selectedDate.value = calendar.time.takeUnless { it.before(startDay) } ?: selectedDate.value
     }
 
 }
