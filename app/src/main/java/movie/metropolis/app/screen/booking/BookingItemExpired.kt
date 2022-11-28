@@ -101,7 +101,7 @@ private fun BookingItemExpiredLayout(
                     Image(
                         modifier = Modifier
                             .size(100.dp)
-                            .scale(2f)
+                            .scale(1.5f)
                             .alpha(.1f)
                             .align(Alignment.BottomEnd),
                         painter = painterResource(id = R.drawable.ic_movie),
@@ -119,7 +119,7 @@ private fun BookingItemExpiredLayout(
                             modifier = Modifier
                                 .shadow(24.dp)
                                 .clip(MaterialTheme.shapes.medium)
-                                .height(150.dp)
+                                .height(100.dp)
                                 .aspectRatio(posterAspectRatio)
                                 .background(MaterialTheme.colorScheme.surface),
                             contentAlignment = Alignment.Center,
