@@ -242,7 +242,7 @@ private fun Preview(
     }
 }
 
-private data class ImageViewPreview(
+data class ImageViewPreview(
     override val aspectRatio: Float,
     override val url: String
 ) : ImageView
@@ -272,7 +272,9 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val cast: List<String> = listOf("Foo Bar", "Bar Foo-Foo"),
         override val directors: List<String> = listOf("Foofoo Barbar"),
         override val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam vel finibus augue. Praesent porta, nibh rhoncus ultrices tempus, metus lacus facilisis lorem, id venenatis nisl mi non massa. Vestibulum eu ipsum leo. Mauris et sagittis tortor. Fusce dictum cursus quam in ornare. Curabitur posuere ligula sem, et tincidunt lorem commodo vitae. Fusce mollis elementum dignissim. Fusce suscipit massa maximus metus gravida, vitae posuere sem semper. Nullam auctor venenatis elementum. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Phasellus nibh sem, volutpat nec egestas convallis, ultricies quis massa. Duis quis placerat neque, eu bibendum arcu. ",
-        override val availableFrom: String = "23. 4. 2022"
+        override val availableFrom: String = "23. 4. 2022",
+        override val poster: ImageView? = null,
+        override val trailer: VideoView? = null,
     ) : MovieDetailView
 
 }

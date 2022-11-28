@@ -1,6 +1,7 @@
 package movie.metropolis.app.feature.user
 
 import movie.metropolis.app.feature.global.Cinema
+import movie.metropolis.app.feature.global.MovieDetail
 import java.util.Date
 
 sealed interface Booking {
@@ -9,7 +10,7 @@ sealed interface Booking {
     val name: String
     val startsAt: Date
     val paidAt: Date
-    val distributorCode: String
+    val movie: MovieDetail
     val eventId: String
     val cinema: Cinema
 

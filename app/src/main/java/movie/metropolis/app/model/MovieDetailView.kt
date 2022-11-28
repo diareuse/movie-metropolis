@@ -13,4 +13,6 @@ interface MovieDetailView {
     val directors: List<String>
     val description: String
     val availableFrom: String
+    val poster: ImageView?
+    val trailer: VideoView?
 }
