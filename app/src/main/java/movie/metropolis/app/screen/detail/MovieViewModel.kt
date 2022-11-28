@@ -221,6 +221,12 @@ data class MovieDetailViewFromFeature(
         get() = movie.description
     override val availableFrom: String
         get() = dateFormat.format(movie.screeningFrom)
+    override val poster: ImageView?
+        get() = movie.media.asSequence().filterIsInstance<Media.Image>()
+            .sortedByDescending { it.width * it.height }.firstOrNull()?.let(::ImageViewFromFeature)
+    override val trailer: VideoView?
+        get() = movie.media.filterIsInstance<Media.Video>().firstOrNull()
+            ?.let(::VideoViewFromFeature)
 }
 
 data class MovieFromId(

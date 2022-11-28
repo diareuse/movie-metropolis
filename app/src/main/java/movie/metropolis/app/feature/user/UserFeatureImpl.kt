@@ -3,6 +3,7 @@ package movie.metropolis.app.feature.user
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import movie.metropolis.app.feature.global.EventFeature
+import movie.metropolis.app.feature.global.MovieDetail
 import movie.metropolis.app.feature.user.FieldUpdate.Cinema
 import movie.metropolis.app.feature.user.FieldUpdate.Consent
 import movie.metropolis.app.feature.user.FieldUpdate.Email
@@ -18,6 +19,7 @@ import movie.metropolis.app.feature.user.model.CustomerResponse
 import movie.metropolis.app.feature.user.model.PasswordRequest
 import movie.metropolis.app.feature.user.model.RegistrationRequest
 import movie.metropolis.app.feature.user.model.TokenRequest
+import movie.metropolis.app.screen.detail.MovieFromId
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 
@@ -70,12 +72,14 @@ internal class UserFeatureImpl(
     override suspend fun getBookings(): Result<Iterable<Booking>> {
         val cinemas = event.getCinemas(null).map { it.toList() }.getOrDefault(emptyList())
         return service.getBookings().map {
-            it.map { booking ->
+            it.mapNotNull { booking ->
+                val movie = event.getDetail(MovieFromId(booking.movieId)).getOrNull()
+                    ?: return@mapNotNull null
                 when (booking.isExpired) {
-                    true -> BookingExpiredFromResponse(booking, cinemas)
+                    true -> BookingExpiredFromResponse(booking, movie, cinemas)
                     else -> when (val detail = service.getBooking(booking.id).getOrNull()) {
-                        null -> BookingExpiredFromResponse(booking, cinemas)
-                        else -> BookingActiveFromResponse(booking, detail, cinemas)
+                        null -> BookingExpiredFromResponse(booking, movie, cinemas)
+                        else -> BookingActiveFromResponse(booking, detail, movie, cinemas)
                     }
                 }
             }
@@ -177,15 +181,18 @@ internal data class UserFromRemote(
 
 internal data class BookingExpiredFromResponse(
     private val response: BookingResponse,
+    override val movie: MovieDetail,
     override val cinema: movie.metropolis.app.feature.global.Cinema
 ) : Booking.Expired {
 
     constructor(
         response: BookingResponse,
+        movie: MovieDetail,
         cinemas: List<movie.metropolis.app.feature.global.Cinema>
     ) : this(
-        response,
-        cinemas.first { it.id == response.cinemaId }
+        response = response,
+        movie = movie,
+        cinema = cinemas.first { it.id == response.cinemaId }
     )
 
     override val id: String
@@ -196,8 +203,6 @@ internal data class BookingExpiredFromResponse(
         get() = response.startsAt
     override val paidAt: Date
         get() = response.paidAt
-    override val distributorCode: String
-        get() = response.eventMasterCode
     override val eventId: String
         get() = response.eventId
 
@@ -206,17 +211,20 @@ internal data class BookingExpiredFromResponse(
 internal data class BookingActiveFromResponse(
     private val response: BookingResponse,
     private val detail: BookingDetailResponse,
+    override val movie: MovieDetail,
     override val cinema: movie.metropolis.app.feature.global.Cinema
 ) : Booking.Active {
 
     constructor(
         response: BookingResponse,
         detail: BookingDetailResponse,
+        movie: MovieDetail,
         cinemas: List<movie.metropolis.app.feature.global.Cinema>
     ) : this(
-        response,
-        detail,
-        cinemas.first { it.id == response.cinemaId }
+        response = response,
+        detail = detail,
+        movie = movie,
+        cinema = cinemas.first { it.id == response.cinemaId }
     )
 
     override val id: String
@@ -227,8 +235,6 @@ internal data class BookingActiveFromResponse(
         get() = response.startsAt
     override val paidAt: Date
         get() = response.paidAt
-    override val distributorCode: String
-        get() = response.eventMasterCode
     override val eventId: String
         get() = response.eventId
     override val hall: String

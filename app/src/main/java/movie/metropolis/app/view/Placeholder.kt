@@ -32,13 +32,18 @@ fun Modifier.imagePlaceholder(visible: Boolean, shape: ShapeToken = ShapeToken.M
     )
 }
 
-fun Modifier.textPlaceholder(visible: Boolean, shape: ShapeToken = ShapeToken.Small) = composed {
-    val color = LocalContentColor.current
+fun Modifier.textPlaceholder(
+    visible: Boolean,
+    shape: ShapeToken = ShapeToken.Small,
+    color: Color = Color.Unspecified
+) = composed {
+    val background = LocalContentColor.current
     padding(if (visible) 2.dp else 0.dp).placeholder(
         visible = visible,
-        color = color.copy(alpha = .1f),
+        color = background.copy(alpha = .1f),
         shape = shape.shape,
-        highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.containerColorFor(color))
+        highlight = PlaceholderHighlight.shimmer(color.takeUnless { it == Color.Unspecified }
+            ?: MaterialTheme.colorScheme.containerColorFor(background))
     )
 }
 

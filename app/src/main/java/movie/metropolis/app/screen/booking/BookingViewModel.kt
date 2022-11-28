@@ -12,9 +12,11 @@ import movie.metropolis.app.feature.user.Booking
 import movie.metropolis.app.feature.user.UserFeature
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.cinema.CinemaViewFromFeature
+import movie.metropolis.app.screen.detail.MovieDetailViewFromFeature
 import movie.metropolis.app.screen.map
 import java.text.DateFormat
 import java.util.Calendar
@@ -69,6 +71,8 @@ data class BookingViewExpiredFromFeature(
             calendar.set(Calendar.MILLISECOND, 0)
             return Date().after(calendar.time)
         }
+    override val movie: MovieDetailView
+        get() = MovieDetailViewFromFeature(booking.movie)
     override val isPaid: Boolean
         get() = booking.paidAt.before(Date())
     override val cinema: CinemaView
@@ -102,6 +106,8 @@ data class BookingViewActiveFromFeature(
             calendar.set(Calendar.MILLISECOND, 0)
             return Date().after(calendar.time)
         }
+    override val movie: MovieDetailView
+        get() = MovieDetailViewFromFeature(booking.movie)
     override val isPaid: Boolean
         get() = booking.paidAt.before(Date())
     override val cinema: CinemaView

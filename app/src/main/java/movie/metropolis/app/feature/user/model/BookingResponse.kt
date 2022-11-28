@@ -15,7 +15,7 @@ internal data class BookingResponse(
     @Serializable(TimestampSerializer::class)
     @SerialName("transactionDate") val paidAt: Date,
     @SerialName("isPaid") val isPaid: Boolean,
-    @SerialName("eventMasterCode") val eventMasterCode: String,
+    @SerialName("distributorCode") val movieId: String,
     @SerialName("cinemaId") val cinemaId: String,
     @SerialName("eventId") val eventId: String
 ) {
