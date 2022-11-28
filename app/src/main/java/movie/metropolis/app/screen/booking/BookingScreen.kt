@@ -11,6 +11,9 @@ import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -51,6 +54,7 @@ private fun BookingScreen(
     ) {
         active.onSuccess { view ->
             items(view, BookingView::id) {
+                var isVisible by rememberSaveable { mutableStateOf(false) }
                 BookingItemActive(
                     modifier = Modifier.animateItemPlacement(),
                     name = it.name,
@@ -59,7 +63,17 @@ private fun BookingScreen(
                     time = it.time,
                     poster = it.movie.poster,
                     duration = it.movie.duration,
-                    onClick = {}
+                    onClick = { isVisible = true }
+                )
+                BookingTicketDialog(
+                    code = it.id,
+                    poster = it.movie.poster?.url.orEmpty(),
+                    hall = it.hall,
+                    seats = it.seats.map { it.row to it.seat },
+                    time = it.time,
+                    name = it.name,
+                    isVisible = isVisible,
+                    onDismissRequest = { isVisible = false }
                 )
             }
             item(key = "divider") { Divider(Modifier.padding(16.dp)) }
