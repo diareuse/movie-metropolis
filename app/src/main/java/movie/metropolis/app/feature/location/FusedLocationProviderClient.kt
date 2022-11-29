@@ -8,7 +8,6 @@ import androidx.core.app.ActivityCompat.checkSelfPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
 import kotlinx.coroutines.suspendCancellableCoroutine
-import movie.metropolis.app.model.LocationSnapshot
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
@@ -20,14 +19,14 @@ sealed class LocationException : RuntimeException() {
 @Throws(LocationException::class)
 suspend fun FusedLocationProviderClient.getLastLocation(
     context: Context
-) = suspendCancellableCoroutine { cont ->
+): Location? = suspendCancellableCoroutine { cont ->
     if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
         cont.resumeWithException(LocationException.PermissionMissing())
         return@suspendCancellableCoroutine
     }
     lastLocation.addOnCompleteListener {
         when (it.isSuccessful) {
-            true -> cont.resume(LocationSnapshot(it.result))
+            true -> cont.resume(it.result)
             else -> cont.resumeWithException(LocationException.NotAvailable(it.exception))
         }
     }
@@ -36,20 +35,15 @@ suspend fun FusedLocationProviderClient.getLastLocation(
 @Throws(LocationException::class)
 suspend fun FusedLocationProviderClient.getCurrentLocation(
     context: Context
-) = suspendCancellableCoroutine { cont ->
+): Location? = suspendCancellableCoroutine { cont ->
     if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
         cont.resumeWithException(LocationException.PermissionMissing())
         return@suspendCancellableCoroutine
     }
     getCurrentLocation(Priority.PRIORITY_LOW_POWER, null).addOnCompleteListener {
         when (it.isSuccessful) {
-            true -> cont.resume(LocationSnapshot(it.result))
+            true -> cont.resume(it.result)
             else -> cont.resumeWithException(LocationException.NotAvailable(it.exception))
         }
     }
-}
-
-private fun LocationSnapshot(location: Location?): LocationSnapshot? {
-    location ?: return null
-    return LocationSnapshot(location.latitude, location.longitude)
 }
