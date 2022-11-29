@@ -1,22 +1,50 @@
 package movie.metropolis.app.screen.booking
 
-import androidx.compose.animation.AnimatedVisibility
+import android.view.animation.AnticipateOvershootInterpolator
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.SecureFlagPolicy
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun AppDialog(
     isVisible: Boolean,
-    onDismissRequest: () -> Unit,
+    onVisibilityChanged: (Boolean) -> Unit,
     content: @Composable () -> Unit
 ) {
-    AnimatedVisibility(visible = isVisible) {
-        Dialog(
-            onDismissRequest = onDismissRequest,
-            properties = DialogProperties(securePolicy = SecureFlagPolicy.SecureOn),
-            content = content
-        )
+    AnimatedDialog(
+        isVisible = isVisible,
+        onVisibilityChanged = onVisibilityChanged,
+        exitDuration = 600,
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        ),
+        enter = slideInVertically(
+            initialOffsetY = { it },
+            animationSpec = tween(
+                easing = AnticipateOvershootEasing,
+                durationMillis = 600
+            )
+        ),
+        exit = slideOutVertically(
+            targetOffsetY = { it },
+            animationSpec = tween(
+                easing = AnticipateOvershootEasing,
+                durationMillis = 600
+            )
+        ),
+        content = content
+    )
+}
+
+private val AnticipateOvershootEasing = object : Easing {
+    val easing = AnticipateOvershootInterpolator()
+    override fun transform(fraction: Float): Float {
+        return easing.getInterpolation(fraction)
     }
 }

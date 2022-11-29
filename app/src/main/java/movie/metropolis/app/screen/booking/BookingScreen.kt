@@ -73,7 +73,7 @@ private fun BookingScreen(
                     time = it.time,
                     name = it.name,
                     isVisible = isVisible,
-                    onDismissRequest = { isVisible = false }
+                    onVisibilityChanged = { isVisible = it }
                 )
             }
             item(key = "divider") { Divider(Modifier.padding(16.dp)) }
