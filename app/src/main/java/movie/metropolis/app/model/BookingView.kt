@@ -9,7 +9,6 @@ sealed interface BookingView {
     val name: String
     val date: String
     val time: String
-    val isExpired: Boolean
     val isPaid: Boolean
     val movie: MovieDetailView
     val cinema: CinemaView

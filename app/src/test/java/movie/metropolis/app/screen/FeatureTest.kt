@@ -3,20 +3,18 @@ package movie.metropolis.app.screen
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockEngineConfig
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import movie.metropolis.app.di.NetworkModule
 import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.global.UserAccount
 import movie.metropolis.app.feature.global.UserCredentials
 import movie.metropolis.app.feature.global.UserFeature
+import movie.metropolis.app.feature.global.di.EventFeatureModule
 import movie.metropolis.app.feature.global.di.UserFeatureModule
 import org.junit.Before
 import org.mockito.kotlin.spy
 import java.util.Date
 
-abstract class ViewModelTest {
+abstract class FeatureTest {
 
     protected lateinit var account: UserAccount
     protected lateinit var credentials: UserCredentials
@@ -29,7 +27,6 @@ abstract class ViewModelTest {
 
     @Before
     fun prepareInternal() {
-        Dispatchers.setMain(UnconfinedTestDispatcher())
         config = MockEngineConfig()
         responder = UrlResponder()
         config.addHandler(responder)
@@ -42,7 +39,8 @@ abstract class ViewModelTest {
     }
 
     private fun prepareEvent(clientData: HttpClient, clientRoot: HttpClient) {
-        //event = EventFeatureModule().feature(clientData)
+        val module = EventFeatureModule()
+        event = module.feature(module.event(clientData), module.cinema(clientRoot))
     }
 
     private fun prepareUser(client: HttpClient) {
@@ -50,7 +48,7 @@ abstract class ViewModelTest {
         credentials = spy(MockCredentials())
         val module = UserFeatureModule()
         val service = module.service(client, account, credentials)
-        user = module.feature(service, account)
+        user = module.feature(service, account, event)
     }
 
     private open class MockAccount : UserAccount {
