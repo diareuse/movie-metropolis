@@ -1,6 +1,8 @@
 package movie.metropolis.app.screen.booking
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +19,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +58,7 @@ import coil.compose.AsyncImage
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.screen.profile.Barcode
 import movie.metropolis.app.theme.Theme
+import kotlin.random.Random.Default.nextLong
 
 typealias Row = String
 typealias Seat = String
@@ -76,8 +79,18 @@ fun BookingTicketDialog(
         onVisibilityChanged = onVisibilityChanged
     ) {
         val context = LocalContext.current
-        LaunchedEffect(context) {
-            (context as? Activity)?.window?.attributes?.screenBrightness = 1f
+        val token = remember(isVisible) { nextLong() }
+        DisposableEffect(token) {
+            val window = context.findActivity().window
+            val initialBrightness = window.attributes.screenBrightness
+            window.attributes = window.attributes.apply {
+                screenBrightness = 1f
+            }
+            onDispose {
+                window.attributes = window.attributes.apply {
+                    screenBrightness = initialBrightness
+                }
+            }
         }
         BookingTicketDialogContent(
             code = code,
@@ -88,6 +101,14 @@ fun BookingTicketDialog(
             name = name
         )
     }
+}
+
+private fun Context.findActivity(): Activity {
+    when (this) {
+        is Activity -> return this
+        is ContextWrapper -> return baseContext.findActivity()
+    }
+    throw IllegalStateException("Unknown Context $this")
 }
 
 @Composable
