@@ -1,6 +1,7 @@
 package movie.metropolis.app.feature.global
 
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import movie.metropolis.app.feature.global.FieldUpdate.Cinema
 import movie.metropolis.app.feature.global.FieldUpdate.Consent
@@ -68,19 +69,42 @@ internal class UserFeatureImpl(
     }
 
     override suspend fun getBookings(): Result<Iterable<Booking>> {
-        val cinemas = event.getCinemas(null).map { it.toList() }.getOrDefault(emptyList())
-        return service.getBookings().map {
-            it.mapNotNull { booking ->
-                val movie = event.getDetail(MovieFromId(booking.movieId)).getOrNull()
-                    ?: return@mapNotNull null
+        val bookingsResult = service.getBookings()
+        if (bookingsResult.isFailure)
+            return bookingsResult as Result<Iterable<Booking>>
+        val bookings = bookingsResult.getOrThrow()
+        return coroutineScope {
+            val cinemas =
+                async { event.getCinemas(null).map { it.toList() }.getOrDefault(emptyList()) }
+
+            bookings.map { booking ->
+                val movie = async { event.getDetail(MovieFromId(booking.movieId)).getOrNull() }
                 when (booking.isExpired) {
-                    true -> BookingExpiredFromResponse(booking, movie, cinemas)
+                    true -> async {
+                        val detail = movie.await()
+                        if (detail == null) null
+                        else BookingExpiredFromResponse(
+                            response = booking,
+                            movie = detail,
+                            cinemas = cinemas.await()
+                        )
+                    }
+
                     else -> {
-                        val detail = service.getBooking(booking.id).getOrThrow()
-                        BookingActiveFromResponse(booking, detail, movie, cinemas)
+                        val detail = async { service.getBooking(booking.id).getOrThrow() }
+                        async {
+                            val movieDetail = movie.await()
+                            if (movieDetail == null) null
+                            else BookingActiveFromResponse(
+                                response = booking,
+                                detail = detail.await(),
+                                movie = movieDetail,
+                                cinemas = cinemas.await()
+                            )
+                        }
                     }
                 }
-            }
+            }.runCatching { awaitAll().filterNotNull() }
         }
     }
 
