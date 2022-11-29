@@ -1,5 +1,8 @@
 package movie.metropolis.app.screen
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+
 typealias LoadableList<Type> = Loadable<List<Type>>
 
 @JvmInline
@@ -75,3 +78,6 @@ inline fun <T, R : Any> Loadable<T>.mapNotNull(mapper: (T) -> R?) = when {
 
     else -> this as Loadable<R>
 }
+
+fun <T, R> Flow<Loadable<T>>.mapLoadable(body: (T) -> R) =
+    map { it.map(body) }

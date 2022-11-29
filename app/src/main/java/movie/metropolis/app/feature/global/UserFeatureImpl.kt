@@ -75,9 +75,9 @@ internal class UserFeatureImpl(
                     ?: return@mapNotNull null
                 when (booking.isExpired) {
                     true -> BookingExpiredFromResponse(booking, movie, cinemas)
-                    else -> when (val detail = service.getBooking(booking.id).getOrNull()) {
-                        null -> BookingExpiredFromResponse(booking, movie, cinemas)
-                        else -> BookingActiveFromResponse(booking, detail, movie, cinemas)
+                    else -> {
+                        val detail = service.getBooking(booking.id).getOrThrow()
+                        BookingActiveFromResponse(booking, detail, movie, cinemas)
                     }
                 }
             }

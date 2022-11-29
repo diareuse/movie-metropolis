@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import movie.metropolis.app.feature.global.Booking
@@ -15,33 +14,69 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
+import movie.metropolis.app.screen.booking.BookingFacade.Companion.bookingsFlow
 import movie.metropolis.app.screen.cinema.CinemaViewFromFeature
 import movie.metropolis.app.screen.detail.MovieDetailViewFromFeature
-import movie.metropolis.app.screen.map
+import movie.metropolis.app.screen.getOrThrow
+import movie.metropolis.app.screen.mapLoadable
 import java.text.DateFormat
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
 class BookingViewModel @Inject constructor(
-    private val user: UserFeature
+    facade: BookingFacade
 ) : ViewModel() {
 
-    private val items = flow { emit(user.getBookings()) }
-        .map { it.map { it.map(::BookingViewFromFeature) }.asLoadable() }
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
+    private val items = facade.bookingsFlow
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val expired = items
-        .map { it.map { it.filterIsInstance<BookingView.Expired>() } }
+        .mapLoadable { it.filterIsInstance<BookingView.Expired>() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
     val active = items
-        .map { it.map { it.filterIsInstance<BookingView.Active>() } }
+        .mapLoadable { it.filterIsInstance<BookingView.Active>() }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
+}
+
+interface BookingFacade {
+
+    suspend fun getBookings(): Loadable<List<BookingView>>
+
+    companion object {
+
+        val BookingFacade.bookingsFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getBookings())
+            }
+
+    }
+
+}
+
+class BookingFacadeFromFeature(
+    private val feature: UserFeature
+) : BookingFacade {
+
+    override suspend fun getBookings(): Loadable<List<BookingView>> = feature.getBookings()
+        .map { it.map(::BookingViewFromFeature) }
+        .asLoadable()
+
+    @Suppress("FunctionName")
     private fun BookingViewFromFeature(booking: Booking) = when (booking) {
         is Booking.Active -> BookingViewActiveFromFeature(booking)
         is Booking.Expired -> BookingViewExpiredFromFeature(booking)
     }
+
+}
+
+class BookingFacadeRecover(
+    private val origin: BookingFacade
+) : BookingFacade {
+
+    override suspend fun getBookings() =
+        kotlin.runCatching { origin.getBookings().getOrThrow() }.asLoadable()
 
 }
 
@@ -60,23 +95,16 @@ data class BookingViewExpiredFromFeature(
         get() = dateFormat.format(booking.startsAt)
     override val time: String
         get() = timeFormat.format(booking.startsAt)
-    override val isExpired: Boolean
-        get() {
-            val calendar = Calendar.getInstance()
-            calendar.time = booking.startsAt
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return Date().after(calendar.time)
-        }
     override val movie: MovieDetailView
         get() = MovieDetailViewFromFeature(booking.movie)
     override val isPaid: Boolean
         get() = booking.paidAt.before(Date())
     override val cinema: CinemaView
         get() = CinemaViewFromFeature(booking.cinema)
+
+    override fun toString(): String {
+        return "BookingView.Expired(id='$id', name='$name', date='$date', time='$time', movie=$movie, isPaid=$isPaid, cinema=$cinema)"
+    }
 
 }
 
@@ -95,17 +123,6 @@ data class BookingViewActiveFromFeature(
         get() = dateFormat.format(booking.startsAt)
     override val time: String
         get() = timeFormat.format(booking.startsAt)
-    override val isExpired: Boolean
-        get() {
-            val calendar = Calendar.getInstance()
-            calendar.time = booking.startsAt
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-            calendar.set(Calendar.HOUR_OF_DAY, 0)
-            calendar.set(Calendar.MINUTE, 0)
-            calendar.set(Calendar.SECOND, 0)
-            calendar.set(Calendar.MILLISECOND, 0)
-            return Date().after(calendar.time)
-        }
     override val movie: MovieDetailView
         get() = MovieDetailViewFromFeature(booking.movie)
     override val isPaid: Boolean
@@ -120,10 +137,20 @@ data class BookingViewActiveFromFeature(
     data class SeatFromFeature(
         private val feature: Booking.Active.Seat
     ) : BookingView.Active.Seat {
+
         override val row: String
             get() = feature.row
         override val seat: String
             get() = feature.seat
+
+        override fun toString(): String {
+            return "Seat(row='$row', seat='$seat')"
+        }
+
+    }
+
+    override fun toString(): String {
+        return "BookingView.Active(id='$id', name='$name', date='$date', time='$time', movie=$movie, isPaid=$isPaid, cinema=$cinema, hall='$hall', seats=$seats)"
     }
 
 }

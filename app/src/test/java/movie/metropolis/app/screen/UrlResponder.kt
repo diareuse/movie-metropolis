@@ -46,7 +46,7 @@ class UrlResponder : Responder {
         fun CinemaLocation(lat: Double, lng: Double) =
             Url("$Domain/cz/$DataService/v1/10101/cinema/bylocation?lat=${lat}&long=${lng}&unit=KILOMETERS")
 
-        fun Detail(id: String) =
+        fun Detail(id: String = "5376O2R") =
             Url("$Domain/cz/$DataService/v1/10101/films/byDistributorCode/${id}?lang=en")
 
         fun MoviesByShowing(type: String) =
@@ -68,7 +68,10 @@ class UrlResponder : Responder {
             Url("$Domain/cz/$CustomerService/oauth/token")
 
         val Booking =
-            Url("$Domain/cz/$CustomerService/v1/bookings")
+            Url("$Domain/cz/$CustomerService/v1/bookings?lang=en")
+
+        fun Booking(id: String = "1") =
+            Url("$Domain/cz/$CustomerService/v1/bookings/${id}?lang=en")
 
     }
 
