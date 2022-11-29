@@ -56,11 +56,11 @@ fun BookingTicketDialog(
     time: String,
     name: String,
     isVisible: Boolean,
-    onDismissRequest: () -> Unit
+    onVisibilityChanged: (Boolean) -> Unit
 ) {
     AppDialog(
         isVisible = isVisible,
-        onDismissRequest = onDismissRequest
+        onVisibilityChanged = onVisibilityChanged
     ) {
         val context = LocalContext.current
         LaunchedEffect(context) {
@@ -141,7 +141,7 @@ private fun Preview() {
             time = "12:10",
             name = "Wonder Woman",
             isVisible = true,
-            onDismissRequest = {}
+            onVisibilityChanged = {}
         )
     }
 }
