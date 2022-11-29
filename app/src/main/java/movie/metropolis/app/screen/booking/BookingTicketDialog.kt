@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -120,104 +121,109 @@ private fun BookingTicketDialogContent(
     time: String,
     name: String,
 ) {
-    Column(
-        modifier = Modifier
-            .width(300.dp)
-            .wrapContentHeight()
-            .padding(24.dp)
-            .shadow(32.dp)
-            .clip(TicketShape(CornerSize(16.dp)))
-            .background(MaterialTheme.colorScheme.surface)
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Box(contentAlignment = Alignment.BottomStart) {
-            val density = LocalDensity.current
-            val colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surface)
-            val brush = Brush.verticalGradient(colors)
-            var size by remember { mutableStateOf(IntSize.Zero) }
-            AsyncImage(
-                modifier = Modifier
-                    .width(with(density) { size.width.toDp() })
-                    .height(with(density) { size.height.toDp() })
-                    .drawWithContent {
-                        drawContent()
-                        drawRect(brush)
-                    },
-                model = poster,
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.TopCenter
-            )
-            Column(Modifier.onGloballyPositioned { size = it.size }) {
-                Spacer(Modifier.height(200.dp))
-                Text(
-                    name,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Table(
-                    TableRow(
-                        "Venue",
-                        "Time",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = LocalContentColor.current.copy(alpha = .75f)
-                        )
-                    ),
-                    TableRow(hall, time),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                val rows = buildList {
-                    this += TableRow(
-                        "Row",
-                        "Seat",
-                        style = MaterialTheme.typography.bodySmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = LocalContentColor.current.copy(alpha = .75f)
-                        )
-                    )
-                    for ((row, seat) in seats)
-                        this += TableRow(row, seat)
-                }
-                Table(
-                    rows = rows,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 16.dp)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-        }
-        val color = MaterialTheme.colorScheme.onSurface
-        Box(
-            Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .offset(y = 2.dp)
-                .alpha(.25f)
-                .drawBehind {
-                    drawLine(
-                        color,
-                        Offset(0f, size.height / 2),
-                        Offset(size.width, size.height / 2),
-                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(25f, 25f), 25f / 2),
-                        strokeWidth = size.height
-                    )
-                }
-        )
-        Barcode(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(1f),
-            code = code,
-            format = BarcodeFormat.QR_CODE,
-            color = LocalContentColor.current
-        )
+                .width(300.dp)
+                .wrapContentHeight()
+                .padding(24.dp)
+                .shadow(32.dp)
+                .clip(TicketShape(CornerSize(16.dp)))
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            Box(contentAlignment = Alignment.BottomStart) {
+                val density = LocalDensity.current
+                val colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surface)
+                val brush = Brush.verticalGradient(colors)
+                var size by remember { mutableStateOf(IntSize.Zero) }
+                AsyncImage(
+                    modifier = Modifier
+                        .width(with(density) { size.width.toDp() })
+                        .height(with(density) { size.height.toDp() })
+                        .drawWithContent {
+                            drawContent()
+                            drawRect(brush)
+                        },
+                    model = poster,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.TopCenter
+                )
+                Column(Modifier.onGloballyPositioned { size = it.size }) {
+                    Spacer(Modifier.height(200.dp))
+                    Text(
+                        name,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Table(
+                        TableRow(
+                            "Venue",
+                            "Time",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = LocalContentColor.current.copy(alpha = .75f)
+                            )
+                        ),
+                        TableRow(hall, time),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    val rows = buildList {
+                        this += TableRow(
+                            "Row",
+                            "Seat",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontWeight = FontWeight.Bold,
+                                color = LocalContentColor.current.copy(alpha = .75f)
+                            )
+                        )
+                        for ((row, seat) in seats)
+                            this += TableRow(row, seat)
+                    }
+                    Table(
+                        rows = rows,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            }
+            val color = MaterialTheme.colorScheme.onSurface
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(4.dp)
+                    .offset(y = 2.dp)
+                    .alpha(.25f)
+                    .drawBehind {
+                        drawLine(
+                            color,
+                            Offset(0f, size.height / 2),
+                            Offset(size.width, size.height / 2),
+                            pathEffect = PathEffect.dashPathEffect(floatArrayOf(25f, 25f), 25f / 2),
+                            strokeWidth = size.height
+                        )
+                    }
+            )
+            Barcode(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                code = code,
+                format = BarcodeFormat.QR_CODE,
+                color = LocalContentColor.current
+            )
+        }
     }
 }
 
