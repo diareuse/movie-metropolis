@@ -1,8 +1,8 @@
-package movie.metropolis.app.feature.user
+package movie.metropolis.app.feature.global
 
-import movie.metropolis.app.feature.user.model.CustomerDataRequest
-import movie.metropolis.app.feature.user.model.PasswordRequest
-import movie.metropolis.app.feature.user.model.TokenRequest
+import movie.metropolis.app.feature.global.model.CustomerDataRequest
+import movie.metropolis.app.feature.global.model.PasswordRequest
+import movie.metropolis.app.feature.global.model.TokenRequest
 import kotlin.time.Duration.Companion.minutes
 
 internal class UserServiceReauthorize(

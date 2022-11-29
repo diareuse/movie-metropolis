@@ -1,24 +1,22 @@
-package movie.metropolis.app.feature.user
+package movie.metropolis.app.feature.global
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.MovieDetail
-import movie.metropolis.app.feature.user.FieldUpdate.Cinema
-import movie.metropolis.app.feature.user.FieldUpdate.Consent
-import movie.metropolis.app.feature.user.FieldUpdate.Email
-import movie.metropolis.app.feature.user.FieldUpdate.Name
-import movie.metropolis.app.feature.user.FieldUpdate.Password
-import movie.metropolis.app.feature.user.FieldUpdate.Phone
-import movie.metropolis.app.feature.user.model.BookingDetailResponse
-import movie.metropolis.app.feature.user.model.BookingResponse
-import movie.metropolis.app.feature.user.model.ConsentRemote
-import movie.metropolis.app.feature.user.model.CustomerDataRequest
-import movie.metropolis.app.feature.user.model.CustomerPointsResponse
-import movie.metropolis.app.feature.user.model.CustomerResponse
-import movie.metropolis.app.feature.user.model.PasswordRequest
-import movie.metropolis.app.feature.user.model.RegistrationRequest
-import movie.metropolis.app.feature.user.model.TokenRequest
+import movie.metropolis.app.feature.global.FieldUpdate.Cinema
+import movie.metropolis.app.feature.global.FieldUpdate.Consent
+import movie.metropolis.app.feature.global.FieldUpdate.Email
+import movie.metropolis.app.feature.global.FieldUpdate.Name
+import movie.metropolis.app.feature.global.FieldUpdate.Password
+import movie.metropolis.app.feature.global.FieldUpdate.Phone
+import movie.metropolis.app.feature.global.model.BookingDetailResponse
+import movie.metropolis.app.feature.global.model.BookingResponse
+import movie.metropolis.app.feature.global.model.ConsentRemote
+import movie.metropolis.app.feature.global.model.CustomerDataRequest
+import movie.metropolis.app.feature.global.model.CustomerPointsResponse
+import movie.metropolis.app.feature.global.model.CustomerResponse
+import movie.metropolis.app.feature.global.model.PasswordRequest
+import movie.metropolis.app.feature.global.model.RegistrationRequest
+import movie.metropolis.app.feature.global.model.TokenRequest
 import movie.metropolis.app.screen.detail.MovieFromId
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
@@ -153,7 +151,7 @@ internal data class UserFromRemote(
     override val consent: User.Consent
         get() = ConsentFromRemote(customer.consent)
     override val membership: User.Membership?
-        get() = customer.membership.club?.let(::MembershipFromRemote)
+        get() = customer.membership.club?.let(UserFromRemote::MembershipFromRemote)
     override val points: Double
         get() = customerPoints.total
 
@@ -240,7 +238,7 @@ internal data class BookingActiveFromResponse(
     override val hall: String
         get() = detail.hall
     override val seats: List<Booking.Active.Seat>
-        get() = detail.tickets.map(::SeatFromResponse)
+        get() = detail.tickets.map(BookingActiveFromResponse::SeatFromResponse)
 
     private data class SeatFromResponse(
         private val ticket: BookingDetailResponse.Ticket

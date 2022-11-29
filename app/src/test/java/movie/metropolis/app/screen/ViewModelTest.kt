@@ -8,10 +8,10 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.setMain
 import movie.metropolis.app.di.NetworkModule
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.user.UserAccount
-import movie.metropolis.app.feature.user.UserCredentials
-import movie.metropolis.app.feature.user.UserFeature
-import movie.metropolis.app.feature.user.di.UserFeatureModule
+import movie.metropolis.app.feature.global.UserAccount
+import movie.metropolis.app.feature.global.UserCredentials
+import movie.metropolis.app.feature.global.UserFeature
+import movie.metropolis.app.feature.global.di.UserFeatureModule
 import org.junit.Before
 import org.mockito.kotlin.spy
 import java.util.Date

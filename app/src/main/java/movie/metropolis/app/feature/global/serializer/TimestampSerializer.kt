@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.user.serializer
+package movie.metropolis.app.feature.global.serializer
 
 import java.text.SimpleDateFormat
 import java.util.Locale

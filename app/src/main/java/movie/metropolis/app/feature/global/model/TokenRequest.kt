@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.user.model
+package movie.metropolis.app.feature.global.model
 
 import io.ktor.http.Parameters
 import kotlinx.serialization.SerialName

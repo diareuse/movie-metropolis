@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import movie.metropolis.app.feature.global.Cinema
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.user.FieldUpdate
-import movie.metropolis.app.feature.user.User
-import movie.metropolis.app.feature.user.UserFeature
+import movie.metropolis.app.feature.global.FieldUpdate
+import movie.metropolis.app.feature.global.User
+import movie.metropolis.app.feature.global.UserFeature
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.StateMachine
