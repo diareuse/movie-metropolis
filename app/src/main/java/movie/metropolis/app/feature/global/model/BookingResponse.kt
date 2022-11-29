@@ -1,8 +1,8 @@
-package movie.metropolis.app.feature.user.model
+package movie.metropolis.app.feature.global.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import movie.metropolis.app.feature.user.serializer.TimestampSerializer
+import movie.metropolis.app.feature.global.serializer.TimestampSerializer
 import java.util.Date
 import kotlin.time.Duration.Companion.hours
 

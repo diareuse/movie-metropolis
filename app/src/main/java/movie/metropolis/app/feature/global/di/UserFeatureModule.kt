@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.user.di
+package movie.metropolis.app.feature.global.di
 
 import android.accounts.AccountManager
 import android.content.Context
@@ -10,16 +10,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
 import movie.metropolis.app.di.ClientCustomer
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.user.UserAccount
-import movie.metropolis.app.feature.user.UserAccountImpl
-import movie.metropolis.app.feature.user.UserCredentials
-import movie.metropolis.app.feature.user.UserCredentialsImpl
-import movie.metropolis.app.feature.user.UserFeature
-import movie.metropolis.app.feature.user.UserFeatureImpl
-import movie.metropolis.app.feature.user.UserService
-import movie.metropolis.app.feature.user.UserServiceImpl
-import movie.metropolis.app.feature.user.UserServiceReauthorize
-import movie.metropolis.app.feature.user.UserServiceSaving
+import movie.metropolis.app.feature.global.UserAccount
+import movie.metropolis.app.feature.global.UserAccountImpl
+import movie.metropolis.app.feature.global.UserCredentials
+import movie.metropolis.app.feature.global.UserCredentialsImpl
+import movie.metropolis.app.feature.global.UserFeature
+import movie.metropolis.app.feature.global.UserFeatureImpl
+import movie.metropolis.app.feature.global.UserService
+import movie.metropolis.app.feature.global.UserServiceImpl
+import movie.metropolis.app.feature.global.UserServiceReauthorize
+import movie.metropolis.app.feature.global.UserServiceSaving
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)

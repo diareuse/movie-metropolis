@@ -1,7 +1,7 @@
-package movie.metropolis.app.feature.user
+package movie.metropolis.app.feature.global
 
-import movie.metropolis.app.feature.user.model.RegistrationRequest
-import movie.metropolis.app.feature.user.model.TokenRequest
+import movie.metropolis.app.feature.global.model.RegistrationRequest
+import movie.metropolis.app.feature.global.model.TokenRequest
 
 internal class UserServiceSaving(
     private val origin: UserService,

@@ -1,7 +1,5 @@
-package movie.metropolis.app.feature.user
+package movie.metropolis.app.feature.global
 
-import movie.metropolis.app.feature.global.Cinema
-import movie.metropolis.app.feature.global.MovieDetail
 import java.util.Date
 
 sealed interface Booking {

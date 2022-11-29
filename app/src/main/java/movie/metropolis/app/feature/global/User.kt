@@ -1,6 +1,5 @@
-package movie.metropolis.app.feature.user
+package movie.metropolis.app.feature.global
 
-import movie.metropolis.app.feature.global.Cinema
 import java.util.Date
 
 interface User {

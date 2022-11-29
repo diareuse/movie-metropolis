@@ -24,7 +24,7 @@ import movie.metropolis.app.feature.global.Media
 import movie.metropolis.app.feature.global.Movie
 import movie.metropolis.app.feature.global.MovieDetail
 import movie.metropolis.app.feature.global.Showing
-import movie.metropolis.app.feature.user.UserFeature
+import movie.metropolis.app.feature.global.UserFeature
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.ImageView

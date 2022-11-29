@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import movie.metropolis.app.feature.user.Booking
-import movie.metropolis.app.feature.user.UserFeature
+import movie.metropolis.app.feature.global.Booking
+import movie.metropolis.app.feature.global.UserFeature
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieDetailView

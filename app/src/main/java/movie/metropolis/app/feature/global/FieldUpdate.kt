@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.user
+package movie.metropolis.app.feature.global
 
 sealed class FieldUpdate {
 
