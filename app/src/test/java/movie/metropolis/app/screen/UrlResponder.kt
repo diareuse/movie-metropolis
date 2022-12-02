@@ -41,7 +41,7 @@ class UrlResponder : Responder {
             Url("$Domain/mrest/cinema?lang=en")
 
         fun EventOccurrence(cinema: String, date: String) =
-            Url("$Domain/cz/$DataService/v1/quickbook/10101/film-events/in-cinema/${cinema}/at-date/${date}?lang=en")
+            Url("$Domain/cz/$DataService/v1/quickbook/10101/film-events/in-cinema/${cinema}/at-date/${date}")
 
         fun CinemaLocation(lat: Double, lng: Double) =
             Url("$Domain/cz/$DataService/v1/10101/cinema/bylocation?lat=${lat}&long=${lng}&unit=KILOMETERS")
