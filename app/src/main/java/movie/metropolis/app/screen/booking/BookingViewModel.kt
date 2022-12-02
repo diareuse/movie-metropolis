@@ -17,7 +17,6 @@ import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.booking.BookingFacade.Companion.bookingsFlow
 import movie.metropolis.app.screen.cinema.CinemaViewFromFeature
 import movie.metropolis.app.screen.detail.MovieDetailViewFromFeature
-import movie.metropolis.app.screen.getOrThrow
 import movie.metropolis.app.screen.mapLoadable
 import java.text.DateFormat
 import java.util.Date
@@ -41,14 +40,14 @@ class BookingViewModel @Inject constructor(
 
 interface BookingFacade {
 
-    suspend fun getBookings(): Loadable<List<BookingView>>
+    suspend fun getBookings(): Result<List<BookingView>>
 
     companion object {
 
         val BookingFacade.bookingsFlow
             get() = flow {
                 emit(Loadable.loading())
-                emit(getBookings())
+                emit(getBookings().asLoadable())
             }
 
     }
@@ -59,9 +58,8 @@ class BookingFacadeFromFeature(
     private val feature: UserFeature
 ) : BookingFacade {
 
-    override suspend fun getBookings(): Loadable<List<BookingView>> = feature.getBookings()
+    override suspend fun getBookings() = feature.getBookings()
         .map { it.map(::BookingViewFromFeature) }
-        .asLoadable()
 
     @Suppress("FunctionName")
     private fun BookingViewFromFeature(booking: Booking) = when (booking) {
@@ -76,7 +74,7 @@ class BookingFacadeRecover(
 ) : BookingFacade {
 
     override suspend fun getBookings() =
-        kotlin.runCatching { origin.getBookings().getOrThrow() }.asLoadable()
+        kotlin.runCatching { origin.getBookings().getOrThrow() }
 
 }
 
