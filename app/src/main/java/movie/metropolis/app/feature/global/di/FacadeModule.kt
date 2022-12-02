@@ -15,6 +15,7 @@ import movie.metropolis.app.screen.cinema.CinemaFacadeFromFeature
 import movie.metropolis.app.screen.cinema.CinemaFacadeRecover
 import movie.metropolis.app.screen.cinema.CinemasFacade
 import movie.metropolis.app.screen.cinema.CinemasFacadeFromFeature
+import movie.metropolis.app.screen.cinema.CinemasFacadeRecover
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -30,7 +31,10 @@ class FacadeModule {
 
     @Provides
     fun cinemas(event: EventFeature): CinemasFacade {
-        return CinemasFacadeFromFeature(event)
+        var facade: CinemasFacade
+        facade = CinemasFacadeFromFeature(event)
+        facade = CinemasFacadeRecover(facade)
+        return facade
     }
 
     @Provides
