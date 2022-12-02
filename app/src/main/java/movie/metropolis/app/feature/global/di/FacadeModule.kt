@@ -9,6 +9,10 @@ import movie.metropolis.app.feature.global.UserFeature
 import movie.metropolis.app.screen.booking.BookingFacade
 import movie.metropolis.app.screen.booking.BookingFacadeFromFeature
 import movie.metropolis.app.screen.booking.BookingFacadeRecover
+import movie.metropolis.app.screen.cinema.CinemaFacade
+import movie.metropolis.app.screen.cinema.CinemaFacadeCaching
+import movie.metropolis.app.screen.cinema.CinemaFacadeFromFeature
+import movie.metropolis.app.screen.cinema.CinemaFacadeRecover
 import movie.metropolis.app.screen.cinema.CinemasFacade
 import movie.metropolis.app.screen.cinema.CinemasFacadeFromFeature
 
@@ -27,6 +31,15 @@ class FacadeModule {
     @Provides
     fun cinemas(event: EventFeature): CinemasFacade {
         return CinemasFacadeFromFeature(event)
+    }
+
+    @Provides
+    fun cinema(event: EventFeature) = CinemaFacade.Factory {
+        var facade: CinemaFacade
+        facade = CinemaFacadeFromFeature(it, event)
+        facade = CinemaFacadeCaching(facade)
+        facade = CinemaFacadeRecover(facade)
+        facade
     }
 
 }

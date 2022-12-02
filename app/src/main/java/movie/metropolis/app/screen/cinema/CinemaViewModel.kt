@@ -4,25 +4,24 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.dropWhile
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import movie.metropolis.app.feature.global.Cinema
 import movie.metropolis.app.feature.global.EventFeature
+import movie.metropolis.app.feature.global.Location
 import movie.metropolis.app.feature.global.MovieReference
 import movie.metropolis.app.feature.global.Showing
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
-import movie.metropolis.app.screen.getOrThrow
+import movie.metropolis.app.screen.cinema.CinemaFacade.Companion.cinemaFlow
+import movie.metropolis.app.screen.cinema.CinemaFacade.Companion.showingsFlow
 import movie.metropolis.app.screen.listing.toStringComponents
-import movie.metropolis.app.screen.map
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -30,37 +29,125 @@ import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
-class CinemaViewModel @Inject constructor(
-    handle: SavedStateHandle,
-    private val event: EventFeature
+class CinemaViewModel private constructor(
+    facade: CinemaFacade
 ) : ViewModel() {
 
-    private val id = handle.get<String>("cinema").orEmpty()
-    private val cinemaInternal = flow { emit(event.getCinemas(null)) }
-        .map { it.mapCatching { it.first { it.id == id } } }
-        .map { it.asLoadable() }
-        .shareIn(viewModelScope, SharingStarted.Eagerly, 1)
-
-    private val sharedCinema = cinemaInternal
-        .dropWhile { !it.isSuccess }
-        .map { it.getOrThrow() }
+    @Inject
+    constructor(
+        handle: SavedStateHandle,
+        facade: CinemaFacade.Factory
+    ) : this(
+        facade.create(handle.get<String>("cinema").orEmpty())
+    )
 
     val selectedDate = MutableStateFlow(Date())
-    val cinema = cinemaInternal
-        .map { it.map(::CinemaViewFromFeature) }
+    val cinema = facade.cinemaFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val items = combine(selectedDate, sharedCinema) { date, cinema ->
-        event.getShowings(cinema, date).asLoadable()
-    }
-        .map {
-            it.map {
-                it.entries.map { (movie, showings) ->
-                    MovieBookingViewFromFeature(movie, showings)
-                }.sortedByDescending { it.availability.entries.sumOf { it.value.size } }
-            }
-        }
+    val items = facade.showingsFlow(selectedDate)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
+}
+
+interface CinemaFacade {
+
+    suspend fun getCinema(): Result<CinemaView>
+    suspend fun getShowings(date: Date): Result<List<MovieBookingView>>
+
+    fun interface Factory {
+        fun create(id: String): CinemaFacade
+    }
+
+    companion object {
+
+        val CinemaFacade.cinemaFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getCinema().asLoadable())
+            }
+
+        fun CinemaFacade.showingsFlow(date: Flow<Date>) = date.flatMapLatest {
+            flow {
+                emit(Loadable.loading())
+                emit(getShowings(it).asLoadable())
+            }
+        }
+
+    }
+
+}
+
+class CinemaFacadeFromFeature(
+    private val id: String,
+    private val event: EventFeature
+) : CinemaFacade {
+
+    override suspend fun getCinema(): Result<CinemaView> {
+        return event.getCinemas(null)
+            .mapCatching { cinemas -> cinemas.first { it.id == id } }
+            .map(::CinemaViewFromFeature)
+    }
+
+    override suspend fun getShowings(date: Date): Result<List<MovieBookingView>> {
+        val cinema = getCinema()
+            .getOrThrow()
+            .let(::CinemaFromView)
+
+        val result = event.getShowings(cinema, date)
+            .getOrThrow()
+
+        return result.entries
+            .map { (movie, events) -> MovieBookingViewFromFeature(movie, events) }
+            .sortedByDescending { it.availability.entries.sumOf { it.value.size } }
+            .let(Result.Companion::success)
+    }
+
+}
+
+class CinemaFacadeRecover(
+    private val origin: CinemaFacade
+) : CinemaFacade {
+
+    override suspend fun getCinema(): Result<CinemaView> {
+        return kotlin.runCatching { origin.getCinema().getOrThrow() }
+    }
+
+    override suspend fun getShowings(date: Date): Result<List<MovieBookingView>> {
+        return kotlin.runCatching { origin.getShowings(date).getOrThrow() }
+    }
+
+}
+
+class CinemaFacadeCaching(
+    private val origin: CinemaFacade
+) : CinemaFacade by origin {
+
+    private var cinema: CinemaView? = null
+
+    override suspend fun getCinema() = cinema?.let(Result.Companion::success)
+        ?: origin.getCinema().onSuccess {
+            cinema = it
+        }
+
+}
+
+data class CinemaFromView(
+    private val cinema: CinemaView
+) : Cinema {
+    override val id: String
+        get() = cinema.id
+    override val name: String
+        get() = cinema.name
+    override val description: String
+        get() = ""
+    override val city: String
+        get() = cinema.city
+    override val address: Iterable<String>
+        get() = cinema.address
+    override val location: Location
+        get() = Location(0.0, 0.0)
+    override val distance: Double?
+        get() = null
 }
 
 data class MovieBookingViewFromFeature(
