@@ -19,6 +19,9 @@ import movie.metropolis.app.screen.cinema.CinemasFacadeRecover
 import movie.metropolis.app.screen.detail.MovieFacade
 import movie.metropolis.app.screen.detail.MovieFacadeFromFeature
 import movie.metropolis.app.screen.detail.MovieFacadeRecover
+import movie.metropolis.app.screen.listing.ListingFacade
+import movie.metropolis.app.screen.listing.ListingFacadeFromFeature
+import movie.metropolis.app.screen.listing.ListingFacadeRecover
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -55,6 +58,14 @@ class FacadeModule {
         facade = MovieFacadeFromFeature(it, event)
         facade = MovieFacadeRecover(facade)
         facade
+    }
+
+    @Provides
+    fun listing(event: EventFeature): ListingFacade {
+        var facade: ListingFacade
+        facade = ListingFacadeFromFeature(event)
+        facade = ListingFacadeRecover(facade)
+        return facade
     }
 
 }

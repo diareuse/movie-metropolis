@@ -50,7 +50,7 @@ class UrlResponder : Responder {
             Url("$Domain/cz/$DataService/v1/10101/films/byDistributorCode/${id}?lang=en")
 
         fun MoviesByShowing(type: String) =
-            Url("$Domain/cz/$DataService/v1/10101/films/by-showing-type/${type}?lang=en&ordering=asc")
+            Url("$Domain/cz/$DataService/v1/10101/films/by-showing-type/${type}?ordering=asc&lang=en")
 
         val Password =
             Url("$Domain/cz/$CustomerService/v1/password?reCaptcha=null")
