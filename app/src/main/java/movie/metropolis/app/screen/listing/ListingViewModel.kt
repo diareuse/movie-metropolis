@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.global.Media
@@ -15,7 +14,8 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
-import movie.metropolis.app.screen.map
+import movie.metropolis.app.screen.listing.ListingFacade.Companion.currentFlow
+import movie.metropolis.app.screen.listing.ListingFacade.Companion.upcomingFlow
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -24,23 +24,64 @@ import kotlin.time.Duration
 
 @HiltViewModel
 class ListingViewModel @Inject constructor(
-    private val event: EventFeature
+    facade: ListingFacade
 ) : ViewModel() {
 
-    val current = flow { emit(event.getCurrent().asLoadable()) }
-        .map { it.map { it.map(::MovieViewFromFeature) } }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            Loadable.loading<List<MovieView>>()
-        )
-    val upcoming = flow { emit(event.getUpcoming().asLoadable()) }
-        .map { it.map { it.map(::MovieViewFromFeature) } }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(),
-            Loadable.loading<List<MovieView>>()
-        )
+    val current = facade.currentFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val upcoming = facade.upcomingFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+
+}
+
+interface ListingFacade {
+
+    suspend fun getCurrent(): Result<List<MovieView>>
+    suspend fun getUpcoming(): Result<List<MovieView>>
+
+    companion object {
+
+        val ListingFacade.currentFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getCurrent().asLoadable())
+            }
+
+        val ListingFacade.upcomingFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getUpcoming().asLoadable())
+            }
+
+    }
+
+}
+
+class ListingFacadeFromFeature(
+    private val event: EventFeature
+) : ListingFacade {
+
+    override suspend fun getCurrent(): Result<List<MovieView>> {
+        return Result.success(event.getCurrent().getOrThrow().map(::MovieViewFromFeature))
+    }
+
+    override suspend fun getUpcoming(): Result<List<MovieView>> {
+        return Result.success(event.getUpcoming().getOrThrow().map(::MovieViewFromFeature))
+    }
+
+}
+
+class ListingFacadeRecover(
+    private val origin: ListingFacade
+) : ListingFacade {
+
+    override suspend fun getCurrent(): Result<List<MovieView>> {
+        return kotlin.runCatching { origin.getCurrent().getOrThrow() }
+    }
+
+    override suspend fun getUpcoming(): Result<List<MovieView>> {
+        return kotlin.runCatching { origin.getUpcoming().getOrThrow() }
+    }
 
 }
 
