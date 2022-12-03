@@ -12,22 +12,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import movie.metropolis.app.feature.global.Cinema
 import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.global.FieldUpdate
 import movie.metropolis.app.feature.global.User
 import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.model.MembershipView
+import movie.metropolis.app.model.CinemaSimpleView
+import movie.metropolis.app.model.CinemaSimpleViewFromFeature
+import movie.metropolis.app.model.MembershipViewFeature
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.StateMachine
 import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.getOrThrow
 import movie.metropolis.app.screen.map
-import java.text.DateFormat
-import java.text.NumberFormat
-import java.util.Date
 import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -116,48 +113,5 @@ class ProfileViewModel @Inject constructor(
     private fun <T> Flow<Loadable<T>>.onEachSuccess(body: suspend (T) -> Unit) = onEach {
         if (it.isSuccess) body(it.getOrThrow())
     }
-
-}
-
-data class CinemaSimpleViewFromFeature(
-    private val cinema: Cinema
-) : CinemaSimpleView {
-
-    override val id: String
-        get() = cinema.id
-    override val name: String
-        get() = cinema.name
-    override val city: String
-        get() = cinema.city
-
-}
-
-interface CinemaSimpleView {
-    val id: String
-    val name: String
-    val city: String
-}
-
-data class MembershipViewFeature(
-    private val user: User
-) : MembershipView {
-
-    private val date = DateFormat.getDateInstance(DateFormat.MEDIUM)
-    private val number = NumberFormat.getNumberInstance()
-
-    private val membership get() = checkNotNull(user.membership)
-
-    override val isExpired: Boolean
-        get() = membership.isExpired
-    override val cardNumber: String
-        get() = membership.cardNumber
-    override val memberFrom: String
-        get() = date.format(membership.memberFrom)
-    override val memberUntil: String
-        get() = date.format(membership.memberUntil)
-    override val daysRemaining: String
-        get() = (membership.memberUntil.time - Date().time).milliseconds.inWholeDays.toString() + "d"
-    override val points: String
-        get() = number.format(user.points)
 
 }

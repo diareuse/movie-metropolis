@@ -18,7 +18,7 @@ import movie.metropolis.app.feature.global.model.CustomerResponse
 import movie.metropolis.app.feature.global.model.PasswordRequest
 import movie.metropolis.app.feature.global.model.RegistrationRequest
 import movie.metropolis.app.feature.global.model.TokenRequest
-import movie.metropolis.app.screen.detail.MovieFromId
+import movie.metropolis.app.model.MovieFromId
 import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 
