@@ -1,12 +1,11 @@
 package movie.metropolis.app.screen.booking
 
 import kotlinx.coroutines.test.runTest
-import movie.metropolis.app.feature.global.SignInMethod
 import movie.metropolis.app.feature.global.di.FacadeModule
+import movie.metropolis.app.feature.global.model.SignInMethod
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.screen.UrlResponder
-import movie.metropolis.app.screen.getOrThrow
 import org.junit.Test
 import kotlin.test.assertIs
 

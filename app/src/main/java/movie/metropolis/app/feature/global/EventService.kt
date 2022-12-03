@@ -1,11 +1,11 @@
 package movie.metropolis.app.feature.global
 
-import movie.metropolis.app.feature.global.model.BodyResponse
-import movie.metropolis.app.feature.global.model.ExtendedMovieResponse
-import movie.metropolis.app.feature.global.model.MovieDetailsResponse
-import movie.metropolis.app.feature.global.model.MovieEventResponse
-import movie.metropolis.app.feature.global.model.NearbyCinemaResponse
-import movie.metropolis.app.feature.global.model.ShowingType
+import movie.metropolis.app.feature.global.model.remote.BodyResponse
+import movie.metropolis.app.feature.global.model.remote.ExtendedMovieResponse
+import movie.metropolis.app.feature.global.model.remote.MovieDetailsResponse
+import movie.metropolis.app.feature.global.model.remote.MovieEventResponse
+import movie.metropolis.app.feature.global.model.remote.NearbyCinemaResponse
+import movie.metropolis.app.feature.global.model.remote.ShowingType
 import java.util.Date
 
 internal interface EventService {

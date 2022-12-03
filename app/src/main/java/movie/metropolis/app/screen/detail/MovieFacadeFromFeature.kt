@@ -3,18 +3,18 @@ package movie.metropolis.app.screen.detail
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.Location
-import movie.metropolis.app.feature.global.Media
-import movie.metropolis.app.feature.global.MovieDetail
+import movie.metropolis.app.feature.global.model.Location
+import movie.metropolis.app.feature.global.model.Media
+import movie.metropolis.app.feature.global.model.MovieDetail
 import movie.metropolis.app.model.CinemaBookingView
-import movie.metropolis.app.model.CinemaBookingViewFromFeature
 import movie.metropolis.app.model.ImageView
-import movie.metropolis.app.model.ImageViewFromFeature
 import movie.metropolis.app.model.MovieDetailView
-import movie.metropolis.app.model.MovieDetailViewFromFeature
-import movie.metropolis.app.model.MovieFromId
 import movie.metropolis.app.model.VideoView
-import movie.metropolis.app.model.VideoViewFromFeature
+import movie.metropolis.app.model.adapter.CinemaBookingViewFromFeature
+import movie.metropolis.app.model.adapter.ImageViewFromFeature
+import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
+import movie.metropolis.app.model.adapter.MovieFromId
+import movie.metropolis.app.model.adapter.VideoViewFromFeature
 import java.util.Date
 
 class MovieFacadeFromFeature(

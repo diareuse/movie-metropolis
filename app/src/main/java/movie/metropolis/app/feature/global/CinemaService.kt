@@ -1,7 +1,7 @@
 package movie.metropolis.app.feature.global
 
-import movie.metropolis.app.feature.global.model.CinemaResponse
-import movie.metropolis.app.feature.global.model.ResultsResponse
+import movie.metropolis.app.feature.global.model.remote.CinemaResponse
+import movie.metropolis.app.feature.global.model.remote.ResultsResponse
 
 internal interface CinemaService {
 

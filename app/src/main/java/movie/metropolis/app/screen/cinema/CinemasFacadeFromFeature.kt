@@ -1,9 +1,9 @@
 package movie.metropolis.app.screen.cinema
 
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.Location
+import movie.metropolis.app.feature.global.model.Location
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.model.CinemaViewFromFeature
+import movie.metropolis.app.model.adapter.CinemaViewFromFeature
 
 class CinemasFacadeFromFeature(
     private val event: EventFeature
