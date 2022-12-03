@@ -9,17 +9,15 @@ import movie.metropolis.app.feature.global.FieldUpdate.Email
 import movie.metropolis.app.feature.global.FieldUpdate.Name
 import movie.metropolis.app.feature.global.FieldUpdate.Password
 import movie.metropolis.app.feature.global.FieldUpdate.Phone
-import movie.metropolis.app.feature.global.model.BookingDetailResponse
-import movie.metropolis.app.feature.global.model.BookingResponse
-import movie.metropolis.app.feature.global.model.ConsentRemote
+import movie.metropolis.app.feature.global.adapter.BookingActiveFromResponse
+import movie.metropolis.app.feature.global.adapter.BookingExpiredFromResponse
+import movie.metropolis.app.feature.global.adapter.UserFromRemote
 import movie.metropolis.app.feature.global.model.CustomerDataRequest
-import movie.metropolis.app.feature.global.model.CustomerPointsResponse
 import movie.metropolis.app.feature.global.model.CustomerResponse
 import movie.metropolis.app.feature.global.model.PasswordRequest
 import movie.metropolis.app.feature.global.model.RegistrationRequest
 import movie.metropolis.app.feature.global.model.TokenRequest
 import movie.metropolis.app.model.MovieFromId
-import java.util.Date
 import kotlin.time.Duration.Companion.minutes
 
 internal class UserFeatureImpl(
@@ -145,133 +143,5 @@ internal class UserFeatureImpl(
         is Name.Last -> model.copy(lastName = field.value)
         is Phone -> model.copy(phone = field.value)
         else -> model
-    }
-}
-
-internal data class UserFromRemote(
-    private val customer: CustomerResponse.Customer,
-    private val customerPoints: CustomerPointsResponse,
-    override val favorite: movie.metropolis.app.feature.global.Cinema?
-) : User {
-
-    constructor(
-        customer: CustomerResponse.Customer,
-        points: CustomerPointsResponse,
-        cinemas: List<movie.metropolis.app.feature.global.Cinema>
-    ) : this(
-        customer = customer,
-        customerPoints = points,
-        favorite = cinemas.firstOrNull { it.id == customer.favoriteCinema }
-    )
-
-    override val firstName: String
-        get() = customer.firstName
-    override val lastName: String
-        get() = customer.lastName
-    override val email: String
-        get() = customer.email
-    override val phone: String
-        get() = customer.phone
-    override val consent: User.Consent
-        get() = ConsentFromRemote(customer.consent)
-    override val membership: User.Membership?
-        get() = customer.membership.club?.let(UserFromRemote::MembershipFromRemote)
-    override val points: Double
-        get() = customerPoints.total
-
-    private data class ConsentFromRemote(
-        private val consent: ConsentRemote
-    ) : User.Consent {
-        override val marketing: Boolean
-            get() = consent.marketing
-        override val premium: Boolean
-            get() = consent.marketingPremium ?: false
-    }
-
-    private data class MembershipFromRemote(
-        private val club: CustomerResponse.Club
-    ) : User.Membership {
-        override val cardNumber: String
-            get() = club.cardNumber
-        override val memberFrom: Date
-            get() = club.joinedAt
-        override val memberUntil: Date
-            get() = club.expiredAt
-    }
-
-}
-
-internal data class BookingExpiredFromResponse(
-    private val response: BookingResponse,
-    override val movie: MovieDetail,
-    override val cinema: movie.metropolis.app.feature.global.Cinema
-) : Booking.Expired {
-
-    constructor(
-        response: BookingResponse,
-        movie: MovieDetail,
-        cinemas: List<movie.metropolis.app.feature.global.Cinema>
-    ) : this(
-        response = response,
-        movie = movie,
-        cinema = cinemas.first { it.id == response.cinemaId }
-    )
-
-    override val id: String
-        get() = response.id
-    override val name: String
-        get() = response.name
-    override val startsAt: Date
-        get() = response.startsAt
-    override val paidAt: Date
-        get() = response.paidAt
-    override val eventId: String
-        get() = response.eventId
-
-}
-
-internal data class BookingActiveFromResponse(
-    private val response: BookingResponse,
-    private val detail: BookingDetailResponse,
-    override val movie: MovieDetail,
-    override val cinema: movie.metropolis.app.feature.global.Cinema
-) : Booking.Active {
-
-    constructor(
-        response: BookingResponse,
-        detail: BookingDetailResponse,
-        movie: MovieDetail,
-        cinemas: List<movie.metropolis.app.feature.global.Cinema>
-    ) : this(
-        response = response,
-        detail = detail,
-        movie = movie,
-        cinema = cinemas.first { it.id == response.cinemaId }
-    )
-
-    override val id: String
-        get() = response.id
-    override val name: String
-        get() = response.name
-    override val startsAt: Date
-        get() = response.startsAt
-    override val paidAt: Date
-        get() = response.paidAt
-    override val eventId: String
-        get() = response.eventId
-    override val hall: String
-        get() = detail.hall
-    override val seats: List<Booking.Active.Seat>
-        get() = detail.tickets.map(BookingActiveFromResponse::SeatFromResponse)
-
-    private data class SeatFromResponse(
-        private val ticket: BookingDetailResponse.Ticket
-    ) : Booking.Active.Seat {
-
-        override val row: String
-            get() = ticket.row
-        override val seat: String
-            get() = ticket.seat
-
     }
 }
