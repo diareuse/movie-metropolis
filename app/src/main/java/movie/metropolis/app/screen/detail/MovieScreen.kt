@@ -67,7 +67,7 @@ fun MovieScreen(
     val showings by viewModel.showings.collectAsState()
     val location by rememberLocation(onPermissionsRequested)
     SideEffect {
-        //viewModel.location.value = location
+        viewModel.location.value = location
     }
     MovieScreen(
         detail = detail,

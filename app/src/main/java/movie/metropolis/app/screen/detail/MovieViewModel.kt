@@ -8,16 +8,14 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import movie.metropolis.app.feature.global.Cinema
-import movie.metropolis.app.feature.global.CinemaWithShowings
 import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.global.Location
 import movie.metropolis.app.feature.global.Media
@@ -34,13 +32,14 @@ import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.cinema.CinemaViewFromFeature
+import movie.metropolis.app.screen.detail.MovieFacade.Companion.availableFromFlow
+import movie.metropolis.app.screen.detail.MovieFacade.Companion.movieFlow
+import movie.metropolis.app.screen.detail.MovieFacade.Companion.posterFlow
+import movie.metropolis.app.screen.detail.MovieFacade.Companion.showingsFlow
+import movie.metropolis.app.screen.detail.MovieFacade.Companion.trailerFlow
 import movie.metropolis.app.screen.listing.ImageViewFromFeature
 import movie.metropolis.app.screen.listing.VideoViewFromFeature
 import movie.metropolis.app.screen.listing.toStringComponents
-import movie.metropolis.app.screen.map
-import movie.metropolis.app.screen.mapNotNull
-import movie.metropolis.app.screen.onFailure
-import movie.metropolis.app.screen.onSuccess
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -50,97 +49,194 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
-class MovieViewModel @Inject constructor(
-    handle: SavedStateHandle,
-    private val event: EventFeature,
+class MovieViewModel private constructor(
+    private val facade: MovieFacade,
     private val user: UserFeature
 ) : ViewModel() {
 
-    private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-    private val id = handle.get<String>("movie").orEmpty()
-    private val movieDetail = flow { emit(event.getDetail(MovieFromId(id))) }
-        .map { it.asLoadable() }
-        .shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
-
-    val startDate = movieDetail.map { it.map { it.screeningFrom } }
-        .map { loadable -> loadable.map { if (it.before(Date())) Date() else it } }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    @Inject
+    constructor(
+        handle: SavedStateHandle,
+        facade: MovieFacade.Factory,
+        user: UserFeature
+    ) : this(
+        facade.create(handle.get<String>("movie").orEmpty()),
+        user
+    )
 
     val selectedDate = MutableStateFlow(null as Date?)
-    val location = MutableStateFlow(null as LocationSnapshot?)
+    val location = MutableStateFlow(null as android.location.Location?)
 
-    val detail = movieDetail
-        .map { it.map(::MovieDetailViewFromFeature) }
+    val startDate = facade.availableFromFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-
-    val trailer: Flow<Loadable<VideoView>> = movieDetail.map {
-        it.mapNotNull {
-            it.media
-                .asSequence()
-                .filterIsInstance<Media.Video>()
-                .firstOrNull()
-                ?.let(::VideoViewFromFeature)
-        }
-    }
-    val poster: Flow<Loadable<ImageView>> = movieDetail.map {
-        it.mapNotNull {
-            it.media
-                .asSequence()
-                .filterIsInstance<Media.Image>()
-                .sortedByDescending { it.height * it.width }
-                .firstOrNull()
-                ?.let(::ImageViewFromFeature)
-        }
-    }
-
-    val showings = combine(selectedDate, location) { date, location ->
-        if (date != null && location != null) date to location else null
-    }.filterNotNull()
-        .flatMapLatest { (date, location) -> loadShowings(date, location) }
-        .map { it.map { it.filter { it.availability.isNotEmpty() } } }
+    val detail = facade.movieFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val trailer = facade.trailerFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val poster = facade.posterFlow
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val showings = facade.showingsFlow(selectedDate.filterNotNull(), location.filterNotNull())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
     init {
         viewModelScope.launch {
-            startDate
-                .dropWhile { it.isLoading }
-                .map { it.getOrNull() }
-                .filterNotNull()
+            facade.getAvailableFrom()
                 .map { if (it.before(Date())) Date() else it }
-                .collect { selectedDate.compareAndSet(null, it) }
+                .onSuccess { selectedDate.compareAndSet(null, it) }
         }
         viewModelScope.launch {
-            user.getToken()
-                .mapCatching { user.getUser().getOrThrow() }
-                .map { it.favorite?.location?.toSnapshot() }
+            user.getUser()
+                .map { it.favorite?.location?.toPlatform() }
                 .onSuccess { location.compareAndSet(null, it) }
-        }
-    }
-
-    @Suppress("RemoveExplicitTypeArguments")
-    private fun loadShowings(date: Date, location: LocationSnapshot) = flow {
-        emit(Loadable.loading())
-        movieDetail.collect {
-            it.onSuccess { detail ->
-                emit(event.getShowings(detail, date, location.toLocation()).asLoadable())
-            }.onFailure { error ->
-                emit(Loadable.failure<CinemaWithShowings>(error))
-            }
-        }
-    }.map {
-        it.map {
-            it.map { (cinema, showings) ->
-                CinemaBookingViewFromResponse(cinema, showings)
-            }
         }
     }
 
 }
 
+interface MovieFacade {
+
+    suspend fun getAvailableFrom(): Result<Date>
+    suspend fun getMovie(): Result<MovieDetailView>
+    suspend fun getPoster(): Result<ImageView>
+    suspend fun getTrailer(): Result<VideoView>
+    suspend fun getShowings(
+        date: Date,
+        latitude: Double,
+        longitude: Double
+    ): Result<List<CinemaBookingView>>
+
+    fun interface Factory {
+        fun create(id: String): MovieFacade
+    }
+
+    companion object {
+
+        val MovieFacade.availableFromFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getAvailableFrom().asLoadable())
+            }
+
+        val MovieFacade.movieFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getMovie().asLoadable())
+            }
+
+        val MovieFacade.posterFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getPoster().asLoadable())
+            }
+
+        val MovieFacade.trailerFlow
+            get() = flow {
+                emit(Loadable.loading())
+                emit(getTrailer().asLoadable())
+            }
+
+        fun MovieFacade.showingsFlow(
+            date: Flow<Date>,
+            location: Flow<android.location.Location>
+        ) = date
+            .combine(location) { date, location -> date to location }
+            .flatMapLatest { (date, location) ->
+                flow {
+                    emit(Loadable.loading())
+                    emit(getShowings(date, location.latitude, location.longitude).asLoadable())
+                }
+            }
+
+    }
+
+}
+
+class MovieFacadeFromFeature(
+    private val id: String,
+    private val event: EventFeature
+) : MovieFacade {
+
+    private val mutex = Mutex(false)
+    private var movie: MovieDetail? = null
+
+    override suspend fun getAvailableFrom(): Result<Date> {
+        return Result.success(getDetail().screeningFrom)
+    }
+
+    override suspend fun getMovie(): Result<MovieDetailView> {
+        return Result.success(MovieDetailViewFromFeature(getDetail()))
+    }
+
+    override suspend fun getPoster(): Result<ImageView> {
+        val image = getDetail().media
+            .asSequence()
+            .filterIsInstance<Media.Image>()
+            .sortedByDescending { it.height * it.width }
+            .map(::ImageViewFromFeature)
+            .first()
+        return Result.success(image)
+    }
+
+    override suspend fun getTrailer(): Result<VideoView> {
+        val video = getDetail().media
+            .asSequence()
+            .filterIsInstance<Media.Video>()
+            .map(::VideoViewFromFeature)
+            .first()
+        return Result.success(video)
+    }
+
+    override suspend fun getShowings(
+        date: Date,
+        latitude: Double,
+        longitude: Double
+    ): Result<List<CinemaBookingView>> {
+        val items = event.getShowings(getDetail(), date, Location(latitude, longitude)).getOrThrow()
+            .asSequence()
+            .map { (cinema, showings) -> CinemaBookingViewFromResponse(cinema, showings) }
+            .filter { it.availability.isNotEmpty() }
+            .toList()
+        return Result.success(items)
+    }
+
+    //
+
+    private suspend fun getDetail(): MovieDetail = mutex.withLock {
+        movie ?: event.getDetail(MovieFromId(id)).getOrThrow().also {
+            movie = it
+        }
+    }
+
+}
+
+class MovieFacadeRecover(
+    private val origin: MovieFacade
+) : MovieFacade {
+
+    override suspend fun getAvailableFrom() =
+        kotlin.runCatching { origin.getAvailableFrom().getOrThrow() }
+
+    override suspend fun getMovie() =
+        kotlin.runCatching { origin.getMovie().getOrThrow() }
+
+    override suspend fun getPoster() =
+        kotlin.runCatching { origin.getPoster().getOrThrow() }
+
+    override suspend fun getTrailer() =
+        kotlin.runCatching { origin.getTrailer().getOrThrow() }
+
+    override suspend fun getShowings(
+        date: Date,
+        latitude: Double,
+        longitude: Double
+    ) = kotlin.runCatching { origin.getShowings(date, latitude, longitude).getOrThrow() }
+
+}
+
 fun LocationSnapshot.toLocation() = Location(latitude, longitude)
-fun Location.toSnapshot() = object : LocationSnapshot {
-    override val latitude: Double = this@toSnapshot.latitude
-    override val longitude: Double = this@toSnapshot.longitude
+fun Location.toPlatform() = android.location.Location(null).also {
+    it.latitude = latitude
+    it.longitude = longitude
 }
 
 data class CinemaBookingViewFromResponse(
