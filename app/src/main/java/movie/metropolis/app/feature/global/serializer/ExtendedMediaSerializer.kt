@@ -5,9 +5,9 @@ import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import movie.metropolis.app.feature.global.model.MovieDetailResponse
-import movie.metropolis.app.feature.global.model.ExtendedMovieResponse.Media as ExtendedMedia
-import movie.metropolis.app.feature.global.model.MovieDetailResponse.Media as DetailMedia
+import movie.metropolis.app.feature.global.model.remote.MovieDetailResponse
+import movie.metropolis.app.feature.global.model.remote.ExtendedMovieResponse.Media as ExtendedMedia
+import movie.metropolis.app.feature.global.model.remote.MovieDetailResponse.Media as DetailMedia
 
 internal class ExtendedMediaSerializer :
     JsonContentPolymorphicSerializer<ExtendedMedia>(ExtendedMedia::class) {

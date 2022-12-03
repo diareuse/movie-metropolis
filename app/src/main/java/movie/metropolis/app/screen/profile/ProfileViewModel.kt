@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.FieldUpdate
-import movie.metropolis.app.feature.global.User
 import movie.metropolis.app.feature.global.UserFeature
+import movie.metropolis.app.feature.global.model.FieldUpdate
+import movie.metropolis.app.feature.global.model.User
 import movie.metropolis.app.model.CinemaSimpleView
-import movie.metropolis.app.model.CinemaSimpleViewFromFeature
-import movie.metropolis.app.model.MembershipViewFeature
+import movie.metropolis.app.model.adapter.CinemaSimpleViewFromFeature
+import movie.metropolis.app.model.adapter.MembershipViewFeature
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.StateMachine
 import movie.metropolis.app.screen.asLoadable

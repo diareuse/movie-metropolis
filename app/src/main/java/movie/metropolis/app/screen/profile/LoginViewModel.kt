@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import movie.metropolis.app.feature.global.SignInMethod
 import movie.metropolis.app.feature.global.UserFeature
+import movie.metropolis.app.feature.global.model.SignInMethod
 import movie.metropolis.app.model.LoginMode
 import movie.metropolis.app.screen.StateMachine
 import javax.inject.Inject

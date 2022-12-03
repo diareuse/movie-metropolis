@@ -1,11 +1,11 @@
 package movie.metropolis.app.screen.cinema
 
 import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.model.CinemaFromView
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.model.CinemaViewFromFeature
 import movie.metropolis.app.model.MovieBookingView
-import movie.metropolis.app.model.MovieBookingViewFromFeature
+import movie.metropolis.app.model.adapter.CinemaFromView
+import movie.metropolis.app.model.adapter.CinemaViewFromFeature
+import movie.metropolis.app.model.adapter.MovieBookingViewFromFeature
 import java.util.Date
 
 class CinemaFacadeFromFeature(

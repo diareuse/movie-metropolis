@@ -12,15 +12,15 @@ import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
 import movie.metropolis.app.BuildConfig
-import movie.metropolis.app.feature.global.model.BookingDetailResponse
-import movie.metropolis.app.feature.global.model.BookingResponse
-import movie.metropolis.app.feature.global.model.CustomerDataRequest
-import movie.metropolis.app.feature.global.model.CustomerPointsResponse
-import movie.metropolis.app.feature.global.model.CustomerResponse
-import movie.metropolis.app.feature.global.model.PasswordRequest
-import movie.metropolis.app.feature.global.model.RegistrationRequest
-import movie.metropolis.app.feature.global.model.TokenRequest
-import movie.metropolis.app.feature.global.model.TokenResponse
+import movie.metropolis.app.feature.global.model.remote.BookingDetailResponse
+import movie.metropolis.app.feature.global.model.remote.BookingResponse
+import movie.metropolis.app.feature.global.model.remote.CustomerDataRequest
+import movie.metropolis.app.feature.global.model.remote.CustomerPointsResponse
+import movie.metropolis.app.feature.global.model.remote.CustomerResponse
+import movie.metropolis.app.feature.global.model.remote.PasswordRequest
+import movie.metropolis.app.feature.global.model.remote.RegistrationRequest
+import movie.metropolis.app.feature.global.model.remote.TokenRequest
+import movie.metropolis.app.feature.global.model.remote.TokenResponse
 import java.util.Locale
 
 internal class UserServiceImpl(

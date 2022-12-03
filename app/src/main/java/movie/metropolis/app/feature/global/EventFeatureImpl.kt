@@ -4,12 +4,18 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import movie.metropolis.app.feature.global.adapter.CinemaFromResponse
-import movie.metropolis.app.feature.global.adapter.MovieDetailFromResponse
-import movie.metropolis.app.feature.global.adapter.MovieFromResponse
-import movie.metropolis.app.feature.global.adapter.MoviePreviewFromResponse
-import movie.metropolis.app.feature.global.adapter.ShowingFromResponse
-import movie.metropolis.app.feature.global.model.ShowingType
+import movie.metropolis.app.feature.global.model.Cinema
+import movie.metropolis.app.feature.global.model.Location
+import movie.metropolis.app.feature.global.model.Movie
+import movie.metropolis.app.feature.global.model.MovieDetail
+import movie.metropolis.app.feature.global.model.MoviePreview
+import movie.metropolis.app.feature.global.model.Showing
+import movie.metropolis.app.feature.global.model.adapter.CinemaFromResponse
+import movie.metropolis.app.feature.global.model.adapter.MovieDetailFromResponse
+import movie.metropolis.app.feature.global.model.adapter.MovieFromResponse
+import movie.metropolis.app.feature.global.model.adapter.MoviePreviewFromResponse
+import movie.metropolis.app.feature.global.model.adapter.ShowingFromResponse
+import movie.metropolis.app.feature.global.model.remote.ShowingType
 import java.util.Date
 import kotlin.math.abs
 

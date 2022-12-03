@@ -1,9 +1,9 @@
 package movie.metropolis.app.screen.booking
 
-import movie.metropolis.app.feature.global.Booking
 import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.model.BookingViewActiveFromFeature
-import movie.metropolis.app.model.BookingViewExpiredFromFeature
+import movie.metropolis.app.feature.global.model.Booking
+import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
+import movie.metropolis.app.model.adapter.BookingViewExpiredFromFeature
 
 class BookingFacadeFromFeature(
     private val feature: UserFeature
