@@ -1,7 +1,6 @@
 package movie.metropolis.app.feature.global
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.forms.submitForm
@@ -20,6 +19,7 @@ import movie.metropolis.app.feature.global.model.remote.PasswordRequest
 import movie.metropolis.app.feature.global.model.remote.RegistrationRequest
 import movie.metropolis.app.feature.global.model.remote.TokenRequest
 import movie.metropolis.app.feature.global.model.remote.TokenResponse
+import movie.metropolis.app.util.requireBody
 import java.util.Locale
 
 internal class UserServiceImpl(
@@ -36,14 +36,14 @@ internal class UserServiceImpl(
             parameter("reCaptcha", authCaptcha)
             setBody(request)
             basicAuth(authUser, authPass)
-        }.body<CustomerResponse>()
+        }.requireBody<CustomerResponse>()
     }
 
     override suspend fun getToken(request: TokenRequest) = kotlin.runCatching {
         client.submitForm(request.toParameters()) {
             url("oauth/token")
             basicAuth(authUser, authPass)
-        }.body<TokenResponse>()
+        }.requireBody<TokenResponse>()
     }
 
     override suspend fun updatePassword(request: PasswordRequest) = kotlin.runCatching {
@@ -52,28 +52,28 @@ internal class UserServiceImpl(
             parameter("reCaptcha", authCaptcha)
             setBody(request)
             bearerAuth(checkNotNull(account.token))
-        }.body<Unit>()
+        }.requireBody<Unit>()
     }
 
     override suspend fun updateUser(request: CustomerDataRequest) = kotlin.runCatching {
         client.put {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
-        }.body<CustomerResponse>()
+        }.requireBody<CustomerResponse>()
     }
 
     override suspend fun getPoints() = kotlin.runCatching {
         client.get {
             url("v1/customer/points")
             bearerAuth(checkNotNull(account.token))
-        }.body<CustomerPointsResponse>()
+        }.requireBody<CustomerPointsResponse>()
     }
 
     override suspend fun getUser() = kotlin.runCatching {
         client.get {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
-        }.body<CustomerResponse.Customer>()
+        }.requireBody<CustomerResponse.Customer>()
     }
 
     override suspend fun getBookings() = kotlin.runCatching {
@@ -83,7 +83,7 @@ internal class UserServiceImpl(
             url {
                 parameters.append("lang", Locale.getDefault().language)
             }
-        }.body<List<BookingResponse>>()
+        }.requireBody<List<BookingResponse>>()
     }
 
     override suspend fun getBooking(id: String) = kotlin.runCatching {
@@ -93,7 +93,7 @@ internal class UserServiceImpl(
             url {
                 parameters.append("lang", Locale.getDefault().language)
             }
-        }.body<BookingDetailResponse>()
+        }.requireBody<BookingDetailResponse>()
     }
 
 }

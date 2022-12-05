@@ -58,6 +58,7 @@ abstract class FeatureTest {
         override var token: String? = null
         override var refreshToken: String? = null
         override var expirationDate: Date? = null
+        override fun delete() {}
     }
 
     private open class MockCredentials : UserCredentials {

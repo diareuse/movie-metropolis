@@ -1,12 +1,12 @@
 package movie.metropolis.app.feature.global
 
 import io.ktor.client.HttpClient
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
 import movie.metropolis.app.feature.global.model.remote.CinemaResponse
 import movie.metropolis.app.feature.global.model.remote.ResultsResponse
+import movie.metropolis.app.util.requireBody
 import java.util.Locale
 
 internal class CinemaServiceImpl(
@@ -17,7 +17,7 @@ internal class CinemaServiceImpl(
         client.get {
             url("cinema")
             parameter("lang", Locale.getDefault().language)
-        }.body<ResultsResponse<List<CinemaResponse>>>()
-    }.onFailure { it.printStackTrace() }
+        }.requireBody<ResultsResponse<List<CinemaResponse>>>()
+    }
 
 }

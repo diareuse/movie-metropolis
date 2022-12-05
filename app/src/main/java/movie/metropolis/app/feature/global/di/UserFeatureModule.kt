@@ -19,6 +19,7 @@ import movie.metropolis.app.feature.global.UserFeature
 import movie.metropolis.app.feature.global.UserFeatureImpl
 import movie.metropolis.app.feature.global.UserService
 import movie.metropolis.app.feature.global.UserServiceImpl
+import movie.metropolis.app.feature.global.UserServiceLogout
 import movie.metropolis.app.feature.global.UserServiceReauthorize
 import movie.metropolis.app.feature.global.UserServiceSaving
 
@@ -47,6 +48,7 @@ internal class UserFeatureModule {
         service = UserServiceImpl(client, account, auth.user, auth.password, auth.captcha)
         service = UserServiceSaving(service, credentials, account)
         service = UserServiceReauthorize(service, credentials, account)
+        service = UserServiceLogout(service, credentials, account)
         return service
     }
 
