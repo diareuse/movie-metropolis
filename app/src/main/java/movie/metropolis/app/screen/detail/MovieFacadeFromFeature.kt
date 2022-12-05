@@ -2,10 +2,11 @@ package movie.metropolis.app.screen.detail
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.model.Location
-import movie.metropolis.app.feature.global.model.Media
-import movie.metropolis.app.feature.global.model.MovieDetail
+import movie.core.EventFeature
+import movie.core.adapter.MovieFromId
+import movie.core.model.Location
+import movie.core.model.Media
+import movie.core.model.MovieDetail
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
@@ -13,7 +14,6 @@ import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.model.adapter.CinemaBookingViewFromFeature
 import movie.metropolis.app.model.adapter.ImageViewFromFeature
 import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
-import movie.metropolis.app.model.adapter.MovieFromId
 import movie.metropolis.app.model.adapter.VideoViewFromFeature
 import java.util.Date
 

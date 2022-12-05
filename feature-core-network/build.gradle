@@ -1,0 +1,22 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    namespace 'movie.core.nwk'
+}
+
+dependencies {
+
+    implementation project(":feature-core-auth")
+
+    implementation "io.ktor:ktor-client-core:[2,3["
+    implementation "io.ktor:ktor-client-cio:[2,3["
+    implementation "io.ktor:ktor-client-logging:[2,3["
+    implementation "io.ktor:ktor-client-content-negotiation:[2,3["
+    implementation "io.ktor:ktor-serialization-kotlinx-json:[2,3["
+    testImplementation "io.ktor:ktor-client-mock:[2,3["
+
+}

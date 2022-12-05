@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.UserFeature
+import movie.core.EventFeature
+import movie.core.UserFeature
 import movie.metropolis.app.screen.booking.BookingFacade
 import movie.metropolis.app.screen.booking.BookingFacadeFromFeature
 import movie.metropolis.app.screen.booking.BookingFacadeRecover

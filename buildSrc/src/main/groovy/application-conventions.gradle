@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'common-conventions'
     id 'signing-conventions'
-    id 'secrets-conventions'
 }
 
 def calendar = Calendar.getInstance()

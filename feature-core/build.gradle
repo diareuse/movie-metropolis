@@ -1,0 +1,15 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.core'
+}
+
+dependencies {
+
+    implementation project(":feature-core-network")
+    implementation project(":feature-core-database")
+
+}

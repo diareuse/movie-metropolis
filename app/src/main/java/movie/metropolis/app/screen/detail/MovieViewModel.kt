@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.feature.global.model.Location
+import movie.core.UserFeature
+import movie.core.model.Location
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.availableFromFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.movieFlow

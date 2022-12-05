@@ -2,7 +2,6 @@ plugins {
     id 'application-conventions'
     id 'di-conventions'
     id 'google-conventions'
-    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -23,6 +22,8 @@ android {
 
 dependencies {
 
+    implementation project(":feature-core")
+
     def vCompose = "[1,2["
     def vMaterial = "[1,2["
     def vCoil = "[2,3["
@@ -40,7 +41,6 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:[2,3["
     implementation "androidx.startup:startup-runtime:[1,2["
     implementation "androidx.work:work-runtime-ktx:[2,3["
-    implementation "androidx.security:security-crypto:[1,2["
     implementation "com.google.android.material:material:[1,2["
 
     //implementation platform("com.google.firebase:firebase-bom:31.0.3")

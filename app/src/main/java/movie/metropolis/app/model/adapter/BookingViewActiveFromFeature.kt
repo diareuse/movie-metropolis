@@ -1,6 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import movie.metropolis.app.feature.global.model.Booking
+import movie.core.model.Booking
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieDetailView

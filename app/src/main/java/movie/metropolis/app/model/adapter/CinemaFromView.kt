@@ -1,7 +1,7 @@
 package movie.metropolis.app.model.adapter
 
-import movie.metropolis.app.feature.global.model.Cinema
-import movie.metropolis.app.feature.global.model.Location
+import movie.core.model.Cinema
+import movie.core.model.Location
 import movie.metropolis.app.model.CinemaView
 
 data class CinemaFromView(

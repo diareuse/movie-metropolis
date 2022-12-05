@@ -13,4 +13,8 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "movie-metropolis"
-include ':app'
+include ":app"
+include ":feature-core",
+        ":feature-core-auth",
+        ":feature-core-database",
+        ":feature-core-network"
