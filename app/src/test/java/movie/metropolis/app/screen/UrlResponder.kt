@@ -4,6 +4,7 @@ import io.ktor.client.engine.mock.MockRequestHandleScope
 import io.ktor.client.engine.mock.respond
 import io.ktor.client.request.HttpRequestData
 import io.ktor.client.request.HttpResponseData
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.Url
 import io.ktor.http.headersOf
@@ -12,15 +13,21 @@ typealias Responder = suspend MockRequestHandleScope.(HttpRequestData) -> HttpRe
 
 class UrlResponder : Responder {
 
-    private val responses = mutableMapOf<Url, String>()
+    private val responses = mutableMapOf<HttpMethod, MutableMap<Url, String>>()
 
     fun onUrlRespond(url: Url, name: String) {
-        responses[url] = file(name).ifEmpty { name }
+        onUrlRespond(HttpMethod.Get, url, name)
+        onUrlRespond(HttpMethod.Post, url, name)
+    }
+
+    fun onUrlRespond(method: HttpMethod, url: Url, name: String) {
+        responses.getOrPut(method) { mutableMapOf() }[url] = file(name).ifEmpty { name }
     }
 
     override suspend fun invoke(p1: MockRequestHandleScope, p2: HttpRequestData): HttpResponseData {
+        val response = responses[p2.method]?.get(p2.url)
         return p1.respond(
-            content = responses.getValue(p2.url),
+            content = requireNotNull(response) { "${p2.method} | ${p2.url} has no response" },
             status = HttpStatusCode.OK,
             headers = headersOf("content-type", "application/json")
         )
@@ -53,10 +60,10 @@ class UrlResponder : Responder {
             Url("$Domain/cz/$DataService/v1/10101/films/by-showing-type/${type}?ordering=asc&lang=en")
 
         val Password =
-            Url("$Domain/cz/$CustomerService/v1/password?reCaptcha=null")
+            Url("$Domain/cz/$CustomerService/v1/password?reCaptcha=captcha")
 
         val Register =
-            Url("$Domain/cz/$CustomerService/v1/customers?reCaptcha=null")
+            Url("$Domain/cz/$CustomerService/v1/customers?reCaptcha=captcha")
 
         val Customer =
             Url("$Domain/cz/$CustomerService/v1/customers/current")

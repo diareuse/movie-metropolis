@@ -47,7 +47,8 @@ abstract class FeatureTest {
         account = spy(MockAccount())
         credentials = spy(MockCredentials())
         val module = UserFeatureModule()
-        val service = module.service(client, account, credentials)
+        val auth = UserFeatureModule.AuthMetadata("user", "password", "captcha")
+        val service = module.service(client, account, credentials, auth)
         user = module.feature(service, account, event)
     }
 

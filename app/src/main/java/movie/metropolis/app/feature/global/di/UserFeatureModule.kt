@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
+import movie.metropolis.app.BuildConfig
 import movie.metropolis.app.di.ClientCustomer
 import movie.metropolis.app.feature.global.EventFeature
 import movie.metropolis.app.feature.global.UserAccount
@@ -39,10 +40,11 @@ internal class UserFeatureModule {
         @ClientCustomer
         client: HttpClient,
         account: UserAccount,
-        credentials: UserCredentials
+        credentials: UserCredentials,
+        auth: AuthMetadata
     ): UserService {
         var service: UserService
-        service = UserServiceImpl(client, account)
+        service = UserServiceImpl(client, account, auth.user, auth.password, auth.captcha)
         service = UserServiceSaving(service, credentials, account)
         service = UserServiceReauthorize(service, credentials, account)
         return service
@@ -64,5 +66,18 @@ internal class UserFeatureModule {
     ): UserCredentials {
         return UserCredentialsImpl(context)
     }
+
+    @Provides
+    fun authMeta(): AuthMetadata = AuthMetadata(
+        user = BuildConfig.BasicUser,
+        password = BuildConfig.BasicPass,
+        captcha = BuildConfig.Captcha
+    )
+
+    data class AuthMetadata(
+        val user: String,
+        val password: String,
+        val captcha: String
+    )
 
 }
