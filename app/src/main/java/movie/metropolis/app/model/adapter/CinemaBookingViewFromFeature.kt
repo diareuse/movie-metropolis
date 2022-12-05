@@ -1,7 +1,7 @@
 package movie.metropolis.app.model.adapter
 
-import movie.metropolis.app.feature.global.model.Cinema
-import movie.metropolis.app.feature.global.model.Showing
+import movie.core.model.Cinema
+import movie.core.model.Showing
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
 import java.text.DateFormat

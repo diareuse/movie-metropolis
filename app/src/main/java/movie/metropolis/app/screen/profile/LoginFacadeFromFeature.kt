@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.profile
 
-import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.feature.global.model.SignInMethod
+import movie.core.UserFeature
+import movie.core.model.SignInMethod
 
 class LoginFacadeFromFeature(
     private val user: UserFeature

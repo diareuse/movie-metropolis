@@ -1,6 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import movie.metropolis.app.feature.global.model.User
+import movie.core.model.User
 import movie.metropolis.app.model.MembershipView
 import java.text.DateFormat
 import java.text.NumberFormat

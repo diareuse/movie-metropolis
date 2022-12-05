@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.booking
 
-import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.feature.global.model.Booking
+import movie.core.UserFeature
+import movie.core.model.Booking
 import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
 import movie.metropolis.app.model.adapter.BookingViewExpiredFromFeature
 

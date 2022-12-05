@@ -1,7 +1,7 @@
 package movie.metropolis.app.model.adapter
 
-import movie.metropolis.app.feature.global.model.Media
-import movie.metropolis.app.feature.global.model.MoviePreview
+import movie.core.model.Media
+import movie.core.model.MoviePreview
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView

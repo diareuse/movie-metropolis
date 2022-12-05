@@ -1,8 +1,8 @@
 package movie.metropolis.app.screen.profile
 
-import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.feature.global.model.FieldUpdate
+import movie.core.EventFeature
+import movie.core.UserFeature
+import movie.core.model.FieldUpdate
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView

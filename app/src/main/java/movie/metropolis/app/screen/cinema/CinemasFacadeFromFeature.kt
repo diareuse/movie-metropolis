@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.cinema
 
-import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.model.Location
+import movie.core.EventFeature
+import movie.core.model.Location
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.adapter.CinemaViewFromFeature
 

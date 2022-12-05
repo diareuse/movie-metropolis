@@ -1,6 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import movie.metropolis.app.feature.global.model.Media
+import movie.core.model.Media
 import movie.metropolis.app.model.VideoView
 
 data class VideoViewFromFeature(
