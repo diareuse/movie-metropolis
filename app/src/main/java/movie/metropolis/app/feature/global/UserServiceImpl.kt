@@ -11,7 +11,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.request.url
-import movie.metropolis.app.BuildConfig
 import movie.metropolis.app.feature.global.model.remote.BookingDetailResponse
 import movie.metropolis.app.feature.global.model.remote.BookingResponse
 import movie.metropolis.app.feature.global.model.remote.CustomerDataRequest
@@ -25,29 +24,32 @@ import java.util.Locale
 
 internal class UserServiceImpl(
     private val client: HttpClient,
-    private val account: UserAccount
+    private val account: UserAccount,
+    private val authUser: String,
+    private val authPass: String,
+    private val authCaptcha: String
 ) : UserService {
 
     override suspend fun register(request: RegistrationRequest) = kotlin.runCatching {
         client.post {
             url("v1/customers")
-            parameter("reCaptcha", BuildConfig.Captcha)
+            parameter("reCaptcha", authCaptcha)
             setBody(request)
-            basicAuth(BuildConfig.BasicUser, BuildConfig.BasicPass)
+            basicAuth(authUser, authPass)
         }.body<CustomerResponse>()
     }
 
     override suspend fun getToken(request: TokenRequest) = kotlin.runCatching {
         client.submitForm(request.toParameters()) {
             url("oauth/token")
-            basicAuth(BuildConfig.BasicUser, BuildConfig.BasicPass)
+            basicAuth(authUser, authPass)
         }.body<TokenResponse>()
     }
 
     override suspend fun updatePassword(request: PasswordRequest) = kotlin.runCatching {
         client.put {
             url("v1/password")
-            parameter("reCaptcha", BuildConfig.Captcha)
+            parameter("reCaptcha", authCaptcha)
             setBody(request)
             bearerAuth(checkNotNull(account.token))
         }.body<Unit>()

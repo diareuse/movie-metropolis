@@ -39,8 +39,8 @@ fun UserScreen(
     onNavigateToLogin: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel()
 ) {
-    val isLoggedIn by viewModel.isLoggedIn.collectAsState(null)
-    val isLoading by viewModel.isLoading.collectAsState(initial = true)
+    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
+    val isLoading by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
     val cinemas by viewModel.cinemas.collectAsState()
     val firstName by viewModel.firstName.collectAsState()
@@ -55,8 +55,8 @@ fun UserScreen(
         padding = padding,
         membership = membership,
         cinemas = cinemas,
-        isLoading = isLoading,
-        isLoggedOut = isLoggedIn == false,
+        isLoading = isLoading.isLoading,
+        isLoggedOut = isLoggedIn.getOrNull() == false,
         favorite = favorite,
         firstName = firstName,
         lastName = lastName,

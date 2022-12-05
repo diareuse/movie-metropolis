@@ -3,63 +3,40 @@ package movie.metropolis.app.screen.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
-import movie.metropolis.app.feature.global.EventFeature
-import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.feature.global.model.FieldUpdate
-import movie.metropolis.app.feature.global.model.User
 import movie.metropolis.app.model.CinemaSimpleView
-import movie.metropolis.app.model.adapter.CinemaSimpleViewFromFeature
-import movie.metropolis.app.model.adapter.MembershipViewFeature
+import movie.metropolis.app.model.UserView
+import movie.metropolis.app.model.adapter.UserViewFromView
 import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.StateMachine
-import movie.metropolis.app.screen.asLoadable
-import movie.metropolis.app.screen.getOrThrow
-import movie.metropolis.app.screen.map
+import movie.metropolis.app.screen.onSuccess
+import movie.metropolis.app.screen.profile.ProfileFacade.Companion.cinemasFlow
+import movie.metropolis.app.screen.profile.ProfileFacade.Companion.isLoggedInFlow
+import movie.metropolis.app.screen.profile.ProfileFacade.Companion.membershipFlow
+import movie.metropolis.app.screen.profile.ProfileFacade.Companion.userFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val feature: UserFeature,
-    private val event: EventFeature
+    private val facade: ProfileFacade
 ) : ViewModel() {
 
-    private val stateMachine = StateMachine<Loadable<User>>(viewModelScope, Loadable.loading()) {
-        Loadable.loading()
-    }
+    private val jobEmitter = Channel<suspend () -> Unit>()
 
-    private val user = stateMachine.state
-        .onEachSuccess { user ->
-            firstName.update { user.firstName }
-            lastName.update { user.lastName }
-            email.update { user.email }
-            phone.update { user.phone }
-            favorite.update { user.favorite?.let(::CinemaSimpleViewFromFeature) }
-            hasMarketing.update { user.consent.marketing }
-            passwordCurrent.update { "" }
-            passwordNew.update { "" }
-        }
+    val cinemas = facade.cinemasFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-
-    val isLoggedIn = flow { emit(feature.getToken().isSuccess) }
-
-    val isLoading = stateMachine.state.map { it.isLoading }
-
-    val membership = user
-        .map { it.map { user -> user.membership?.let { MembershipViewFeature(user) } } }
+    val membership = facade.membershipFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-
-    val cinemas = flow { emit(event.getCinemas(null)) }
-        .map { it.map { it.map(::CinemaSimpleViewFromFeature) } }
-        .map { it.asLoadable() }
+    val user = facade.userFlow(jobEmitter.consumeAsFlow())
+        .onEachSuccess(::populateFields)
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val isLoggedIn = facade.isLoggedInFlow
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
 
     val firstName = MutableStateFlow("")
@@ -71,47 +48,25 @@ class ProfileViewModel @Inject constructor(
     val passwordCurrent = MutableStateFlow("")
     val passwordNew = MutableStateFlow("")
 
-    init {
-        stateMachine.submit { feature.getUser().asLoadable() }
-    }
-
     fun save() {
-        val user = user.value.getOrNull() ?: return
-        val fields = listOfNotNull(
-            compare(firstName, user.firstName, FieldUpdate.Name::First),
-            compare(lastName, user.lastName, FieldUpdate.Name::Last),
-            compare(email, user.email, FieldUpdate::Email),
-            compare(phone, user.phone, FieldUpdate::Phone),
-            compare(favorite.value?.id, user.favorite?.id) { FieldUpdate.Cinema(it) },
-            compare(hasMarketing, user.consent.marketing, FieldUpdate.Consent::Marketing),
-            FieldUpdate.Password(passwordCurrent.value, passwordNew.value).takeIf { it.isValid }
-        )
-        stateMachine.submit {
-            feature.update(fields).asLoadable()
+        jobEmitter.trySend {
+            facade.save(UserViewFromView(this@ProfileViewModel))
         }
     }
 
-    private fun <T : Any> compare(
-        updated: StateFlow<T?>,
-        remote: T?,
-        factory: (T) -> FieldUpdate
-    ): FieldUpdate? = compare(
-        updated = updated.value,
-        remote = remote,
-        factory = factory
-    )
-
-    private fun <T : Any> compare(
-        updated: T?,
-        remote: T?,
-        factory: (T) -> FieldUpdate
-    ): FieldUpdate? {
-        if (updated != remote && updated != null) return factory(updated)
-        return null
+    private fun populateFields(user: UserView) {
+        firstName.update { user.firstName }
+        lastName.update { user.lastName }
+        email.update { user.email }
+        phone.update { user.phone }
+        favorite.update { user.favorite }
+        hasMarketing.update { user.consent.marketing }
+        passwordCurrent.update { "" }
+        passwordNew.update { "" }
     }
 
     private fun <T> Flow<Loadable<T>>.onEachSuccess(body: suspend (T) -> Unit) = onEach {
-        if (it.isSuccess) body(it.getOrThrow())
+        it.onSuccess { v -> body(v) }
     }
 
 }
