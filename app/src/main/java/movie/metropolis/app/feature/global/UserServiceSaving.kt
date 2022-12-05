@@ -1,5 +1,6 @@
 package movie.metropolis.app.feature.global
 
+import movie.metropolis.app.feature.global.model.remote.PasswordRequest
 import movie.metropolis.app.feature.global.model.remote.RegistrationRequest
 import movie.metropolis.app.feature.global.model.remote.TokenRequest
 
@@ -29,6 +30,12 @@ internal class UserServiceSaving(
         account.token = it.accessToken
         account.refreshToken = it.refreshToken
         account.expirationDate = it.expiresAt
+    }
+
+    override suspend fun updatePassword(
+        request: PasswordRequest
+    ) = origin.updatePassword(request).onSuccess {
+        credentials.password = request.new
     }
 
 }
