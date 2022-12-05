@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -50,14 +49,14 @@ fun LoginSignInScreen(
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val state by viewModel.state.collectAsState()
-    LaunchedEffect(state.loggedIn) {
-        if (state.loggedIn) onNavigateHome()
+    LaunchedEffect(state) {
+        if (state.getOrNull() == true) onNavigateHome()
     }
     LoginSignInScreen(
         email = email,
         password = password,
-        error = state.error != null,
-        loading = state.loading,
+        error = state.isFailure,
+        loading = state.isLoading,
         onEmailChanged = { viewModel.email.value = it },
         onPasswordChanged = { viewModel.password.value = it },
         onSendClick = viewModel::send,
@@ -65,7 +64,6 @@ fun LoginSignInScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoginSignInScreen(
     email: String,

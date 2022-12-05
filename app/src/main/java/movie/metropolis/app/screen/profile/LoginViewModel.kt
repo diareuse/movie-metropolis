@@ -3,56 +3,44 @@ package movie.metropolis.app.screen.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import movie.metropolis.app.feature.global.UserFeature
-import movie.metropolis.app.feature.global.model.SignInMethod
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.stateIn
 import movie.metropolis.app.model.LoginMode
-import movie.metropolis.app.screen.StateMachine
+import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.profile.LoginFacade.Companion.stateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val feature: UserFeature
+    facade: LoginFacade
 ) : ViewModel() {
 
-    private val stateMachine = StateMachine(viewModelScope, State()) {
-        copy(loading = true, error = null)
-    }
+    private val jobEmitter = Channel<suspend LoginFacade.() -> Result<Unit>>()
 
     val mode = MutableStateFlow(LoginMode.Login)
 
-    val state = stateMachine.state
+    val state = facade.stateFlow(jobEmitter.consumeAsFlow())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.success(false))
     val email = MutableStateFlow("")
     val password = MutableStateFlow("")
     val firstName = MutableStateFlow("")
     val lastName = MutableStateFlow("")
     val phone = MutableStateFlow("")
 
-    fun send() {
-        val method = when (mode.value) {
-            LoginMode.Login -> SignInMethod.Login(email.value, password.value)
-            LoginMode.Registration -> SignInMethod.Registration(
-                email.value,
-                password.value,
-                firstName.value,
-                lastName.value,
-                phone.value
-            )
-        }
+    fun send() = when (mode.value) {
+        LoginMode.Login -> login()
+        LoginMode.Registration -> register()
+    }.let {}
 
-        stateMachine.submit {
-            feature.signIn(method).fold(
-                { copy(loading = false, loggedIn = true) },
-                { copy(loading = false, loggedIn = false, error = it) }
-            )
-        }
+    private fun login() = jobEmitter.trySend {
+        login(email.value, password.value)
     }
 
-    data class State(
-        val loading: Boolean = false,
-        val loggedIn: Boolean = false,
-        val error: Throwable? = null
-    )
-
+    private fun register() = jobEmitter.trySend {
+        register(email.value, password.value, firstName.value, lastName.value, phone.value)
+    }
 
 }

@@ -22,6 +22,8 @@ import movie.metropolis.app.screen.detail.MovieFacadeRecover
 import movie.metropolis.app.screen.listing.ListingFacade
 import movie.metropolis.app.screen.listing.ListingFacadeFromFeature
 import movie.metropolis.app.screen.listing.ListingFacadeRecover
+import movie.metropolis.app.screen.profile.LoginFacade
+import movie.metropolis.app.screen.profile.LoginFacadeFromFeature
 import movie.metropolis.app.screen.profile.ProfileFacade
 import movie.metropolis.app.screen.profile.ProfileFacadeCaching
 import movie.metropolis.app.screen.profile.ProfileFacadeFromFeature
@@ -81,6 +83,13 @@ class FacadeModule {
         facade = ProfileFacadeFromFeature(user, event)
         facade = ProfileFacadeCaching(facade)
         facade = ProfileFacadeRecover(facade)
+        return facade
+    }
+
+    @Provides
+    fun login(user: UserFeature): LoginFacade {
+        val facade: LoginFacade
+        facade = LoginFacadeFromFeature(user)
         return facade
     }
 
