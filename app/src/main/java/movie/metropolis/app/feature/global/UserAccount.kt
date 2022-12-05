@@ -20,4 +20,6 @@ interface UserAccount {
         return difference in 500 until threshold.inWholeMilliseconds
     }
 
+    fun delete()
+
 }
