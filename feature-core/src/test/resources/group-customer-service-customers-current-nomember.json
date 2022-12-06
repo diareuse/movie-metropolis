@@ -1,0 +1,16 @@
+{
+  "id": "1",
+  "firstName": "First",
+  "lastName": "Last",
+  "email": "hey@allo.com",
+  "phoneNumber": "+10000000000",
+  "birthDate": "1234-12-21",
+  "favouriteCinemaId": "1",
+  "consents": {
+    "marketingConsent": false,
+    "premiumMarketingConsent": false
+  },
+  "memberships": {
+    "basic": {}
+  }
+}
