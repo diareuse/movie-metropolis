@@ -1,0 +1,7 @@
+{
+  "access_token": "accessToken",
+  "token_type": "bearer",
+  "refresh_token": "refreshToken",
+  "expires_in": 7199,
+  "scope": "read"
+}

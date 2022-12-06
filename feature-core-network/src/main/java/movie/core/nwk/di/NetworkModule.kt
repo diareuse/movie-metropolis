@@ -91,7 +91,7 @@ class NetworkModule {
     }
 
     @Provides
-    fun service(
+    fun user(
         @ClientCustomer
         client: HttpClient,
         account: UserAccount,

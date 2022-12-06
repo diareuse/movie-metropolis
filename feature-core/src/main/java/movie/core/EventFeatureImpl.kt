@@ -15,12 +15,15 @@ import movie.core.model.Movie
 import movie.core.model.MovieDetail
 import movie.core.model.MoviePreview
 import movie.core.model.Showing
+import movie.core.nwk.CinemaService
+import movie.core.nwk.EventService
+import movie.core.nwk.model.ShowingType
 import java.util.Date
 import kotlin.math.abs
 
 internal class EventFeatureImpl(
-    private val event: movie.core.nwk.EventService,
-    private val cinema: movie.core.nwk.CinemaService
+    private val event: EventService,
+    private val cinema: CinemaService
 ) : EventFeature {
 
     override suspend fun getShowings(cinema: Cinema, at: Date): Result<MovieWithShowings> {
@@ -83,13 +86,13 @@ internal class EventFeatureImpl(
     }
 
     override suspend fun getCurrent(): Result<Iterable<MoviePreview>> {
-        return event.getMoviesByType(movie.core.nwk.model.ShowingType.Current)
+        return event.getMoviesByType(ShowingType.Current)
             .map { it.body.map(::MoviePreviewFromResponse) }
             .map { it.sortedBy { abs(Date().time - it.screeningFrom.time) } }
     }
 
     override suspend fun getUpcoming(): Result<Iterable<MoviePreview>> {
-        return event.getMoviesByType(movie.core.nwk.model.ShowingType.Upcoming)
+        return event.getMoviesByType(ShowingType.Upcoming)
             .map { it.body.map(::MoviePreviewFromResponse) }
             .map { it.sortedBy { abs(Date().time - it.screeningFrom.time) } }
     }

@@ -14,7 +14,10 @@ import movie.core.nwk.EventService
 internal class EventFeatureModule {
 
     @Provides
-    fun feature(event: EventService, cinema: CinemaService): EventFeature {
+    fun feature(
+        event: EventService,
+        cinema: CinemaService
+    ): EventFeature {
         return EventFeatureImpl(event, cinema)
     }
 

@@ -1,0 +1,1709 @@
+{
+  "body": {
+    "films": [
+      {
+        "id": "5376o2r",
+        "name": "Adam Ondra: Posunout hranice",
+        "length": 80,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=lwgRfmfvebU",
+        "link": "https://www.cinemacity.cz/films/adam-ondra-posunout-hranice/5376o2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "documentary",
+          "original-lang-cs",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5145s2r",
+        "name": "Black Adam",
+        "length": 125,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5145S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=-8vrGvYJzlM",
+        "link": "https://www.cinemacity.cz/films/black-adam/5145s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "fantasy",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ]
+      },
+      {
+        "id": "5219s2r",
+        "name": "Black Panther: Wakanda nechť žije",
+        "length": 161,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5219S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=3M7jWi6i8Ec",
+        "link": "https://www.cinemacity.cz/films/black-panther-wakanda-necht-zije/5219s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "3d",
+          "4dx",
+          "action",
+          "adventure",
+          "dubbed",
+          "dubbed-lang-cs",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ]
+      },
+      {
+        "id": "5248s2r",
+        "name": "Ďáblova kořist",
+        "length": 99,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5248S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=1Aga04rYZRM",
+        "link": "https://www.cinemacity.cz/films/dablova-korist/5248s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed",
+          "thriller"
+        ]
+      },
+      {
+        "id": "4905d2r",
+        "name": "DC Liga supermazlíčků",
+        "length": 106,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/4905D2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=J0MZq94lbsk",
+        "link": "https://www.cinemacity.cz/films/dc-liga-supermazlicku/4905d2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "adventure",
+          "animation",
+          "comedy",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-en-us",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5313o2r",
+        "name": "Grand Prix",
+        "length": 107,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5313O2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=9uUIwje4DM8",
+        "link": "https://www.cinemacity.cz/films/grand-prix/5313o2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs"
+        ]
+      },
+      {
+        "id": "5398o2r",
+        "name": "Hranice lásky",
+        "length": 95,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5398O2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=v_MmtAkup3E",
+        "link": "https://www.cinemacity.cz/films/hranice-lasky/5398o2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "drama",
+          "erotic",
+          "original-lang-cs"
+        ]
+      },
+      {
+        "id": "5154d2r",
+        "name": "Kvík",
+        "length": 72,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5154D2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=1_5myWn9pT4",
+        "link": "https://www.cinemacity.cz/films/kvik/5154d2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "animation",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-nl",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5241s2r",
+        "name": "Menu",
+        "length": 108,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5241S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=sUv5TaGQ6Wk",
+        "link": "https://www.cinemacity.cz/films/menu/5241s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ]
+      },
+      {
+        "id": "4037d2r",
+        "name": "Mimoni 2: Padouch přichází",
+        "length": 88,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/4037D2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=qRn-dUQXVz4",
+        "link": "https://www.cinemacity.cz/films/mimoni-2-padouch-prichazi/4037d2r",
+        "weight": 0,
+        "releaseYear": "2020",
+        "attributeIds": [
+          "2d",
+          "animation",
+          "comedy",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-en-us",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5270s2r",
+        "name": "One Piece Film: Red",
+        "length": 115,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5270S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=yJF4v3gGPDc",
+        "link": "https://www.cinemacity.cz/films/one-piece-film-red/5270s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "adventure",
+          "animation",
+          "first-subbed-lang-cs",
+          "original-lang-ja",
+          "subbed",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5150d2r",
+        "name": "Princezna rebelka",
+        "length": 89,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5150D2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=OP2tWSav4CI",
+        "link": "https://www.cinemacity.cz/films/princezna-rebelka/5150d2r",
+        "weight": 0,
+        "releaseYear": "2021",
+        "attributeIds": [
+          "2d",
+          "animation",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-fr-fr",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5397o2r",
+        "name": "Princezna zakletá v čase 2",
+        "length": 134,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5397O2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=khq0loKmBgo",
+        "link": "https://www.cinemacity.cz/films/princezna-zakleta-v-case-2/5397o2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "fairytale",
+          "fantasy",
+          "original-lang-cs",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5374o2r",
+        "name": "Princ Mamánek",
+        "length": 100,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5374O2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=5vad4eBgGBg",
+        "link": "https://www.cinemacity.cz/films/princ-mamanek/5374o2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "fairytale",
+          "original-lang-cs",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5199d2r",
+        "name": "Šoumen krokodýl",
+        "length": 107,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5199D2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=C1axrO57Ppk",
+        "link": "https://www.cinemacity.cz/films/soumen-krokodyl/5199d2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "dubbed",
+          "dubbed-lang-cs",
+          "family",
+          "original-lang-en-us",
+          "suitable-for-all"
+        ]
+      },
+      {
+        "id": "5280s2r",
+        "name": "Trojúhelník smutku",
+        "length": 147,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5280S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=p9DhNe_Zbxc",
+        "link": "https://www.cinemacity.cz/films/trojuhelnik-smutku/5280s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "drama",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "subbed"
+        ]
+      },
+      {
+        "id": "5170s2r",
+        "name": "Úsměv",
+        "length": 117,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5170S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=RusrggeAGRQ",
+        "link": "https://www.cinemacity.cz/films/usmev/5170s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ]
+      },
+      {
+        "id": "5181s2r",
+        "name": "Vstupenka do ráje",
+        "length": 104,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5181S2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=PKCX1I55Vs0",
+        "link": "https://www.cinemacity.cz/films/vstupenka-do-raje/5181s2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "romance",
+          "subbed"
+        ]
+      },
+      {
+        "id": "5326o2r",
+        "name": "Za vším hledej ženu",
+        "length": 105,
+        "posterLink": "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5326O2R-md.jpg",
+        "videoLink": "https://www.youtube.com/watch?v=mZieI0JSwzM",
+        "link": "https://www.cinemacity.cz/films/za-vsim-hledej-zenu/5326o2r",
+        "weight": 0,
+        "releaseYear": "2022",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs",
+          "romance"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "id": "248381",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T14:10:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248381&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248381&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248381",
+        "soldOut": false,
+        "auditorium": "Sál 01",
+        "auditoriumTinyName": "01"
+      },
+      {
+        "id": "248424",
+        "filmId": "5397o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T14:10:00",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "fairytale",
+          "fantasy",
+          "original-lang-cs",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248424&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248424&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248424",
+        "soldOut": false,
+        "auditorium": "Sál 10",
+        "auditoriumTinyName": "10"
+      },
+      {
+        "id": "248419",
+        "filmId": "5154d2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T14:15:00",
+        "attributeIds": [
+          "2d",
+          "animation",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-nl",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248419&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248419&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248419",
+        "soldOut": false,
+        "auditorium": "Sál 09",
+        "auditoriumTinyName": "09"
+      },
+      {
+        "id": "248400",
+        "filmId": "5145s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T14:30:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "fantasy",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248400&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248400&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248400",
+        "soldOut": false,
+        "auditorium": "Sál 06",
+        "auditoriumTinyName": "06"
+      },
+      {
+        "id": "248430",
+        "filmId": "5374o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T14:40:00",
+        "attributeIds": [
+          "2d",
+          "fairytale",
+          "original-lang-cs",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248430&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248430&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248430",
+        "soldOut": false,
+        "auditorium": "Sál 11",
+        "auditoriumTinyName": "11"
+      },
+      {
+        "id": "248436",
+        "filmId": "5241s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T14:50:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248436&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248436&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248436",
+        "soldOut": false,
+        "auditorium": "Sál 12",
+        "auditoriumTinyName": "12"
+      },
+      {
+        "id": "248404",
+        "filmId": "5199d2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T15:10:00",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "dubbed",
+          "dubbed-lang-cs",
+          "family",
+          "original-lang-en-us",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248404&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248404&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248404",
+        "soldOut": false,
+        "auditorium": "Sál 07",
+        "auditoriumTinyName": "07"
+      },
+      {
+        "id": "248389",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T15:10:00",
+        "attributeIds": [
+          "12-plus",
+          "3d",
+          "4dx",
+          "action",
+          "adventure",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248389&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248389&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248389",
+        "soldOut": false,
+        "auditorium": "4DX",
+        "auditoriumTinyName": "4DX"
+      },
+      {
+        "id": "248396",
+        "filmId": "5313o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T15:20:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248396&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248396&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248396",
+        "soldOut": false,
+        "auditorium": "Sál 05",
+        "auditoriumTinyName": "05"
+      },
+      {
+        "id": "248410",
+        "filmId": "5397o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T15:40:00",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "fairytale",
+          "fantasy",
+          "original-lang-cs",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248410&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248410&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248410",
+        "soldOut": false,
+        "auditorium": "Sál 08",
+        "auditoriumTinyName": "08"
+      },
+      {
+        "id": "248393",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T16:00:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248393&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248393&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248393",
+        "soldOut": false,
+        "auditorium": "Sál 04",
+        "auditoriumTinyName": "04"
+      },
+      {
+        "id": "248420",
+        "filmId": "5398o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T16:00:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "drama",
+          "erotic",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248420&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248420&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248420",
+        "soldOut": false,
+        "auditorium": "Sál 09",
+        "auditoriumTinyName": "09"
+      },
+      {
+        "id": "248386",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T16:20:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248386&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248386&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248386",
+        "soldOut": false,
+        "auditorium": "Sál 02",
+        "auditoriumTinyName": "02"
+      },
+      {
+        "id": "248431",
+        "filmId": "5181s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T16:50:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "romance",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248431&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248431&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248431",
+        "soldOut": false,
+        "auditorium": "Sál 11",
+        "auditoriumTinyName": "11"
+      },
+      {
+        "id": "248425",
+        "filmId": "5326o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T17:00:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs",
+          "romance"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248425&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248425&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248425",
+        "soldOut": false,
+        "auditorium": "Sál 10",
+        "auditoriumTinyName": "10"
+      },
+      {
+        "id": "248437",
+        "filmId": "5241s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T17:10:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248437&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248437&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248437",
+        "soldOut": false,
+        "auditorium": "Sál 12",
+        "auditoriumTinyName": "12"
+      },
+      {
+        "id": "248401",
+        "filmId": "5145s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T17:20:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "fantasy",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248401&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248401&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248401",
+        "soldOut": false,
+        "auditorium": "Sál 06",
+        "auditoriumTinyName": "06"
+      },
+      {
+        "id": "248382",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T17:20:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248382&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248382&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248382",
+        "soldOut": false,
+        "auditorium": "Sál 01",
+        "auditoriumTinyName": "01"
+      },
+      {
+        "id": "248405",
+        "filmId": "5199d2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T17:30:00",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "dubbed",
+          "dubbed-lang-cs",
+          "family",
+          "original-lang-en-us",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248405&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248405&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248405",
+        "soldOut": false,
+        "auditorium": "Sál 07",
+        "auditoriumTinyName": "07"
+      },
+      {
+        "id": "248397",
+        "filmId": "5313o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T17:40:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248397&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248397&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248397",
+        "soldOut": false,
+        "auditorium": "Sál 05",
+        "auditoriumTinyName": "05"
+      },
+      {
+        "id": "248421",
+        "filmId": "5398o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T18:10:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "drama",
+          "erotic",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248421&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248421&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248421",
+        "soldOut": false,
+        "auditorium": "Sál 09",
+        "auditoriumTinyName": "09"
+      },
+      {
+        "id": "248390",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T18:30:00",
+        "attributeIds": [
+          "12-plus",
+          "3d",
+          "4dx",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248390&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248390&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248390",
+        "soldOut": false,
+        "auditorium": "4DX",
+        "auditoriumTinyName": "4DX"
+      },
+      {
+        "id": "248411",
+        "filmId": "5397o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T18:30:00",
+        "attributeIds": [
+          "2d",
+          "comedy",
+          "fairytale",
+          "fantasy",
+          "original-lang-cs",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248411&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248411&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248411",
+        "soldOut": false,
+        "auditorium": "Sál 08",
+        "auditoriumTinyName": "08"
+      },
+      {
+        "id": "248432",
+        "filmId": "5248s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T19:10:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed",
+          "thriller"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248432&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248432&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248432",
+        "soldOut": false,
+        "auditorium": "Sál 11",
+        "auditoriumTinyName": "11"
+      },
+      {
+        "id": "248394",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T19:20:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248394&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248394&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248394",
+        "soldOut": false,
+        "auditorium": "Sál 04",
+        "auditoriumTinyName": "04"
+      },
+      {
+        "id": "248426",
+        "filmId": "5270s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T19:20:00",
+        "attributeIds": [
+          "2d",
+          "adventure",
+          "animation",
+          "first-subbed-lang-cs",
+          "original-lang-ja",
+          "subbed",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248426&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248426&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248426",
+        "soldOut": false,
+        "auditorium": "Sál 10",
+        "auditoriumTinyName": "10"
+      },
+      {
+        "id": "248438",
+        "filmId": "5241s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T19:30:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248438&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248438&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248438",
+        "soldOut": false,
+        "auditorium": "Sál 12",
+        "auditoriumTinyName": "12"
+      },
+      {
+        "id": "248387",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T19:40:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "dubbed",
+          "dubbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248387&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248387&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248387",
+        "soldOut": false,
+        "auditorium": "Sál 02",
+        "auditoriumTinyName": "02"
+      },
+      {
+        "id": "248406",
+        "filmId": "5376o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T19:50:00",
+        "attributeIds": [
+          "2d",
+          "documentary",
+          "original-lang-cs",
+          "suitable-for-all"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248406&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248406&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248406",
+        "soldOut": false,
+        "auditorium": "Sál 07",
+        "auditoriumTinyName": "07"
+      },
+      {
+        "id": "248398",
+        "filmId": "5313o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T20:00:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248398&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248398&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248398",
+        "soldOut": false,
+        "auditorium": "Sál 05",
+        "auditoriumTinyName": "05"
+      },
+      {
+        "id": "248402",
+        "filmId": "5145s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T20:10:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "fantasy",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248402&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248402&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248402",
+        "soldOut": false,
+        "auditorium": "Sál 06",
+        "auditoriumTinyName": "06"
+      },
+      {
+        "id": "248422",
+        "filmId": "5280s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T20:20:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "drama",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248422&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248422&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248422",
+        "soldOut": false,
+        "auditorium": "Sál 09",
+        "auditoriumTinyName": "09"
+      },
+      {
+        "id": "248383",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T20:40:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248383&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248383&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248383",
+        "soldOut": false,
+        "auditorium": "Sál 01",
+        "auditoriumTinyName": "01"
+      },
+      {
+        "id": "248433",
+        "filmId": "5248s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T21:20:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed",
+          "thriller"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248433&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248433&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248433",
+        "soldOut": false,
+        "auditorium": "Sál 11",
+        "auditoriumTinyName": "11"
+      },
+      {
+        "id": "248412",
+        "filmId": "5313o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T21:20:00",
+        "attributeIds": [
+          "12-plus",
+          "2d",
+          "comedy",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248412&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248412&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248412",
+        "soldOut": false,
+        "auditorium": "Sál 08",
+        "auditoriumTinyName": "08"
+      },
+      {
+        "id": "248407",
+        "filmId": "5170s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T21:40:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248407&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248407&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248407",
+        "soldOut": false,
+        "auditorium": "Sál 07",
+        "auditoriumTinyName": "07"
+      },
+      {
+        "id": "248427",
+        "filmId": "5398o2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T21:45:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "drama",
+          "erotic",
+          "original-lang-cs"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248427&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248427&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248427",
+        "soldOut": false,
+        "auditorium": "Sál 10",
+        "auditoriumTinyName": "10"
+      },
+      {
+        "id": "248391",
+        "filmId": "5219s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T21:50:00",
+        "attributeIds": [
+          "12-plus",
+          "3d",
+          "4dx",
+          "action",
+          "adventure",
+          "first-subbed-lang-cs",
+          "original-lang-en-us",
+          "sci-fi",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248391&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248391&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248391",
+        "soldOut": false,
+        "auditorium": "4DX",
+        "auditoriumTinyName": "4DX"
+      },
+      {
+        "id": "248439",
+        "filmId": "5241s2r",
+        "cinemaId": "1031",
+        "businessDay": "2022-11-19",
+        "eventDateTime": "2022-11-19T21:50:00",
+        "attributeIds": [
+          "15-plus",
+          "2d",
+          "comedy",
+          "first-subbed-lang-cs",
+          "horror",
+          "original-lang-en-us",
+          "subbed"
+        ],
+        "bookingLink": "https://www.cinemacity.cz/booking?presentationCode=248439&cinemaId=1031&lang=cs-CZ",
+        "compositeBookingLink": {
+          "type": "TITAN",
+          "bookingUrl": {
+            "url": "https://sr.cinemacity.cz/S_CZ_1031",
+            "params": {
+              "lang": "cs-CZ",
+              "key": "CZNovySmichovP_RES"
+            }
+          },
+          "obsoleteBookingUrl": "https://www.cinemacity.cz/booking?presentationCode=248439&cinemaId=1031&lang=cs-CZ",
+          "blockOnlineSales": false,
+          "blockOnlineSalesUntil": null,
+          "serviceUrl": "https://www.cinemacity.cz/booking"
+        },
+        "presentationCode": "248439",
+        "soldOut": false,
+        "auditorium": "Sál 12",
+        "auditoriumTinyName": "12"
+      }
+    ]
+  }
+}
