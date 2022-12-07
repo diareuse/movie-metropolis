@@ -33,7 +33,7 @@ internal class EventFeatureImpl(
             events
                 .groupBy { it.movieId }
                 .map { (movieId, events) ->
-                    val movie = movies.first { it.id == movieId }
+                    val movie = movies.first { it.id.equals(movieId, ignoreCase = true) }
                     val reference = MovieFromResponse(movie)
                     val showings = events.map { event -> ShowingFromResponse(event, cinema) }
                     reference to showings
@@ -52,7 +52,14 @@ internal class EventFeatureImpl(
         for (cinema in cinemas) {
             showings += async {
                 cinema to getShowings(cinema, at)
-                    .map { it[it.keys.find { it.id == movie.id }] ?: emptyList() }
+                    .mapCatching {
+                        it.getValue(it.keys.first {
+                            it.id.equals(
+                                movie.id,
+                                ignoreCase = true
+                            )
+                        })
+                    }
                     .getOrDefault(emptyList())
             }
         }
