@@ -59,6 +59,28 @@ class UserFeatureTest : FeatureTest() {
     }
 
     @Test
+    fun signInRegister_responds_withSuccess() = runTest {
+        responder.on(UrlResponder.Register) {
+            method = HttpMethod.Post
+            code = HttpStatusCode.OK
+            fileAsBody("group-customer-service-customers.json")
+        }
+        feature.signIn(SignInMethod.Registration("", "", "", "", "")).getOrThrow()
+    }
+
+    @Test
+    fun signInRegister_responds_withFailure() = runTest {
+        responder.on(UrlResponder.Register) {
+            method = HttpMethod.Post
+            code = HttpStatusCode.BadRequest
+            body = ""
+        }
+        assertFails {
+            feature.signIn(SignInMethod.Registration("", "", "", "", "")).getOrThrow()
+        }
+    }
+
+    @Test
     fun updateCinema_responds_withSuccess() = runTest {
         prepareLoggedInUser()
         prepareCustomerUpdateResponse()
@@ -181,7 +203,35 @@ class UserFeatureTest : FeatureTest() {
             code = HttpStatusCode.OK
             fileAsBody("group-customer-service-bookings-id.json")
         }
-        feature.getBookings().getOrThrow()
+        val value = feature.getBookings().getOrThrow()
+        assert(value.toList().isEmpty()) { "Expected to be empty, but was $value." }
+    }
+
+    @Test
+    fun getBookings_responds_withSuccess_hasMovie() = runTest {
+        prepareLoggedInUser()
+        responder.on(UrlResponder.Booking) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("group-customer-service-bookings.json")
+        }
+        responder.on(UrlResponder.Booking()) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("group-customer-service-bookings-id.json")
+        }
+        responder.on(UrlResponder.Detail()) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("data-api-service-films-byDistributorCode.json")
+        }
+        responder.on(UrlResponder.Cinema) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("cinemas.json")
+        }
+        val value = feature.getBookings().getOrThrow()
+        assert(value.toList().isNotEmpty()) { "Expected to contain elements, but was empty." }
     }
 
     @Test
