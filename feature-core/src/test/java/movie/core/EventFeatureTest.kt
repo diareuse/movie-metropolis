@@ -2,15 +2,20 @@ package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.adapter.MovieFromId
 import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
+import movie.core.nwk.Cache
+import movie.core.nwk.cacheOf
 import movie.core.nwk.di.NetworkModule
+import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import java.io.File
 import java.util.Date
 import kotlin.math.abs
 import kotlin.test.assertEquals
@@ -18,15 +23,23 @@ import kotlin.test.assertFails
 
 class EventFeatureTest : FeatureTest() {
 
+    private lateinit var cache: Cache<String, String>
     private lateinit var cinema: Cinema
     private lateinit var feature: EventFeature
 
     override fun prepare() {
         val module = EventFeatureModule()
         val service = NetworkModule()
-        feature = module.feature(service.event(clientData), service.cinema(clientRoot))
+        cache = cacheOf(File("build/cache"))
+        feature =
+            module.feature(service.event(clientData, cache), service.cinema(clientRoot, cache))
         cinema = mock()
         whenever(cinema.id).thenReturn("cinema")
+    }
+
+    @After
+    fun tearDown() {
+        runBlocking { cache.clear() }
     }
 
     // ---
