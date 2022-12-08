@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.listing
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -17,6 +18,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
@@ -24,13 +28,14 @@ import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.theme.Theme
 import kotlin.random.Random.Default.nextBytes
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun MoviesScreen(
     padding: PaddingValues,
     onClickVideo: (String) -> Unit,
     onClickMovie: (String) -> Unit,
     state: LazyListState,
-    stateAvailable: LazyListState,
+    stateAvailable: PagerState,
     stateUpcoming: LazyListState,
     viewModel: ListingViewModel = hiltViewModel()
 ) {
@@ -48,6 +53,7 @@ fun MoviesScreen(
     )
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 private fun MoviesScreen(
     current: Loadable<List<MovieView>>,
@@ -56,7 +62,7 @@ private fun MoviesScreen(
     onClick: (String) -> Unit,
     padding: PaddingValues = PaddingValues(0.dp),
     state: LazyListState = rememberLazyListState(),
-    stateAvailable: LazyListState = rememberLazyListState(),
+    stateAvailable: PagerState = rememberPagerState(),
     stateUpcoming: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
@@ -72,11 +78,10 @@ private fun MoviesScreen(
             )
         }
         item {
-            MovieRow(
+            MoviePager(
                 items = current,
-                isShowing = true,
-                onClickVideo = onClickVideo,
                 onClick = onClick,
+                modifier = Modifier.fillMaxWidth(),
                 state = stateAvailable
             )
         }
@@ -100,6 +105,7 @@ private fun MoviesScreen(
 }
 
 
+@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 private fun Preview(@PreviewParameter(ListMovieViewProvider::class) movies: List<MovieView>) {

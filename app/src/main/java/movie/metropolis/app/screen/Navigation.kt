@@ -32,6 +32,8 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.rememberPagerState
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
@@ -45,7 +47,7 @@ import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.ProfileViewModel
 import movie.metropolis.app.screen.profile.UserScreen
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun Navigation(
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
@@ -62,7 +64,7 @@ fun Navigation(
             val booking: BookingViewModel = hiltViewModel()
             val user: ProfileViewModel = hiltViewModel()
             val moviesState = rememberLazyListState()
-            val moviesAvailableState = rememberLazyListState()
+            val moviesAvailableState = rememberPagerState()
             val moviesUpcomingState = rememberLazyListState()
             val cinemasState = rememberLazyListState()
             val bookingState = rememberLazyListState()
