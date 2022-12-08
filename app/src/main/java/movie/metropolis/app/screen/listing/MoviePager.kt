@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,7 +26,8 @@ fun MoviePager(
     items: Loadable<List<MovieView>>,
     isShowing: Boolean,
     onClickVideo: (String) -> Unit,
-    onClick: (String) -> Unit
+    onClick: (String) -> Unit,
+    state: LazyListState = rememberLazyListState()
 ) {
     when {
         items.isLoading -> Row(
@@ -42,7 +45,8 @@ fun MoviePager(
             items = items.getOrNull().orEmpty(),
             isShowing = isShowing,
             onClick = onClick,
-            onClickVideo = onClickVideo
+            onClickVideo = onClickVideo,
+            state = state
         )
     }
 }
@@ -53,12 +57,14 @@ private fun MoviePager(
     isShowing: Boolean,
     onClickVideo: (String) -> Unit,
     onClick: (String) -> Unit,
+    state: LazyListState,
     modifier: Modifier = Modifier,
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(24.dp)
+        contentPadding = PaddingValues(24.dp),
+        state = state
     ) {
         items(items, key = MovieView::id) { item ->
             MovieItem(

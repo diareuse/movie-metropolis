@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -28,6 +30,7 @@ import movie.metropolis.app.theme.Theme
 @Composable
 fun BookingScreen(
     padding: PaddingValues,
+    state: LazyListState,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
     val active by viewModel.active.collectAsState()
@@ -35,7 +38,8 @@ fun BookingScreen(
     BookingScreen(
         padding = padding,
         active = active,
-        expired = expired
+        expired = expired,
+        state = state
     )
 }
 
@@ -44,13 +48,15 @@ fun BookingScreen(
 private fun BookingScreen(
     padding: PaddingValues,
     active: Loadable<List<BookingView.Active>>,
-    expired: Loadable<List<BookingView.Expired>>
+    expired: Loadable<List<BookingView.Expired>>,
+    state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = padding + PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        userScrollEnabled = !active.isLoading || !expired.isLoading
+        userScrollEnabled = !active.isLoading || !expired.isLoading,
+        state = state
     ) {
         active.onSuccess { view ->
             items(view, BookingView::id) {
@@ -109,7 +115,7 @@ private fun Preview() {
         BookingScreen(
             padding = PaddingValues(0.dp),
             active = Loadable.loading(),
-            expired = Loadable.loading()
+            expired = Loadable.loading(),
         )
     }
 }
