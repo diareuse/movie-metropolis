@@ -8,15 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import movie.core.db.MovieDatabase
-import movie.core.db.dao.BookingDao
-import movie.core.db.dao.BookingSeatsDao
-import movie.core.db.dao.CinemaDao
-import movie.core.db.dao.MovieDao
-import movie.core.db.dao.MovieDetailDao
-import movie.core.db.dao.MovieMediaDao
-import movie.core.db.dao.MoviePreviewDao
-import movie.core.db.dao.MovieReferenceDao
-import movie.core.db.dao.ShowingDao
+import movie.core.db.dao.*
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -37,46 +29,82 @@ class DatabaseModule {
     @Provides
     internal fun booking(
         database: MovieDatabase
-    ): BookingDao = database.booking()
+    ): BookingDao {
+        var dao: BookingDao = database.booking()
+        dao = BookingDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun bookingSeats(
         database: MovieDatabase
-    ): BookingSeatsDao = database.bookingSeats()
+    ): BookingSeatsDao {
+        var dao: BookingSeatsDao = database.bookingSeats()
+        dao = BookingSeatsDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun cinema(
         database: MovieDatabase
-    ): CinemaDao = database.cinema()
+    ): CinemaDao {
+        var dao: CinemaDao = database.cinema()
+        dao = CinemaDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun movie(
         database: MovieDatabase
-    ): MovieDao = database.movie()
+    ): MovieDao {
+        var dao: MovieDao = database.movie()
+        dao = MovieDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun movieDetail(
         database: MovieDatabase
-    ): MovieDetailDao = database.movieDetail()
+    ): MovieDetailDao {
+        var dao: MovieDetailDao = database.movieDetail()
+        dao = MovieDetailDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun movieMedia(
         database: MovieDatabase
-    ): MovieMediaDao = database.movieMedia()
+    ): MovieMediaDao {
+        var dao: MovieMediaDao = database.movieMedia()
+        dao = MovieMediaDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun showing(
         database: MovieDatabase
-    ): ShowingDao = database.showing()
+    ): ShowingDao {
+        var dao: ShowingDao = database.showing()
+        dao = ShowingDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun movieReference(
         database: MovieDatabase
-    ): MovieReferenceDao = database.movieReference()
+    ): MovieReferenceDao {
+        var dao: MovieReferenceDao = database.movieReference()
+        dao = MovieReferenceDaoLowercase(dao)
+        return dao
+    }
 
     @Provides
     internal fun moviePreview(
         database: MovieDatabase
-    ): MoviePreviewDao = database.moviePreview()
+    ): MoviePreviewDao {
+        var dao: MoviePreviewDao = database.moviePreview()
+        dao = MoviePreviewDaoLowercase(dao)
+        return dao
+    }
 
 }
