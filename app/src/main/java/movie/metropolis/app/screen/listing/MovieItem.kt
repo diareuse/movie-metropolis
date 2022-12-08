@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,13 +30,23 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
+import androidx.palette.graphics.Palette
+import androidx.palette.graphics.Target
+import androidx.palette.graphics.get
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
@@ -52,9 +63,11 @@ fun MovieItem(
     onClickVideo: (String) -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    height: Dp = 225.dp
 ) {
     MovieItemLayout(
         modifier = modifier,
+        height = height,
         posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
         poster = {
             MoviePoster(url = poster?.url, onClick = onClick)
@@ -75,8 +88,13 @@ fun MovieItem(
 }
 
 @Composable
-fun MovieItem() {
+fun MovieItem(
+    modifier: Modifier = Modifier,
+    height: Dp = 225.dp
+) {
     MovieItemLayout(
+        modifier = modifier,
+        height = height,
         poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize(), onClick = {}) },
         text = {
             MovieSubText(text = "2021", isLoading = true)
@@ -92,10 +110,11 @@ fun MovieItemLayout(
     text: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     posterAspectRatio: Float = DefaultPosterAspectRatio,
+    height: Dp = 225.dp
 ) {
     Column(modifier = modifier.width(IntrinsicSize.Min)) {
         Row(
-            modifier = Modifier.height(225.dp),
+            modifier = Modifier.height(height),
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -123,16 +142,34 @@ fun MovieItemLayout(
 fun MoviePoster(
     url: String?,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: (() -> Unit)? = null,
+    onSpotColorResolved: ((Color) -> Unit)? = null
 ) {
+    val scope = rememberCoroutineScope()
     AsyncImage(
         modifier = modifier
             .fillMaxSize()
             .imagePlaceholder(url == null)
             .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() }),
+        imageLoader = ImageLoader.Builder(LocalContext.current)
+            .allowHardware(onSpotColorResolved == null)
+            .build(),
         model = url ?: "",
         contentDescription = "",
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
+        onSuccess = {
+            if (onSpotColorResolved != null) scope.launch(Dispatchers.Default) {
+                val target = Target.VIBRANT
+                val bitmap = it.result.drawable.toBitmap()
+                val result = Palette.Builder(bitmap)
+                    .addTarget(target)
+                    .generate()
+                val swatch = result[target]
+                if (swatch != null) withContext(Dispatchers.Main) {
+                    onSpotColorResolved(Color(swatch.rgb))
+                }
+            }
+        }
     )
 }
 
