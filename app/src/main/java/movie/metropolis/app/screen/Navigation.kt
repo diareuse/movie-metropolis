@@ -25,17 +25,22 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.booking.BookingScreen
+import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemaScreen
 import movie.metropolis.app.screen.cinema.CinemasScreen
+import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.detail.MovieScreen
+import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.listing.MoviesScreen
 import movie.metropolis.app.screen.profile.LoginScreen
+import movie.metropolis.app.screen.profile.ProfileViewModel
 import movie.metropolis.app.screen.profile.UserScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -49,26 +54,38 @@ fun Navigation(
         startDestination = "/home"
     ) {
         composable("/home") {
+            val listing: ListingViewModel = hiltViewModel()
+            val cinemas: CinemasViewModel = hiltViewModel()
+            val booking: BookingViewModel = hiltViewModel()
+            val user: ProfileViewModel = hiltViewModel()
             HomeScreen(
                 movies = {
                     MoviesScreen(
                         padding = it,
                         onClickVideo = {},
-                        onClickMovie = { id -> controller.navigate("/movies/${id}") }
+                        onClickMovie = { id -> controller.navigate("/movies/${id}") },
+                        viewModel = listing
                     )
                 },
                 cinemas = {
                     CinemasScreen(
                         padding = it,
                         onPermissionRequested = onPermissionsRequested,
-                        onClickCinema = { id -> controller.navigate("/cinemas/$id") }
+                        onClickCinema = { id -> controller.navigate("/cinemas/$id") },
+                        viewModel = cinemas
                     )
                 },
-                booking = { BookingScreen(it) },
+                booking = {
+                    BookingScreen(
+                        padding = it,
+                        viewModel = booking
+                    )
+                },
                 user = {
                     UserScreen(
                         padding = it,
-                        onNavigateToLogin = { controller.navigate("/user/login") }
+                        onNavigateToLogin = { controller.navigate("/user/login") },
+                        viewModel = user
                     )
                 }
             )

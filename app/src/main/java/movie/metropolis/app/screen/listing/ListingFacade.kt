@@ -2,7 +2,6 @@ package movie.metropolis.app.screen.listing
 
 import kotlinx.coroutines.flow.flow
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
 
 interface ListingFacade {
@@ -14,13 +13,11 @@ interface ListingFacade {
 
         val ListingFacade.currentFlow
             get() = flow {
-                emit(Loadable.loading())
                 emit(getCurrent().asLoadable())
             }
 
         val ListingFacade.upcomingFlow
             get() = flow {
-                emit(Loadable.loading())
                 emit(getUpcoming().asLoadable())
             }
 
