@@ -53,16 +53,26 @@ class UserFeatureTest : FeatureTest() {
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
         val service = network.user(clientCustomer, account, auth)
-        val event = EventFeatureModule().feature(
-            event = network.event(clientData),
-            cinema = network.cinema(clientRoot),
-            showingDao = showingDao,
-            cinemaDao = cinemaDao,
-            detailDao = detailDao,
-            mediaDao = mediaDao,
-            referenceDao = referenceDao,
-            previewDao = previewDao,
-            movieDao = movieDao
+        val module = EventFeatureModule()
+        var event = module.featureSaving(
+            network.event(clientData),
+            network.cinema(clientRoot),
+            showingDao,
+            cinemaDao,
+            detailDao,
+            mediaDao,
+            referenceDao,
+            previewDao,
+            movieDao
+        )
+        event = module.feature(
+            showingDao,
+            cinemaDao,
+            detailDao,
+            mediaDao,
+            referenceDao,
+            previewDao,
+            event
         )
         feature = UserFeatureModule().feature(
             service = service,
