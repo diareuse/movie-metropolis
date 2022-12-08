@@ -2,7 +2,6 @@ package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
@@ -20,20 +19,15 @@ import movie.core.di.EventFeatureModule
 import movie.core.di.UserFeatureModule
 import movie.core.model.FieldUpdate
 import movie.core.model.SignInMethod
-import movie.core.nwk.Cache
-import movie.core.nwk.cacheOf
 import movie.core.nwk.di.NetworkModule
-import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
-import java.io.File
 import java.util.Date
 import kotlin.test.assertFails
 
 class UserFeatureTest : FeatureTest() {
 
-    private lateinit var cache: Cache<String, String>
     private lateinit var account: UserAccount
     private lateinit var credentials: UserCredentials
     private lateinit var feature: UserFeature
@@ -59,13 +53,12 @@ class UserFeatureTest : FeatureTest() {
         movieDao = mock()
         account = spy(MockAccount())
         credentials = spy(MockCredentials())
-        cache = cacheOf(File("build/cache"))
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
-        val service = network.user(clientCustomer, account, credentials, auth, cache)
+        val service = network.user(clientCustomer, account, credentials, auth)
         val event = EventFeatureModule().feature(
-            event = network.event(clientData, cache),
-            cinema = network.cinema(clientRoot, cache),
+            event = network.event(clientData),
+            cinema = network.cinema(clientRoot),
             showingDao = showingDao,
             cinemaDao = cinemaDao,
             detailDao = detailDao,
@@ -83,11 +76,6 @@ class UserFeatureTest : FeatureTest() {
             cinemaDao = cinemaDao,
             mediaDao = mediaDao
         )
-    }
-
-    @After
-    fun tearDown() {
-        runBlocking { cache.clear() }
     }
 
     // ---
