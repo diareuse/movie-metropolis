@@ -13,8 +13,6 @@ import movie.core.auth.EncryptionProvider
 import movie.core.auth.EncryptionProviderAndroid
 import movie.core.auth.UserAccount
 import movie.core.auth.UserAccountImpl
-import movie.core.auth.UserCredentials
-import movie.core.auth.UserCredentialsImpl
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -27,14 +25,6 @@ class AuthModule {
         encryption: EncryptionProvider
     ): UserAccount {
         return UserAccountImpl(AccountManager.get(context), encryption)
-    }
-
-    @Provides
-    fun credentials(
-        @ApplicationContext
-        context: Context
-    ): UserCredentials {
-        return UserCredentialsImpl(context)
     }
 
     @Provides
