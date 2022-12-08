@@ -343,8 +343,6 @@ class UserFeatureTest : FeatureTest() {
     // ---
 
     private open class MockAccount : UserAccount {
-        override val isLoggedIn: Boolean
-            get() = email != null
         override var token: String? = null
         override var refreshToken: String? = null
         override var expirationDate: Date? = null
