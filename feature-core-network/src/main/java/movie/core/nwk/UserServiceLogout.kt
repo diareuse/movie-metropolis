@@ -12,7 +12,7 @@ internal class UserServiceLogout(
         request: TokenRequest
     ) = origin.getToken(request).onFailure {
         if (it !is NetworkException) return@onFailure
-        if (it.code != 400) return@onFailure
+        if (it.code !in listOf(400, 401)) return@onFailure
 
         account.password = null
     }
