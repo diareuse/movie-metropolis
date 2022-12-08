@@ -6,10 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.UserView
@@ -20,6 +18,7 @@ import movie.metropolis.app.screen.profile.ProfileFacade.Companion.cinemasFlow
 import movie.metropolis.app.screen.profile.ProfileFacade.Companion.isLoggedInFlow
 import movie.metropolis.app.screen.profile.ProfileFacade.Companion.membershipFlow
 import movie.metropolis.app.screen.profile.ProfileFacade.Companion.userFlow
+import movie.metropolis.app.screen.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,14 +29,14 @@ class ProfileViewModel @Inject constructor(
     private val jobEmitter = Channel<suspend () -> Unit>()
 
     val cinemas = facade.cinemasFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+        .retainStateIn(viewModelScope, Loadable.loading())
     val membership = facade.membershipFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+        .retainStateIn(viewModelScope, Loadable.loading())
     val user = facade.userFlow(jobEmitter.consumeAsFlow())
         .onEachSuccess(::populateFields)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+        .retainStateIn(viewModelScope, Loadable.loading())
     val isLoggedIn = facade.isLoggedInFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+        .retainStateIn(viewModelScope, Loadable.loading())
 
     val firstName = MutableStateFlow("")
     val lastName = MutableStateFlow("")

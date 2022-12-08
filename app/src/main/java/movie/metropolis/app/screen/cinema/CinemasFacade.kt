@@ -2,10 +2,8 @@ package movie.metropolis.app.screen.cinema
 
 import android.location.Location
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.mapLatest
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
 
 interface CinemasFacade {
@@ -16,11 +14,8 @@ interface CinemasFacade {
 
         fun CinemasFacade.cinemasFlow(
             location: Flow<Location?>
-        ) = location.flatMapLatest {
-            flow {
-                emit(Loadable.loading())
-                emit(getCinemas(it?.latitude, it?.longitude).asLoadable())
-            }
+        ) = location.mapLatest {
+            getCinemas(it?.latitude, it?.longitude).asLoadable()
         }
 
     }

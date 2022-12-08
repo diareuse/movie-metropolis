@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.profile
 
 import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
@@ -26,18 +27,15 @@ interface ProfileFacade {
 
         val ProfileFacade.cinemasFlow
             get() = flow {
-                emit(Loadable.loading())
                 emit(getCinemas().asLoadable())
             }
 
         val ProfileFacade.membershipFlow
             get() = flow {
-                emit(Loadable.loading())
                 emit(getMembership().asLoadable())
             }
 
         fun ProfileFacade.userFlow(jobEmitter: Flow<suspend () -> Unit>) = flow {
-            emit(Loadable.loading())
             emit(getUser().asLoadable())
             jobEmitter.collect {
                 emit(Loadable.loading())
@@ -48,10 +46,9 @@ interface ProfileFacade {
 
         val ProfileFacade.isLoggedInFlow
             get() = flow {
-                emit(Loadable.loading())
                 emit(Loadable.success(isLoggedIn()))
                 while (currentCoroutineContext().isActive) {
-                    kotlinx.coroutines.delay(1.seconds)
+                    delay(1.seconds)
                     emit(Loadable.success(isLoggedIn()))
                 }
             }.distinctUntilChanged()
