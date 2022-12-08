@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.theme.Theme
+import movie.metropolis.app.view.textPlaceholder
 
 @Composable
 fun ShowingItem(
@@ -55,29 +56,62 @@ fun ShowingItem(
 }
 
 @Composable
-fun ShowingItemSection(type: String, language: String) {
+fun ShowingItem(
+    modifier: Modifier = Modifier
+) {
+    ShowingLayout(
+        modifier = modifier,
+        items = mapOf(
+            "a" to List(3) { it },
+            "b" to List(1) { it },
+            "c" to List(2) { it },
+        ),
+        key = { it },
+        title = { Text("My super awesome cinema", Modifier.textPlaceholder(true)) },
+        section = { ShowingItemSection(type = "type", language = "English", isLoading = true) }
+    ) {
+        ShowingItemTime(
+            modifier = Modifier.textPlaceholder(true),
+            time = "10.00"
+        )
+    }
+}
+
+@Composable
+fun ShowingItemSection(type: String, language: String, isLoading: Boolean = false) {
     Column {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier
+                    .size(16.dp)
+                    .textPlaceholder(isLoading),
                 painter = painterResource(id = R.drawable.ic_screening_type),
                 contentDescription = null
             )
-            Text(type)
+            Text(
+                modifier = Modifier.textPlaceholder(isLoading),
+                text = type
+            )
         }
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                modifier = Modifier.size(16.dp),
+                modifier = Modifier
+                    .size(16.dp)
+                    .textPlaceholder(isLoading),
                 painter = painterResource(id = R.drawable.ic_language),
                 contentDescription = null
             )
-            Text(language, style = MaterialTheme.typography.bodySmall)
+            Text(
+                modifier = Modifier.textPlaceholder(isLoading),
+                text = language,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
     }
 }

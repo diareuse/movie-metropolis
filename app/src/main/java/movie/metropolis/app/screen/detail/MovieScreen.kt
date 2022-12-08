@@ -45,6 +45,8 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
+import movie.metropolis.app.screen.onLoading
+import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.EllipsisText
 import movie.metropolis.app.view.imagePlaceholder
@@ -148,15 +150,25 @@ private fun MovieScreen(
                     onClickDate = onSelectedDateUpdated
                 )
             }
-            items(showings.getOrNull().orEmpty(), key = { it.cinema.id }) {
-                ShowingItem(
-                    modifier = Modifier
-                        .animateItemPlacement()
-                        .padding(horizontal = 24.dp),
-                    title = it.cinema.name,
-                    showings = it.availability,
-                    onClick = onBookingClick
-                )
+            showings.onSuccess { showings ->
+                items(showings, key = { it.cinema.id }) {
+                    ShowingItem(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .padding(horizontal = 24.dp),
+                        title = it.cinema.name,
+                        showings = it.availability,
+                        onClick = onBookingClick
+                    )
+                }
+            }.onLoading {
+                items(4) {
+                    ShowingItem(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .padding(horizontal = 24.dp)
+                    )
+                }
             }
             item { Spacer(Modifier.navigationBarsPadding()) }
         }
