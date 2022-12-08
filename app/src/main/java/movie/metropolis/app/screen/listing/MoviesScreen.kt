@@ -72,7 +72,7 @@ private fun MoviesScreen(
             )
         }
         item {
-            MoviePager(
+            MovieRow(
                 items = current,
                 isShowing = true,
                 onClickVideo = onClickVideo,
@@ -88,7 +88,7 @@ private fun MoviesScreen(
             )
         }
         item {
-            MoviePager(
+            MovieRow(
                 items = upcoming,
                 isShowing = false,
                 onClickVideo = onClickVideo,
