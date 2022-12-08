@@ -5,7 +5,6 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
-import movie.core.auth.UserCredentials
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.dao.CinemaDao
@@ -29,7 +28,6 @@ import kotlin.test.assertFails
 class UserFeatureTest : FeatureTest() {
 
     private lateinit var account: UserAccount
-    private lateinit var credentials: UserCredentials
     private lateinit var feature: UserFeature
     private lateinit var bookingDao: BookingDao
     private lateinit var seatsDao: BookingSeatsDao
@@ -52,10 +50,9 @@ class UserFeatureTest : FeatureTest() {
         previewDao = mock()
         movieDao = mock()
         account = spy(MockAccount())
-        credentials = spy(MockCredentials())
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
-        val service = network.user(clientCustomer, account, credentials, auth)
+        val service = network.user(clientCustomer, account, auth)
         val event = EventFeatureModule().feature(
             event = network.event(clientData),
             cinema = network.cinema(clientRoot),
@@ -346,16 +343,12 @@ class UserFeatureTest : FeatureTest() {
 
     private open class MockAccount : UserAccount {
         override val isLoggedIn: Boolean
-            get() = token != null
+            get() = email != null
         override var token: String? = null
         override var refreshToken: String? = null
         override var expirationDate: Date? = null
-        override fun delete() {}
-    }
-
-    private open class MockCredentials : UserCredentials {
-        override var email: String? = "test@google.com"
-        override var password: String? = "foobartoolbar"
+        override var email: String? = null
+        override var password: String? = null
     }
 
 }

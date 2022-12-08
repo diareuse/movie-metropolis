@@ -2,7 +2,7 @@ package movie.metropolis.app.screen.booking
 
 import kotlinx.coroutines.test.runTest
 import movie.core.model.SignInMethod
-import movie.metropolis.app.feature.global.di.FacadeModule
+import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.screen.UrlResponder

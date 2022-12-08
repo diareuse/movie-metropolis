@@ -36,7 +36,7 @@ class LoginViewModel @Inject constructor(
     }.let {}
 
     private fun login() = jobEmitter.trySend {
-        login(email.value, password.value)
+        login(email.value, password.value).onFailure { it.printStackTrace() }
     }
 
     private fun register() = jobEmitter.trySend {

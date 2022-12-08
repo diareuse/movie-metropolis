@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.global.di
+package movie.metropolis.app.di
 
 import dagger.Module
 import dagger.Provides

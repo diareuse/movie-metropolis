@@ -6,6 +6,8 @@ import kotlin.time.Duration
 interface UserAccount {
 
     val isLoggedIn: Boolean
+    var email: String?
+    var password: String?
     var token: String?
     var refreshToken: String?
     var expirationDate: Date?
@@ -19,7 +21,5 @@ interface UserAccount {
         val difference = expiration.time - now.time
         return difference in 500 until threshold.inWholeMilliseconds
     }
-
-    fun delete()
 
 }

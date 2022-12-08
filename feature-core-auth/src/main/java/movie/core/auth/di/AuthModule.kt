@@ -9,6 +9,8 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import movie.core.auth.AuthMetadata
 import movie.core.auth.BuildConfig
+import movie.core.auth.EncryptionProvider
+import movie.core.auth.EncryptionProviderAndroid
 import movie.core.auth.UserAccount
 import movie.core.auth.UserAccountImpl
 import movie.core.auth.UserCredentials
@@ -22,9 +24,9 @@ class AuthModule {
     fun account(
         @ApplicationContext
         context: Context,
-        credentials: UserCredentials
+        encryption: EncryptionProvider
     ): UserAccount {
-        return UserAccountImpl(AccountManager.get(context), credentials)
+        return UserAccountImpl(AccountManager.get(context), encryption)
     }
 
     @Provides
@@ -33,6 +35,14 @@ class AuthModule {
         context: Context
     ): UserCredentials {
         return UserCredentialsImpl(context)
+    }
+
+    @Provides
+    fun encryption(
+        @ApplicationContext
+        context: Context
+    ): EncryptionProvider {
+        return EncryptionProviderAndroid(context)
     }
 
     @Provides

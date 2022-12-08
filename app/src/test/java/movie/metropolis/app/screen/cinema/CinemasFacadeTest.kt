@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.cinema
 
 import kotlinx.coroutines.test.runTest
-import movie.metropolis.app.feature.global.di.FacadeModule
+import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.screen.UrlResponder
 import org.junit.Test
