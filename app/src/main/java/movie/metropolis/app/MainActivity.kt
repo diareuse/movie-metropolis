@@ -1,11 +1,13 @@
 package movie.metropolis.app
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.theme.Theme
@@ -19,7 +21,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Theme {
-                Navigation(onPermissionsRequested = { requestPermissions(it) })
+                Navigation(
+                    onPermissionsRequested = { requestPermissions(it) },
+                    onLinkClicked = ::openExternal
+                )
             }
         }
     }
@@ -38,6 +43,13 @@ class MainActivity : AppCompatActivity() {
         register(key, contract) {
             cont.resume(it)
         }.launch(input)
+    }
+
+    private fun openExternal(link: String) {
+        Intent(Intent.ACTION_VIEW)
+            .setData(link.toUri())
+            .let { Intent.createChooser(it, "") }
+            .also(::startActivity)
     }
 
 }
