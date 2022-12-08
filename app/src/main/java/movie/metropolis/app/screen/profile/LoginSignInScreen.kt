@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -88,7 +89,7 @@ private fun LoginSignInScreen(
                     .align(Alignment.TopEnd),
                 painter = painterResource(id = R.drawable.ic_cinema),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
             Image(
                 modifier = Modifier
@@ -107,7 +108,8 @@ private fun LoginSignInScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
                 .padding(24.dp)
-                .imePadding(),
+                .imePadding()
+                .navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.End
         ) {
