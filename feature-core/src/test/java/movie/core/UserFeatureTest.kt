@@ -7,6 +7,11 @@ import kotlinx.coroutines.test.runTest
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.auth.UserCredentials
+import movie.core.db.dao.BookingDao
+import movie.core.db.dao.BookingSeatsDao
+import movie.core.db.dao.CinemaDao
+import movie.core.db.dao.MovieDetailDao
+import movie.core.db.dao.MovieMediaDao
 import movie.core.di.EventFeatureModule
 import movie.core.di.UserFeatureModule
 import movie.core.model.FieldUpdate
@@ -16,6 +21,7 @@ import movie.core.nwk.cacheOf
 import movie.core.nwk.di.NetworkModule
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import java.io.File
 import java.util.Date
@@ -27,8 +33,18 @@ class UserFeatureTest : FeatureTest() {
     private lateinit var account: UserAccount
     private lateinit var credentials: UserCredentials
     private lateinit var feature: UserFeature
+    private lateinit var bookingDao: BookingDao
+    private lateinit var seatsDao: BookingSeatsDao
+    private lateinit var movieDao: MovieDetailDao
+    private lateinit var cinemaDao: CinemaDao
+    private lateinit var mediaDao: MovieMediaDao
 
     override fun prepare() {
+        bookingDao = mock()
+        seatsDao = mock()
+        movieDao = mock()
+        cinemaDao = mock()
+        mediaDao = mock()
         account = spy(MockAccount())
         credentials = spy(MockCredentials())
         cache = cacheOf(File("build/cache"))
@@ -39,7 +55,15 @@ class UserFeatureTest : FeatureTest() {
             event = network.event(clientData, cache),
             cinema = network.cinema(clientRoot, cache)
         )
-        feature = UserFeatureModule().feature(service, event)
+        feature = UserFeatureModule().feature(
+            service,
+            event,
+            bookingDao,
+            seatsDao,
+            movieDao,
+            cinemaDao,
+            mediaDao
+        )
     }
 
     @After
