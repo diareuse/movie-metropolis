@@ -67,6 +67,7 @@ class UserFeatureTest : FeatureTest() {
         feature = UserFeatureModule().feature(
             service = service,
             event = event,
+            account = account,
             bookingDao = bookingDao,
             seatsDao = seatsDao,
             movieDao = detailDao,

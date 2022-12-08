@@ -4,8 +4,10 @@ import movie.core.UserFeature
 import movie.core.model.SignInMethod
 
 class LoginFacadeFromFeature(
-    private val user: UserFeature
+    private val user: UserFeature,
 ) : LoginFacade {
+
+    override val currentUserEmail get() = user.email
 
     override suspend fun login(
         email: String,

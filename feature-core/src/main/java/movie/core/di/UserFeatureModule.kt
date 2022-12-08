@@ -12,6 +12,7 @@ import movie.core.UserFeatureRecover
 import movie.core.UserFeatureRecoverSecondary
 import movie.core.UserFeatureRequireNotEmpty
 import movie.core.UserFeatureStoring
+import movie.core.auth.UserAccount
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.dao.CinemaDao
@@ -32,13 +33,14 @@ internal class UserFeatureModule {
         movieDao: MovieDetailDao,
         cinemaDao: CinemaDao,
         mediaDao: MovieMediaDao,
+        account: UserAccount
     ): UserFeature {
         var database: UserFeature
         database = UserFeatureDatabase(bookingDao, seatsDao, movieDao, cinemaDao, mediaDao)
         database = UserFeatureRecover(database)
         database = UserFeatureRequireNotEmpty(database)
         var network: UserFeature
-        network = UserFeatureImpl(service, event)
+        network = UserFeatureImpl(service, event, account)
         network = UserFeatureStoring(network, bookingDao, seatsDao)
         network = UserFeatureRecoverSecondary(database, network)
         return network

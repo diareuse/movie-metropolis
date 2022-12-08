@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    facade: LoginFacade
+    facade: LoginFacade,
 ) : ViewModel() {
 
     private val jobEmitter = Channel<suspend LoginFacade.() -> Result<Unit>>()
@@ -24,7 +24,7 @@ class LoginViewModel @Inject constructor(
 
     val state = facade.stateFlow(jobEmitter.consumeAsFlow())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.success(false))
-    val email = MutableStateFlow("")
+    val email = MutableStateFlow(facade.currentUserEmail.orEmpty())
     val password = MutableStateFlow("")
     val firstName = MutableStateFlow("")
     val lastName = MutableStateFlow("")
