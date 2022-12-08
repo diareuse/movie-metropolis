@@ -7,6 +7,8 @@ import movie.metropolis.app.screen.asLoadable
 
 interface LoginFacade {
 
+    val currentUserEmail: String?
+
     suspend fun login(
         email: String,
         password: String

@@ -7,6 +7,7 @@ import movie.core.adapter.BookingActiveFromResponse
 import movie.core.adapter.BookingExpiredFromResponse
 import movie.core.adapter.MovieFromId
 import movie.core.adapter.UserFromRemote
+import movie.core.auth.UserAccount
 import movie.core.model.Booking
 import movie.core.model.FieldUpdate
 import movie.core.model.FieldUpdate.Cinema
@@ -26,8 +27,11 @@ import movie.core.nwk.model.TokenRequest
 
 internal class UserFeatureImpl(
     private val service: UserService,
-    private val event: EventFeature
+    private val event: EventFeature,
+    private val account: UserAccount
 ) : UserFeature {
+
+    override val email get() = account.email
 
     override suspend fun signIn(method: SignInMethod) = when (method) {
         is SignInMethod.Login -> service.getToken(
