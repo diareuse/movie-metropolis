@@ -18,7 +18,9 @@ import java.util.Date
         )
     ],
     indices = [
-        Index("cinema")
+        Index("cinema"),
+        Index("movie"),
+        Index("starts_at", orders = [Index.Order.ASC])
     ]
 )
 data class ShowingStored(
@@ -38,5 +40,7 @@ data class ShowingStored(
     @ColumnInfo("language")
     val language: String,
     @ColumnInfo("type")
-    val type: String
+    val type: String,
+    @ColumnInfo("movie")
+    val movie: String
 )

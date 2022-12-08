@@ -34,5 +34,7 @@ data class MoviePreviewStored(
     @ColumnInfo("cast")
     val cast: Iterable<String>,
     @ColumnInfo("country_of_origin")
-    val countryOfOrigin: String
+    val countryOfOrigin: String,
+    @ColumnInfo("upcoming")
+    val isUpcoming: Boolean
 )

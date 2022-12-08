@@ -34,8 +34,8 @@ data class MovieMediaStored(
     val type: Type
 ) {
 
-    enum class Type {
-        Image, Video
+    enum class Type(val type: String) {
+        Image("image"), Video("video")
     }
 
 }
