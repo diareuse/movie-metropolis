@@ -1,12 +1,10 @@
 package movie.core.nwk
 
 import movie.core.auth.UserAccount
-import movie.core.auth.UserCredentials
 import movie.core.nwk.model.TokenRequest
 
 internal class UserServiceLogout(
     private val origin: UserService,
-    private val credentials: UserCredentials,
     private val account: UserAccount
 ) : UserService by origin {
 
@@ -16,9 +14,8 @@ internal class UserServiceLogout(
         if (it !is NetworkException) return@onFailure
         if (it.code != 400) return@onFailure
 
-        account.delete()
-        credentials.email = null
-        credentials.password = null
+        account.password = null
+        account.email = null
     }
 
 }

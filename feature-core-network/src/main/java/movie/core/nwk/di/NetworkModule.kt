@@ -20,7 +20,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
-import movie.core.auth.UserCredentials
 import movie.core.nwk.CinemaService
 import movie.core.nwk.CinemaServiceImpl
 import movie.core.nwk.EventService
@@ -116,14 +115,13 @@ class NetworkModule {
         @ClientCustomer
         client: HttpClient,
         account: UserAccount,
-        credentials: UserCredentials,
         auth: AuthMetadata
     ): UserService {
         var service: UserService
         service = UserServiceImpl(client, account, auth.user, auth.password, auth.captcha)
-        service = UserServiceSaving(service, credentials, account)
-        service = UserServiceReauthorize(service, credentials, account, auth.captcha)
-        service = UserServiceLogout(service, credentials, account)
+        service = UserServiceSaving(service, account)
+        service = UserServiceReauthorize(service, account, auth.captcha)
+        service = UserServiceLogout(service, account)
         return service
     }
 

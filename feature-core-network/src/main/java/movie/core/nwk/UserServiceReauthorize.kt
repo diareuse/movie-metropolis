@@ -1,7 +1,6 @@
 package movie.core.nwk
 
 import movie.core.auth.UserAccount
-import movie.core.auth.UserCredentials
 import movie.core.nwk.model.CustomerDataRequest
 import movie.core.nwk.model.PasswordRequest
 import movie.core.nwk.model.TokenRequest
@@ -9,7 +8,6 @@ import kotlin.time.Duration.Companion.minutes
 
 internal class UserServiceReauthorize(
     private val origin: UserService,
-    private val credentials: UserCredentials,
     private val account: UserAccount,
     private val captcha: String
 ) : UserService by origin {
@@ -18,10 +16,10 @@ internal class UserServiceReauthorize(
         get() = checkNotNull(account.refreshToken)
 
     private val email
-        get() = checkNotNull(credentials.email)
+        get() = checkNotNull(account.email)
 
     private val password
-        get() = checkNotNull(credentials.password)
+        get() = checkNotNull(account.password)
 
     override suspend fun getCurrentToken() = requireToken {
         origin.getCurrentToken()

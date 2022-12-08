@@ -2,22 +2,39 @@ package movie.core.auth
 
 import android.accounts.Account
 import android.accounts.AccountManager
-import android.os.Build
 import android.os.Bundle
 import java.util.Date
 
 internal class UserAccountImpl(
     private val manager: AccountManager,
-    private val credentials: UserCredentials
+    private val encryption: EncryptionProvider
 ) : UserAccount {
 
     private val account
-        get() = credentials.email
-            ?.let { Account(it, Type) }
-            ?.also(::requireExistence)
+        get() = manager.getAccountsByType(Type).firstOrNull()
 
     override val isLoggedIn
         get() = account != null
+
+    override var email: String?
+        get() = account?.name
+        set(value) { // todo migrate password when changing email
+            account?.also(manager::removeAccountExplicitly)
+            if (value != null) {
+                manager.addAccountExplicitly(Account(value, Type), null, Bundle.EMPTY)
+            }
+        }
+
+    override var password: String?
+        get() {
+            val encrypted = manager.getUserData(account ?: return null, "user-password")
+            return encryption.decrypt(encrypted).getOrNull()
+        }
+        set(value) {
+            val account = account ?: return
+            val encrypted = value?.let(encryption::encrypt)?.getOrNull()
+            manager.setUserData(account, "user-password", encrypted)
+        }
 
     override var token
         get() = account?.let(manager::getPassword)
@@ -41,18 +58,6 @@ internal class UserAccountImpl(
             val account = account ?: return
             manager.setUserData(account, "token-expiration", value?.time?.toString())
         }
-
-    private fun requireExistence(account: Account) {
-        if (account in manager.getAccountsByType(Type))
-            return
-        manager.addAccountExplicitly(account, null, Bundle.EMPTY)
-    }
-
-    override fun delete() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            manager.removeAccountExplicitly(account ?: return)
-        }
-    }
 
     companion object {
 

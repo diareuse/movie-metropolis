@@ -3,7 +3,7 @@ package movie.metropolis.app.screen.profile
 import io.ktor.http.HttpMethod
 import kotlinx.coroutines.test.runTest
 import movie.core.model.SignInMethod
-import movie.metropolis.app.feature.global.di.FacadeModule
+import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.screen.FeatureTest
