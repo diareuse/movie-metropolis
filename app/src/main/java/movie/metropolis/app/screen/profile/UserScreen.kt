@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.profile
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,7 +38,8 @@ import movie.metropolis.app.view.textPlaceholder
 fun UserScreen(
     padding: PaddingValues,
     onNavigateToLogin: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel()
+    viewModel: ProfileViewModel = hiltViewModel(),
+    state: ScrollState
 ) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     val isLoading by viewModel.user.collectAsState()
@@ -74,7 +76,8 @@ fun UserScreen(
         onPasswordCurrentChanged = { viewModel.passwordCurrent.value = it },
         onPasswordNewChanged = { viewModel.passwordNew.value = it },
         onSaveClick = viewModel::save,
-        onLoginClick = onNavigateToLogin
+        onLoginClick = onNavigateToLogin,
+        state = state
     )
 }
 
@@ -103,11 +106,12 @@ private fun UserScreen(
     onPasswordNewChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
     onLoginClick: () -> Unit,
+    state: ScrollState = rememberScrollState()
 ) {
     Column(
         Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(state)
             .padding(padding)
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -248,7 +252,7 @@ private fun Preview() {
             onPasswordCurrentChanged = {},
             onPasswordNewChanged = {},
             onSaveClick = {},
-            onLoginClick = {}
+            onLoginClick = {},
         )
     }
 }

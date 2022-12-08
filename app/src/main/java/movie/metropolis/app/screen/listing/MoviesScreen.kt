@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,16 +29,22 @@ fun MoviesScreen(
     padding: PaddingValues,
     onClickVideo: (String) -> Unit,
     onClickMovie: (String) -> Unit,
+    state: LazyListState,
+    stateAvailable: LazyListState,
+    stateUpcoming: LazyListState,
     viewModel: ListingViewModel = hiltViewModel()
 ) {
     val current by viewModel.current.collectAsState()
     val upcoming by viewModel.upcoming.collectAsState()
     MoviesScreen(
-        padding = padding,
         current = current,
         upcoming = upcoming,
         onClickVideo = onClickVideo,
-        onClick = onClickMovie
+        onClick = onClickMovie,
+        padding = padding,
+        state = state,
+        stateAvailable = stateAvailable,
+        stateUpcoming = stateUpcoming
     )
 }
 
@@ -46,10 +54,14 @@ private fun MoviesScreen(
     upcoming: Loadable<List<MovieView>>,
     onClickVideo: (String) -> Unit,
     onClick: (String) -> Unit,
-    padding: PaddingValues = PaddingValues(0.dp)
+    padding: PaddingValues = PaddingValues(0.dp),
+    state: LazyListState = rememberLazyListState(),
+    stateAvailable: LazyListState = rememberLazyListState(),
+    stateUpcoming: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = state,
         contentPadding = padding
     ) {
         item {
@@ -64,7 +76,8 @@ private fun MoviesScreen(
                 items = current,
                 isShowing = true,
                 onClickVideo = onClickVideo,
-                onClick = onClick
+                onClick = onClick,
+                state = stateAvailable
             )
         }
         item {
@@ -79,7 +92,8 @@ private fun MoviesScreen(
                 items = upcoming,
                 isShowing = false,
                 onClickVideo = onClickVideo,
-                onClick = onClick
+                onClick = onClick,
+                state = stateUpcoming
             )
         }
     }

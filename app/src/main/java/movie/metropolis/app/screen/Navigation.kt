@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -58,13 +60,22 @@ fun Navigation(
             val cinemas: CinemasViewModel = hiltViewModel()
             val booking: BookingViewModel = hiltViewModel()
             val user: ProfileViewModel = hiltViewModel()
+            val moviesState = rememberLazyListState()
+            val moviesAvailableState = rememberLazyListState()
+            val moviesUpcomingState = rememberLazyListState()
+            val cinemasState = rememberLazyListState()
+            val bookingState = rememberLazyListState()
+            val userState = rememberScrollState()
             HomeScreen(
                 movies = {
                     MoviesScreen(
                         padding = it,
                         onClickVideo = {},
                         onClickMovie = { id -> controller.navigate("/movies/${id}") },
-                        viewModel = listing
+                        viewModel = listing,
+                        state = moviesState,
+                        stateAvailable = moviesAvailableState,
+                        stateUpcoming = moviesUpcomingState
                     )
                 },
                 cinemas = {
@@ -72,20 +83,23 @@ fun Navigation(
                         padding = it,
                         onPermissionRequested = onPermissionsRequested,
                         onClickCinema = { id -> controller.navigate("/cinemas/$id") },
-                        viewModel = cinemas
+                        viewModel = cinemas,
+                        state = cinemasState
                     )
                 },
                 booking = {
                     BookingScreen(
                         padding = it,
-                        viewModel = booking
+                        viewModel = booking,
+                        state = bookingState
                     )
                 },
                 user = {
                     UserScreen(
                         padding = it,
                         onNavigateToLogin = { controller.navigate("/user/login") },
-                        viewModel = user
+                        viewModel = user,
+                        state = userState
                     )
                 }
             )

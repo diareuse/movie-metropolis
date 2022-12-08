@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.UserView
@@ -32,7 +32,7 @@ class ProfileViewModel @Inject constructor(
         .retainStateIn(viewModelScope, Loadable.loading())
     val membership = facade.membershipFlow
         .retainStateIn(viewModelScope, Loadable.loading())
-    val user = facade.userFlow(jobEmitter.consumeAsFlow())
+    val user = facade.userFlow(jobEmitter.receiveAsFlow())
         .onEachSuccess(::populateFields)
         .retainStateIn(viewModelScope, Loadable.loading())
     val isLoggedIn = facade.isLoggedInFlow

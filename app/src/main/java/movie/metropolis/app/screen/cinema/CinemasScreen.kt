@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -26,6 +28,7 @@ fun CinemasScreen(
     padding: PaddingValues,
     onPermissionRequested: suspend (Array<String>) -> Boolean,
     onClickCinema: (String) -> Unit,
+    state: LazyListState,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
     val items by viewModel.items.collectAsState()
@@ -33,7 +36,12 @@ fun CinemasScreen(
     SideEffect {
         viewModel.location.value = location
     }
-    CinemasScreen(items, padding, onClickCinema)
+    CinemasScreen(
+        items = items,
+        padding = padding,
+        onClickCinema = onClickCinema,
+        state = state
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -41,12 +49,14 @@ fun CinemasScreen(
 private fun CinemasScreen(
     items: Loadable<List<CinemaView>>,
     padding: PaddingValues,
-    onClickCinema: (String) -> Unit
+    onClickCinema: (String) -> Unit,
+    state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = padding + PaddingValues(vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        state = state
     ) {
         if (items.isLoading) items(4) {
             CinemaItem(modifier = Modifier.padding(horizontal = 24.dp))
@@ -74,6 +84,7 @@ private fun Preview() {
             items = Loadable.loading(),
             padding = PaddingValues(0.dp),
             onClickCinema = {}
+
         )
     }
 }
