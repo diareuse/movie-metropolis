@@ -55,10 +55,10 @@ internal class UserServiceReauthorize(
         if (!account.isLoggedIn) {
             return Result.failure(SecurityException())
         } else if (account.expiresWithin(1.minutes)) {
-            val result = getToken(TokenRequest.Refresh(refreshToken, captcha))
+            val result = getToken(TokenRequest.Refresh(token = refreshToken, captcha = captcha))
             if (result.isFailure) return result as Result<T>
         } else if (account.isExpired) {
-            val result = getToken(TokenRequest.Login(email, password, captcha))
+            val result = getToken(TokenRequest.Login(username = email, password = password))
             if (result.isFailure) return result as Result<T>
         }
         return body()
