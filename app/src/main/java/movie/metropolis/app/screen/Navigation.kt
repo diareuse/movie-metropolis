@@ -49,6 +49,7 @@ import movie.metropolis.app.screen.profile.UserScreen
 @Composable
 fun Navigation(
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
+    onLinkClicked: (String) -> Unit,
     controller: NavHostController = rememberAnimatedNavController()
 ) {
     AnimatedNavHost(
@@ -70,7 +71,7 @@ fun Navigation(
                 movies = {
                     MoviesScreen(
                         padding = it,
-                        onClickVideo = {},
+                        onClickVideo = onLinkClicked,
                         onClickMovie = { id -> controller.navigate("/movies/${id}") },
                         viewModel = listing,
                         state = moviesState,
