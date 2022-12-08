@@ -1,5 +1,6 @@
 package movie.core.nwk.di
 
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,6 +11,9 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
@@ -45,6 +49,15 @@ class NetworkModule {
     ): HttpClient = HttpClient(engine) {
         install(ContentNegotiation) {
             json(serializer)
+        }
+        Logging {
+            level = LogLevel.ALL
+            logger = object : Logger {
+                override fun log(message: String) {
+                    for (part in message.windowed(4000, 4000, true))
+                        Log.v("Network", part)
+                }
+            }
         }
         install(HttpCache)
         defaultRequest {
