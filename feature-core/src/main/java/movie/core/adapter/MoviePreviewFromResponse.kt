@@ -29,7 +29,7 @@ internal data class MoviePreviewFromResponse(
     override val media: Iterable<Media>
         get() = response.media.mapNotNull(::MediaFromResponse)
     override val description: String
-        get() = metadata.synopsis
+        get() = metadata.synopsis.orEmpty()
     override val directors: Iterable<String>
         get() = metadata.directors.split(", ", ",")
     override val cast: Iterable<String>

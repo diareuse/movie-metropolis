@@ -27,7 +27,7 @@ internal class EventServiceImpl(
         client.get {
             url("quickbook/10101/film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
         }.requireBody<BodyResponse<MovieEventResponse>>()
-    }
+    }.onFailure { it.printStackTrace() }
 
     override suspend fun getNearbyCinemas(
         lat: Double,
@@ -39,14 +39,14 @@ internal class EventServiceImpl(
             parameter("long", lng)
             parameter("unit", "KILOMETERS")
         }.requireBody<BodyResponse<List<NearbyCinemaResponse>>>()
-    }
+    }.onFailure { it.printStackTrace() }
 
     override suspend fun getDetail(id: String) = kotlin.runCatching {
         client.get {
             url("10101/films/byDistributorCode/$id")
             parameter("lang", Locale.getDefault().language)
         }.requireBody<BodyResponse<MovieDetailsResponse>>()
-    }
+    }.onFailure { it.printStackTrace() }
 
     override suspend fun getMoviesByType(type: ShowingType) = kotlin.runCatching {
         client.get {
@@ -54,6 +54,6 @@ internal class EventServiceImpl(
             parameter("ordering", "asc")
             parameter("lang", Locale.getDefault().language)
         }.requireBody<BodyResponse<List<ExtendedMovieResponse>>>()
-    }
+    }.onFailure { it.printStackTrace() }
 
 }
