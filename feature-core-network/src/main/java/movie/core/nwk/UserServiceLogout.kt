@@ -15,7 +15,6 @@ internal class UserServiceLogout(
         if (it.code != 400) return@onFailure
 
         account.password = null
-        account.email = null
     }
 
 }
