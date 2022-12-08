@@ -9,6 +9,7 @@ import movie.core.EventFeatureDatabase
 import movie.core.EventFeatureImpl
 import movie.core.EventFeatureRecover
 import movie.core.EventFeatureRecoverSecondary
+import movie.core.EventFeatureRequireNotEmpty
 import movie.core.EventFeatureStoring
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
@@ -42,6 +43,7 @@ internal class EventFeatureModule {
             mediaDao, referenceDao, previewDao
         )
         database = EventFeatureRecover(database)
+        database = EventFeatureRequireNotEmpty(database)
         var network: EventFeature
         network = EventFeatureImpl(event, cinema)
         network = EventFeatureStoring(
