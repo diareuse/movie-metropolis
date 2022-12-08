@@ -14,6 +14,9 @@ import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
+import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MovieReferenceDao
+import movie.core.db.dao.ShowingDao
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -60,5 +63,20 @@ class DatabaseModule {
     internal fun movieMedia(
         database: MovieDatabase
     ): MovieMediaDao = database.movieMedia()
+
+    @Provides
+    internal fun showing(
+        database: MovieDatabase
+    ): ShowingDao = database.showing()
+
+    @Provides
+    internal fun movieReference(
+        database: MovieDatabase
+    ): MovieReferenceDao = database.movieReference()
+
+    @Provides
+    internal fun moviePreview(
+        database: MovieDatabase
+    ): MoviePreviewDao = database.moviePreview()
 
 }

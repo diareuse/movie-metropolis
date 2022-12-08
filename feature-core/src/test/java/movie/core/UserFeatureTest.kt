@@ -10,8 +10,12 @@ import movie.core.auth.UserCredentials
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.dao.CinemaDao
+import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
+import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MovieReferenceDao
+import movie.core.db.dao.ShowingDao
 import movie.core.di.EventFeatureModule
 import movie.core.di.UserFeatureModule
 import movie.core.model.FieldUpdate
@@ -35,16 +39,24 @@ class UserFeatureTest : FeatureTest() {
     private lateinit var feature: UserFeature
     private lateinit var bookingDao: BookingDao
     private lateinit var seatsDao: BookingSeatsDao
-    private lateinit var movieDao: MovieDetailDao
+    private lateinit var detailDao: MovieDetailDao
     private lateinit var cinemaDao: CinemaDao
     private lateinit var mediaDao: MovieMediaDao
+    private lateinit var showingDao: ShowingDao
+    private lateinit var referenceDao: MovieReferenceDao
+    private lateinit var previewDao: MoviePreviewDao
+    private lateinit var movieDao: MovieDao
 
     override fun prepare() {
         bookingDao = mock()
         seatsDao = mock()
-        movieDao = mock()
+        detailDao = mock()
         cinemaDao = mock()
         mediaDao = mock()
+        showingDao = mock()
+        referenceDao = mock()
+        previewDao = mock()
+        movieDao = mock()
         account = spy(MockAccount())
         credentials = spy(MockCredentials())
         cache = cacheOf(File("build/cache"))
@@ -53,16 +65,23 @@ class UserFeatureTest : FeatureTest() {
         val service = network.user(clientCustomer, account, credentials, auth, cache)
         val event = EventFeatureModule().feature(
             event = network.event(clientData, cache),
-            cinema = network.cinema(clientRoot, cache)
+            cinema = network.cinema(clientRoot, cache),
+            showingDao = showingDao,
+            cinemaDao = cinemaDao,
+            detailDao = detailDao,
+            mediaDao = mediaDao,
+            referenceDao = referenceDao,
+            previewDao = previewDao,
+            movieDao = movieDao
         )
         feature = UserFeatureModule().feature(
-            service,
-            event,
-            bookingDao,
-            seatsDao,
-            movieDao,
-            cinemaDao,
-            mediaDao
+            service = service,
+            event = event,
+            bookingDao = bookingDao,
+            seatsDao = seatsDao,
+            movieDao = detailDao,
+            cinemaDao = cinemaDao,
+            mediaDao = mediaDao
         )
     }
 

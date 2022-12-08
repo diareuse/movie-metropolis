@@ -5,6 +5,13 @@ import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.adapter.MovieFromId
+import movie.core.db.dao.CinemaDao
+import movie.core.db.dao.MovieDao
+import movie.core.db.dao.MovieDetailDao
+import movie.core.db.dao.MovieMediaDao
+import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MovieReferenceDao
+import movie.core.db.dao.ShowingDao
 import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -26,13 +33,36 @@ class EventFeatureTest : FeatureTest() {
     private lateinit var cache: Cache<String, String>
     private lateinit var cinema: Cinema
     private lateinit var feature: EventFeature
+    private lateinit var showingDao: ShowingDao
+    private lateinit var cinemaDao: CinemaDao
+    private lateinit var detailDao: MovieDetailDao
+    private lateinit var mediaDao: MovieMediaDao
+    private lateinit var referenceDao: MovieReferenceDao
+    private lateinit var previewDao: MoviePreviewDao
+    private lateinit var movieDao: MovieDao
 
     override fun prepare() {
         val module = EventFeatureModule()
         val service = NetworkModule()
+        showingDao = mock()
+        cinemaDao = mock()
+        detailDao = mock()
+        mediaDao = mock()
+        referenceDao = mock()
+        previewDao = mock()
+        movieDao = mock()
         cache = cacheOf(File("build/cache"))
-        feature =
-            module.feature(service.event(clientData, cache), service.cinema(clientRoot, cache))
+        feature = module.feature(
+            service.event(clientData, cache),
+            service.cinema(clientRoot, cache),
+            showingDao,
+            cinemaDao,
+            detailDao,
+            mediaDao,
+            referenceDao,
+            previewDao,
+            movieDao
+        )
         cinema = mock()
         whenever(cinema.id).thenReturn("cinema")
     }
