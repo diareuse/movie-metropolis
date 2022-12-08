@@ -22,7 +22,7 @@ import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.theme.Theme
 
 @Composable
-fun MoviePager(
+fun MovieRow(
     items: Loadable<List<MovieView>>,
     isShowing: Boolean,
     onClickVideo: (String) -> Unit,
@@ -41,7 +41,7 @@ fun MoviePager(
             MovieItem()
         }
 
-        items.isSuccess -> MoviePager(
+        items.isSuccess -> MovieRow(
             items = items.getOrNull().orEmpty(),
             isShowing = isShowing,
             onClick = onClick,
@@ -52,7 +52,7 @@ fun MoviePager(
 }
 
 @Composable
-private fun MoviePager(
+private fun MovieRow(
     items: List<MovieView>,
     isShowing: Boolean,
     onClickVideo: (String) -> Unit,
@@ -87,13 +87,13 @@ private fun Preview(
 ) {
     Theme {
         Column {
-            MoviePager(
+            MovieRow(
                 items = Loadable.loading(),
                 isShowing = false,
                 onClickVideo = {},
                 onClick = {}
             )
-            MoviePager(
+            MovieRow(
                 items = Loadable.success(movies),
                 isShowing = false,
                 onClickVideo = {},
