@@ -156,11 +156,11 @@ fun HomeScreen(
                         Text(text)
                     },
                     colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        scrolledContainerColor = MaterialTheme.colorScheme.surface
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                        scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
                     )
                 )
-                Divider(modifier = Modifier.padding(horizontal = 24.dp))
+                Divider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         },
         bottomBar = {
