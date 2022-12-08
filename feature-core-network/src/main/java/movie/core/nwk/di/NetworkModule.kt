@@ -1,11 +1,9 @@
 package movie.core.nwk.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
@@ -19,7 +17,6 @@ import kotlinx.serialization.json.Json
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.auth.UserCredentials
-import movie.core.nwk.Cache
 import movie.core.nwk.CinemaService
 import movie.core.nwk.CinemaServiceImpl
 import movie.core.nwk.EventService
@@ -29,8 +26,6 @@ import movie.core.nwk.UserServiceImpl
 import movie.core.nwk.UserServiceLogout
 import movie.core.nwk.UserServiceReauthorize
 import movie.core.nwk.UserServiceSaving
-import movie.core.nwk.timedCacheOf
-import java.io.File
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -41,12 +36,6 @@ class NetworkModule {
         ignoreUnknownKeys = true
         explicitNulls = false
     }
-
-    @Provides
-    fun cache(
-        @ApplicationContext
-        context: Context
-    ): Cache<String, String> = timedCacheOf(File(context.cacheDir, "network"))
 
     @ClientRoot
     @Provides
