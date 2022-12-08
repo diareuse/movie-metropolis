@@ -26,7 +26,7 @@ class MovieFacadeFromFeature(
     private var movie: MovieDetail? = null
 
     override suspend fun getAvailableFrom(): Result<Date> {
-        return Result.success(getDetail().screeningFrom)
+        return Result.success(getDetail().screeningFrom.coerceAtLeast(Date()))
     }
 
     override suspend fun getMovie(): Result<MovieDetailView> {
