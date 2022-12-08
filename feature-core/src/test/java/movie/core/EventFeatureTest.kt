@@ -45,7 +45,7 @@ class EventFeatureTest : FeatureTest() {
         referenceDao = mock()
         previewDao = mock()
         movieDao = mock()
-        feature = module.feature(
+        feature = module.featureSaving(
             service.event(clientData),
             service.cinema(clientRoot),
             showingDao,
@@ -55,6 +55,15 @@ class EventFeatureTest : FeatureTest() {
             referenceDao,
             previewDao,
             movieDao
+        )
+        feature = module.feature(
+            showingDao,
+            cinemaDao,
+            detailDao,
+            mediaDao,
+            referenceDao,
+            previewDao,
+            feature
         )
         cinema = mock()
         whenever(cinema.id).thenReturn("cinema")

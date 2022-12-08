@@ -27,6 +27,30 @@ internal class EventFeatureModule {
 
     @Provides
     fun feature(
+        showingDao: ShowingDao,
+        cinemaDao: CinemaDao,
+        detailDao: MovieDetailDao,
+        mediaDao: MovieMediaDao,
+        referenceDao: MovieReferenceDao,
+        previewDao: MoviePreviewDao,
+        @Saving
+        saving: EventFeature
+    ): EventFeature {
+        var database: EventFeature
+        database = EventFeatureDatabase(
+            showingDao, cinemaDao, detailDao,
+            mediaDao, referenceDao, previewDao
+        )
+        database = EventFeatureRecover(database)
+        database = EventFeatureRequireNotEmpty(database)
+        var network: EventFeature = saving
+        network = EventFeatureRecoverSecondary(database, network)
+        return network
+    }
+
+    @Saving
+    @Provides
+    fun featureSaving(
         event: EventService,
         cinema: CinemaService,
         showingDao: ShowingDao,
@@ -37,20 +61,12 @@ internal class EventFeatureModule {
         previewDao: MoviePreviewDao,
         movieDao: MovieDao
     ): EventFeature {
-        var database: EventFeature
-        database = EventFeatureDatabase(
-            showingDao, cinemaDao, detailDao,
-            mediaDao, referenceDao, previewDao
-        )
-        database = EventFeatureRecover(database)
-        database = EventFeatureRequireNotEmpty(database)
         var network: EventFeature
         network = EventFeatureImpl(event, cinema)
         network = EventFeatureStoring(
             network, cinemaDao, movieDao, detailDao, mediaDao,
             showingDao, referenceDao, previewDao
         )
-        network = EventFeatureRecoverSecondary(database, network)
         return network
     }
 
