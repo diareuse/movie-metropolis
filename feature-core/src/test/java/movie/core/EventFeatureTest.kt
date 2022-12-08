@@ -2,7 +2,6 @@ package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.adapter.MovieFromId
 import movie.core.db.dao.CinemaDao
@@ -15,14 +14,10 @@ import movie.core.db.dao.ShowingDao
 import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
-import movie.core.nwk.Cache
-import movie.core.nwk.cacheOf
 import movie.core.nwk.di.NetworkModule
-import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
-import java.io.File
 import java.util.Date
 import kotlin.math.abs
 import kotlin.test.assertEquals
@@ -30,7 +25,6 @@ import kotlin.test.assertFails
 
 class EventFeatureTest : FeatureTest() {
 
-    private lateinit var cache: Cache<String, String>
     private lateinit var cinema: Cinema
     private lateinit var feature: EventFeature
     private lateinit var showingDao: ShowingDao
@@ -51,10 +45,9 @@ class EventFeatureTest : FeatureTest() {
         referenceDao = mock()
         previewDao = mock()
         movieDao = mock()
-        cache = cacheOf(File("build/cache"))
         feature = module.feature(
-            service.event(clientData, cache),
-            service.cinema(clientRoot, cache),
+            service.event(clientData),
+            service.cinema(clientRoot),
             showingDao,
             cinemaDao,
             detailDao,
@@ -65,11 +58,6 @@ class EventFeatureTest : FeatureTest() {
         )
         cinema = mock()
         whenever(cinema.id).thenReturn("cinema")
-    }
-
-    @After
-    fun tearDown() {
-        runBlocking { cache.clear() }
     }
 
     // ---

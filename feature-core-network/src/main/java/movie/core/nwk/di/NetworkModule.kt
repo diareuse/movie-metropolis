@@ -21,13 +21,10 @@ import movie.core.auth.UserAccount
 import movie.core.auth.UserCredentials
 import movie.core.nwk.Cache
 import movie.core.nwk.CinemaService
-import movie.core.nwk.CinemaServiceCache
 import movie.core.nwk.CinemaServiceImpl
 import movie.core.nwk.EventService
-import movie.core.nwk.EventServiceCache
 import movie.core.nwk.EventServiceImpl
 import movie.core.nwk.UserService
-import movie.core.nwk.UserServiceCache
 import movie.core.nwk.UserServiceImpl
 import movie.core.nwk.UserServiceLogout
 import movie.core.nwk.UserServiceReauthorize
@@ -95,26 +92,20 @@ class NetworkModule {
     @Provides
     fun event(
         @ClientData
-        client: HttpClient,
-        cache: Cache<String, String>,
-        serializer: Json = serializer()
+        client: HttpClient
     ): EventService {
-        var service: EventService
+        val service: EventService
         service = EventServiceImpl(client)
-        service = EventServiceCache(service, cache, serializer)
         return service
     }
 
     @Provides
     fun cinema(
         @ClientRoot
-        client: HttpClient,
-        cache: Cache<String, String>,
-        serializer: Json = serializer()
+        client: HttpClient
     ): CinemaService {
-        var service: CinemaService
+        val service: CinemaService
         service = CinemaServiceImpl(client)
-        service = CinemaServiceCache(service, cache, serializer)
         return service
     }
 
@@ -124,16 +115,13 @@ class NetworkModule {
         client: HttpClient,
         account: UserAccount,
         credentials: UserCredentials,
-        auth: AuthMetadata,
-        cache: Cache<String, String>,
-        serializer: Json = serializer()
+        auth: AuthMetadata
     ): UserService {
         var service: UserService
         service = UserServiceImpl(client, account, auth.user, auth.password, auth.captcha)
         service = UserServiceSaving(service, credentials, account)
         service = UserServiceReauthorize(service, credentials, account, auth.captcha)
         service = UserServiceLogout(service, credentials, account)
-        service = UserServiceCache(service, cache, serializer)
         return service
     }
 
