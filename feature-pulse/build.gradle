@@ -1,0 +1,15 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.pulse'
+}
+
+dependencies {
+
+    implementation "androidx.work:work-runtime-ktx:[2,3["
+    implementation "androidx.startup:startup-runtime:[1,2["
+
+}

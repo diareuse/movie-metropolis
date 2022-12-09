@@ -11,6 +11,7 @@ dependencies {
 
     implementation project(":feature-core-network")
     implementation project(":feature-core-database")
+    implementation project(":feature-pulse")
 
     testImplementation "io.ktor:ktor-client-mock:[2,3["
 
