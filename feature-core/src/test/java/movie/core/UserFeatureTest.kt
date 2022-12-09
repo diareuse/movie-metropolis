@@ -74,15 +74,20 @@ class UserFeatureTest : FeatureTest() {
             previewDao,
             event
         )
-        feature = UserFeatureModule().feature(
+        feature = UserFeatureModule().saving(
             service = service,
             event = event,
-            account = account,
+            bookingDao = bookingDao,
+            seatsDao = seatsDao,
+            account = account
+        )
+        feature = UserFeatureModule().feature(
             bookingDao = bookingDao,
             seatsDao = seatsDao,
             movieDao = detailDao,
             cinemaDao = cinemaDao,
-            mediaDao = mediaDao
+            mediaDao = mediaDao,
+            saving = feature
         )
     }
 

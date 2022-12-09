@@ -3,7 +3,7 @@ package movie.core.di
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 import movie.core.EventFeature
 import movie.core.EventFeatureDatabase
 import movie.core.EventFeatureImpl
@@ -22,7 +22,7 @@ import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 internal class EventFeatureModule {
 
     @Provides

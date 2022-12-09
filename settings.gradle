@@ -18,3 +18,4 @@ include ":feature-core",
         ":feature-core-auth",
         ":feature-core-database",
         ":feature-core-network"
+include ":feature-pulse"

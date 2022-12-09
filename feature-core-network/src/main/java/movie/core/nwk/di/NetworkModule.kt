@@ -4,7 +4,7 @@ import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityRetainedComponent
+import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
@@ -31,7 +31,7 @@ import movie.core.nwk.UserServiceReauthorize
 import movie.core.nwk.UserServiceSaving
 
 @Module
-@InstallIn(ActivityRetainedComponent::class)
+@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     @Provides
