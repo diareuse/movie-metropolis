@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen
 
+import android.util.Base64
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -43,6 +44,7 @@ import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.detail.MovieScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.listing.MoviesScreen
+import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.ProfileViewModel
 import movie.metropolis.app.screen.profile.UserScreen
@@ -119,14 +121,31 @@ fun Navigation(
         composable("/cinemas/{cinema}") {
             CinemaScreen(
                 onBackClick = controller::navigateUp,
-                onBookingClick = {}
+                onBookingClick = {
+                    val url = Base64.encodeToString(
+                        it.encodeToByteArray(),
+                        Base64.URL_SAFE or Base64.NO_PADDING
+                    )
+                    controller.navigate("/order/$url")
+                }
             )
         }
         composable("/movies/{movie}") {
             MovieScreen(
                 onBackClick = controller::navigateUp,
                 onPermissionsRequested = onPermissionsRequested,
-                onBookingClick = {}
+                onBookingClick = {
+                    val url = Base64.encodeToString(
+                        it.encodeToByteArray(),
+                        Base64.URL_SAFE or Base64.NO_PADDING
+                    )
+                    controller.navigate("/order/$url")
+                }
+            )
+        }
+        composable("/order/{url}") {
+            OrderScreen(
+                onBackClick = controller::navigateUp
             )
         }
     }

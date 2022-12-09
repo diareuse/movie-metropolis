@@ -23,6 +23,9 @@ import movie.metropolis.app.screen.detail.MovieFacadeRecover
 import movie.metropolis.app.screen.listing.ListingFacade
 import movie.metropolis.app.screen.listing.ListingFacadeFromFeature
 import movie.metropolis.app.screen.listing.ListingFacadeRecover
+import movie.metropolis.app.screen.order.OrderFacade
+import movie.metropolis.app.screen.order.OrderFacadeFromFeature
+import movie.metropolis.app.screen.order.OrderFacadeRecover
 import movie.metropolis.app.screen.profile.LoginFacade
 import movie.metropolis.app.screen.profile.LoginFacadeFromFeature
 import movie.metropolis.app.screen.profile.ProfileFacade
@@ -95,6 +98,14 @@ class FacadeModule {
         val facade: LoginFacade
         facade = LoginFacadeFromFeature(user)
         return facade
+    }
+
+    @Provides
+    fun order(user: UserFeature): OrderFacade.Factory = OrderFacade.Factory {
+        var facade: OrderFacade
+        facade = OrderFacadeFromFeature(it, user)
+        facade = OrderFacadeRecover(facade)
+        facade
     }
 
 }
