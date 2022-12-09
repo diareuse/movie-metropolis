@@ -7,4 +7,8 @@ class BookingFacadeRecover(
     override suspend fun getBookings() =
         kotlin.runCatching { origin.getBookings().getOrThrow() }
 
+    override suspend fun refresh() {
+        kotlin.runCatching { origin.refresh() }
+    }
+
 }
