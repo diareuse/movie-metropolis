@@ -4,12 +4,15 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,6 +42,7 @@ fun BookingScreen(
         padding = padding,
         active = active,
         expired = expired,
+        onRefreshClick = viewModel::refresh,
         state = state
     )
 }
@@ -49,6 +53,7 @@ private fun BookingScreen(
     padding: PaddingValues,
     active: Loadable<List<BookingView.Active>>,
     expired: Loadable<List<BookingView.Expired>>,
+    onRefreshClick: () -> Unit = {},
     state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
@@ -59,6 +64,14 @@ private fun BookingScreen(
         state = state
     ) {
         active.onSuccess { view ->
+            item {
+                Button(
+                    onClick = onRefreshClick,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Find new tickets")
+                }
+            }
             items(view, BookingView::id) {
                 var isVisible by rememberSaveable { mutableStateOf(false) }
                 BookingItemActive(

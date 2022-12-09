@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.core.EventFeature
 import movie.core.UserFeature
+import movie.core.di.Saving
 import movie.metropolis.app.screen.booking.BookingFacade
 import movie.metropolis.app.screen.booking.BookingFacadeFromFeature
 import movie.metropolis.app.screen.booking.BookingFacadeRecover
@@ -34,9 +35,12 @@ import movie.metropolis.app.screen.profile.ProfileFacadeRecover
 class FacadeModule {
 
     @Provides
-    fun booking(user: UserFeature): BookingFacade {
+    fun booking(
+        user: UserFeature,
+        @Saving online: UserFeature
+    ): BookingFacade {
         var facade: BookingFacade
-        facade = BookingFacadeFromFeature(user)
+        facade = BookingFacadeFromFeature(user, online)
         facade = BookingFacadeRecover(facade)
         return facade
     }
