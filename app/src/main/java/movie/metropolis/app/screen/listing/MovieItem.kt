@@ -22,7 +22,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -146,10 +150,11 @@ fun MoviePoster(
     onSpotColorResolved: ((Color) -> Unit)? = null
 ) {
     val scope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(true) }
     AsyncImage(
         modifier = modifier
             .fillMaxSize()
-            .imagePlaceholder(url == null)
+            .imagePlaceholder(url == null || isLoading)
             .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() }),
         imageLoader = ImageLoader.Builder(LocalContext.current)
             .allowHardware(onSpotColorResolved == null)
@@ -157,7 +162,11 @@ fun MoviePoster(
         model = url ?: "",
         contentDescription = "",
         contentScale = ContentScale.Crop,
+        onLoading = {
+            isLoading = true
+        },
         onSuccess = {
+            isLoading = false
             if (onSpotColorResolved != null) scope.launch(Dispatchers.Default) {
                 val target = Target.VIBRANT
                 val bitmap = it.result.drawable.toBitmap()
