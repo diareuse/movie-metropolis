@@ -23,6 +23,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -69,8 +70,8 @@ fun MovieScreen(
     val selectedDate by viewModel.selectedDate.collectAsState()
     val showings by viewModel.showings.collectAsState()
     val location by rememberLocation(onPermissionsRequested)
-    SideEffect {
-        viewModel.location.value = location
+    LaunchedEffect(location) {
+        viewModel.location.value = location ?: return@LaunchedEffect
     }
     MovieScreen(
         detail = detail,
