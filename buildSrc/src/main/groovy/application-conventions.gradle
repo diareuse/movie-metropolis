@@ -14,7 +14,7 @@ android {
     namespace "movie.metropolis.app"
 
     defaultConfig {
-        applicationId "wiki.depasquale.vivillon"
+        applicationId "movie.metropolis.app"
         versionCode 1
         versionName dateVersion
     }
