@@ -1,8 +1,8 @@
 package movie.metropolis.app.screen.detail
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -20,7 +20,7 @@ fun MovieScreenAppBar(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.navigationBarsPadding()) {
+    Box(modifier = modifier.statusBarsPadding()) {
         Surface(
             modifier = Modifier.padding(24.dp),
             color = MaterialTheme.colorScheme.surface,
