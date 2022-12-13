@@ -19,6 +19,9 @@ jobs:
           echo "${{ secrets.DEPLOY_SIGNING_PROPERTIES }}" | base64 --decode > keystore.properties
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
           echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
+          echo "MM_BASIC_USER=${{ secrets.BASIC_USER }}" >> secrets.properties
+          echo "MM_BASIC_PASS=${{ secrets.BASIC_PASS }}" >> secrets.properties
+          echo "MM_CAPTCHA=${{ secrets.CAPTCHA }}" >> secrets.properties
 
       - run: |
           sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/" buildSrc/src/main/groovy/application-conventions.gradle 
