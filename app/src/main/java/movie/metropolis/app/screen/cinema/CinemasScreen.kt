@@ -10,7 +10,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -33,8 +33,8 @@ fun CinemasScreen(
 ) {
     val items by viewModel.items.collectAsState()
     val location by rememberLocation(onPermissionRequested)
-    SideEffect {
-        viewModel.location.value = location
+    LaunchedEffect(location) {
+        viewModel.location.value = location ?: return@LaunchedEffect
     }
     CinemasScreen(
         items = items,
