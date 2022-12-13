@@ -6,16 +6,18 @@ import movie.core.model.Movie
 import java.util.Date
 
 class EventFeatureRecoverSecondary(
-    private val primary: EventFeature,
-    private val secondary: EventFeature
+    private val local: EventFeature,
+    private val remote: EventFeature
 ) : EventFeature {
 
     override suspend fun getShowings(cinema: Cinema, at: Date) = tryOrRecover {
         getShowings(cinema, at)
     }
 
-    override suspend fun getCinemas(location: Location?) = tryOrRecover {
-        getCinemas(location)
+    override suspend fun getCinemas(location: Location?) = when (location) {
+        null -> tryOrRecover { getCinemas(null) }
+        else -> remote.getCinemas(location)
+            .recoverCatching { local.getCinemas(location).getOrThrow() }
     }
 
     override suspend fun getDetail(movie: Movie) = tryOrRecover {
@@ -33,7 +35,7 @@ class EventFeatureRecoverSecondary(
     // ---
 
     private inline fun <T> tryOrRecover(body: EventFeature.() -> Result<T>): Result<T> {
-        return primary.run(body).recoverCatching { secondary.run(body).getOrThrow() }
+        return local.run(body).recoverCatching { remote.run(body).getOrThrow() }
     }
 
 }
