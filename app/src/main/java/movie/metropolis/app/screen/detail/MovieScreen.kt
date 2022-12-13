@@ -3,7 +3,6 @@ package movie.metropolis.app.screen.detail
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,7 +16,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -65,6 +66,7 @@ import kotlin.random.Random.Default.nextInt
 fun MovieScreen(
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
+    onVideoClick: (String) -> Unit,
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
@@ -85,13 +87,15 @@ fun MovieScreen(
         showings = showings,
         selectionAvailableStart = startDate.getOrNull(),
         selectedDate = selectedDate,
+        hideShowings = viewModel.hideShowings,
         onBackClick = onBackClick,
         onSelectedDateUpdated = { viewModel.selectedDate.value = it },
-        onBookingClick = onBookingClick
+        onBookingClick = onBookingClick,
+        onVideoClick = onVideoClick
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieScreen(
     detail: Loadable<MovieDetailView>,
@@ -100,17 +104,17 @@ private fun MovieScreen(
     showings: Loadable<List<CinemaBookingView>>,
     selectionAvailableStart: Date?,
     selectedDate: Date?,
+    hideShowings: Boolean,
     onSelectedDateUpdated: (Date) -> Unit,
     onBackClick: () -> Unit,
-    onBookingClick: (String) -> Unit
+    onBookingClick: (String) -> Unit,
+    onVideoClick: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
-            Box {
-                MovieScreenAppBar(
-                    onBackClick = onBackClick
-                )
-            }
+            MovieScreenAppBar(
+                onBackClick = onBackClick
+            )
         }
     ) { padding ->
         val surface = MaterialTheme.colorScheme.surface
@@ -147,45 +151,78 @@ private fun MovieScreen(
                         .padding(horizontal = 24.dp)
                         .textPlaceholder(detailView == null),
                     text = detailView?.description ?: "There was an error loading this detail.",
-                    maxLines = 5
+                    maxLines = 5,
+                    startState = hideShowings
                 )
             }
-            item(key = "divider") {
-                Divider(
-                    Modifier
-                        .padding(horizontal = 32.dp)
-                        .animateItemPlacement()
+            if (!hideShowings) {
+                MovieDetailShowings(
+                    showings = showings,
+                    selectionAvailableStart = selectionAvailableStart,
+                    selectedDate = selectedDate,
+                    onSelectedDateUpdated = onSelectedDateUpdated,
+                    onBookingClick = onBookingClick
                 )
-            }
-            if (selectionAvailableStart != null && selectedDate != null) item("picker") {
-                DatePickerRow(
-                    modifier = Modifier.animateItemPlacement(),
-                    start = selectionAvailableStart,
-                    selected = selectedDate,
-                    onClickDate = onSelectedDateUpdated
-                )
-            }
-            showings.onSuccess { showings ->
-                items(showings, key = { it.cinema.id }) {
-                    ShowingItem(
-                        modifier = Modifier
-                            .animateItemPlacement()
-                            .padding(horizontal = 24.dp),
-                        title = it.cinema.name,
-                        showings = it.availability,
-                        onClick = onBookingClick
-                    )
-                }
-            }.onLoading {
-                items(4) {
-                    ShowingItem(
-                        modifier = Modifier
-                            .animateItemPlacement()
-                            .padding(horizontal = 24.dp)
-                    )
+            } else {
+                trailer.onSuccess {
+                    item("trailer") {
+                        Button(
+                            modifier = Modifier.fillMaxWidth(),
+                            onClick = { onVideoClick(it.url) }
+                        ) {
+                            Text("View trailer")
+                        }
+                    }
                 }
             }
-            item { Spacer(Modifier.navigationBarsPadding()) }
+            item {
+                Spacer(Modifier.navigationBarsPadding())
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+fun LazyListScope.MovieDetailShowings(
+    showings: Loadable<List<CinemaBookingView>>,
+    selectionAvailableStart: Date?,
+    selectedDate: Date?,
+    onSelectedDateUpdated: (Date) -> Unit,
+    onBookingClick: (String) -> Unit
+) {
+    item(key = "divider") {
+        Divider(
+            Modifier
+                .padding(horizontal = 32.dp)
+                .animateItemPlacement()
+        )
+    }
+    if (selectionAvailableStart != null && selectedDate != null) item("picker") {
+        DatePickerRow(
+            modifier = Modifier.animateItemPlacement(),
+            start = selectionAvailableStart,
+            selected = selectedDate,
+            onClickDate = onSelectedDateUpdated
+        )
+    }
+    showings.onSuccess { showings ->
+        items(showings, key = { it.cinema.id }) {
+            ShowingItem(
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = 24.dp),
+                title = it.cinema.name,
+                showings = it.availability,
+                onClick = onBookingClick
+            )
+        }
+    }.onLoading {
+        items(4) {
+            ShowingItem(
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = 24.dp)
+            )
         }
     }
 }
@@ -284,9 +321,11 @@ private fun Preview(
             selectedDate = Date(),
             onBackClick = {},
             showings = Loadable.success(showings),
+            hideShowings = false,
             selectionAvailableStart = Date(),
             onSelectedDateUpdated = {},
-            onBookingClick = {}
+            onBookingClick = {},
+            onVideoClick = {}
         )
     }
 }

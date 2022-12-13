@@ -24,7 +24,8 @@ import android.location.Location as AndroidLocation
 @HiltViewModel
 class MovieViewModel private constructor(
     private val facade: MovieFacade,
-    private val user: UserFeature
+    private val user: UserFeature,
+    val hideShowings: Boolean
 ) : ViewModel() {
 
     @Inject
@@ -34,7 +35,8 @@ class MovieViewModel private constructor(
         user: UserFeature
     ) : this(
         facade.create(handle.get<String>("movie").orEmpty()),
-        user
+        user,
+        handle.get<String>("upcoming") == "true"
     )
 
     val selectedDate = MutableStateFlow(null as Date?)

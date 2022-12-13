@@ -10,7 +10,7 @@ data
 secrets.properties
 keystore.properties
 keystore.jks
-google-services.json
+app/google-services.json
 
 ### Java template
 # Compiled class file

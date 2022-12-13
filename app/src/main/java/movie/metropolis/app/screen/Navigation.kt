@@ -76,7 +76,7 @@ fun Navigation(
                     MoviesScreen(
                         padding = it,
                         onClickVideo = onLinkClicked,
-                        onClickMovie = { id -> controller.navigate("/movies/${id}") },
+                        onClickMovie = { id, upcoming -> controller.navigate("/movies/${id}?upcoming=$upcoming") },
                         viewModel = listing,
                         state = moviesState,
                         stateAvailable = moviesAvailableState,
@@ -130,10 +130,11 @@ fun Navigation(
                 }
             )
         }
-        composable("/movies/{movie}") {
+        composable("/movies/{movie}?upcoming={upcoming}") {
             MovieScreen(
                 onBackClick = controller::navigateUp,
                 onPermissionsRequested = onPermissionsRequested,
+                onVideoClick = onLinkClicked,
                 onBookingClick = {
                     val url = Base64.encodeToString(
                         it.encodeToByteArray(),
