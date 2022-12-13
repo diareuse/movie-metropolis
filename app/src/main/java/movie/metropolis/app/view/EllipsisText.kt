@@ -20,9 +20,10 @@ fun EllipsisText(
     maxLines: Int,
     modifier: Modifier = Modifier,
     style: TextStyle = LocalTextStyle.current,
+    startState: Boolean = false
 ) {
     var expanded by rememberSaveable(text) {
-        mutableStateOf(false)
+        mutableStateOf(startState)
     }
     Text(
         modifier = modifier
