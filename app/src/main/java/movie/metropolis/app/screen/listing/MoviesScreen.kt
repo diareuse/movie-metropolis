@@ -70,14 +70,14 @@ private fun MoviesScreen(
         state = state,
         contentPadding = padding
     ) {
-        item {
+        item("available-headline") {
             Text(
                 text = "Now Available",
                 modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
                 style = MaterialTheme.typography.titleLarge
             )
         }
-        item {
+        item("available-pager") {
             MoviePager(
                 items = current,
                 onClick = onClick,
@@ -85,14 +85,14 @@ private fun MoviesScreen(
                 state = stateAvailable
             )
         }
-        item {
+        item("upcoming-headline") {
             Text(
                 text = "Upcoming",
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp),
                 style = MaterialTheme.typography.titleLarge
             )
         }
-        item {
+        item("upcoming-row") {
             MovieRow(
                 items = upcoming,
                 isShowing = false,

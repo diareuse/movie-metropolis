@@ -1,10 +1,16 @@
 package movie.metropolis.app.screen.detail
 
 import kotlinx.coroutines.test.runTest
+import movie.core.adapter.MovieFromId
+import movie.core.model.Cinema
+import movie.core.model.Location
+import movie.core.model.Media
+import movie.core.model.MovieDetail
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.screen.FeatureTest
-import movie.metropolis.app.screen.UrlResponder
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.test.assertEquals
 
@@ -18,10 +24,13 @@ class MovieFacadeTest : FeatureTest() {
 
     @Test
     fun returns_availableFrom_success() = runTest {
-        prepareSuccessDetail()
+        val detail = mock<MovieDetail> {
+            on { it.screeningFrom }.thenReturn(Date(3666821600000))
+        }
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(detail))
         val result = facade.getAvailableFrom()
         assert(result.isSuccess) { result }
-        assertEquals(Date(1666821600000), result.getOrThrow())
+        assertEquals(Date(3666821600000), result.getOrThrow())
     }
 
     @Test
@@ -32,7 +41,7 @@ class MovieFacadeTest : FeatureTest() {
 
     @Test
     fun returns_movie_success() = runTest {
-        prepareSuccessDetail()
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
         val result = facade.getMovie()
         assert(result.isSuccess) { result }
     }
@@ -45,7 +54,10 @@ class MovieFacadeTest : FeatureTest() {
 
     @Test
     fun returns_poster_success() = runTest {
-        prepareSuccessDetail()
+        val detail = mock<MovieDetail> {
+            on { it.media }.thenReturn(listOf(Media.Image(0, 0, "")))
+        }
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(detail))
         val result = facade.getPoster()
         assert(result.isSuccess) { result }
     }
@@ -58,7 +70,10 @@ class MovieFacadeTest : FeatureTest() {
 
     @Test
     fun returns_trailer_success() = runTest {
-        prepareSuccessDetail()
+        val detail = mock<MovieDetail> {
+            on { it.media }.thenReturn(listOf(Media.Video("")))
+        }
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(detail))
         val result = facade.getTrailer()
         assert(result.isSuccess) { result }
     }
@@ -71,72 +86,26 @@ class MovieFacadeTest : FeatureTest() {
 
     @Test
     fun returns_showings_success() = runTest {
-        prepareSuccessDetail()
-        prepareSuccessCinema()
-        prepareSuccessEvent()
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("5376O2R")
+        }
+        whenever(event.getDetail(MovieFromId("5376O2R")))
+            .thenReturn(Result.success(movie))
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("id")
+        }
+        whenever(event.getCinemas(Location(0.0, 0.0)))
+            .thenReturn(Result.success(listOf(cinema)))
+        whenever(event.getShowings(movie, Date(0), Location(0.0, 0.0)))
+            .thenReturn(Result.success(mock()))
         val result = facade.getShowings(Date(0), 0.0, 0.0)
         assert(result.isSuccess) { result }
-        assertEquals(6, result.getOrThrow().size)
     }
 
     @Test
     fun returns_showings_failure() = runTest {
         val result = facade.getShowings(Date(0), 0.0, 0.0)
         assert(result.isFailure) { result }
-    }
-
-    @Test
-    fun returns_showings_withAllCinemas_ifLocationNull() = runTest {
-        prepareSuccessDetail()
-        prepareSuccessCinemaWithoutLocation()
-        prepareSuccessEvent()
-        val result = facade.getShowings(Date(0), 0.0, 0.0)
-        assert(result.isSuccess) { result }
-        assertEquals(13, result.getOrThrow().size)
-    }
-
-    // ---
-
-    private fun prepareSuccessDetail() {
-        responder.onUrlRespond(
-            UrlResponder.Detail(),
-            "data-api-service-films-byDistributorCode.json"
-        )
-    }
-
-    private fun prepareSuccessCinema() {
-        responder.onUrlRespond(
-            UrlResponder.CinemaLocation(0.0, 0.0),
-            "data-api-service-cinema-bylocation.json"
-        )
-        responder.onUrlRespond(UrlResponder.Cinema, "cinemas.json")
-    }
-
-    private fun prepareSuccessCinemaWithoutLocation() {
-        responder.onUrlRespond(UrlResponder.CinemaLocation(0.0, 0.0), "")
-        responder.onUrlRespond(UrlResponder.Cinema, "cinemas.json")
-    }
-
-    private fun prepareSuccessEvent() {
-        val ids = listOf(
-            "1056",
-            "1052",
-            "1033",
-            "1031",
-            "1030",
-            "1051",
-            "1037",
-            "1055",
-            "1054",
-            "1034",
-            "1053",
-            "1036",
-            "1035"
-        )
-        for (id in ids) responder.onUrlRespond(
-            UrlResponder.EventOccurrence(id, "1970-01-01"),
-            "quickbook-film-events-in-cinema-at-date.json"
-        )
     }
 
 }
