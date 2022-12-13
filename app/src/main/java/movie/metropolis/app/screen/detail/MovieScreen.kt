@@ -167,7 +167,9 @@ private fun MovieScreen(
                 trailer.onSuccess {
                     item("trailer") {
                         Button(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 24.dp),
                             onClick = { onVideoClick(it.url) }
                         ) {
                             Text("View trailer")
