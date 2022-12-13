@@ -31,7 +31,6 @@ import movie.metropolis.app.screen.profile.LoginFacadeFromFeature
 import movie.metropolis.app.screen.profile.ProfileFacade
 import movie.metropolis.app.screen.profile.ProfileFacadeCaching
 import movie.metropolis.app.screen.profile.ProfileFacadeFromFeature
-import movie.metropolis.app.screen.profile.ProfileFacadeRecover
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -89,7 +88,7 @@ class FacadeModule {
         var facade: ProfileFacade
         facade = ProfileFacadeFromFeature(user, event)
         facade = ProfileFacadeCaching(facade)
-        facade = ProfileFacadeRecover(facade)
+        //facade = ProfileFacadeRecover(facade)
         return facade
     }
 

@@ -1,12 +1,13 @@
 package movie.metropolis.app.screen.booking
 
 import kotlinx.coroutines.test.runTest
-import movie.core.model.SignInMethod
+import movie.core.model.Booking
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.FeatureTest
-import movie.metropolis.app.screen.UrlResponder
 import org.junit.Test
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import kotlin.test.assertIs
 
 class BookingFacadeTest : FeatureTest() {
@@ -14,13 +15,12 @@ class BookingFacadeTest : FeatureTest() {
     private lateinit var facade: BookingFacade
 
     override fun prepare() {
-        facade = FacadeModule().booking(user)
+        facade = FacadeModule().booking(user, user)
     }
 
     @Test
     fun returns_listFromResponse() = runTest {
-        prepareLoggedInUser()
-        prepareValidResponse()
+        whenever(user.getBookings()).thenReturn(Result.success(listOf(mock<Booking.Active>())))
         val result = facade.getBookings()
         assert(result.isSuccess) { result }
         assert(result.getOrThrow().isNotEmpty())
@@ -28,8 +28,9 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun returns_singleActive() = runTest {
-        prepareLoggedInUser()
-        prepareValidResponse()
+        whenever(user.getBookings()).thenReturn(
+            Result.success(listOf(mock<Booking.Active>(), mock<Booking.Expired>()))
+        )
         val result = facade.getBookings()
         assert(result.isSuccess) { result }
         assert(result.getOrThrow().count { it is BookingView.Active } == 1) { result }
@@ -37,8 +38,9 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun returns_multipleExpired() = runTest {
-        prepareLoggedInUser()
-        prepareValidResponse()
+        whenever(user.getBookings()).thenReturn(
+            Result.success(listOf(mock<Booking.Active>(), mock<Booking.Expired>()))
+        )
         val result = facade.getBookings()
         assert(result.isSuccess) { result }
         assert(result.getOrThrow().count { it is BookingView.Expired } == 1) { result }
@@ -46,7 +48,7 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun returns_failureWhenSignedOff() = runTest {
-        prepareValidResponse()
+        whenever(user.getBookings()).thenThrow(SecurityException())
         val result = facade.getBookings()
         assert(result.isFailure) { result }
         assertIs<SecurityException>(result.exceptionOrNull())
@@ -54,32 +56,9 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun returns_failure() = runTest {
+        whenever(user.getBookings()).thenThrow(RuntimeException())
         val result = facade.getBookings()
         assert(result.isFailure) { result }
-    }
-
-    @Test
-    fun printsResults() = runTest {
-        prepareLoggedInUser()
-        prepareValidResponse()
-        println(facade.getBookings().getOrThrow())
-    }
-
-    // ---
-
-    private suspend fun prepareLoggedInUser() {
-        responder.onUrlRespond(UrlResponder.Auth, "group-customer-service-oauth-token.json")
-        user.signIn(SignInMethod.Login("foo", "bar"))
-    }
-
-    private fun prepareValidResponse() {
-        responder.onUrlRespond(UrlResponder.Cinema, "cinemas.json")
-        responder.onUrlRespond(UrlResponder.Booking, "group-customer-service-bookings.json")
-        responder.onUrlRespond(
-            UrlResponder.Detail(),
-            "data-api-service-films-byDistributorCode.json"
-        )
-        responder.onUrlRespond(UrlResponder.Booking(), "group-customer-service-bookings-id.json")
     }
 
 }

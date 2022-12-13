@@ -86,7 +86,7 @@ private fun CinemaScreen(
             contentPadding = padding + PaddingValues(vertical = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
+            item("picker") {
                 DatePickerRow(
                     start = remember { Date() },
                     selected = selectedDate,

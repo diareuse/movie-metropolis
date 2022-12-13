@@ -64,7 +64,7 @@ private fun BookingScreen(
         state = state
     ) {
         active.onSuccess { view ->
-            item {
+            item("ticket-cta") {
                 Button(
                     onClick = onRefreshClick,
                     modifier = Modifier.fillMaxWidth()
