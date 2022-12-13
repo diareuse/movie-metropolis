@@ -3,8 +3,10 @@ package movie.metropolis.app.screen.detail
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -16,7 +18,6 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -24,12 +25,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.tooling.preview.Preview
@@ -101,49 +106,58 @@ private fun MovieScreen(
 ) {
     Scaffold(
         topBar = {
-            MovieScreenAppBar(
-                onBackClick = onBackClick
-            )
+            Box {
+                MovieScreenAppBar(
+                    onBackClick = onBackClick
+                )
+            }
         }
     ) { padding ->
-        SideEffect { padding } // just to suppress lint
+        val surface = MaterialTheme.colorScheme.surface
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(16.dp)
+                .alpha(.2f)
+                .drawWithContent {
+                    drawContent()
+                    drawRect(Brush.verticalGradient(listOf(Color.Transparent, surface)))
+                },
+            model = poster.getOrNull()?.url,
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(24.dp),
-            contentPadding = PaddingValues(bottom = 24.dp)
+            contentPadding = padding + PaddingValues(bottom = 24.dp)
         ) {
-            item {
-                AsyncImage(
-                    modifier = Modifier
-                        .shadow(32.dp)
-                        .fillMaxWidth()
-                        .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
-                        .clip(
-                            MaterialTheme.shapes.large.copy(
-                                topStart = CornerSize(0.dp),
-                                topEnd = CornerSize(0.dp)
-                            )
-                        )
-                        .imagePlaceholder(poster.getOrNull() == null)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .animateItemPlacement(),
-                    model = poster.getOrNull()?.url,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop
+            item(key = "image") {
+                MovieMetadata(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    detail = detail,
+                    poster = poster
                 )
             }
-            item {
-                DetailPosterRow(modifier = Modifier.animateItemPlacement(), detail = detail)
+            item(key = "detail") {
+                val detailView = detail.getOrNull()
+                EllipsisText(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .textPlaceholder(detailView == null),
+                    text = detailView?.description ?: "There was an error loading this detail.",
+                    maxLines = 5
+                )
             }
-            item {
+            item(key = "divider") {
                 Divider(
                     Modifier
                         .padding(horizontal = 32.dp)
                         .animateItemPlacement()
                 )
             }
-            if (selectionAvailableStart != null && selectedDate != null) item {
+            if (selectionAvailableStart != null && selectedDate != null) item("picker") {
                 DatePickerRow(
                     modifier = Modifier.animateItemPlacement(),
                     start = selectionAvailableStart,
@@ -177,6 +191,32 @@ private fun MovieScreen(
 }
 
 @Composable
+fun MovieMetadata(
+    detail: Loadable<MovieDetailView>,
+    poster: Loadable<ImageView>,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+        AsyncImage(
+            modifier = Modifier
+                .shadow(32.dp)
+                .fillMaxWidth(.3f)
+                .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
+                .clip(MaterialTheme.shapes.medium)
+                .imagePlaceholder(poster.getOrNull() == null)
+                .background(MaterialTheme.colorScheme.surface),
+            model = poster.getOrNull()?.url,
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        DetailPosterRow(detail = detail)
+    }
+}
+
+@Composable
 operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
     val dir = LocalLayoutDirection.current
     return PaddingValues(
@@ -193,7 +233,7 @@ fun DetailPosterRow(
     modifier: Modifier = Modifier,
 ) {
     val detailView = detail.getOrNull()
-    Column(modifier = modifier.padding(horizontal = 24.dp)) {
+    Column(modifier = modifier) {
         Text(
             text = detailView?.name ?: "Movie Name",
             style = MaterialTheme.typography.titleLarge,
@@ -219,12 +259,6 @@ fun DetailPosterRow(
             text = detailView?.cast?.joinToString() ?: "Foobar Boobar, Foobar Boobar",
             maxLines = 3,
             style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.textPlaceholder(detailView == null)
-        )
-        Spacer(Modifier.height(24.dp))
-        EllipsisText(
-            text = detailView?.description ?: "There was an error loading this detail.",
-            maxLines = 5,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
     }
