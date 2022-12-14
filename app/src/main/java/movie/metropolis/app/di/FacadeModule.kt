@@ -35,6 +35,7 @@ import movie.metropolis.app.screen.profile.ProfileFacadeFromFeature
 import movie.metropolis.app.screen.profile.ProfileFacadeRecover
 import movie.metropolis.app.screen.settings.SettingsFacade
 import movie.metropolis.app.screen.settings.SettingsFacadeFromFeature
+import movie.metropolis.app.screen.settings.SettingsFacadeReactive
 import movie.metropolis.app.screen.settings.SettingsFacadeRecover
 
 @Module
@@ -116,6 +117,7 @@ class FacadeModule {
     fun settings(prefs: EventPreference): SettingsFacade {
         var facade: SettingsFacade
         facade = SettingsFacadeFromFeature(prefs)
+        facade = SettingsFacadeReactive(facade)
         facade = SettingsFacadeRecover(facade)
         return facade
     }

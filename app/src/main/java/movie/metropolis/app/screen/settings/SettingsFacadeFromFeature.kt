@@ -1,10 +1,15 @@
 package movie.metropolis.app.screen.settings
 
 import movie.core.preference.EventPreference
+import movie.metropolis.app.screen.settings.SettingsFacade.OnChangedListener
+import java.util.Collections
 
 class SettingsFacadeFromFeature(
     private val prefs: EventPreference
 ) : SettingsFacade {
+
+    val listeners: MutableSet<OnChangedListener> =
+        Collections.synchronizedSet(mutableSetOf<OnChangedListener>())
 
     override var filterSeen: Boolean
         get() = prefs.filterSeen
@@ -12,18 +17,14 @@ class SettingsFacadeFromFeature(
             prefs.filterSeen = value
         }
 
-    override fun addListener(listener: SettingsFacade.OnChangedListener): SettingsFacade.OnChangedListener {
-        val wrapped = listener.wrap()
-        prefs.addListener(wrapped)
-        return wrapped
+    override fun addListener(listener: OnChangedListener): OnChangedListener {
+        listeners += listener
+        return listener
     }
 
-    override fun removeListener(listener: SettingsFacade.OnChangedListener) {
-        prefs.removeListener(listener as? EventPreference.OnChangedListener ?: return)
+    override fun removeListener(listener: OnChangedListener) {
+        listeners -= listener
     }
-
-    private fun SettingsFacade.OnChangedListener.wrap() = object :
-        SettingsFacade.OnChangedListener by this,
-        EventPreference.OnChangedListener {}
 
 }
+
