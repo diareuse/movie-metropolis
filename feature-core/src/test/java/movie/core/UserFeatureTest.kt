@@ -19,14 +19,17 @@ import movie.core.di.UserFeatureModule
 import movie.core.model.FieldUpdate
 import movie.core.model.SignInMethod
 import movie.core.nwk.di.NetworkModule
+import movie.core.preference.EventPreference
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
+import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.test.assertFails
 
 class UserFeatureTest : FeatureTest() {
 
+    private lateinit var preference: EventPreference
     private lateinit var account: UserAccount
     private lateinit var feature: UserFeature
     private lateinit var bookingDao: BookingDao
@@ -50,6 +53,8 @@ class UserFeatureTest : FeatureTest() {
         previewDao = mock()
         movieDao = mock()
         account = spy(MockAccount())
+        preference = mock()
+        whenever(preference.filterSeen).thenReturn(false)
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
         val service = network.user(clientCustomer, account, auth)
@@ -72,6 +77,8 @@ class UserFeatureTest : FeatureTest() {
             mediaDao,
             referenceDao,
             previewDao,
+            bookingDao,
+            preference,
             event
         )
         feature = UserFeatureModule().saving(
