@@ -62,7 +62,7 @@ jobs:
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service-account.json
-          packageName: wiki.depasquale.vivillon
+          packageName: movie.metropolis.app
           releaseFiles: build/outputs/bundle/release/app-release.aab
           track: production
           status: completed
