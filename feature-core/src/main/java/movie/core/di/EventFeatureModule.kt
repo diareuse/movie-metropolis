@@ -6,11 +6,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.EventFeature
 import movie.core.EventFeatureDatabase
+import movie.core.EventFeatureFilterUnseen
 import movie.core.EventFeatureImpl
 import movie.core.EventFeatureRecover
 import movie.core.EventFeatureRecoverSecondary
 import movie.core.EventFeatureRequireNotEmpty
 import movie.core.EventFeatureStoring
+import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
@@ -20,6 +22,7 @@ import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
 import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
+import movie.core.preference.EventPreference
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -33,6 +36,8 @@ internal class EventFeatureModule {
         mediaDao: MovieMediaDao,
         referenceDao: MovieReferenceDao,
         previewDao: MoviePreviewDao,
+        bookingDao: BookingDao,
+        preference: EventPreference,
         @Saving
         saving: EventFeature
     ): EventFeature {
@@ -45,6 +50,7 @@ internal class EventFeatureModule {
         database = EventFeatureRequireNotEmpty(database)
         var network: EventFeature = saving
         network = EventFeatureRecoverSecondary(database, network)
+        network = EventFeatureFilterUnseen(network, preference, bookingDao)
         return network
     }
 

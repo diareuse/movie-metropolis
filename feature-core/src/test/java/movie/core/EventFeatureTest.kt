@@ -4,6 +4,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.test.runTest
 import movie.core.adapter.MovieFromId
+import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
@@ -15,6 +16,7 @@ import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.nwk.di.NetworkModule
+import movie.core.preference.EventPreference
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -25,6 +27,8 @@ import kotlin.test.assertFails
 
 class EventFeatureTest : FeatureTest() {
 
+    private lateinit var preference: EventPreference
+    private lateinit var bookingDao: BookingDao
     private lateinit var cinema: Cinema
     private lateinit var feature: EventFeature
     private lateinit var showingDao: ShowingDao
@@ -44,7 +48,10 @@ class EventFeatureTest : FeatureTest() {
         mediaDao = mock()
         referenceDao = mock()
         previewDao = mock()
+        bookingDao = mock()
         movieDao = mock()
+        preference = mock()
+        whenever(preference.filterSeen).thenReturn(false)
         feature = module.featureSaving(
             service.event(clientData),
             service.cinema(clientRoot),
@@ -63,6 +70,8 @@ class EventFeatureTest : FeatureTest() {
             mediaDao,
             referenceDao,
             previewDao,
+            bookingDao,
+            preference,
             feature
         )
         cinema = mock()
