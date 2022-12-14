@@ -19,3 +19,4 @@ include ":feature-core",
         ":feature-core-database",
         ":feature-core-network"
 include ":feature-pulse"
+include ":feature-settings"
