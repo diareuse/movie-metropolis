@@ -2,7 +2,7 @@
 <full-backup-content>
     <include
         domain="sharedpref"
-        path="wiki.depasquale.vivillon.credentials.xml" />
+        path="movie.metropolis.app.credentials.xml" />
     <include
         domain="database"
         path="*" />
