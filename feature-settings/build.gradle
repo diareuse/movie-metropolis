@@ -1,0 +1,8 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.settings'
+}
