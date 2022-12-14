@@ -12,6 +12,7 @@ import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
+import movie.core.db.model.BookingStored
 import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -262,6 +263,43 @@ class EventFeatureTest : FeatureTest() {
         }
     }
 
+    @Test
+    fun getShowings_returns_filteredElements() = runTest {
+        val bookings = prepareBooking()
+        whenever(preference.filterSeen).thenReturn(true)
+        whenever(bookingDao.selectAll()).thenReturn(bookings)
+        prepareShowingsResponse()
+        val movieIds = feature.getShowings(cinema, Date(0)).getOrThrow().keys.map { it.id }
+        for (booking in bookings)
+            assert(booking.movieId !in movieIds)
+    }
+
+    @Test
+    fun getCurrent_returns_filteredElements() = runTest {
+        val bookings = prepareBooking()
+        whenever(preference.filterSeen).thenReturn(true)
+        whenever(bookingDao.selectAll()).thenReturn(bookings)
+        responder.on(UrlResponder.MoviesByShowing("SHOWING")) {
+            fileAsBody("data-api-service-films-by-showing-type-SHOWING.json")
+        }
+        val movieIds = feature.getCurrent().getOrThrow().map { it.id }
+        for (booking in bookings)
+            assert(booking.movieId !in movieIds)
+    }
+
+    @Test
+    fun getUpcoming_returns_filteredElements() = runTest {
+        val bookings = prepareBooking()
+        whenever(preference.filterSeen).thenReturn(true)
+        whenever(bookingDao.selectAll()).thenReturn(bookings)
+        responder.on(UrlResponder.MoviesByShowing("FUTURE")) {
+            fileAsBody("data-api-service-films-by-showing-type-FUTURE.json")
+        }
+        val movieIds = feature.getUpcoming().getOrThrow().map { it.id }
+        for (booking in bookings)
+            assert(booking.movieId !in movieIds)
+    }
+
     // ---
 
     private fun prepareShowingsResponse(id: String = cinema.id, date: String = "1970-01-01") {
@@ -271,5 +309,18 @@ class EventFeatureTest : FeatureTest() {
             fileAsBody("quickbook-film-events-in-cinema-at-date.json")
         }
     }
+
+    private fun prepareBooking() = listOf(
+        BookingStored(
+            id = "",
+            name = "",
+            startsAt = Date(0),
+            paidAt = Date(0),
+            movieId = "5145s2r",
+            eventId = "",
+            cinemaId = cinema.id,
+            hall = null
+        )
+    )
 
 }
