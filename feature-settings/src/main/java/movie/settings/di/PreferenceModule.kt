@@ -6,8 +6,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import movie.settings.ObservablePreference
-import movie.settings.ObservablePreferenceDefault
 import movie.settings.PreferenceStore
 import movie.settings.PreferenceStoreShared
 import movie.settings.SharedPreferencesFactory
@@ -20,27 +18,20 @@ class PreferenceModule {
     @Provides
     fun user(
         @ApplicationContext
-        context: Context,
-        observer: ObservablePreference
+        context: Context
     ): PreferenceStore {
         val prefs = SharedPreferencesFactory.user().create(context)
-        return PreferenceStoreShared(prefs, observer)
+        return PreferenceStoreShared(prefs)
     }
 
     @Functionality
     @Provides
     fun functionality(
         @ApplicationContext
-        context: Context,
-        observer: ObservablePreference
+        context: Context
     ): PreferenceStore {
         val prefs = SharedPreferencesFactory.functionality().create(context)
-        return PreferenceStoreShared(prefs, observer)
-    }
-
-    @Provides
-    fun observer(): ObservablePreference {
-        return ObservablePreferenceDefault()
+        return PreferenceStoreShared(prefs)
     }
 
 }
