@@ -26,24 +26,3 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: test
-
-  detekt:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Setup Java
-        uses: actions/setup-java@v3
-        with:
-          java-version: 11
-          distribution: temurin
-
-      - name: Run detekt
-        run: ./gradlew detekt
-
-      - name: Upload SARIF file
-        uses: github/codeql-action/upload-sarif@v2
-        if: success() || failure()
-        with:
-          sarif_file: build/reports/detekt/merge.sarif
