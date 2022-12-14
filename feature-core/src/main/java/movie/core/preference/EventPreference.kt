@@ -1,10 +1,15 @@
 package movie.core.preference
 
-import movie.settings.ObservablePreference
-
-interface EventPreference : ObservablePreference {
+interface EventPreference {
 
     var filterSeen: Boolean
+
+    fun addListener(listener: OnChangedListener): OnChangedListener
+    fun removeListener(listener: OnChangedListener)
+
+    fun interface OnChangedListener {
+        fun onChanged()
+    }
 
 }
 

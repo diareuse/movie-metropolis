@@ -8,10 +8,10 @@ interface SettingsFacade {
 
     var filterSeen: Boolean
 
-    fun addOnPreferenceChangedListener(listener: OnPreferenceChangedListener): OnPreferenceChangedListener
-    fun removeOnPreferenceChangedListener(listener: OnPreferenceChangedListener)
+    fun addListener(listener: OnChangedListener): OnChangedListener
+    fun removeListener(listener: OnChangedListener)
 
-    fun interface OnPreferenceChangedListener {
+    fun interface OnChangedListener {
         fun onChanged()
     }
 
@@ -20,11 +20,11 @@ interface SettingsFacade {
         val SettingsFacade.filterSeenFlow
             get() = callbackFlow {
                 send(filterSeen)
-                val listener = addOnPreferenceChangedListener {
+                val listener = addListener {
                     trySend(filterSeen)
                 }
                 awaitClose {
-                    removeOnPreferenceChangedListener(listener)
+                    removeListener(listener)
                 }
             }.distinctUntilChanged()
 
