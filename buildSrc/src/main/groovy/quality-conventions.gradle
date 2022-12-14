@@ -4,7 +4,7 @@ plugins {
 
 detekt {
     config = files("${rootProject.projectDir}/config/config.yml")
-    baseline = file("${rootProject.projectDir}/config/baseline.xml")
+    baseline = file("${rootProject.projectDir}/config/baseline-${project.name}.xml")
 
     reports {
         txt.enabled = false

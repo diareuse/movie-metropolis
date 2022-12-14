@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>ComplexInterface:MovieDetailView.kt$MovieDetailView</ID>
+    <ID>ComplexInterface:MovieView.kt$MovieView</ID>
+    <ID>StringLiteralDuplication:Navigation.kt$"/home"</ID>
+    <ID>ThrowingExceptionsWithoutMessageOrCause:ProfileFacadeFromFeature.kt$ProfileFacadeFromFeature$IllegalArgumentException()</ID>
+  </CurrentIssues>
+</SmellBaseline>

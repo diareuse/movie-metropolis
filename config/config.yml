@@ -13,6 +13,8 @@ complexity:
   active: true
   ComplexInterface:
     active: true
+    excludes: &models
+      - '**/model/**'
   LargeClass:
     active: true
     threshold: 400
