@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>LongMethod:UserFeatureImpl.kt$UserFeatureImpl$override suspend fun getBookings(): Result&lt;Iterable&lt;Booking&gt;&gt;</ID>
+    <ID>LongParameterList:EventFeatureModule.kt$EventFeatureModule$( event: EventService, cinema: CinemaService, showingDao: ShowingDao, cinemaDao: CinemaDao, detailDao: MovieDetailDao, mediaDao: MovieMediaDao, referenceDao: MovieReferenceDao, previewDao: MoviePreviewDao, movieDao: MovieDao )</ID>
+    <ID>LongParameterList:EventFeatureModule.kt$EventFeatureModule$( showingDao: ShowingDao, cinemaDao: CinemaDao, detailDao: MovieDetailDao, mediaDao: MovieMediaDao, referenceDao: MovieReferenceDao, previewDao: MoviePreviewDao, @Saving saving: EventFeature )</ID>
+    <ID>LongParameterList:EventFeatureStoring.kt$EventFeatureStoring$( private val origin: EventFeature, private val cinemaDao: CinemaDao, private val movieDao: MovieDao, private val detailDao: MovieDetailDao, private val mediaDao: MovieMediaDao, private val showingDao: ShowingDao, private val referenceDao: MovieReferenceDao, private val previewDao: MoviePreviewDao )</ID>
+    <ID>LongParameterList:UserFeatureModule.kt$UserFeatureModule$( bookingDao: BookingDao, seatsDao: BookingSeatsDao, movieDao: MovieDetailDao, cinemaDao: CinemaDao, mediaDao: MovieMediaDao, @Saving saving: UserFeature )</ID>
+    <ID>TooManyFunctions:EventFeatureStoring.kt$EventFeatureStoring : EventFeature</ID>
+  </CurrentIssues>
+</SmellBaseline>
