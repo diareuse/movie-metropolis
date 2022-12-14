@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.profile
 
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,11 +9,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,10 +25,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.screen.Loadable
@@ -38,6 +46,7 @@ import movie.metropolis.app.view.textPlaceholder
 fun UserScreen(
     padding: PaddingValues,
     onNavigateToLogin: () -> Unit,
+    onNavigateToSettings: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
     state: ScrollState
 ) {
@@ -77,6 +86,7 @@ fun UserScreen(
         onPasswordNewChanged = { viewModel.passwordNew.value = it },
         onSaveClick = viewModel::save,
         onLoginClick = onNavigateToLogin,
+        onSettingsClick = onNavigateToSettings,
         state = state
     )
 }
@@ -106,6 +116,7 @@ private fun UserScreen(
     onPasswordNewChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
     onLoginClick: () -> Unit,
+    onSettingsClick: () -> Unit,
     state: ScrollState = rememberScrollState()
 ) {
     Column(
@@ -221,6 +232,23 @@ private fun UserScreen(
             ) {
                 Text("Save")
             }
+            Divider()
+            Row(
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .clickable(onClick = onSettingsClick)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                    .heightIn(min = 36.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(modifier = Modifier.weight(1f), text = "Settings")
+                Icon(
+                    modifier = Modifier.rotate(180f),
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = null
+                )
+            }
         }
     }
 }
@@ -253,6 +281,7 @@ private fun Preview() {
             onPasswordNewChanged = {},
             onSaveClick = {},
             onLoginClick = {},
+            onSettingsClick = {}
         )
     }
 }

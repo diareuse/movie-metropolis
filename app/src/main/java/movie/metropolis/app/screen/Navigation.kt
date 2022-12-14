@@ -102,6 +102,7 @@ fun Navigation(
                     UserScreen(
                         padding = it,
                         onNavigateToLogin = { controller.navigate("/user/login") },
+                        onNavigateToSettings = { controller.navigate("/settings") },
                         viewModel = user,
                         state = userState
                     )
@@ -149,7 +150,9 @@ fun Navigation(
             )
         }
         composable("/user/settings") {
-            SettingsScreen()
+            SettingsScreen(
+                onBackClick = controller::navigateUp
+            )
         }
     }
 }
