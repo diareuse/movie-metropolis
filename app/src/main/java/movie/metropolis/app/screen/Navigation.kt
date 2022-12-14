@@ -46,6 +46,7 @@ import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.ProfileViewModel
 import movie.metropolis.app.screen.profile.UserScreen
+import movie.metropolis.app.screen.settings.SettingsScreen
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @Composable
@@ -146,6 +147,9 @@ fun Navigation(
             OrderScreen(
                 onBackClick = controller::navigateUp
             )
+        }
+        composable("/user/settings") {
+            SettingsScreen()
         }
     }
 }
