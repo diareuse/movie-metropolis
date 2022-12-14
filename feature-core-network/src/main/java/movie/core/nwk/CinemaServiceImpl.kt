@@ -17,6 +17,6 @@ class CinemaServiceImpl(
             url("cinema")
             parameter("lang", Locale.getDefault().language)
         }.requireBody<ResultsResponse<List<CinemaResponse>>>()
-    }.onFailure { it.printStackTrace() }
+    }
 
 }

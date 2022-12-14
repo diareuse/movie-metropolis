@@ -38,7 +38,7 @@ internal class UserServiceImpl(
             setBody(request)
             basicAuth(authUser, authPass)
         }.requireBody<CustomerResponse>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun getToken(request: TokenRequest) = kotlin.runCatching {
         val params = Parameters.build {
@@ -49,7 +49,7 @@ internal class UserServiceImpl(
             url("oauth/token")
             basicAuth(authUser, authPass)
         }.requireBody<TokenResponse>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun getCurrentToken(): Result<String> {
         return kotlin.runCatching { requireNotNull(account.token) }
@@ -62,28 +62,28 @@ internal class UserServiceImpl(
             setBody(request)
             bearerAuth(checkNotNull(account.token))
         }.requireBody<Unit>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun updateUser(request: CustomerDataRequest) = kotlin.runCatching {
         client.put {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerResponse>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun getPoints() = kotlin.runCatching {
         client.get {
             url("v1/customer/points")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerPointsResponse>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun getUser() = kotlin.runCatching {
         client.get {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerResponse.Customer>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun getBookings() = kotlin.runCatching {
         client.get {
@@ -93,7 +93,7 @@ internal class UserServiceImpl(
                 parameters.append("lang", Locale.getDefault().language)
             }
         }.requireBody<List<BookingResponse>>()
-    }.onFailure { it.printStackTrace() }
+    }
 
     override suspend fun getBooking(id: String) = kotlin.runCatching {
         client.get {
@@ -103,6 +103,6 @@ internal class UserServiceImpl(
                 parameters.append("lang", Locale.getDefault().language)
             }
         }.requireBody<BookingDetailResponse>()
-    }.onFailure { it.printStackTrace() }
+    }
 
 }
