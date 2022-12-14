@@ -3,17 +3,17 @@
     <cloud-backup>
         <include
             domain="sharedpref"
-            path="movie.metropolis.app.credentials.xml" />
+            path="." />
         <include
             domain="database"
-            path="*" />
+            path="." />
     </cloud-backup>
     <device-transfer>
         <include
             domain="sharedpref"
-            path="movie.metropolis.app.credentials.xml" />
+            path="." />
         <include
             domain="database"
-            path="*" />
+            path="." />
     </device-transfer>
 </data-extraction-rules>

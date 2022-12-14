@@ -2,8 +2,8 @@
 <full-backup-content>
     <include
         domain="sharedpref"
-        path="movie.metropolis.app.credentials.xml" />
+        path="." />
     <include
         domain="database"
-        path="*" />
+        path="." />
 </full-backup-content>
