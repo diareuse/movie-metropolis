@@ -35,7 +35,6 @@ fun rememberLocation(
         snapshotState.value = kotlin
             .runCatching { provider.getLastLocation(context).let(::requireNotNull) }
             .recoverCatching { provider.getCurrentLocation(context).let(::requireNotNull) }
-            .onFailure { it.printStackTrace() }
             .getOrNull()
     }
     return snapshotState
