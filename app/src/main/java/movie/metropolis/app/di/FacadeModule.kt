@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.core.EventFeature
 import movie.core.UserFeature
 import movie.core.di.Saving
+import movie.core.preference.EventPreference
 import movie.metropolis.app.screen.booking.BookingFacade
 import movie.metropolis.app.screen.booking.BookingFacadeFromFeature
 import movie.metropolis.app.screen.booking.BookingFacadeRecover
@@ -31,6 +32,10 @@ import movie.metropolis.app.screen.profile.LoginFacadeFromFeature
 import movie.metropolis.app.screen.profile.ProfileFacade
 import movie.metropolis.app.screen.profile.ProfileFacadeCaching
 import movie.metropolis.app.screen.profile.ProfileFacadeFromFeature
+import movie.metropolis.app.screen.profile.ProfileFacadeRecover
+import movie.metropolis.app.screen.settings.SettingsFacade
+import movie.metropolis.app.screen.settings.SettingsFacadeFromFeature
+import movie.metropolis.app.screen.settings.SettingsFacadeRecover
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -88,7 +93,7 @@ class FacadeModule {
         var facade: ProfileFacade
         facade = ProfileFacadeFromFeature(user, event)
         facade = ProfileFacadeCaching(facade)
-        //facade = ProfileFacadeRecover(facade)
+        facade = ProfileFacadeRecover(facade)
         return facade
     }
 
@@ -105,6 +110,14 @@ class FacadeModule {
         facade = OrderFacadeFromFeature(it, user)
         facade = OrderFacadeRecover(facade)
         facade
+    }
+
+    @Provides
+    fun settings(prefs: EventPreference): SettingsFacade {
+        var facade: SettingsFacade
+        facade = SettingsFacadeFromFeature(prefs)
+        facade = SettingsFacadeRecover(facade)
+        return facade
     }
 
 }
