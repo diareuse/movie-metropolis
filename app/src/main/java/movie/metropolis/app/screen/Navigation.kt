@@ -102,7 +102,7 @@ fun Navigation(
                     UserScreen(
                         padding = it,
                         onNavigateToLogin = { controller.navigate("/user/login") },
-                        onNavigateToSettings = { controller.navigate("/settings") },
+                        onNavigateToSettings = { controller.navigate("/user/settings") },
                         viewModel = user,
                         state = userState
                     )
