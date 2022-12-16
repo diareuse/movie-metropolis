@@ -249,7 +249,7 @@ fun LazyListScope.MovieDetailShowings(
             )
         }
     }.onLoading {
-        items(4) {
+        items(2) {
             ShowingItem(
                 modifier = Modifier
                     .animateItemPlacement()

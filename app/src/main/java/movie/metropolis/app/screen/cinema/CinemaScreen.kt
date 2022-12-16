@@ -134,7 +134,7 @@ private fun CinemaScreen(
                     )
                 }
             }.onLoading {
-                items(5) {
+                items(2) {
                     MovieShowingItem(
                         Modifier
                             .animateItemPlacement()
