@@ -30,14 +30,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
-import movie.metropolis.app.model.CinemaBookingView
+import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.textPlaceholder
 
 @Composable
 fun ShowingItem(
     title: String,
-    showings: Map<CinemaBookingView.LanguageAndType, List<CinemaBookingView.Availability>>,
+    showings: Map<AvailabilityView.Type, List<AvailabilityView>>,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -49,8 +49,8 @@ fun ShowingItem(
         section = { ShowingItemSection(type = it.type, language = it.language) }
     ) {
         ShowingItemTime(
-            modifier = Modifier.clickable { onClick(it.url) },
-            time = it.startsAt
+            time = it.startsAt,
+            onClick = { onClick(it.url) }
         )
     }
 }
@@ -119,7 +119,8 @@ fun ShowingItemSection(type: String, language: String, isLoading: Boolean = fals
 @Composable
 fun ShowingItemTime(
     time: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     Surface(
         modifier = modifier,
@@ -128,7 +129,8 @@ fun ShowingItemTime(
     ) {
         Text(
             modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .clickable(enabled = onClick != null, onClick = onClick ?: {}),
             text = time,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold

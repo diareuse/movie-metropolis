@@ -2,16 +2,23 @@ package movie.metropolis.app.screen.cinema
 
 import movie.core.EventFeature
 import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.model.adapter.CinemaFromView
 import movie.metropolis.app.model.adapter.CinemaViewFromFeature
 import movie.metropolis.app.model.adapter.MovieBookingViewFromFeature
+import movie.metropolis.app.screen.cinema.BookingFilterable.OnChangedListener
 import java.util.Date
 
 class CinemaFacadeFromFeature(
     private val id: String,
     private val event: EventFeature
 ) : CinemaFacade {
+
+    override suspend fun getOptions(): Result<List<Filter>> = Result.failure(NotImplementedError())
+    override fun toggle(filter: Filter) = Unit
+    override fun addOnChangedListener(listener: OnChangedListener) = listener
+    override fun removeOnChangedListener(listener: OnChangedListener) = Unit
 
     override suspend fun getCinema(): Result<CinemaView> {
         return event.getCinemas(null)
@@ -34,3 +41,4 @@ class CinemaFacadeFromFeature(
     }
 
 }
+

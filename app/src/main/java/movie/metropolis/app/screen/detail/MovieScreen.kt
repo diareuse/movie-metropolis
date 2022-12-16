@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import movie.metropolis.app.feature.location.rememberLocation
+import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.ImageView
@@ -379,7 +380,7 @@ class CinemaBookingViewProvider :
 
     private data class CinemaBookingViewPreview(
         override val cinema: CinemaView = CinemaViewPreview(),
-        override val availability: Map<CinemaBookingView.LanguageAndType, List<CinemaBookingView.Availability>> = mapOf(
+        override val availability: Map<AvailabilityView.Type, List<AvailabilityView>> = mapOf(
             LanguageAndTypePreview() to List(nextInt(1, 5)) { AvailabilityPreview() }
         )
     ) : CinemaBookingView
@@ -391,7 +392,7 @@ class CinemaBookingViewProvider :
             "Hungarian (Czech)"
         ).random(),
         override val type: String = listOf("2D", "3D", "3D | 4DX", "2D | VIP").random()
-    ) : CinemaBookingView.LanguageAndType
+    ) : AvailabilityView.Type
 
     private data class CinemaViewPreview(
         override val id: String = String(nextBytes(10)),
@@ -406,6 +407,6 @@ class CinemaBookingViewProvider :
         override val url: String = "https://foo.bar",
         override val startsAt: String = "12:10",
         override val isEnabled: Boolean = true
-    ) : CinemaBookingView.Availability
+    ) : AvailabilityView
 
 }

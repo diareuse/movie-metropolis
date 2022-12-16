@@ -6,6 +6,7 @@ import movie.core.model.Cinema
 import movie.core.model.MovieReference
 import movie.core.model.Showing
 import movie.metropolis.app.di.FacadeModule
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.CinemaFromView
 import movie.metropolis.app.screen.FeatureTest
 import org.junit.Test
@@ -78,6 +79,22 @@ class CinemaFacadeTest : FeatureTest() {
             }.also {
                 previousSize = item.availability.size
             }
+    }
+
+    @Test
+    fun returns_filteredShowings() = runTest {
+        whenever(event.getCinemas(null))
+            .thenReturn(Result.success(listOf(cinema)))
+        val view = CinemaFromView(facade.getCinema().getOrThrow())
+        val showings = generateShowings(4)
+        whenever(event.getShowings(view, Date(0)))
+            .thenReturn(Result.success(showings))
+        facade.getShowings(Date(0)) // only to populate the filters
+        facade.toggle(Filter(true, "type"))
+        facade.toggle(Filter(true, "language"))
+        val result = facade.getShowings(Date(0))
+        assert(result.isSuccess) { result }
+        assert(result.getOrThrow().isEmpty()) { result.getOrThrow() }
     }
 
     // ---
