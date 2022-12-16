@@ -26,7 +26,7 @@ data class EventResponse(
             else -> "-"
         }
 
-    val type
+    val types
         get() = buildList {
             if (ScreeningType2D in tags) add("2D")
             if (ScreeningType3D in tags) add("3D")
@@ -34,7 +34,7 @@ data class EventResponse(
             if (ScreeningType4DX in tags) add("4DX")
             if (ScreeningTypeIMAX in tags) add("IMAX")
             if (ScreeningTypeVIP in tags) add("VIP")
-        }.joinToString(separator = " | ")
+        }
 
     private val labelDubbed
         get() = tags.firstAround(Dubbing, "-").orEmpty()

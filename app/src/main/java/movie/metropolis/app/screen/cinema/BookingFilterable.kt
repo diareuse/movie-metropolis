@@ -9,7 +9,7 @@ import movie.metropolis.app.screen.asLoadable
 
 interface BookingFilterable {
 
-    suspend fun getOptions(): Result<List<Filter>>
+    suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>>
 
     fun toggle(filter: Filter)
     fun addOnChangedListener(listener: OnChangedListener): OnChangedListener

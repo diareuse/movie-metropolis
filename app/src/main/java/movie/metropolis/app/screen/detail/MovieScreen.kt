@@ -107,7 +107,7 @@ private fun MovieScreen(
     poster: Loadable<ImageView>,
     trailer: Loadable<VideoView>,
     showings: Loadable<List<CinemaBookingView>>,
-    options: Loadable<List<Filter>>,
+    options: Loadable<Map<Filter.Type, List<Filter>>>,
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     hideShowings: Boolean,
@@ -196,7 +196,7 @@ private fun MovieScreen(
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.MovieDetailShowings(
     showings: Loadable<List<CinemaBookingView>>,
-    options: Loadable<List<Filter>>,
+    options: Loadable<Map<Filter.Type, List<Filter>>>,
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     onSelectedDateUpdated: (Date) -> Unit,
@@ -220,13 +220,21 @@ fun LazyListScope.MovieDetailShowings(
     }
     options.onSuccess { filters ->
         item("filters") {
-            FilterRow(
-                modifier = Modifier
-                    .animateItemPlacement(),
-                filters = filters,
-                onFilterToggle = onFilterClick,
-                contentPadding = PaddingValues(horizontal = 24.dp)
-            )
+            Column(
+                modifier = Modifier.animateItemPlacement(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                FilterRow(
+                    filters = filters[Filter.Type.Language].orEmpty(),
+                    onFilterToggle = onFilterClick,
+                    contentPadding = PaddingValues(horizontal = 24.dp)
+                )
+                FilterRow(
+                    filters = filters[Filter.Type.Projection].orEmpty(),
+                    onFilterToggle = onFilterClick,
+                    contentPadding = PaddingValues(horizontal = 24.dp)
+                )
+            }
         }
     }
     showings.onSuccess { showings ->
@@ -414,7 +422,12 @@ class CinemaBookingViewProvider :
             "Czech",
             "Hungarian (Czech)"
         ).random(),
-        override val type: String = listOf("2D", "3D", "3D | 4DX", "2D | VIP").random()
+        override val types: List<String> = listOf(
+            listOf("2D"),
+            listOf("3D"),
+            listOf("3D", "4DX"),
+            listOf("2D", "VIP")
+        ).random()
     ) : AvailabilityView.Type
 
     private data class CinemaViewPreview(

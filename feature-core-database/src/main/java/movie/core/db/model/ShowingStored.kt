@@ -5,6 +5,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import movie.core.db.converters.ShowingTypeConverter
 import java.util.Date
 
 @Entity(
@@ -23,6 +25,7 @@ import java.util.Date
         Index("starts_at", orders = [Index.Order.ASC])
     ]
 )
+@TypeConverters(ShowingTypeConverter::class)
 data class ShowingStored(
     @PrimaryKey
     @ColumnInfo("id")
@@ -40,7 +43,7 @@ data class ShowingStored(
     @ColumnInfo("language")
     val language: String,
     @ColumnInfo("type")
-    val type: String,
+    val types: List<String>,
     @ColumnInfo("movie")
     val movie: String
 )

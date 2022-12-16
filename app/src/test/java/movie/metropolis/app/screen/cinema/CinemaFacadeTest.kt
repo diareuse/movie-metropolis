@@ -104,7 +104,7 @@ class CinemaFacadeTest : FeatureTest() {
             val key: MovieReference = mock()
             val items = List(nextInt(1, 20)) {
                 mock<Showing>(name = "$it") {
-                    on { type }.thenReturn("type")
+                    on { types }.thenReturn(listOf("type"))
                     on { language }.thenReturn("language")
                 }
             }

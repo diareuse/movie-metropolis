@@ -144,7 +144,7 @@ class EventFeatureStoring(
         isEnabled = isEnabled,
         auditorium = auditorium,
         language = language,
-        type = type,
+        types = types.toList(),
         movie = movie.id
     )
 

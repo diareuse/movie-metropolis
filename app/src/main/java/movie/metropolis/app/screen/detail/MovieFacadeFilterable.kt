@@ -6,27 +6,27 @@ import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.CinemaBookingViewFilter
 import movie.metropolis.app.screen.cinema.BookingFilterable.OnChangedListener
 import movie.metropolis.app.screen.cinema.Listenable
+import movie.metropolis.app.screen.cinema.ShowingFilterable
 import java.util.Date
 
 class MovieFacadeFilterable(
     private val origin: MovieFacade
 ) : MovieFacade by origin {
 
+    private val filterable = ShowingFilterable()
     private val listenable = Listenable<OnChangedListener>()
-    private val selected = mutableSetOf<String>()
-    private val options = mutableSetOf<String>()
     private val mutex = Mutex(true)
 
     override suspend fun getOptions() = mutex.withLock {
-        val values = options
-            .map { Filter(it in selected, it) }
-            .sortedByDescending { it.isSelected }
-        Result.success(values)
+        val output = buildMap {
+            put(Filter.Type.Language, filterable.getLanguages())
+            put(Filter.Type.Projection, filterable.getTypes())
+        }
+        Result.success(output)
     }
 
     override fun toggle(filter: Filter) {
-        if (filter.value in selected) selected.remove(filter.value)
-        else selected.add(filter.value)
+        filterable.toggle(filter)
         listenable.notify { onChanged() }
     }
 
@@ -43,33 +43,18 @@ class MovieFacadeFilterable(
         latitude: Double,
         longitude: Double
     ) = origin.getShowings(date, latitude, longitude).onSuccess {
-        val filters = it.asSequence()
-            .flatMap { it.availability.keys }
-            .flatMap { listOf(it.language, it.type) }
-            .toSet()
-        updateFilters(filters)
-        if (mutex.isLocked)
+        val availableTypes = it.asSequence().flatMap { it.availability.keys }
+        filterable.addFrom(availableTypes.asIterable())
+        if (mutex.isLocked) {
+            filterable.selectAll()
             mutex.unlock()
+        }
     }.map { cinemas ->
-        val options = getOptionKeys() ?: return@map cinemas
         cinemas
             .asSequence()
-            .map { CinemaBookingViewFilter(options, it) }
+            .map { CinemaBookingViewFilter(filterable.getSelectedTags(), it) }
             .filterNot { it.availability.isEmpty() }
             .toList()
     }
-
-    private fun updateFilters(filters: Set<String>) {
-        if (mutex.isLocked) {
-            selected.addAll(filters)
-        }
-        options.addAll(filters)
-    }
-
-    private suspend fun getOptionKeys() = getOptions().getOrNull()
-        ?.asSequence()
-        ?.filter { it.isSelected }
-        ?.map { it.value }
-        ?.toSet()
 
 }

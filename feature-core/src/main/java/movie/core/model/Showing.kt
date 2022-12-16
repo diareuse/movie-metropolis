@@ -10,5 +10,5 @@ interface Showing {
     val isEnabled: Boolean // ie. is not sold out
     val auditorium: String
     val language: String
-    val type: String
+    val types: Iterable<String>
 }
