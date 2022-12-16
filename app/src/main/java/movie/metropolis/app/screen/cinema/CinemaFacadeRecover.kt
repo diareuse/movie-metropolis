@@ -17,7 +17,7 @@ class CinemaFacadeRecover(
         return kotlin.runCatching { origin.getShowings(date).getOrThrow() }
     }
 
-    override suspend fun getOptions(): Result<List<Filter>> {
+    override suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>> {
         return kotlin.runCatching { origin.getOptions().getOrThrow() }
     }
 

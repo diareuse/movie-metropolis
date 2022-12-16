@@ -141,7 +141,7 @@ class MovieFacadeTest : FeatureTest() {
         repeat(count) {
             val items = List(Random.nextInt(1, 20)) {
                 mock<Showing>(name = "$it") {
-                    on { type }.thenReturn("type")
+                    on { types }.thenReturn(listOf("type"))
                     on { language }.thenReturn("language")
                 }
             }

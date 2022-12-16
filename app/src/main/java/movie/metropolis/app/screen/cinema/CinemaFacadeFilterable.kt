@@ -11,24 +11,20 @@ class CinemaFacadeFilterable(
     private val origin: CinemaFacade
 ) : CinemaFacade by origin {
 
+    private val filterable = ShowingFilterable()
     private val listenable = Listenable<OnChangedListener>()
-    private val selected = mutableSetOf<String>()
-    private val options = mutableSetOf<String>()
     private val mutex = Mutex(true)
 
-    override suspend fun getOptions(): Result<List<Filter>> = mutex.withLock {
-        val output = options
-            .map { Filter(it in selected, it) }
-            .sortedByDescending { it.isSelected }
+    override suspend fun getOptions() = mutex.withLock {
+        val output = buildMap {
+            put(Filter.Type.Language, filterable.getLanguages())
+            put(Filter.Type.Projection, filterable.getTypes())
+        }
         Result.success(output)
     }
 
     override fun toggle(filter: Filter) {
-        if (filter.value in selected) {
-            selected.remove(filter.value)
-        } else {
-            selected.add(filter.value)
-        }
+        filterable.toggle(filter)
         listenable.notify { onChanged() }
     }
 
@@ -41,36 +37,19 @@ class CinemaFacadeFilterable(
     }
 
     override suspend fun getShowings(date: Date) = origin.getShowings(date).onSuccess {
-        val filters = it.asSequence()
-            .flatMap { it.availability.keys }
-            .flatMap { listOf(it.language, it.type) }
-            .toSet()
-        updateFilters(filters)
-        if (mutex.isLocked)
+        val availableTypes = it.asSequence().flatMap { it.availability.keys }
+        filterable.addFrom(availableTypes.asIterable())
+        if (mutex.isLocked) {
+            filterable.selectAll()
             mutex.unlock()
+        }
     }.map { movies ->
-        val options = getOptionKeys() ?: return@map movies
         movies
             .asSequence()
-            .map { MovieBookingViewFilter(options, it) }
+            .map { MovieBookingViewFilter(filterable, it) }
             .filterNot { it.availability.isEmpty() }
             .toList()
     }
-
-    // ---
-
-    private fun updateFilters(filters: Set<String>) {
-        if (mutex.isLocked) {
-            selected.addAll(filters)
-        }
-        options.addAll(filters)
-    }
-
-    private suspend fun getOptionKeys() = getOptions().getOrNull()
-        ?.asSequence()
-        ?.filter { it.isSelected }
-        ?.map { it.value }
-        ?.toSet()
 
 }
 

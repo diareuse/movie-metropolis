@@ -67,7 +67,9 @@ class MovieFacadeFromFeature(
         return Result.success(items)
     }
 
-    override suspend fun getOptions(): Result<List<Filter>> = Result.failure(NotImplementedError())
+    override suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>> =
+        Result.failure(NotImplementedError())
+
     override fun toggle(filter: Filter) = Unit
     override fun addOnChangedListener(listener: OnChangedListener) = listener
     override fun removeOnChangedListener(listener: OnChangedListener) = Unit

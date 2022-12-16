@@ -8,8 +8,9 @@ interface AvailabilityView {
     val isEnabled: Boolean
 
     interface Type {
-        val type: String
+        val types: List<String>
         val language: String
+        val type get() = types.joinToString(" | ")
     }
 
 }

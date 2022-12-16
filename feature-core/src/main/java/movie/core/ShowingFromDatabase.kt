@@ -21,6 +21,6 @@ data class ShowingFromDatabase(
         get() = showing.auditorium
     override val language: String
         get() = showing.language
-    override val type: String
-        get() = showing.type
+    override val types: Iterable<String>
+        get() = showing.types
 }
