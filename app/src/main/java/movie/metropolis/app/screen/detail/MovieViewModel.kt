@@ -11,12 +11,15 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import movie.core.UserFeature
 import movie.core.model.Location
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.availableFromFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.movieFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.posterFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.showingsFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.trailerFlow
+import movie.metropolis.app.screen.retainStateIn
 import java.util.Date
 import javax.inject.Inject
 import android.location.Location as AndroidLocation
@@ -52,6 +55,8 @@ class MovieViewModel private constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
     val showings = facade.showingsFlow(selectedDate.filterNotNull(), location.filterNotNull())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
+    val options = facade.optionsFlow
+        .retainStateIn(viewModelScope, Loadable.loading())
 
     init {
         viewModelScope.launch {
@@ -65,6 +70,8 @@ class MovieViewModel private constructor(
                 .onSuccess { location.compareAndSet(null, it) }
         }
     }
+
+    fun toggleFilter(filter: Filter) = facade.toggle(filter)
 
     private fun Location.toPlatform() = AndroidLocation(null).also {
         it.latitude = latitude

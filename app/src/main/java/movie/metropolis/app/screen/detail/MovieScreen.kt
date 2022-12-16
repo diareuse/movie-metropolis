@@ -48,6 +48,7 @@ import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
@@ -77,6 +78,7 @@ fun MovieScreen(
     val startDate by viewModel.startDate.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
     val showings by viewModel.showings.collectAsState()
+    val options by viewModel.options.collectAsState()
     val location by rememberLocation(onPermissionsRequested)
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
@@ -86,13 +88,15 @@ fun MovieScreen(
         poster = poster,
         trailer = trailer,
         showings = showings,
+        options = options,
         selectionAvailableStart = startDate.getOrNull(),
         selectedDate = selectedDate,
         hideShowings = viewModel.hideShowings,
         onBackClick = onBackClick,
         onSelectedDateUpdated = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
-        onVideoClick = onVideoClick
+        onVideoClick = onVideoClick,
+        onFilterClick = viewModel::toggleFilter
     )
 }
 
@@ -103,13 +107,15 @@ private fun MovieScreen(
     poster: Loadable<ImageView>,
     trailer: Loadable<VideoView>,
     showings: Loadable<List<CinemaBookingView>>,
+    options: Loadable<List<Filter>>,
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     hideShowings: Boolean,
     onSelectedDateUpdated: (Date) -> Unit,
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
-    onVideoClick: (String) -> Unit
+    onVideoClick: (String) -> Unit,
+    onFilterClick: (Filter) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -159,10 +165,12 @@ private fun MovieScreen(
             if (!hideShowings) {
                 MovieDetailShowings(
                     showings = showings,
+                    options = options,
                     selectionAvailableStart = selectionAvailableStart,
                     selectedDate = selectedDate,
                     onSelectedDateUpdated = onSelectedDateUpdated,
-                    onBookingClick = onBookingClick
+                    onBookingClick = onBookingClick,
+                    onFilterClick = onFilterClick
                 )
             } else {
                 trailer.onSuccess {
@@ -188,10 +196,12 @@ private fun MovieScreen(
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.MovieDetailShowings(
     showings: Loadable<List<CinemaBookingView>>,
+    options: Loadable<List<Filter>>,
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     onSelectedDateUpdated: (Date) -> Unit,
-    onBookingClick: (String) -> Unit
+    onBookingClick: (String) -> Unit,
+    onFilterClick: (Filter) -> Unit
 ) {
     item(key = "divider") {
         Divider(
@@ -207,6 +217,17 @@ fun LazyListScope.MovieDetailShowings(
             selected = selectedDate,
             onClickDate = onSelectedDateUpdated
         )
+    }
+    options.onSuccess { filters ->
+        item("filters") {
+            FilterRow(
+                modifier = Modifier
+                    .animateItemPlacement(),
+                filters = filters,
+                onFilterToggle = onFilterClick,
+                contentPadding = PaddingValues(horizontal = 24.dp)
+            )
+        }
     }
     showings.onSuccess { showings ->
         items(showings, key = { it.cinema.id }) {
@@ -321,6 +342,7 @@ private fun Preview(
                 )
             ),
             trailer = Loadable.loading(),
+            options = Loadable.loading(),
             selectedDate = Date(),
             onBackClick = {},
             showings = Loadable.success(showings),
@@ -328,7 +350,8 @@ private fun Preview(
             selectionAvailableStart = Date(),
             onSelectedDateUpdated = {},
             onBookingClick = {},
-            onVideoClick = {}
+            onVideoClick = {},
+            onFilterClick = {}
         )
     }
 }
