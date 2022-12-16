@@ -10,3 +10,8 @@ fun <T> Flow<T>.retainStateIn(scope: CoroutineScope, initial: T) = stateIn(
     started = SharingStarted.WhileSubscribed(replayExpirationMillis = Long.MAX_VALUE),
     initialValue = initial
 )
+
+fun <T> Flow<Loadable<T>>.retainStateIn(scope: CoroutineScope) = retainStateIn(
+    scope = scope,
+    initial = Loadable.loading()
+)

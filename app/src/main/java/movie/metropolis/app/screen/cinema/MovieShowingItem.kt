@@ -14,6 +14,7 @@ import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.detail.ShowingItemSection
 import movie.metropolis.app.screen.detail.ShowingItemTime
 import movie.metropolis.app.screen.detail.ShowingLayout
+import movie.metropolis.app.view.textPlaceholder
 
 @Composable
 fun MovieShowingItem(
@@ -43,6 +44,28 @@ fun MovieShowingItem(
         ShowingItemTime(
             time = it.startsAt,
             onClick = { onClick(it.url) }
+        )
+    }
+}
+
+@Composable
+fun MovieShowingItem(
+    modifier: Modifier = Modifier
+) {
+    ShowingLayout(
+        modifier = modifier,
+        items = mapOf(
+            "a" to List(3) { it },
+            "b" to List(1) { it },
+            "c" to List(2) { it },
+        ),
+        key = { it },
+        title = { Text("My super awesome cinema", Modifier.textPlaceholder(true)) },
+        section = { ShowingItemSection(type = "type", language = "English", isLoading = true) }
+    ) {
+        ShowingItemTime(
+            modifier = Modifier.textPlaceholder(true),
+            time = "10.00"
         )
     }
 }
