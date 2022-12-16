@@ -19,7 +19,7 @@ class CinemaFacadeFilterable(
     override suspend fun getOptions(): Result<List<Filter>> = mutex.withLock {
         val output = options
             .map { Filter(it in selected, it) }
-            .sortedBy { it.isSelected }
+            .sortedByDescending { it.isSelected }
         Result.success(output)
     }
 
