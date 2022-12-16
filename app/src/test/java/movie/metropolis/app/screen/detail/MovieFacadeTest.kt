@@ -1,17 +1,21 @@
 package movie.metropolis.app.screen.detail
 
 import kotlinx.coroutines.test.runTest
+import movie.core.CinemaWithShowings
 import movie.core.adapter.MovieFromId
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Media
 import movie.core.model.MovieDetail
+import movie.core.model.Showing
 import movie.metropolis.app.di.FacadeModule
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.FeatureTest
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.Date
+import kotlin.random.Random
 import kotlin.test.assertEquals
 
 class MovieFacadeTest : FeatureTest() {
@@ -106,6 +110,43 @@ class MovieFacadeTest : FeatureTest() {
     fun returns_showings_failure() = runTest {
         val result = facade.getShowings(Date(0), 0.0, 0.0)
         assert(result.isFailure) { result }
+    }
+
+    @Test
+    fun returns_filteredShowings() = runTest {
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("5376O2R")
+        }
+        whenever(event.getDetail(MovieFromId("5376O2R")))
+            .thenReturn(Result.success(movie))
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("id")
+        }
+        whenever(event.getCinemas(Location(0.0, 0.0)))
+            .thenReturn(Result.success(listOf(cinema)))
+        val showings = generateShowings(cinema, 4)
+        whenever(event.getShowings(movie, Date(0), Location(0.0, 0.0)))
+            .thenReturn(Result.success(showings))
+        facade.getShowings(Date(0), 0.0, 0.0) // only to populate the filters
+        facade.toggle(Filter(true, "type"))
+        facade.toggle(Filter(true, "language"))
+        val result = facade.getShowings(Date(0), 0.0, 0.0)
+        assert(result.isSuccess) { result }
+        assert(result.getOrThrow().isEmpty()) { result.getOrThrow() }
+    }
+
+    // ---
+
+    private fun generateShowings(cinema: Cinema, count: Int): CinemaWithShowings = buildMap {
+        repeat(count) {
+            val items = List(Random.nextInt(1, 20)) {
+                mock<Showing>(name = "$it") {
+                    on { type }.thenReturn("type")
+                    on { language }.thenReturn("language")
+                }
+            }
+            put(cinema, items)
+        }
     }
 
 }

@@ -8,6 +8,7 @@ import movie.core.model.Location
 import movie.core.model.Media
 import movie.core.model.MovieDetail
 import movie.metropolis.app.model.CinemaBookingView
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
@@ -15,6 +16,7 @@ import movie.metropolis.app.model.adapter.CinemaBookingViewFromFeature
 import movie.metropolis.app.model.adapter.ImageViewFromFeature
 import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
 import movie.metropolis.app.model.adapter.VideoViewFromFeature
+import movie.metropolis.app.screen.cinema.BookingFilterable.OnChangedListener
 import java.util.Date
 
 class MovieFacadeFromFeature(
@@ -64,6 +66,11 @@ class MovieFacadeFromFeature(
             .toList()
         return Result.success(items)
     }
+
+    override suspend fun getOptions(): Result<List<Filter>> = Result.failure(NotImplementedError())
+    override fun toggle(filter: Filter) = Unit
+    override fun addOnChangedListener(listener: OnChangedListener) = listener
+    override fun removeOnChangedListener(listener: OnChangedListener) = Unit
 
     //
 
