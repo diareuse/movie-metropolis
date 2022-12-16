@@ -61,6 +61,7 @@ class EventFeatureStoring(
     }
 
     override suspend fun getCurrent() = origin.getCurrent().onSuccess {
+        previewDao.deleteAll(upcoming = false)
         for (preview in it) {
             movieDao.insertOrUpdate((preview as Movie).asStored())
             previewDao.insertOrUpdate(preview.asStored(upcoming = false))
@@ -70,6 +71,7 @@ class EventFeatureStoring(
     }
 
     override suspend fun getUpcoming() = origin.getUpcoming().onSuccess {
+        previewDao.deleteAll(upcoming = false)
         for (preview in it) {
             movieDao.insertOrUpdate((preview as Movie).asStored())
             previewDao.insertOrUpdate(preview.asStored(upcoming = true))

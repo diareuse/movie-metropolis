@@ -14,4 +14,7 @@ interface MoviePreviewDao : DaoBase<MoviePreviewStored> {
     @Query("select * from movie_preview_views where not (select movie_previews.upcoming from movie_previews where movie_previews.movie=movie_preview_views.id)")
     suspend fun selectCurrent(): List<MoviePreviewView>
 
+    @Query("delete from movie_previews where upcoming=:upcoming")
+    suspend fun deleteAll(upcoming: Boolean)
+
 }
