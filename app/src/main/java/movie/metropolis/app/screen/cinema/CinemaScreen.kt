@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.cinema
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,10 +26,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.DatePickerRow
+import movie.metropolis.app.screen.detail.FilterRow
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.onLoading
+import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.view.textPlaceholder
 import java.util.Date
 
@@ -41,13 +46,16 @@ fun CinemaScreen(
     val cinema by viewModel.cinema.collectAsState()
     val items by viewModel.items.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
+    val options by viewModel.options.collectAsState()
     CinemaScreen(
         cinema = cinema,
         items = items,
+        options = options,
         selectedDate = selectedDate,
         onSelectedDateChanged = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onFilterClick = viewModel::toggleFilter
     )
 }
 
@@ -56,10 +64,12 @@ fun CinemaScreen(
 private fun CinemaScreen(
     cinema: Loadable<CinemaView>,
     items: Loadable<List<MovieBookingView>>,
+    options: Loadable<Map<Filter.Type, List<Filter>>>,
     selectedDate: Date,
     onSelectedDateChanged: (Date) -> Unit,
     onBookingClick: (String) -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onFilterClick: (Filter) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -93,15 +103,44 @@ private fun CinemaScreen(
                     onClickDate = onSelectedDateChanged
                 )
             }
-            items(items.getOrNull().orEmpty(), key = { it.movie.id }) {
-                MovieShowingItem(
-                    modifier = Modifier
-                        .animateItemPlacement()
-                        .padding(horizontal = 24.dp),
-                    movie = it.movie,
-                    availability = it.availability,
-                    onClick = onBookingClick
-                )
+            options.onSuccess { filters ->
+                item("filters") {
+                    Column(
+                        modifier = Modifier.animateItemPlacement(),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        FilterRow(
+                            filters = filters[Filter.Type.Language].orEmpty(),
+                            onFilterToggle = onFilterClick,
+                            contentPadding = PaddingValues(horizontal = 24.dp)
+                        )
+                        FilterRow(
+                            filters = filters[Filter.Type.Projection].orEmpty(),
+                            onFilterToggle = onFilterClick,
+                            contentPadding = PaddingValues(horizontal = 24.dp)
+                        )
+                    }
+                }
+            }
+            items.onSuccess { items ->
+                items(items, key = { it.movie.id }) {
+                    MovieShowingItem(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .padding(horizontal = 24.dp),
+                        movie = it.movie,
+                        availability = it.availability,
+                        onClick = onBookingClick
+                    )
+                }
+            }.onLoading {
+                items(5) {
+                    MovieShowingItem(
+                        Modifier
+                            .animateItemPlacement()
+                            .padding(horizontal = 24.dp)
+                    )
+                }
             }
         }
     }
