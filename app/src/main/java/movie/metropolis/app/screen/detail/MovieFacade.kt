@@ -11,9 +11,11 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
+import movie.metropolis.app.screen.cinema.BookingFilterable
+import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsChangedFlow
 import java.util.Date
 
-interface MovieFacade {
+interface MovieFacade : BookingFilterable {
 
     suspend fun getAvailableFrom(): Result<Date>
     suspend fun getMovie(): Result<MovieDetailView>
@@ -63,7 +65,9 @@ interface MovieFacade {
             .flatMapLatest { (date, location) ->
                 flow {
                     emit(Loadable.loading())
-                    emit(getShowings(date, location.latitude, location.longitude).asLoadable())
+                    optionsChangedFlow.collect {
+                        emit(getShowings(date, location.latitude, location.longitude).asLoadable())
+                    }
                 }
             }
 

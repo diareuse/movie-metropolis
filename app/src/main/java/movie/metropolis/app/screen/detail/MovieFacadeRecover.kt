@@ -1,10 +1,11 @@
 package movie.metropolis.app.screen.detail
 
+import movie.metropolis.app.model.Filter
 import java.util.Date
 
 class MovieFacadeRecover(
     private val origin: MovieFacade
-) : MovieFacade {
+) : MovieFacade by origin {
 
     override suspend fun getAvailableFrom() =
         kotlin.runCatching { origin.getAvailableFrom().getOrThrow() }
@@ -23,5 +24,12 @@ class MovieFacadeRecover(
         latitude: Double,
         longitude: Double
     ) = kotlin.runCatching { origin.getShowings(date, latitude, longitude).getOrThrow() }
+
+    override suspend fun getOptions() =
+        kotlin.runCatching { origin.getOptions().getOrThrow() }
+
+    override fun toggle(filter: Filter) {
+        kotlin.runCatching { origin.toggle(filter) }
+    }
 
 }
