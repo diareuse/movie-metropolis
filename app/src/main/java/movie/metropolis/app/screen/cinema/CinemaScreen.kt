@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -104,6 +106,15 @@ private fun CinemaScreen(
                 )
             }
             options.onSuccess { filters ->
+                item("filters-title") {
+                    Text(
+                        modifier = Modifier
+                            .animateItemPlacement()
+                            .padding(horizontal = 24.dp),
+                        text = "Filters",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
                 item("filters") {
                     Column(
                         modifier = Modifier.animateItemPlacement(),
@@ -120,6 +131,9 @@ private fun CinemaScreen(
                             contentPadding = PaddingValues(horizontal = 24.dp)
                         )
                     }
+                }
+                item("filters-divider") {
+                    Divider(Modifier.padding(horizontal = 32.dp))
                 }
             }
             items.onSuccess { items ->

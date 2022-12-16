@@ -219,6 +219,15 @@ fun LazyListScope.MovieDetailShowings(
         )
     }
     options.onSuccess { filters ->
+        item("filters-title") {
+            Text(
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = 24.dp),
+                text = "Filters",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
         item("filters") {
             Column(
                 modifier = Modifier.animateItemPlacement(),
@@ -235,6 +244,9 @@ fun LazyListScope.MovieDetailShowings(
                     contentPadding = PaddingValues(horizontal = 24.dp)
                 )
             }
+        }
+        item("filters-divider") {
+            Divider(Modifier.padding(horizontal = 32.dp))
         }
     }
     showings.onSuccess { showings ->
