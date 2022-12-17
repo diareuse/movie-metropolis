@@ -4,10 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "movie_media",
-    primaryKeys = ["movie", "type"],
     foreignKeys = [
         ForeignKey(
             entity = MovieStored::class,
@@ -27,6 +27,7 @@ data class MovieMediaStored(
     val width: Int?,
     @ColumnInfo("height")
     val height: Int?,
+    @PrimaryKey
     @ColumnInfo("url")
     val url: String,
     @ColumnInfo("type")

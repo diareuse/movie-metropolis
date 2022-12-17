@@ -4,6 +4,8 @@ import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import movie.core.db.converters.DateConverter
 import movie.core.db.converters.IterableStringConverter
 import movie.core.db.dao.BookingDao
@@ -32,7 +34,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 2,
+    version = 3,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -51,7 +53,9 @@ import movie.core.db.model.ShowingStored
         MoviePreviewView::class
     ],
     exportSchema = true,
-    autoMigrations = [AutoMigration(1, 2)]
+    autoMigrations = [
+        AutoMigration(1, 2)
+    ]
 )
 @TypeConverters(
     DateConverter::class,
@@ -70,5 +74,15 @@ internal abstract class MovieDatabase : RoomDatabase() {
     abstract fun movieReference(): MovieReferenceDao
     abstract fun moviePreview(): MoviePreviewDao
     abstract fun movieFavorite(): MovieFavoriteDao
+
+    class Migration2to3 : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `movie_media_copy` (`movie` TEXT NOT NULL, `width` INTEGER, `height` INTEGER, `url` TEXT NOT NULL, `type` TEXT NOT NULL, PRIMARY KEY(`url`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            database.execSQL("insert into movie_media_copy (`movie`,`width`,`height`,`url`,`type`) select `movie`,`width`,`height`,`url`,`type` from movie_media")
+            database.execSQL("drop table movie_media")
+            database.execSQL("alter table movie_media_copy rename to movie_media")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_media_movie` ON `movie_media` (`movie`)")
+        }
+    }
 
 }
