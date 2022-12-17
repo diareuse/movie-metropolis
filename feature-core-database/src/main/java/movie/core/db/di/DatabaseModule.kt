@@ -107,4 +107,13 @@ class DatabaseModule {
         return dao
     }
 
+    @Provides
+    internal fun movieFavorite(
+        database: MovieDatabase
+    ): MovieFavoriteDao {
+        var dao: MovieFavoriteDao = database.movieFavorite()
+        dao = MovieFavoriteDaoLowercase(dao)
+        return dao
+    }
+
 }

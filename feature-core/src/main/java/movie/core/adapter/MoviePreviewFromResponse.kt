@@ -2,12 +2,13 @@ package movie.core.adapter
 
 import movie.core.model.Media
 import movie.core.model.MoviePreview
+import movie.core.nwk.model.ExtendedMovieResponse
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration
 
 internal data class MoviePreviewFromResponse(
-    private val response: movie.core.nwk.model.ExtendedMovieResponse
+    private val response: ExtendedMovieResponse
 ) : MoviePreview {
 
     private val metadata = response.metadata[Locale.getDefault()]
@@ -37,15 +38,15 @@ internal data class MoviePreviewFromResponse(
     override val countryOfOrigin: String
         get() = metadata.countryOfOrigin.orEmpty()
 
-    private fun MediaFromResponse(media: movie.core.nwk.model.ExtendedMovieResponse.Media) =
+    private fun MediaFromResponse(media: ExtendedMovieResponse.Media) =
         when (media) {
-            is movie.core.nwk.model.ExtendedMovieResponse.Media.Image -> Media.Image(
+            is ExtendedMovieResponse.Media.Image -> Media.Image(
                 media.width,
                 media.height,
                 media.url
             )
 
-            is movie.core.nwk.model.ExtendedMovieResponse.Media.Video -> Media.Video(media.url)
+            is ExtendedMovieResponse.Media.Video -> Media.Video(media.url)
             else -> null
         }
 }
