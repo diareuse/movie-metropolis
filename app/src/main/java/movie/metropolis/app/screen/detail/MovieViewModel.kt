@@ -15,6 +15,7 @@ import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.availableFromFlow
+import movie.metropolis.app.screen.detail.MovieFacade.Companion.favoriteFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.movieFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.posterFlow
 import movie.metropolis.app.screen.detail.MovieFacade.Companion.showingsFlow
@@ -57,6 +58,8 @@ class MovieViewModel private constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
     val options = facade.optionsFlow
         .retainStateIn(viewModelScope, Loadable.loading())
+    val favorite = facade.favoriteFlow
+        .retainStateIn(viewModelScope)
 
     init {
         viewModelScope.launch {
@@ -72,6 +75,9 @@ class MovieViewModel private constructor(
     }
 
     fun toggleFilter(filter: Filter) = facade.toggle(filter)
+    fun toggleFavorite() = viewModelScope.launch {
+        facade.toggleFavorite()
+    }
 
     private fun Location.toPlatform() = AndroidLocation(null).also {
         it.latitude = latitude

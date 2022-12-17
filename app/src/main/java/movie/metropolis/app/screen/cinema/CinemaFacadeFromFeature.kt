@@ -7,7 +7,7 @@ import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.model.adapter.CinemaFromView
 import movie.metropolis.app.model.adapter.CinemaViewFromFeature
 import movie.metropolis.app.model.adapter.MovieBookingViewFromFeature
-import movie.metropolis.app.screen.cinema.BookingFilterable.OnChangedListener
+import movie.metropolis.app.screen.OnChangedListener
 import java.util.Date
 
 class CinemaFacadeFromFeature(

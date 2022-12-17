@@ -3,6 +3,7 @@ package movie.metropolis.app.screen.detail
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.core.EventFeature
+import movie.core.FavoriteFeature
 import movie.core.adapter.MovieFromId
 import movie.core.model.Location
 import movie.core.model.Media
@@ -16,16 +17,23 @@ import movie.metropolis.app.model.adapter.CinemaBookingViewFromFeature
 import movie.metropolis.app.model.adapter.ImageViewFromFeature
 import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
 import movie.metropolis.app.model.adapter.VideoViewFromFeature
-import movie.metropolis.app.screen.cinema.BookingFilterable.OnChangedListener
+import movie.metropolis.app.screen.OnChangedListener
+import movie.metropolis.app.screen.cinema.Listenable
 import java.util.Date
 
 class MovieFacadeFromFeature(
     private val id: String,
-    private val event: EventFeature
+    private val event: EventFeature,
+    private val favorite: FavoriteFeature
 ) : MovieFacade {
 
     private val mutex = Mutex(false)
     private var movie: MovieDetail? = null
+    private val listenableFavorite = Listenable<OnChangedListener>()
+
+    override suspend fun isFavorite(): Result<Boolean> {
+        return favorite.isFavorite(getDetail())
+    }
 
     override suspend fun getAvailableFrom(): Result<Date> {
         return Result.success(getDetail().screeningFrom.coerceAtLeast(Date()))
@@ -65,6 +73,21 @@ class MovieFacadeFromFeature(
             .filter { it.availability.isNotEmpty() }
             .toList()
         return Result.success(items)
+    }
+
+    override suspend fun toggleFavorite() {
+        favorite.toggle(getDetail()).onSuccess {
+            listenableFavorite.notify { onChanged() }
+        }
+    }
+
+    override fun addOnFavoriteChangedListener(listener: OnChangedListener): OnChangedListener {
+        listenableFavorite += listener
+        return listener
+    }
+
+    override fun removeOnFavoriteChangedListener(listener: OnChangedListener) {
+        listenableFavorite -= listener
     }
 
     override suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>> =
