@@ -22,6 +22,7 @@ class DatabaseModule {
         val name = "${context.packageName}.core"
         return Room
             .databaseBuilder(context, MovieDatabase::class.java, name)
+            .addMigrations(MovieDatabase.Migration2to3())
             .fallbackToDestructiveMigration()
             .build()
     }
