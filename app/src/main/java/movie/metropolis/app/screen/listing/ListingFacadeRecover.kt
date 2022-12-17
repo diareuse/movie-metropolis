@@ -4,7 +4,7 @@ import movie.metropolis.app.model.MovieView
 
 class ListingFacadeRecover(
     private val origin: ListingFacade
-) : ListingFacade {
+) : ListingFacade by origin {
 
     override suspend fun getCurrent(): Result<List<MovieView>> {
         return kotlin.runCatching { origin.getCurrent().getOrThrow() }
@@ -12,6 +12,10 @@ class ListingFacadeRecover(
 
     override suspend fun getUpcoming(): Result<List<MovieView>> {
         return kotlin.runCatching { origin.getUpcoming().getOrThrow() }
+    }
+
+    override suspend fun toggleFavorite(movie: MovieView) {
+        origin.runCatching { toggleFavorite(movie) }
     }
 
 }
