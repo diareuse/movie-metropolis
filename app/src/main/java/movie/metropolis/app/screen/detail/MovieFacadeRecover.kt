@@ -32,4 +32,12 @@ class MovieFacadeRecover(
         kotlin.runCatching { origin.toggle(filter) }
     }
 
+    override suspend fun isFavorite(): Result<Boolean> {
+        return origin.runCatching { isFavorite().getOrThrow() }
+    }
+
+    override suspend fun toggleFavorite() {
+        origin.runCatching { toggleFavorite() }
+    }
+
 }

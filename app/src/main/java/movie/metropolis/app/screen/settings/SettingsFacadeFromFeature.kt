@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.settings
 
 import movie.core.preference.EventPreference
-import movie.metropolis.app.screen.settings.SettingsFacade.OnChangedListener
+import movie.metropolis.app.screen.OnChangedListener
 import java.util.Collections
 
 class SettingsFacadeFromFeature(

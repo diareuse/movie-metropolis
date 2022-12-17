@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.OnChangedListener
 import movie.metropolis.app.screen.asLoadable
 
 interface BookingFilterable {
@@ -14,10 +15,6 @@ interface BookingFilterable {
     fun toggle(filter: Filter)
     fun addOnChangedListener(listener: OnChangedListener): OnChangedListener
     fun removeOnChangedListener(listener: OnChangedListener)
-
-    fun interface OnChangedListener {
-        fun onChanged()
-    }
 
     companion object {
 

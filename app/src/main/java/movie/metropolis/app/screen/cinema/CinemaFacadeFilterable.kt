@@ -4,7 +4,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.MovieBookingViewFilter
-import movie.metropolis.app.screen.cinema.BookingFilterable.OnChangedListener
+import movie.metropolis.app.screen.OnChangedListener
 import java.util.Date
 
 class CinemaFacadeFilterable(

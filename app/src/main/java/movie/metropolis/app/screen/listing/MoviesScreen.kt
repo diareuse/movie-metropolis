@@ -26,6 +26,7 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.theme.Theme
+import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextBytes
 
 @OptIn(ExperimentalPagerApi::class)
@@ -141,7 +142,8 @@ class MovieViewProvider :
         override val cast: List<String> = emptyList(),
         override val countryOfOrigin: String = "USA",
         override val poster: ImageView? = PreviewImage(),
-        override val video: VideoView? = PreviewVideo()
+        override val video: VideoView? = PreviewVideo(),
+        override val favorite: Boolean = nextBoolean()
     ) : MovieView
 
     private data class PreviewImage(

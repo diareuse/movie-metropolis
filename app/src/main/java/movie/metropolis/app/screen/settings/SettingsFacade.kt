@@ -3,6 +3,7 @@ package movie.metropolis.app.screen.settings
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import movie.metropolis.app.screen.OnChangedListener
 
 interface SettingsFacade {
 
@@ -10,10 +11,6 @@ interface SettingsFacade {
 
     fun addListener(listener: OnChangedListener): OnChangedListener
     fun removeListener(listener: OnChangedListener)
-
-    fun interface OnChangedListener {
-        fun onChanged()
-    }
 
     companion object {
 

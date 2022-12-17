@@ -1,7 +1,9 @@
 package movie.metropolis.app.screen.detail
 
 import android.location.Location
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -10,6 +12,7 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.OnChangedListener
 import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.cinema.BookingFilterable
 import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsChangedFlow
@@ -17,6 +20,7 @@ import java.util.Date
 
 interface MovieFacade : BookingFilterable {
 
+    suspend fun isFavorite(): Result<Boolean>
     suspend fun getAvailableFrom(): Result<Date>
     suspend fun getMovie(): Result<MovieDetailView>
     suspend fun getPoster(): Result<ImageView>
@@ -27,11 +31,34 @@ interface MovieFacade : BookingFilterable {
         longitude: Double
     ): Result<List<CinemaBookingView>>
 
+    suspend fun toggleFavorite()
+    fun addOnFavoriteChangedListener(listener: OnChangedListener): OnChangedListener
+    fun removeOnFavoriteChangedListener(listener: OnChangedListener)
+
     fun interface Factory {
         fun create(id: String): MovieFacade
     }
 
     companion object {
+
+        private val MovieFacade.favoriteChangedFlow
+            get() = callbackFlow {
+                send(Any())
+                val listener = addOnFavoriteChangedListener {
+                    trySend(Any())
+                }
+                awaitClose {
+                    removeOnFavoriteChangedListener(listener)
+                }
+            }
+
+        val MovieFacade.favoriteFlow
+            get() = flow {
+                emit(Loadable.loading())
+                favoriteChangedFlow.collect {
+                    emit(isFavorite().asLoadable())
+                }
+            }
 
         val MovieFacade.availableFromFlow
             get() = flow {

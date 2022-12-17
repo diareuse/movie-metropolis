@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.core.EventFeature
+import movie.core.FavoriteFeature
 import movie.core.UserFeature
 import movie.core.di.Saving
 import movie.core.preference.EventPreference
@@ -74,18 +75,24 @@ class FacadeModule {
     }
 
     @Provides
-    fun movie(event: EventFeature) = MovieFacade.Factory {
+    fun movie(
+        event: EventFeature,
+        favorite: FavoriteFeature
+    ) = MovieFacade.Factory {
         var facade: MovieFacade
-        facade = MovieFacadeFromFeature(it, event)
+        facade = MovieFacadeFromFeature(it, event, favorite)
         facade = MovieFacadeFilterable(facade)
         facade = MovieFacadeRecover(facade)
         facade
     }
 
     @Provides
-    fun listing(event: EventFeature): ListingFacade {
+    fun listing(
+        event: EventFeature,
+        favorite: FavoriteFeature
+    ): ListingFacade {
         var facade: ListingFacade
-        facade = ListingFacadeFromFeature(event)
+        facade = ListingFacadeFromFeature(event, favorite)
         facade = ListingFacadeRecover(facade)
         return facade
     }
