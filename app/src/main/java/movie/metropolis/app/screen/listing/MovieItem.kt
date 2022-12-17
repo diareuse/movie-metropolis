@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen.listing
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,11 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,9 +47,9 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
+import movie.metropolis.app.screen.detail.FavoriteButton
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.imagePlaceholder
 import movie.metropolis.app.view.textPlaceholder
@@ -62,10 +58,10 @@ import movie.metropolis.app.view.textPlaceholder
 fun MovieItem(
     name: String,
     subtext: String,
-    video: VideoView?,
     poster: ImageView?,
-    onClickVideo: (String) -> Unit,
+    isFavorite: Boolean,
     onClick: () -> Unit,
+    onClickFavorite: () -> Unit,
     modifier: Modifier = Modifier,
     height: Dp = 225.dp
 ) {
@@ -75,13 +71,10 @@ fun MovieItem(
         posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
         poster = {
             MoviePoster(url = poster?.url, onClick = onClick)
-            if (video != null) Image(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clickable(role = Role.Button) { onClickVideo(video.url) },
-                painter = painterResource(id = R.drawable.ic_play),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(Color.White)
+            FavoriteButton(
+                modifier = Modifier.align(Alignment.TopEnd),
+                isChecked = isFavorite,
+                onClick = onClickFavorite
             )
         },
         text = {
@@ -220,12 +213,12 @@ private fun Preview() {
             modifier = Modifier.padding(16.dp),
             name = "Black Adam",
             subtext = "12. 11. 2022",
-            video = VideoView("https://www.youtube.com/watch?v=X0tOpBuYasI"),
+            isFavorite = true,
             poster = ImageView(
                 DefaultPosterAspectRatio,
                 "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5145S2R-lg.jpg"
             ),
-            onClickVideo = {},
+            onClickFavorite = {},
             onClick = {}
         )
     }

@@ -33,7 +33,6 @@ import kotlin.random.Random.Default.nextBytes
 @Composable
 fun MoviesScreen(
     padding: PaddingValues,
-    onClickVideo: (String) -> Unit,
     onClickMovie: (String, upcoming: Boolean) -> Unit,
     state: LazyListState,
     stateAvailable: PagerState,
@@ -45,7 +44,7 @@ fun MoviesScreen(
     MoviesScreen(
         current = current,
         upcoming = upcoming,
-        onClickVideo = onClickVideo,
+        onClickFavorite = viewModel::toggleFavorite,
         onClick = onClickMovie,
         padding = padding,
         state = state,
@@ -59,7 +58,7 @@ fun MoviesScreen(
 private fun MoviesScreen(
     current: Loadable<List<MovieView>>,
     upcoming: Loadable<List<MovieView>>,
-    onClickVideo: (String) -> Unit,
+    onClickFavorite: (MovieView) -> Unit,
     onClick: (String, upcoming: Boolean) -> Unit,
     padding: PaddingValues = PaddingValues(0.dp),
     state: LazyListState = rememberLazyListState(),
@@ -97,7 +96,7 @@ private fun MoviesScreen(
             MovieRow(
                 items = upcoming,
                 isShowing = false,
-                onClickVideo = onClickVideo,
+                onClickFavorite = onClickFavorite,
                 onClick = { onClick(it, true) },
                 state = stateUpcoming
             )
@@ -114,7 +113,7 @@ private fun Preview(@PreviewParameter(ListMovieViewProvider::class) movies: List
         MoviesScreen(
             current = Loadable.loading(),
             upcoming = Loadable.success(movies),
-            onClickVideo = {},
+            onClickFavorite = {},
             onClick = { _, _ -> }
         )
     }
