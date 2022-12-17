@@ -10,6 +10,8 @@ class ShowingFilterable {
     private val types = mutableSetOf<String>()
 
     fun addFrom(types: Iterable<AvailabilityView.Type>) {
+        this.types.clear()
+        this.languages.clear()
         for (type in types) {
             this.types.addAll(type.types)
             this.languages.add(type.language)
