@@ -79,6 +79,7 @@ fun MovieScreen(
     val selectedDate by viewModel.selectedDate.collectAsState()
     val showings by viewModel.showings.collectAsState()
     val options by viewModel.options.collectAsState()
+    val favorite by viewModel.favorite.collectAsState()
     val location by rememberLocation(onPermissionsRequested)
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
@@ -89,6 +90,7 @@ fun MovieScreen(
         trailer = trailer,
         showings = showings,
         options = options,
+        isFavorite = favorite.getOrNull() ?: false,
         selectionAvailableStart = startDate.getOrNull(),
         selectedDate = selectedDate,
         hideShowings = viewModel.hideShowings,
@@ -96,7 +98,8 @@ fun MovieScreen(
         onSelectedDateUpdated = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
         onVideoClick = onVideoClick,
-        onFilterClick = viewModel::toggleFilter
+        onFilterClick = viewModel::toggleFilter,
+        onFavoriteClick = viewModel::toggleFavorite
     )
 }
 
@@ -108,6 +111,7 @@ private fun MovieScreen(
     trailer: Loadable<VideoView>,
     showings: Loadable<List<CinemaBookingView>>,
     options: Loadable<Map<Filter.Type, List<Filter>>>,
+    isFavorite: Boolean,
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     hideShowings: Boolean,
@@ -115,12 +119,19 @@ private fun MovieScreen(
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
     onVideoClick: (String) -> Unit,
-    onFilterClick: (Filter) -> Unit
+    onFilterClick: (Filter) -> Unit,
+    onFavoriteClick: () -> Unit
 ) {
     Scaffold(
         topBar = {
             MovieScreenAppBar(
-                onBackClick = onBackClick
+                onBackClick = onBackClick,
+                actions = {
+                    if (hideShowings) FavoriteButton(
+                        isChecked = isFavorite,
+                        onClick = onFavoriteClick
+                    )
+                }
             )
         }
     ) { padding ->
@@ -365,13 +376,15 @@ private fun Preview(
             options = Loadable.loading(),
             selectedDate = Date(),
             onBackClick = {},
+            isFavorite = true,
             showings = Loadable.success(showings),
             hideShowings = false,
             selectionAvailableStart = Date(),
             onSelectedDateUpdated = {},
             onBookingClick = {},
             onVideoClick = {},
-            onFilterClick = {}
+            onFilterClick = {},
+            onFavoriteClick = {}
         )
     }
 }
