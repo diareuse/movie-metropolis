@@ -74,12 +74,11 @@ fun Navigation(
                 movies = {
                     MoviesScreen(
                         padding = it,
-                        onClickVideo = onLinkClicked,
                         onClickMovie = { id, upcoming -> controller.navigate("/movies/${id}?upcoming=$upcoming") },
-                        viewModel = listing,
                         state = moviesState,
                         stateAvailable = moviesAvailableState,
-                        stateUpcoming = moviesUpcomingState
+                        stateUpcoming = moviesUpcomingState,
+                        viewModel = listing
                     )
                 },
                 cinemas = {

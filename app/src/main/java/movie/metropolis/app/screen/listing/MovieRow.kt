@@ -19,18 +19,28 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.onLoading
+import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.theme.Theme
 
 @Composable
 fun MovieRow(
     items: Loadable<List<MovieView>>,
     isShowing: Boolean,
-    onClickVideo: (String) -> Unit,
+    onClickFavorite: (MovieView) -> Unit,
     onClick: (String) -> Unit,
     state: LazyListState = rememberLazyListState()
 ) {
-    when {
-        items.isLoading -> Row(
+    items.onSuccess {
+        MovieRow(
+            items = items.getOrNull().orEmpty(),
+            isShowing = isShowing,
+            onClick = onClick,
+            onClickFavorite = onClickFavorite,
+            state = state
+        )
+    }.onLoading {
+        Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
@@ -40,14 +50,6 @@ fun MovieRow(
             MovieItem()
             MovieItem()
         }
-
-        items.isSuccess -> MovieRow(
-            items = items.getOrNull().orEmpty(),
-            isShowing = isShowing,
-            onClick = onClick,
-            onClickVideo = onClickVideo,
-            state = state
-        )
     }
 }
 
@@ -55,7 +57,7 @@ fun MovieRow(
 private fun MovieRow(
     items: List<MovieView>,
     isShowing: Boolean,
-    onClickVideo: (String) -> Unit,
+    onClickFavorite: (MovieView) -> Unit,
     onClick: (String) -> Unit,
     state: LazyListState,
     modifier: Modifier = Modifier,
@@ -70,9 +72,9 @@ private fun MovieRow(
             MovieItem(
                 name = item.name,
                 subtext = if (isShowing) item.releasedAt else item.availableFrom,
-                video = item.video,
+                isFavorite = item.favorite,
                 poster = item.poster,
-                onClickVideo = onClickVideo,
+                onClickFavorite = { onClickFavorite(item) },
                 onClick = { onClick(item.id) }
             )
         }
@@ -90,13 +92,13 @@ private fun Preview(
             MovieRow(
                 items = Loadable.loading(),
                 isShowing = false,
-                onClickVideo = {},
+                onClickFavorite = {},
                 onClick = {}
             )
             MovieRow(
                 items = Loadable.success(movies),
                 isShowing = false,
-                onClickVideo = {},
+                onClickFavorite = {},
                 onClick = {}
             )
         }
