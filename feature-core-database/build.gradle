@@ -5,6 +5,13 @@ plugins {
 
 android {
     namespace 'movie.core.db'
+    defaultConfig {
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+    }
 }
 
 dependencies {
