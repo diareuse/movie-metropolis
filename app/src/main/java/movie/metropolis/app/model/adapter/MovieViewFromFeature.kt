@@ -11,7 +11,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class MovieViewFromFeature(
-    private val movie: MoviePreview
+    private val movie: MoviePreview,
+    override val favorite: Boolean
 ) : MovieView {
 
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
