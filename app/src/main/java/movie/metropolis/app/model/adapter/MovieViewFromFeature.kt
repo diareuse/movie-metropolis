@@ -12,7 +12,8 @@ import java.util.Locale
 
 data class MovieViewFromFeature(
     private val movie: MoviePreview,
-    override val favorite: Boolean
+    override val favorite: Boolean,
+    private val preferLargeMedia: Boolean
 ) : MovieView {
 
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
@@ -35,12 +36,16 @@ data class MovieViewFromFeature(
     override val countryOfOrigin: String
         get() = movie.countryOfOrigin
     override val poster: ImageView?
-        get() = movie.media
-            .asSequence()
-            .filterIsInstance<Media.Image>()
-            .sortedByDescending { it.height * it.width }
-            .firstOrNull()
-            ?.let(::ImageViewFromFeature)
+        get() {
+            val media = movie.media
+                .asSequence()
+                .filterIsInstance<Media.Image>()
+                .sortedByDescending { it.height * it.width }
+            return when (preferLargeMedia) {
+                true -> media.firstOrNull()
+                else -> media.middleOrNull()
+            }?.let(::ImageViewFromFeature)
+        }
     override val video: VideoView?
         get() = movie.media
             .asSequence()

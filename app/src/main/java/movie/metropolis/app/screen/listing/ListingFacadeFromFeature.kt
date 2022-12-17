@@ -17,13 +17,13 @@ class ListingFacadeFromFeature(
 
     override suspend fun getCurrent(): Result<List<MovieView>> {
         val values = event.getCurrent().getOrThrow()
-            .map { MovieViewFromFeature(it, favorite.isFavorite(it).getOrThrow()) }
+            .map { MovieViewFromFeature(it, favorite.isFavorite(it).getOrThrow(), true) }
         return Result.success(values)
     }
 
     override suspend fun getUpcoming(): Result<List<MovieView>> {
         val values = event.getUpcoming().getOrThrow()
-            .map { MovieViewFromFeature(it, favorite.isFavorite(it).getOrThrow()) }
+            .map { MovieViewFromFeature(it, favorite.isFavorite(it).getOrThrow(), false) }
         return Result.success(values)
     }
 
