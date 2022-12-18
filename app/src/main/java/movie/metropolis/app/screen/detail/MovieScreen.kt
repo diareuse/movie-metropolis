@@ -1,5 +1,7 @@
 package movie.metropolis.app.screen.detail
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
@@ -44,6 +47,7 @@ import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import kotlinx.coroutines.launch
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
@@ -81,6 +85,7 @@ fun MovieScreen(
     val options by viewModel.options.collectAsState()
     val favorite by viewModel.favorite.collectAsState()
     val location by rememberLocation(onPermissionsRequested)
+    val scope = rememberCoroutineScope()
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
     }
@@ -99,7 +104,17 @@ fun MovieScreen(
         onBookingClick = onBookingClick,
         onVideoClick = onVideoClick,
         onFilterClick = viewModel::toggleFilter,
-        onFavoriteClick = viewModel::toggleFavorite
+        onFavoriteClick = {
+            scope.launch {
+                val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    onPermissionsRequested(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                } else {
+                    true
+                }
+                if (!granted) return@launch
+                viewModel.toggleFavorite()
+            }
+        }
     )
 }
 

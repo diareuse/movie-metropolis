@@ -78,7 +78,8 @@ fun Navigation(
                         state = moviesState,
                         stateAvailable = moviesAvailableState,
                         stateUpcoming = moviesUpcomingState,
-                        viewModel = listing
+                        viewModel = listing,
+                        onPermissionsRequested = onPermissionsRequested
                     )
                 },
                 cinemas = {
