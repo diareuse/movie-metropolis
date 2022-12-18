@@ -37,6 +37,8 @@ class ExactPulseNotificationMovie(
             .setSummaryText("${movie.name} is now available at the cinemas.")
             .bigPicture(getPicture(movie))
         return NotificationCompat.Builder(context, info.getChannel())
+            .setContentTitle("Now available!")
+            .setContentText("${movie.name} is now available at the cinemas.")
             .setSmallIcon(R.drawable.ic_stat_movie)
             .setContentIntent(info.getDeepLink(movie))
             .setStyle(style)
@@ -50,7 +52,7 @@ class ExactPulseNotificationMovie(
         val image = movie.media
             .asSequence()
             .filterIsInstance<Media.Image>()
-            .minByOrNull { it.width * it.height }
+            .maxByOrNull { it.width * it.height }
             ?: return null
         return URL(image.url).openStream().use {
             BitmapFactory.decodeStream(it)
