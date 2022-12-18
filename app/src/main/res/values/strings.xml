@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Movie Metropolis</string>
+    <string name="stat_channel_now_available_title">Now available</string>
+    <string name="stat_channel_now_available_desc">Provides notifications about new movies you marked as favorite</string>
+    <string name="stat_group_movie_title">Movies</string>
+    <string name="stat_group_movie_desc">Notifications regarding movies</string>
 </resources>
