@@ -2,7 +2,6 @@ package movie.metropolis.app.screen.listing
 
 import movie.core.EventFeature
 import movie.core.FavoriteFeature
-import movie.core.adapter.MovieFromId
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewFromFeature
 import movie.metropolis.app.screen.OnChangedListener
@@ -28,7 +27,8 @@ class ListingFacadeFromFeature(
     }
 
     override suspend fun toggleFavorite(movie: MovieView) {
-        favorite.toggle(MovieFromId(movie.id))
+        if (movie !is MovieViewFromFeature) return
+        favorite.toggle(movie.movie)
         favoriteListenable.notify { onChanged() }
     }
 
