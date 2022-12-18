@@ -28,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -47,6 +48,8 @@ import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.ProfileViewModel
 import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
+
+private const val uri = "app://movie.metropolis"
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @Composable
@@ -130,7 +133,10 @@ fun Navigation(
                 }
             )
         }
-        composable("/movies/{movie}?upcoming={upcoming}") {
+        composable(
+            route = "/movies/{movie}?upcoming={upcoming}",
+            deepLinks = listOf(navDeepLink { uriPattern = "$uri/movies/{movie}" })
+        ) {
             MovieScreen(
                 onBackClick = controller::navigateUp,
                 onPermissionsRequested = onPermissionsRequested,
