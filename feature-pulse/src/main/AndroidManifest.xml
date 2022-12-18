@@ -20,6 +20,14 @@
                 tools:node="remove" />
         </provider>
 
+        <receiver
+            android:name="movie.pulse.ExactPulseReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="movie.pulse.PULSE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
