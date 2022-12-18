@@ -42,6 +42,7 @@ class ExactPulseNotificationMovie(
             .setStyle(style)
             .setColorized(true)
             .setOnlyAlertOnce(true)
+            .setAutoCancel(true)
             .build()
     }
 
