@@ -1,5 +1,7 @@
 package movie.metropolis.app.screen.listing
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -21,6 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
@@ -37,14 +41,26 @@ fun MoviesScreen(
     state: LazyListState,
     stateAvailable: PagerState,
     stateUpcoming: LazyListState,
+    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     viewModel: ListingViewModel = hiltViewModel()
 ) {
     val current by viewModel.current.collectAsState()
     val upcoming by viewModel.upcoming.collectAsState()
+    val scope = rememberCoroutineScope()
     MoviesScreen(
         current = current,
         upcoming = upcoming,
-        onClickFavorite = viewModel::toggleFavorite,
+        onClickFavorite = {
+            scope.launch {
+                val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    onPermissionsRequested(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                } else {
+                    true
+                }
+                if (!granted) return@launch
+                viewModel.toggleFavorite(it)
+            }
+        },
         onClick = onClickMovie,
         padding = padding,
         state = state,
