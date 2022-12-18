@@ -4,6 +4,7 @@ import movie.core.db.dao.MovieFavoriteDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.model.MovieFavoriteStored
 import movie.core.model.Movie
+import movie.core.model.MoviePreview
 
 class FavoriteFeatureFromDatabase(
     private val favoriteDao: MovieFavoriteDao,
@@ -14,12 +15,14 @@ class FavoriteFeatureFromDatabase(
         favoriteDao.isFavorite(movie.id)
     }
 
-    override suspend fun toggle(movie: Movie) = kotlin.runCatching {
+    override suspend fun toggle(movie: MoviePreview): Result<Boolean> = kotlin.runCatching {
         val favorite = MovieFavoriteStored(movie = movie.id)
-        when (isFavorite(movie).getOrThrow()) {
+        val isFavorite = isFavorite(movie).getOrThrow()
+        when (isFavorite) {
             true -> favoriteDao.delete(favorite)
             else -> favoriteDao.insertOrUpdate(favorite)
         }
+        !isFavorite
     }
 
     override suspend fun getAll() = kotlin.runCatching {

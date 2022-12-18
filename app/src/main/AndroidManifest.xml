@@ -25,6 +25,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <data
+                    android:host="movie.metropolis"
+                    android:scheme="app" />
+            </intent-filter>
         </activity>
 
         <service

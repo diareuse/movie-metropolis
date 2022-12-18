@@ -6,17 +6,21 @@ import movie.core.db.dao.MovieMediaDao
 import movie.core.di.FavoriteFeatureModule
 import movie.core.mock.MoviePreviewView
 import movie.core.model.Movie
+import movie.core.model.MoviePreview
+import movie.pulse.ExactPulseScheduler
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.Date
 import kotlin.test.assertFails
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class FavoriteFeatureTest : FeatureTest() {
 
+    private lateinit var scheduler: ExactPulseScheduler
     private lateinit var feature: FavoriteFeature
     private lateinit var media: MovieMediaDao
     private lateinit var favorite: MovieFavoriteDao
@@ -24,7 +28,11 @@ class FavoriteFeatureTest : FeatureTest() {
     override fun prepare() {
         favorite = mock()
         media = mock()
-        feature = FavoriteFeatureModule().feature(favorite, media)
+        scheduler = mock {
+            on { schedule(any()) }.then { }
+            on { cancel(any()) }.then { }
+        }
+        feature = FavoriteFeatureModule().feature(favorite, media, scheduler)
     }
 
     @Test
@@ -58,29 +66,34 @@ class FavoriteFeatureTest : FeatureTest() {
 
     @Test
     fun toggle_inserts() = runTest {
-        val movie = mock<Movie> {
+        val movie = mock<MoviePreview> {
             on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(false)
-        feature.toggle(movie)
+        feature.toggle(movie).getOrThrow()
         verify(favorite).insertOrUpdate(any())
     }
 
     @Test
     fun toggle_deletes() = runTest {
-        val movie = mock<Movie> {
+        val movie = mock<MoviePreview> {
             on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(true)
-        feature.toggle(movie)
+        feature.toggle(movie).getOrThrow()
         verify(favorite).delete(any())
     }
 
     @Test
     fun toggle_returnsFailure_onInsert() = runTest {
-        val movie = mock<Movie>()
+        val movie = mock<MoviePreview> {
+            on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
+        }
         whenever(favorite.isFavorite(any())).thenReturn(false)
-        whenever(favorite.insert(any())).thenThrow(RuntimeException())
+        whenever(favorite.insertOrUpdate(any())).thenThrow(RuntimeException())
         assertFails {
             feature.toggle(movie).getOrThrow()
         }
@@ -88,7 +101,10 @@ class FavoriteFeatureTest : FeatureTest() {
 
     @Test
     fun toggle_returnsFailure_onDelete() = runTest {
-        val movie = mock<Movie>()
+        val movie = mock<MoviePreview> {
+            on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
+        }
         whenever(favorite.isFavorite(any())).thenReturn(true)
         whenever(favorite.delete(any())).thenThrow(RuntimeException())
         assertFails {
@@ -98,11 +114,36 @@ class FavoriteFeatureTest : FeatureTest() {
 
     @Test
     fun toggle_returnsFailure_isFavoriteError() = runTest {
-        val movie = mock<Movie>()
+        val movie = mock<MoviePreview> {
+            on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
+        }
         whenever(favorite.isFavorite(any())).thenThrow(RuntimeException())
         assertFails {
             feature.toggle(movie).getOrThrow()
         }
+    }
+
+    @Test
+    fun toggle_cancelsAlarm() = runTest {
+        val movie = mock<MoviePreview> {
+            on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
+        }
+        whenever(favorite.isFavorite(any())).thenReturn(true)
+        feature.toggle(movie).getOrThrow()
+        verify(scheduler).cancel(any())
+    }
+
+    @Test
+    fun toggle_schedulesAlarm() = runTest {
+        val movie = mock<MoviePreview> {
+            on { id }.thenReturn("id")
+            on { screeningFrom }.thenReturn(Date(0))
+        }
+        whenever(favorite.isFavorite(any())).thenReturn(false)
+        feature.toggle(movie).getOrThrow()
+        verify(scheduler).schedule(any())
     }
 
     @Test
