@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class MovieViewFromFeature(
-    private val movie: MoviePreview,
+    internal val movie: MoviePreview,
     override val favorite: Boolean,
     private val preferLargeMedia: Boolean
 ) : MovieView {

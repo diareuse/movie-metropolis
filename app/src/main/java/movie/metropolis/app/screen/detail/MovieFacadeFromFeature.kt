@@ -16,6 +16,7 @@ import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.model.adapter.CinemaBookingViewFromFeature
 import movie.metropolis.app.model.adapter.ImageViewFromFeature
 import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
+import movie.metropolis.app.model.adapter.MoviePreviewFromDetail
 import movie.metropolis.app.model.adapter.VideoViewFromFeature
 import movie.metropolis.app.screen.OnChangedListener
 import movie.metropolis.app.screen.cinema.Listenable
@@ -76,7 +77,8 @@ class MovieFacadeFromFeature(
     }
 
     override suspend fun toggleFavorite() {
-        favorite.toggle(getDetail()).onSuccess {
+        val preview = MoviePreviewFromDetail(getDetail())
+        favorite.toggle(preview).onSuccess {
             listenableFavorite.notify { onChanged() }
         }
     }

@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.detail
 
 import kotlinx.coroutines.test.runTest
 import movie.core.CinemaWithShowings
+import movie.core.FavoriteFeature
 import movie.core.adapter.MovieFromId
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -12,18 +13,46 @@ import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.FeatureTest
 import org.junit.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 class MovieFacadeTest : FeatureTest() {
 
+    private lateinit var favorite: FavoriteFeature
     private lateinit var facade: MovieFacade
 
     override fun prepare() {
-        facade = FacadeModule().movie(event).create("5376O2R")
+        favorite = mock()
+        facade = FacadeModule().movie(event, favorite).create("5376O2R")
+    }
+
+    @Test
+    fun returns_isFavorite_success() = runTest {
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
+        whenever(favorite.isFavorite(any())).thenReturn(Result.success(true))
+        facade.isFavorite().getOrThrow()
+    }
+
+    @Test
+    fun returns_isFavorite_failure() = runTest {
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
+        whenever(favorite.isFavorite(any())).thenThrow(RuntimeException())
+        assertFails {
+            facade.isFavorite().getOrThrow()
+        }
+    }
+
+    @Test
+    fun toggle_callsFavorite() = runTest {
+        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
+        facade.toggleFavorite()
+        verify(favorite).toggle(any())
     }
 
     @Test
