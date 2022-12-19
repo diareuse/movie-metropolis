@@ -3,7 +3,9 @@ package movie.metropolis.app.screen.detail
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +27,7 @@ import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,8 +45,10 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
@@ -51,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
+import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
@@ -76,7 +82,7 @@ import kotlin.random.Random.Default.nextInt
 fun MovieScreen(
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
-    onVideoClick: (String) -> Unit,
+    onLinkClick: (String) -> Unit,
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
     viewModel: MovieViewModel = hiltViewModel()
 ) {
@@ -106,7 +112,7 @@ fun MovieScreen(
         onBackClick = onBackClick,
         onSelectedDateUpdated = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
-        onVideoClick = onVideoClick,
+        onLinkClick = onLinkClick,
         onFilterClick = viewModel::toggleFilter,
         onFavoriteClick = {
             scope.launch {
@@ -137,7 +143,7 @@ private fun MovieScreen(
     onSelectedDateUpdated: (Date) -> Unit,
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
-    onVideoClick: (String) -> Unit,
+    onLinkClick: (String) -> Unit,
     onFilterClick: (Filter) -> Unit,
     onFavoriteClick: () -> Unit
 ) {
@@ -192,6 +198,48 @@ private fun MovieScreen(
                     startState = hideShowings
                 )
             }
+            detail.mapNotNull { it.links }.onSuccess {
+                val csfd = it.csfd
+                val imdb = it.imdb
+                val rottenTomatoes = it.rottenTomatoes
+                item(key = "links") {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(
+                            16.dp,
+                            Alignment.CenterHorizontally
+                        )
+                    ) {
+                        if (csfd != null) Image(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .clickable { onLinkClick(csfd) },
+                            painter = painterResource(id = R.drawable.ic_csfd),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(LocalContentColor.current)
+                        )
+                        if (imdb != null) Image(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .clickable { onLinkClick(imdb) },
+                            painter = painterResource(id = R.drawable.ic_imdb),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(LocalContentColor.current)
+                        )
+                        if (rottenTomatoes != null) Image(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .clickable { onLinkClick(rottenTomatoes) },
+                            painter = painterResource(id = R.drawable.ic_rotten_tomatoes),
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(LocalContentColor.current)
+                        )
+                    }
+                }
+            }
             if (!hideShowings) {
                 MovieDetailShowings(
                     showings = showings,
@@ -209,7 +257,7 @@ private fun MovieScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp),
-                            onClick = { onVideoClick(it.url) }
+                            onClick = { onLinkClick(it.url) }
                         ) {
                             Text("View trailer")
                         }
@@ -421,7 +469,7 @@ private fun Preview(
             selectionAvailableStart = Date(),
             onSelectedDateUpdated = {},
             onBookingClick = {},
-            onVideoClick = {},
+            onLinkClick = {},
             onFilterClick = {},
             onFavoriteClick = {}
         )

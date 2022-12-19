@@ -140,7 +140,7 @@ fun Navigation(
             MovieScreen(
                 onBackClick = controller::navigateUp,
                 onPermissionsRequested = onPermissionsRequested,
-                onVideoClick = onLinkClicked,
+                onLinkClick = onLinkClicked,
                 onBookingClick = {
                     val url = Base64.encodeToString(
                         it.encodeToByteArray(),
