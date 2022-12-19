@@ -1,0 +1,15 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.rating'
+}
+
+dependencies {
+
+    implementation "io.ktor:ktor-client-core:[2,3["
+    implementation "io.ktor:ktor-client-cio:[2,3["
+
+}
