@@ -21,7 +21,7 @@ class RatingProviderImdbTest : AbstractRatingTest() {
     @Test
     fun returns_imdb() = runTest {
         val result = provider.getRating(descriptor)
-        assertEquals(90, result)
+        assertEquals(81, result)
     }
 
 }
