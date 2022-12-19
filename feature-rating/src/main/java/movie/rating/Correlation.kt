@@ -3,7 +3,7 @@ package movie.rating
 import kotlin.math.max
 import kotlin.math.min
 
-infix fun String.correlate(other: String): Float {
+internal infix fun String.correlate(other: String): Float {
     if (trim() == other.trim()) return 1f
 
     fun sizeFactor(): Float {
