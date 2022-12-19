@@ -1,6 +1,6 @@
 package movie.rating
 
-class RatingProviderFallback(
+internal class RatingProviderFallback(
     private vararg val stack: RatingProvider
 ) : RatingProvider {
 

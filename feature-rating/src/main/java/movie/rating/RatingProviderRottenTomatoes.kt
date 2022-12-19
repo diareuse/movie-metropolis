@@ -4,7 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 
-class RatingProviderRottenTomatoes(
+internal class RatingProviderRottenTomatoes(
     private val client: HttpClient,
     private val link: LinkProvider
 ) : RatingProvider {

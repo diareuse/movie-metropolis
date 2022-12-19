@@ -5,9 +5,9 @@ import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
 
-class LinkProviderRottenTomatoes(
+internal class LinkProviderRottenTomatoes(
     private val client: HttpClient
-): LinkProvider {
+) : LinkProvider {
 
     override suspend fun getLink(descriptor: MovieDescriptor): String {
         val (name, year) = descriptor
