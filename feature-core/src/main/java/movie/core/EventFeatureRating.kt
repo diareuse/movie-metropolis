@@ -1,8 +1,10 @@
 package movie.core
 
+import movie.core.adapter.MovieDetailWithRating
 import movie.core.db.dao.MovieRatingDao
 import movie.core.db.model.MovieRatingStored
 import movie.core.model.Movie
+import movie.core.model.MovieDetail
 import movie.rating.LinkProvider
 import movie.rating.MovieDescriptor
 import movie.rating.RatingProvider
@@ -18,7 +20,9 @@ class EventFeatureRating(
     private val csfd: LinkProvider,
 ) : EventFeature by origin {
 
-    override suspend fun getDetail(movie: Movie) = origin.getDetail(movie).onSuccess {
+    override suspend fun getDetail(
+        movie: Movie
+    ): Result<MovieDetail> = origin.getDetail(movie).map {
         val year = Calendar.getInstance().run {
             time = it.releasedAt
             get(Calendar.YEAR)
@@ -32,6 +36,7 @@ class EventFeatureRating(
             linkRottenTomatoes = tomatoes.getLinkOrNull(descriptor)
         )
         dao.insertOrUpdate(rating)
+        MovieDetailWithRating(it, rating)
     }
 
 }
