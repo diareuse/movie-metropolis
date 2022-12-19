@@ -14,7 +14,7 @@ internal class LinkProviderCsfd(
         val query = name.encodeURLParameter()
         val response = client.get("https://www.csfd.cz/hledat/?q=$query")
         val body = response.bodyAsText()
-        for (row in row.findAll(body).toList().also { println(it.joinToString { it.value }) }) {
+        for (row in row.findAll(body)) {
             if (!row.value.contains(year.toString())) continue
             val title = title.find(row.value) ?: continue
             val correlationFactor = title.groupValues[2] correlate name
