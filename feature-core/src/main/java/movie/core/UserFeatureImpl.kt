@@ -87,7 +87,6 @@ internal class UserFeatureImpl(
                 when (booking.isExpired) {
                     true -> async {
                         val detail = movie.await()
-                        println(cinemas.await().map { it.id })
                         if (detail == null) null
                         else BookingExpiredFromResponse(
                             response = booking,
