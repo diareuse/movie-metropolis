@@ -2,6 +2,7 @@ package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.adapter.MovieFromId
 import movie.core.db.dao.BookingDao
@@ -10,6 +11,7 @@ import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MovieRatingDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
 import movie.core.db.model.BookingStored
@@ -18,7 +20,10 @@ import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
+import movie.rating.LinkProvider
+import movie.rating.RatingProvider
 import org.junit.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.Date
@@ -28,6 +33,9 @@ import kotlin.test.assertFails
 
 class EventFeatureTest : FeatureTest() {
 
+    private lateinit var rating: RatingProvider
+    private lateinit var link: LinkProvider
+    private lateinit var ratingDao: MovieRatingDao
     private lateinit var preference: EventPreference
     private lateinit var bookingDao: BookingDao
     private lateinit var cinema: Cinema
@@ -51,7 +59,12 @@ class EventFeatureTest : FeatureTest() {
         previewDao = mock()
         bookingDao = mock()
         movieDao = mock()
+        ratingDao = mock()
         preference = mock()
+        rating = mock {
+            on { runBlocking { getRating(any()) } }.thenReturn(0)
+        }
+        link = mock()
         whenever(preference.filterSeen).thenReturn(false)
         feature = module.featureSaving(
             service.event(clientData),
@@ -62,7 +75,10 @@ class EventFeatureTest : FeatureTest() {
             mediaDao,
             referenceDao,
             previewDao,
-            movieDao
+            movieDao,
+            ratingDao,
+            rating,
+            link, link, link
         )
         feature = module.feature(
             showingDao,

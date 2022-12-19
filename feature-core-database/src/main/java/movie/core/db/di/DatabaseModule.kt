@@ -117,4 +117,13 @@ class DatabaseModule {
         return dao
     }
 
+    @Provides
+    internal fun movieRating(
+        database: MovieDatabase
+    ): MovieRatingDao {
+        var dao: MovieRatingDao = database.movieRating()
+        dao = MovieRatingDaoLowercase(dao)
+        return dao
+    }
+
 }
