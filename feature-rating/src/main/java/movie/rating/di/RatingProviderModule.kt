@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import movie.rating.LinkProvider
+import movie.rating.LinkProviderCaching
 import movie.rating.LinkProviderCsfd
 import movie.rating.LinkProviderImdb
 import movie.rating.LinkProviderRottenTomatoes
@@ -43,8 +44,12 @@ internal class RatingProviderModule {
     fun csfdLink(
         @Rating
         client: HttpClient
-    ): LinkProvider =
-        LinkProviderCsfd(client)
+    ): LinkProvider {
+        var link: LinkProvider
+        link = LinkProviderCsfd(client)
+        link = LinkProviderCaching(link)
+        return link
+    }
 
     @Provides
     @Imdb
@@ -61,8 +66,12 @@ internal class RatingProviderModule {
     fun imdbLink(
         @Rating
         client: HttpClient
-    ): LinkProvider =
-        LinkProviderImdb(client)
+    ): LinkProvider {
+        var link: LinkProvider
+        link = LinkProviderImdb(client)
+        link = LinkProviderCaching(link)
+        return link
+    }
 
     @Provides
     @RottenTomatoes
@@ -79,8 +88,12 @@ internal class RatingProviderModule {
     fun rtLink(
         @Rating
         client: HttpClient
-    ): LinkProvider =
-        LinkProviderRottenTomatoes(client)
+    ): LinkProvider {
+        var link: LinkProvider
+        link = LinkProviderRottenTomatoes(client)
+        link = LinkProviderCaching(link)
+        return link
+    }
 
     @Provides
     @Rating
