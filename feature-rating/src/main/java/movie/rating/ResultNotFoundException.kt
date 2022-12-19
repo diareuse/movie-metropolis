@@ -1,3 +1,3 @@
 package movie.rating
 
-class ResultNotFoundException : RuntimeException()
+internal class ResultNotFoundException : RuntimeException()
