@@ -28,11 +28,12 @@ class EventFeatureRating(
             get(Calendar.YEAR)
         }
         val descriptor = MovieDescriptor(it.originalName, year)
+        val descriptorLocal = MovieDescriptor(it.name, year)
         val rating = MovieRatingStored(
             movie = it.id,
             rating = rating.getRating(descriptor),
             linkImdb = imdb.getLinkOrNull(descriptor),
-            linkCsfd = csfd.getLinkOrNull(descriptor),
+            linkCsfd = csfd.getLinkOrNull(descriptorLocal),
             linkRottenTomatoes = tomatoes.getLinkOrNull(descriptor)
         )
         dao.insertOrUpdate(rating)
