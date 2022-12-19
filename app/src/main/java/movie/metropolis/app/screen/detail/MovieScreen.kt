@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +33,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
@@ -58,6 +61,7 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
+import movie.metropolis.app.screen.mapNotNull
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.theme.Theme
@@ -307,18 +311,38 @@ fun MovieMetadata(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-        AsyncImage(
-            modifier = Modifier
+        Box(
+            Modifier
                 .shadow(32.dp)
-                .fillMaxWidth(.3f)
-                .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
                 .clip(MaterialTheme.shapes.medium)
-                .imagePlaceholder(poster.getOrNull() == null)
-                .background(MaterialTheme.colorScheme.surface),
-            model = poster.getOrNull()?.url,
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .fillMaxWidth(.3f)
+                    .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
+                    .imagePlaceholder(poster.getOrNull() == null)
+                    .background(MaterialTheme.colorScheme.surface),
+                model = poster.getOrNull()?.url,
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+            detail.mapNotNull { it.rating }.onSuccess {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .clip(
+                            MaterialTheme.shapes.medium.copy(
+                                topStart = ZeroCornerSize,
+                                bottomEnd = ZeroCornerSize
+                            )
+                        )
+                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .padding(8.dp)
+                        .padding(start = 2.dp),
+                    text = it
+                )
+            }
+        }
         DetailPosterRow(detail = detail)
     }
 }
