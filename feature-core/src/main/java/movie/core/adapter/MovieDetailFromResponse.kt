@@ -2,11 +2,12 @@ package movie.core.adapter
 
 import movie.core.model.Media
 import movie.core.model.MovieDetail
+import movie.core.nwk.model.MovieDetailResponse
 import java.util.Date
 import kotlin.time.Duration
 
 internal data class MovieDetailFromResponse(
-    private val response: movie.core.nwk.model.MovieDetailResponse
+    private val response: MovieDetailResponse
 ) : MovieDetail {
 
     override val id: String
@@ -35,16 +36,24 @@ internal data class MovieDetailFromResponse(
         get() = response.restrictionUrl
     override val media: Iterable<Media>
         get() = response.media.mapNotNull(::MediaFromResponse)
+    override val rating: Byte
+        get() = 0
+    override val linkImdb: String?
+        get() = null
+    override val linkRottenTomatoes: String?
+        get() = null
+    override val linkCsfd: String?
+        get() = null
 
-    private fun MediaFromResponse(media: movie.core.nwk.model.MovieDetailResponse.Media) =
+    private fun MediaFromResponse(media: MovieDetailResponse.Media) =
         when (media) {
-            is movie.core.nwk.model.MovieDetailResponse.Media.Image -> Media.Image(
+            is MovieDetailResponse.Media.Image -> Media.Image(
                 media.width,
                 media.height,
                 media.url
             )
 
-            is movie.core.nwk.model.MovieDetailResponse.Media.Video -> Media.Video(media.url)
+            is MovieDetailResponse.Media.Video -> Media.Video(media.url)
             else -> null
         }
 
