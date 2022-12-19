@@ -437,7 +437,15 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val availableFrom: String = "23. 4. 2022",
         override val poster: ImageView? = null,
         override val trailer: VideoView? = null,
+        override val rating: String? = "78%",
+        override val links: MovieDetailView.Links? = Links(),
     ) : MovieDetailView
+
+    private data class Links(
+        override val imdb: String? = "https://imdb.com/",
+        override val csfd: String? = "https://csfd.cz/",
+        override val rottenTomatoes: String? = "https://rottentomatoes.com/"
+    ) : MovieDetailView.Links
 
 }
 
