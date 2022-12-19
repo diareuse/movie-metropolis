@@ -15,4 +15,12 @@ interface MovieDetailView {
     val availableFrom: String
     val poster: ImageView?
     val trailer: VideoView?
+    val rating: String?
+    val links: Links?
+
+    interface Links {
+        val imdb: String?
+        val csfd: String?
+        val rottenTomatoes: String?
+    }
 }
