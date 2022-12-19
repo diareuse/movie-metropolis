@@ -40,7 +40,10 @@ internal class RatingProviderModule {
 
     @Provides
     @Csfd
-    fun csfdLink(client: HttpClient): LinkProvider =
+    fun csfdLink(
+        @Rating
+        client: HttpClient
+    ): LinkProvider =
         LinkProviderCsfd(client)
 
     @Provides
@@ -55,7 +58,10 @@ internal class RatingProviderModule {
 
     @Provides
     @Imdb
-    fun imdbLink(client: HttpClient): LinkProvider =
+    fun imdbLink(
+        @Rating
+        client: HttpClient
+    ): LinkProvider =
         LinkProviderImdb(client)
 
     @Provides
@@ -70,7 +76,10 @@ internal class RatingProviderModule {
 
     @Provides
     @RottenTomatoes
-    fun rtLink(client: HttpClient): LinkProvider =
+    fun rtLink(
+        @Rating
+        client: HttpClient
+    ): LinkProvider =
         LinkProviderRottenTomatoes(client)
 
     @Provides
