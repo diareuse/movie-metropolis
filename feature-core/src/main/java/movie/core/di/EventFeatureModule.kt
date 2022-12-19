@@ -8,6 +8,7 @@ import movie.core.EventFeature
 import movie.core.EventFeatureDatabase
 import movie.core.EventFeatureFilterUnseen
 import movie.core.EventFeatureImpl
+import movie.core.EventFeatureRating
 import movie.core.EventFeatureRecover
 import movie.core.EventFeatureRecoverSecondary
 import movie.core.EventFeatureRequireNotEmpty
@@ -18,11 +19,17 @@ import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MovieRatingDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
 import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
 import movie.core.preference.EventPreference
+import movie.rating.LinkProvider
+import movie.rating.RatingProvider
+import movie.rating.di.Csfd
+import movie.rating.di.Imdb
+import movie.rating.di.RottenTomatoes
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -65,7 +72,15 @@ internal class EventFeatureModule {
         mediaDao: MovieMediaDao,
         referenceDao: MovieReferenceDao,
         previewDao: MoviePreviewDao,
-        movieDao: MovieDao
+        movieDao: MovieDao,
+        ratingDao: MovieRatingDao,
+        rating: RatingProvider,
+        @RottenTomatoes
+        tomatoes: LinkProvider,
+        @Imdb
+        imdb: LinkProvider,
+        @Csfd
+        csfd: LinkProvider,
     ): EventFeature {
         var network: EventFeature
         network = EventFeatureImpl(event, cinema)
@@ -73,6 +88,7 @@ internal class EventFeatureModule {
             network, cinemaDao, movieDao, detailDao, mediaDao,
             showingDao, referenceDao, previewDao
         )
+        network = EventFeatureRating(network, ratingDao, rating, tomatoes, imdb, csfd)
         return network
     }
 

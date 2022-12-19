@@ -2,25 +2,24 @@ package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.dao.CinemaDao
-import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
-import movie.core.db.dao.MoviePreviewDao
-import movie.core.db.dao.MovieReferenceDao
-import movie.core.db.dao.ShowingDao
-import movie.core.di.EventFeatureModule
 import movie.core.di.UserFeatureModule
+import movie.core.model.Cinema
 import movie.core.model.FieldUpdate
+import movie.core.model.MovieDetail
 import movie.core.model.SignInMethod
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
 import org.junit.Test
+import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.whenever
@@ -29,6 +28,7 @@ import kotlin.test.assertFails
 
 class UserFeatureTest : FeatureTest() {
 
+    private lateinit var event: EventFeature
     private lateinit var preference: EventPreference
     private lateinit var account: UserAccount
     private lateinit var feature: UserFeature
@@ -37,10 +37,6 @@ class UserFeatureTest : FeatureTest() {
     private lateinit var detailDao: MovieDetailDao
     private lateinit var cinemaDao: CinemaDao
     private lateinit var mediaDao: MovieMediaDao
-    private lateinit var showingDao: ShowingDao
-    private lateinit var referenceDao: MovieReferenceDao
-    private lateinit var previewDao: MoviePreviewDao
-    private lateinit var movieDao: MovieDao
 
     override fun prepare() {
         bookingDao = mock()
@@ -48,39 +44,20 @@ class UserFeatureTest : FeatureTest() {
         detailDao = mock()
         cinemaDao = mock()
         mediaDao = mock()
-        showingDao = mock()
-        referenceDao = mock()
-        previewDao = mock()
-        movieDao = mock()
         account = spy(MockAccount())
         preference = mock()
+        event = mock {
+            on { runBlocking { getShowings(any(), any()) } }.thenReturn(Result.success(emptyMap()))
+            on { runBlocking { getCinemas(any()) } }.thenReturn(Result.success(listOf(mock())))
+            on { runBlocking { getCinemas(null) } }.thenReturn(Result.success(listOf(mock())))
+            on { runBlocking { getDetail(any()) } }.thenReturn(Result.success(mock()))
+            on { runBlocking { getCurrent() } }.thenReturn(Result.success(listOf(mock())))
+            on { runBlocking { getUpcoming() } }.thenReturn(Result.success(listOf(mock())))
+        }
         whenever(preference.filterSeen).thenReturn(false)
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
         val service = network.user(clientCustomer, account, auth)
-        val module = EventFeatureModule()
-        var event = module.featureSaving(
-            network.event(clientData),
-            network.cinema(clientRoot),
-            showingDao,
-            cinemaDao,
-            detailDao,
-            mediaDao,
-            referenceDao,
-            previewDao,
-            movieDao
-        )
-        event = module.feature(
-            showingDao,
-            cinemaDao,
-            detailDao,
-            mediaDao,
-            referenceDao,
-            previewDao,
-            bookingDao,
-            preference,
-            event
-        )
         feature = UserFeatureModule().saving(
             service = service,
             event = event,
@@ -256,6 +233,11 @@ class UserFeatureTest : FeatureTest() {
 
     @Test
     fun getBookings_responds_withSuccess() = runTest {
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("1051")
+        }
+        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
+        whenever(event.getDetail(any())).thenReturn(Result.failure(Throwable()))
         prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
@@ -273,6 +255,14 @@ class UserFeatureTest : FeatureTest() {
 
     @Test
     fun getBookings_responds_withSuccess_hasMovie() = runTest {
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("1051")
+        }
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("id")
+        }
+        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
+        whenever(event.getDetail(any())).thenReturn(Result.success(movie))
         prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
