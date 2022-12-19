@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.request.header
 import movie.rating.LinkProvider
 import movie.rating.LinkProviderCaching
 import movie.rating.LinkProviderCsfd
@@ -97,6 +99,13 @@ internal class RatingProviderModule {
 
     @Provides
     @Rating
-    fun client(): HttpClient = HttpClient(CIO) {}
+    fun client(): HttpClient = HttpClient(CIO) {
+        defaultRequest {
+            header(
+                "user-agent",
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0"
+            )
+        }
+    }
 
 }
