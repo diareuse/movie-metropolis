@@ -7,6 +7,8 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import movie.rating.RatingProvider
+import movie.rating.RatingProviderFallback
+import movie.rating.RatingProviderImdb
 import movie.rating.RatingProviderRottenTomatoes
 
 @Module
@@ -17,7 +19,10 @@ class RatingProviderModule {
     fun rating(
         @Rating client: HttpClient
     ): RatingProvider {
-        return RatingProviderRottenTomatoes(client)
+        return RatingProviderFallback(
+            RatingProviderRottenTomatoes(client),
+            RatingProviderImdb(client)
+        )
     }
 
     @Provides
