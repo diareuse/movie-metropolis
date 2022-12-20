@@ -9,11 +9,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,14 +25,17 @@ import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.theme.Theme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CinemasScreen(
     padding: PaddingValues,
     onPermissionRequested: suspend (Array<String>) -> Boolean,
     onClickCinema: (String) -> Unit,
     state: LazyListState,
+    profileIcon: @Composable () -> Unit,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
     val items by viewModel.items.collectAsState()
@@ -36,24 +43,33 @@ fun CinemasScreen(
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
     }
-    CinemasScreen(
-        items = items,
-        padding = padding,
-        onClickCinema = onClickCinema,
-        state = state
-    )
+    HomeScreenLayout(
+        profileIcon = profileIcon,
+        title = { Text("Cinemas") }
+    ) { innerPadding, behavior ->
+        CinemasScreen(
+            items = items,
+            behavior = behavior,
+            padding = innerPadding + padding,
+            onClickCinema = onClickCinema,
+            state = state
+        )
+    }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 private fun CinemasScreen(
     items: Loadable<List<CinemaView>>,
     padding: PaddingValues,
+    behavior: TopAppBarScrollBehavior,
     onClickCinema: (String) -> Unit,
     state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .nestedScroll(behavior.nestedScrollConnection)
+            .fillMaxSize(),
         contentPadding = padding + PaddingValues(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         state = state
@@ -76,15 +92,18 @@ private fun CinemasScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
     Theme {
-        CinemasScreen(
-            items = Loadable.loading(),
-            padding = PaddingValues(0.dp),
-            onClickCinema = {}
-
-        )
+        HomeScreenLayout(profileIcon = { /*TODO*/ }, title = { /*TODO*/ }) { padding, behavior ->
+            CinemasScreen(
+                items = Loadable.loading(),
+                padding = padding,
+                behavior = behavior,
+                onClickCinema = {}
+            )
+        }
     }
 }

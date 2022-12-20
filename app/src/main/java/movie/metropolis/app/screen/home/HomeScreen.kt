@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,6 +19,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -93,17 +96,53 @@ fun HomeScreen(
                 onPermissionRequested = onPermissionsRequested,
                 onClickCinema = onClickCinema,
                 viewModel = cinemas,
-                state = cinemasState
+                state = cinemasState,
+                profileIcon = {
+                    if (email != null) ProfileIcon(
+                        email = email,
+                        onClick = onClickUser
+                    )
+                }
             )
         },
         booking = {
             BookingScreen(
                 padding = it,
                 viewModel = booking,
-                state = bookingState
+                state = bookingState,
+                profileIcon = {
+                    if (email != null) ProfileIcon(
+                        email = email,
+                        onClick = onClickUser
+                    )
+                }
             )
         },
         onNavigateToLogin = onClickLogin
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenLayout(
+    profileIcon: @Composable () -> Unit,
+    title: @Composable () -> Unit,
+    content: @Composable (PaddingValues, TopAppBarScrollBehavior) -> Unit
+) {
+    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = title,
+                navigationIcon = profileIcon,
+                scrollBehavior = behavior,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
+                )
+            )
+        },
+        content = { content(it, behavior) }
     )
 }
 
