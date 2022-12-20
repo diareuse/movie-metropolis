@@ -2,7 +2,9 @@ package movie.metropolis.app.screen
 
 import android.util.Base64
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -14,6 +16,7 @@ import movie.metropolis.app.screen.detail.MovieScreen
 import movie.metropolis.app.screen.home.HomeScreen
 import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.profile.LoginScreen
+import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
 
 private const val uri = "app://movie.metropolis"
@@ -31,13 +34,18 @@ fun Navigation(
     ) {
         composable("/home") {
             HomeScreen(
+                onPermissionsRequested = onPermissionsRequested,
                 onClickMovie = { id, upcoming ->
                     controller.navigate("/movies/${id}?upcoming=$upcoming")
                 },
-                onPermissionsRequested = onPermissionsRequested,
                 onClickCinema = { id -> controller.navigate("/cinemas/$id") },
-                onClickLogin = { controller.navigate("/user/login") },
-                onClickSettings = { controller.navigate("/user/settings") },
+            )
+        }
+        composable("/user") {
+            UserScreen(
+                padding = PaddingValues(0.dp),
+                onNavigateToLogin = { controller.navigate("/user/login") },
+                onNavigateToSettings = { controller.navigate("/user/settings") }
             )
         }
         composable("/user/login") {
