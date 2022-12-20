@@ -12,7 +12,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -20,44 +22,57 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.theme.Theme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingScreen(
     padding: PaddingValues,
     state: LazyListState,
+    profileIcon: @Composable () -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
     val active by viewModel.active.collectAsState()
     val expired by viewModel.expired.collectAsState()
-    BookingScreen(
-        padding = padding,
-        active = active,
-        expired = expired,
-        onRefreshClick = viewModel::refresh,
-        state = state
-    )
+    HomeScreenLayout(
+        profileIcon = profileIcon,
+        title = { Text("Tickets") }
+    ) { innerPadding, behavior ->
+        BookingScreenContent(
+            padding = innerPadding + padding,
+            behavior = behavior,
+            active = active,
+            expired = expired,
+            onRefreshClick = viewModel::refresh,
+            state = state
+        )
+    }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-private fun BookingScreen(
+private fun BookingScreenContent(
     padding: PaddingValues,
     active: Loadable<List<BookingView.Active>>,
     expired: Loadable<List<BookingView.Expired>>,
+    behavior: TopAppBarScrollBehavior,
     onRefreshClick: () -> Unit = {},
     state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .nestedScroll(behavior.nestedScrollConnection)
+            .fillMaxSize(),
         contentPadding = padding + PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         userScrollEnabled = !active.isLoading || !expired.isLoading,
@@ -121,14 +136,21 @@ private fun BookingScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
     Theme {
-        BookingScreen(
-            padding = PaddingValues(0.dp),
-            active = Loadable.loading(),
-            expired = Loadable.loading(),
-        )
+        HomeScreenLayout(
+            profileIcon = {},
+            title = {}
+        ) { padding, behavior ->
+            BookingScreenContent(
+                padding = padding,
+                active = Loadable.loading(),
+                expired = Loadable.loading(),
+                behavior = behavior
+            )
+        }
     }
 }

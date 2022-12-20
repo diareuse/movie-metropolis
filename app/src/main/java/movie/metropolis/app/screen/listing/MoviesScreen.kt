@@ -9,19 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -37,6 +33,7 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.theme.Theme
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextBytes
@@ -56,7 +53,10 @@ fun MoviesScreen(
     val current by viewModel.current.collectAsState()
     val upcoming by viewModel.upcoming.collectAsState()
     val scope = rememberCoroutineScope()
-    MoviesScreen(profileIcon = profileIcon) { innerPadding, behavior ->
+    HomeScreenLayout(
+        profileIcon = profileIcon,
+        title = { Text("Movies") }
+    ) { innerPadding, behavior ->
         MoviesScreenContent(
             behavior = behavior,
             current = current,
@@ -79,29 +79,6 @@ fun MoviesScreen(
             stateUpcoming = stateUpcoming
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun MoviesScreen(
-    profileIcon: @Composable () -> Unit,
-    content: @Composable (PaddingValues, TopAppBarScrollBehavior) -> Unit
-) {
-    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = { Text("Movies") },
-                navigationIcon = profileIcon,
-                scrollBehavior = behavior,
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent
-                )
-            )
-        },
-        content = { content(it, behavior) }
-    )
 }
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
@@ -164,7 +141,10 @@ private fun MoviesScreenContent(
 @Composable
 private fun Preview(@PreviewParameter(ListMovieViewProvider::class) movies: List<MovieView>) {
     Theme {
-        MoviesScreen(profileIcon = {}) { padding, behavior ->
+        HomeScreenLayout(
+            profileIcon = {},
+            title = {}
+        ) { padding, behavior ->
             MoviesScreenContent(
                 padding = padding,
                 current = Loadable.loading(),
