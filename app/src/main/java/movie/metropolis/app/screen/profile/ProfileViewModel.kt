@@ -15,7 +15,6 @@ import movie.metropolis.app.model.adapter.UserViewFromView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.screen.profile.ProfileFacade.Companion.cinemasFlow
-import movie.metropolis.app.screen.profile.ProfileFacade.Companion.isLoggedInFlow
 import movie.metropolis.app.screen.profile.ProfileFacade.Companion.membershipFlow
 import movie.metropolis.app.screen.profile.ProfileFacade.Companion.userFlow
 import movie.metropolis.app.screen.retainStateIn
@@ -34,8 +33,6 @@ class ProfileViewModel @Inject constructor(
         .retainStateIn(viewModelScope, Loadable.loading())
     val user = facade.userFlow(jobEmitter.receiveAsFlow())
         .onEachSuccess(::populateFields)
-        .retainStateIn(viewModelScope, Loadable.loading())
-    val isLoggedIn = facade.isLoggedInFlow
         .retainStateIn(viewModelScope, Loadable.loading())
 
     val firstName = MutableStateFlow("")
