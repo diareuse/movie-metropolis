@@ -4,6 +4,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.BookingActiveFromDatabase
 import movie.core.adapter.BookingExpiredFromDatabase
+import movie.core.auth.UserAccount
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.dao.CinemaDao
@@ -19,8 +20,12 @@ class UserFeatureDatabase(
     private val seatsDao: BookingSeatsDao,
     private val movieDao: MovieDetailDao,
     private val cinemaDao: CinemaDao,
-    private val mediaDao: MovieMediaDao
+    private val mediaDao: MovieMediaDao,
+    private val account: UserAccount
 ) : UserFeature {
+
+    override val email: String?
+        get() = account.email
 
     override suspend fun signIn(method: SignInMethod): Result<Unit> {
         return Result.failure(NotImplementedError())

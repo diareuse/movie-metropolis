@@ -5,7 +5,7 @@ import movie.core.model.SignInMethod
 
 class UserFeatureRecover(
     private val origin: UserFeature
-) : UserFeature {
+) : UserFeature by origin {
 
     override suspend fun signIn(method: SignInMethod) =
         origin.runCatching { signIn(method).getOrThrow() }

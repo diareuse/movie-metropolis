@@ -26,6 +26,7 @@ internal class UserFeatureModule {
 
     @Provides
     fun feature(
+        account: UserAccount,
         bookingDao: BookingDao,
         seatsDao: BookingSeatsDao,
         movieDao: MovieDetailDao,
@@ -34,7 +35,7 @@ internal class UserFeatureModule {
         @Saving saving: UserFeature
     ): UserFeature {
         var database: UserFeature
-        database = UserFeatureDatabase(bookingDao, seatsDao, movieDao, cinemaDao, mediaDao)
+        database = UserFeatureDatabase(bookingDao, seatsDao, movieDao, cinemaDao, mediaDao, account)
         database = UserFeatureRecover(database)
         database = UserFeatureRequireNotEmpty(database)
         val network: UserFeature
