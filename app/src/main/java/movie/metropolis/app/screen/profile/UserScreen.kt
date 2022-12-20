@@ -48,7 +48,7 @@ fun UserScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToSettings: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
-    state: ScrollState
+    state: ScrollState = rememberScrollState()
 ) {
     val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     val isLoading by viewModel.user.collectAsState()
