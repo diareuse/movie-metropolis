@@ -110,6 +110,7 @@ fun HomeScreen(
                 padding = it,
                 viewModel = booking,
                 state = bookingState,
+                onMovieClick = { onClickMovie(it, false) },
                 profileIcon = {
                     if (email != null) ProfileIcon(
                         email = email,

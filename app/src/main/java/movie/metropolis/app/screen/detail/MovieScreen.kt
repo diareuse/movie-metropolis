@@ -488,6 +488,7 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
 ) {
 
     private data class MovieDetailViewPreview(
+        override val id: String = "id",
         override val name: String = listOf(
             "Black Adam",
             "Black Panther: Wakanda Forever",
