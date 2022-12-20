@@ -4,6 +4,7 @@ import androidx.compose.runtime.Stable
 
 @Stable
 interface MovieDetailView {
+    val id: String
     val name: String
     val nameOriginal: String
     val releasedAt: String

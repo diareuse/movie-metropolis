@@ -17,6 +17,8 @@ data class MovieDetailViewFromFeature(
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
 
+    override val id: String
+        get() = movie.id
     override val name: String
         get() = movie.name
     override val nameOriginal: String

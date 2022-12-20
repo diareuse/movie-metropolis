@@ -40,6 +40,7 @@ fun BookingScreen(
     padding: PaddingValues,
     state: LazyListState,
     profileIcon: @Composable () -> Unit,
+    onMovieClick: (String) -> Unit,
     viewModel: BookingViewModel = hiltViewModel()
 ) {
     val active by viewModel.active.collectAsState()
@@ -54,6 +55,7 @@ fun BookingScreen(
             active = active,
             expired = expired,
             onRefreshClick = viewModel::refresh,
+            onMovieClick = onMovieClick,
             state = state
         )
     }
@@ -67,6 +69,7 @@ private fun BookingScreenContent(
     expired: Loadable<List<BookingView.Expired>>,
     behavior: TopAppBarScrollBehavior,
     onRefreshClick: () -> Unit = {},
+    onMovieClick: (String) -> Unit = {},
     state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
@@ -125,7 +128,8 @@ private fun BookingScreenContent(
                     date = it.date,
                     time = it.time,
                     poster = it.movie.poster,
-                    duration = it.movie.duration
+                    duration = it.movie.duration,
+                    onClick = { onMovieClick(it.movie.id) }
                 )
             }
         }.onLoading {

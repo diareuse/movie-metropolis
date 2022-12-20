@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.booking
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ fun BookingItemExpired(
     time: String,
     poster: ImageView?,
     duration: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     BookingItemExpiredLayout(
@@ -54,7 +56,8 @@ fun BookingItemExpired(
         poster = { MoviePoster(url = poster?.url) },
         name = { Text(name) },
         time = { Text("%s @ %s".format(date, time)) },
-        duration = { Text(duration) }
+        duration = { Text(duration) },
+        onClick = onClick
     )
 }
 
@@ -80,6 +83,7 @@ private fun BookingItemExpiredLayout(
     time: @Composable () -> Unit,
     duration: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
 ) {
     Surface(
         modifier = modifier,
@@ -97,7 +101,10 @@ private fun BookingItemExpiredLayout(
                 tonalElevation = 1.dp,
                 shape = MaterialTheme.shapes.large
             ) {
-                Box {
+                Box(
+                    modifier = Modifier
+                        .clickable(onClick = onClick ?: {}, enabled = onClick != null)
+                ) {
                     Image(
                         modifier = Modifier
                             .size(100.dp)
@@ -166,7 +173,8 @@ private fun Preview() {
                 url = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
                 aspectRatio = DefaultPosterAspectRatio
             ),
-            duration = "1h 30m"
+            duration = "1h 30m",
+            onClick = {}
         )
     }
 }
