@@ -2,9 +2,7 @@ package movie.metropolis.app.screen
 
 import android.util.Base64
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -45,9 +43,8 @@ fun Navigation(
         }
         composable("/user") {
             UserScreen(
-                padding = PaddingValues(0.dp),
-                onNavigateToLogin = { controller.navigate("/user/login") },
-                onNavigateToSettings = { controller.navigate("/user/settings") }
+                onNavigateToSettings = { controller.navigate("/user/settings") },
+                onNavigateBack = controller::navigateUp
             )
         }
         composable("/user/login") {

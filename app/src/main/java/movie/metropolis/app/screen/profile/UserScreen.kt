@@ -1,32 +1,31 @@
 package movie.metropolis.app.screen.profile
 
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -44,13 +43,11 @@ import movie.metropolis.app.view.textPlaceholder
 
 @Composable
 fun UserScreen(
-    padding: PaddingValues,
-    onNavigateToLogin: () -> Unit,
     onNavigateToSettings: () -> Unit,
+    onNavigateBack: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
     state: ScrollState = rememberScrollState()
 ) {
-    val isLoggedIn by viewModel.isLoggedIn.collectAsState()
     val isLoading by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
     val cinemas by viewModel.cinemas.collectAsState()
@@ -63,11 +60,9 @@ fun UserScreen(
     val passwordCurrent by viewModel.passwordCurrent.collectAsState()
     val passwordNew by viewModel.passwordNew.collectAsState()
     UserScreen(
-        padding = padding,
         membership = membership,
         cinemas = cinemas,
         isLoading = isLoading.isLoading,
-        isLoggedOut = isLoggedIn.getOrNull() == false,
         favorite = favorite,
         firstName = firstName,
         lastName = lastName,
@@ -85,19 +80,18 @@ fun UserScreen(
         onPasswordCurrentChanged = { viewModel.passwordCurrent.value = it },
         onPasswordNewChanged = { viewModel.passwordNew.value = it },
         onSaveClick = viewModel::save,
-        onLoginClick = onNavigateToLogin,
         onSettingsClick = onNavigateToSettings,
+        onBackClick = onNavigateBack,
         state = state
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun UserScreen(
-    padding: PaddingValues,
     membership: Loadable<MembershipView?>,
     cinemas: Loadable<List<CinemaSimpleView>>,
     isLoading: Boolean,
-    isLoggedOut: Boolean,
     favorite: CinemaSimpleView?,
     firstName: String,
     lastName: String,
@@ -115,45 +109,56 @@ private fun UserScreen(
     onPasswordCurrentChanged: (String) -> Unit,
     onPasswordNewChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
-    onLoginClick: () -> Unit,
+    onBackClick: () -> Unit,
     onSettingsClick: () -> Unit,
     state: ScrollState = rememberScrollState()
 ) {
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(state)
-            .padding(padding)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-    ) {
-        membership.onSuccess {
-            if (it != null) MembershipCard(
-                firstName = firstName,
-                lastName = lastName,
-                cardNumber = it.cardNumber,
-                until = it.memberUntil,
-                points = it.points
-            )
-        }.onLoading {
-            MembershipCard()
-        }
-        if (isLoggedOut) {
-            Surface(
-                color = MaterialTheme.colorScheme.errorContainer,
-                shape = MaterialTheme.shapes.large
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    Text("It seems like you're not currently logged in. You can log in or register using the button below.")
-                    Button(onClick = onLoginClick) {
-                        Text("Log in now!")
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text("You") },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
+                ),
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_back),
+                            contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onSettingsClick) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_settings),
+                            contentDescription = null
+                        )
                     }
                 }
+            )
+        }
+    ) { padding ->
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(state)
+                .padding(padding)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+        ) {
+            membership.onSuccess {
+                if (it != null) MembershipCard(
+                    firstName = firstName,
+                    lastName = lastName,
+                    cardNumber = it.cardNumber,
+                    until = it.memberUntil,
+                    points = it.points
+                )
+            }.onLoading {
+                MembershipCard()
             }
-        } else {
             Text("You in Detail", style = MaterialTheme.typography.titleLarge)
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
@@ -232,23 +237,6 @@ private fun UserScreen(
             ) {
                 Text("Save")
             }
-            Divider()
-            Row(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .clickable(onClick = onSettingsClick)
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
-                    .heightIn(min = 36.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(modifier = Modifier.weight(1f), text = "Settings")
-                Icon(
-                    modifier = Modifier.rotate(180f),
-                    painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = null
-                )
-            }
         }
     }
 }
@@ -258,11 +246,9 @@ private fun UserScreen(
 private fun Preview() {
     Theme {
         UserScreen(
-            padding = PaddingValues(0.dp),
             membership = Loadable.loading(),
             cinemas = Loadable.loading(),
             isLoading = true,
-            isLoggedOut = false,
             favorite = null,
             firstName = "John",
             lastName = "Doe",
@@ -280,7 +266,7 @@ private fun Preview() {
             onPasswordCurrentChanged = {},
             onPasswordNewChanged = {},
             onSaveClick = {},
-            onLoginClick = {},
+            onBackClick = {},
             onSettingsClick = {}
         )
     }
