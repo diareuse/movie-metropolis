@@ -1,12 +1,21 @@
 package movie.rating
 
+import java.text.Normalizer.Form
+import java.text.Normalizer.isNormalized
+import java.text.Normalizer.normalize
 import kotlin.math.max
 import kotlin.math.min
 
 internal infix fun String.correlate(other: String): Float {
     if (trim() == other.trim()) return 1f
+    if (
+        !isNormalized(this, Form.NFKD) ||
+        !isNormalized(other, Form.NFKD)
+    ) {
+        return normalize(this, Form.NFKD) correlate normalize(other, Form.NFKD)
+    }
 
-    fun sizeFactor(): Float {
+    fun charFactor(): Float {
         val mySize = toSet().size
         val otherSize = other.toSet().size
         return min(mySize, otherSize).toFloat() / max(mySize, otherSize)
@@ -28,7 +37,7 @@ internal infix fun String.correlate(other: String): Float {
     }
 
     return average(
-        sizeFactor(),
+        charFactor(),
         wordFactor()
     )
 }
