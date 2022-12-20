@@ -296,7 +296,7 @@ fun LazyListScope.MovieDetailShowings(
             onClickDate = onSelectedDateUpdated
         )
     }
-    options.onSuccess { filters ->
+    options.mapNotNull { it.takeUnless { it.isEmpty() } }.onSuccess { filters ->
         item("filters-title") {
             Text(
                 modifier = Modifier
