@@ -9,6 +9,7 @@ import movie.rating.LinkProvider
 import movie.rating.MovieDescriptor
 import movie.rating.RatingProvider
 import movie.rating.getLinkOrNull
+import movie.rating.getRating
 import java.util.Calendar
 
 class EventFeatureRating(
@@ -31,10 +32,10 @@ class EventFeatureRating(
         val descriptorLocal = MovieDescriptor(it.name, year)
         val rating = MovieRatingStored(
             movie = it.id,
-            rating = rating.getRating(descriptor),
-            linkImdb = imdb.getLinkOrNull(descriptor),
-            linkCsfd = csfd.getLinkOrNull(descriptorLocal),
-            linkRottenTomatoes = tomatoes.getLinkOrNull(descriptor)
+            rating = rating.getRating(descriptor, descriptorLocal),
+            linkImdb = imdb.getLinkOrNull(descriptor, descriptorLocal),
+            linkCsfd = csfd.getLinkOrNull(descriptor, descriptorLocal),
+            linkRottenTomatoes = tomatoes.getLinkOrNull(descriptor, descriptorLocal)
         )
         dao.insertOrUpdate(rating)
         MovieDetailWithRating(it, rating)

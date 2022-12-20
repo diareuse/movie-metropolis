@@ -6,3 +6,6 @@ interface RatingProvider {
 
 }
 
+suspend fun RatingProvider.getRating(vararg descriptors: MovieDescriptor) = descriptors
+    .distinct()
+    .firstNotNullOfOrNull { getRating(it).takeUnless { it == 0.toByte() } } ?: 0

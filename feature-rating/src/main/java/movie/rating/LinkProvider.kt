@@ -9,3 +9,7 @@ interface LinkProvider {
 
 suspend fun LinkProvider.getLinkOrNull(descriptor: MovieDescriptor) =
     kotlin.runCatching { getLink(descriptor) }.getOrNull()
+
+suspend fun LinkProvider.getLinkOrNull(vararg descriptors: MovieDescriptor) = descriptors
+    .distinct()
+    .firstNotNullOfOrNull { getLinkOrNull(it) }
