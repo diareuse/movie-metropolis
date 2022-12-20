@@ -7,7 +7,7 @@ import movie.core.model.User
 
 interface UserFeature {
 
-    val email: String? get() = null
+    val email: String?
 
     suspend fun signIn(method: SignInMethod): Result<Unit>
     suspend fun update(data: Iterable<FieldUpdate>): Result<User>

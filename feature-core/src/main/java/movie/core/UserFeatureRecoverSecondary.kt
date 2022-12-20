@@ -8,6 +8,9 @@ class UserFeatureRecoverSecondary(
     private val secondary: UserFeature
 ) : UserFeature {
 
+    override val email: String?
+        get() = primary.email ?: secondary.email
+
     override suspend fun signIn(method: SignInMethod) = tryOrRecover {
         signIn(method)
     }
