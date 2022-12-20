@@ -1,5 +1,7 @@
 package movie.core
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.MovieDetailWithRating
 import movie.core.db.dao.MovieRatingDao
 import movie.core.db.model.MovieRatingStored
@@ -30,15 +32,26 @@ class EventFeatureRating(
         }
         val descriptor = MovieDescriptor(it.originalName, year)
         val descriptorLocal = MovieDescriptor(it.name, year)
-        val rating = MovieRatingStored(
-            movie = it.id,
-            rating = rating.getRating(descriptor, descriptorLocal),
-            linkImdb = imdb.getLinkOrNull(descriptor, descriptorLocal),
-            linkCsfd = csfd.getLinkOrNull(descriptor, descriptorLocal),
-            linkRottenTomatoes = tomatoes.getLinkOrNull(descriptor, descriptorLocal)
-        )
+        val rating = getRatingStored(it.id, descriptor, descriptorLocal)
         dao.insertOrUpdate(rating)
         MovieDetailWithRating(it, rating)
+    }
+
+    private suspend fun getRatingStored(
+        id: String,
+        vararg descriptors: MovieDescriptor
+    ): MovieRatingStored = coroutineScope {
+        val rating = async { rating.getRating(descriptors = descriptors) }
+        val imdb = async { imdb.getLinkOrNull(descriptors = descriptors) }
+        val csfd = async { csfd.getLinkOrNull(descriptors = descriptors) }
+        val tomatoes = async { tomatoes.getLinkOrNull(descriptors = descriptors) }
+        MovieRatingStored(
+            movie = id,
+            rating = rating.await(),
+            linkImdb = imdb.await(),
+            linkCsfd = csfd.await(),
+            linkRottenTomatoes = tomatoes.await()
+        )
     }
 
 }
