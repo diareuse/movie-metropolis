@@ -24,6 +24,8 @@ import movie.metropolis.app.screen.detail.MovieFacade
 import movie.metropolis.app.screen.detail.MovieFacadeFilterable
 import movie.metropolis.app.screen.detail.MovieFacadeFromFeature
 import movie.metropolis.app.screen.detail.MovieFacadeRecover
+import movie.metropolis.app.screen.home.HomeFacade
+import movie.metropolis.app.screen.home.HomeFacadeFromFeature
 import movie.metropolis.app.screen.listing.ListingFacade
 import movie.metropolis.app.screen.listing.ListingFacadeFromFeature
 import movie.metropolis.app.screen.listing.ListingFacadeRecover
@@ -131,6 +133,11 @@ class FacadeModule {
         facade = SettingsFacadeReactive(facade)
         facade = SettingsFacadeRecover(facade)
         return facade
+    }
+
+    @Provides
+    fun home(user: UserFeature): HomeFacade {
+        return HomeFacadeFromFeature(user)
     }
 
 }

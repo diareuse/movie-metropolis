@@ -39,6 +39,8 @@ fun Navigation(
                     controller.navigate("/movies/${id}?upcoming=$upcoming")
                 },
                 onClickCinema = { id -> controller.navigate("/cinemas/$id") },
+                onClickUser = { controller.navigate("/user") },
+                onClickLogin = { controller.navigate("/user/login") }
             )
         }
         composable("/user") {
