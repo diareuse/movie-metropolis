@@ -13,9 +13,9 @@ internal class ImageAnalyzerSaving(
 
     override suspend fun getColors(url: String) = origin.getColors(url).also {
         imageDao.insert(ImageStored(url))
-        for (color in it.colors) {
-            colorDao.insert(ColorStored(url, color.rgb))
-        }
+        colorDao.insert(ColorStored(url, it.vibrant.rgb, ColorStored.ClassVibrant))
+        colorDao.insert(ColorStored(url, it.dark.rgb, ColorStored.ClassDark))
+        colorDao.insert(ColorStored(url, it.light.rgb, ColorStored.ClassLight))
     }
 
 }

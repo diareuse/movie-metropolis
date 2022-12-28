@@ -16,11 +16,23 @@ import androidx.room.Index
             onDelete = ForeignKey.CASCADE
         )
     ],
-    primaryKeys = ["image", "color"]
+    primaryKeys = ["image", "color", "class"]
 )
 internal data class ColorStored(
     @ColumnInfo("image")
     val image: String,
     @ColumnInfo("color")
-    val color: Int
-)
+    val color: Int,
+    @ColumnInfo("class")
+    val imageClass: String
+) {
+
+    companion object {
+
+        const val ClassLight = "light"
+        const val ClassDark = "dark"
+        const val ClassVibrant = "vibrant"
+
+    }
+
+}
