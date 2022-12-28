@@ -3,6 +3,7 @@ package movie.metropolis.app.screen.booking
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -218,10 +219,11 @@ private fun BookingTicketDialogContent(
             Barcode(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f),
+                    .aspectRatio(1f)
+                    .background(Color.White),
                 code = code,
                 format = BarcodeFormat.QR_CODE,
-                color = LocalContentColor.current
+                color = Color.Black
             )
         }
     }
@@ -230,6 +232,21 @@ private fun BookingTicketDialogContent(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
+    Theme {
+        BookingTicketDialogContent(
+            code = "3921492517",
+            poster = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
+            hall = "IMAX",
+            seats = listOf("12" to "10", "12" to "11"),
+            time = "12:10",
+            name = "Wonder Woman"
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Composable
+private fun PreviewDark() {
     Theme {
         BookingTicketDialogContent(
             code = "3921492517",
