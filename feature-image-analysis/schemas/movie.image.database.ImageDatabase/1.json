@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c028997d88fa40cf009046e12ca8b09d",
+    "identityHash": "351bbf3026572a8f0a1b68327c105ab9",
     "entities": [
       {
         "tableName": "images",
@@ -26,7 +26,7 @@
       },
       {
         "tableName": "colors",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`image` TEXT NOT NULL, `color` INTEGER NOT NULL, PRIMARY KEY(`image`, `color`), FOREIGN KEY(`image`) REFERENCES `images`(`url`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`image` TEXT NOT NULL, `color` INTEGER NOT NULL, `class` TEXT NOT NULL, PRIMARY KEY(`image`, `color`, `class`), FOREIGN KEY(`image`) REFERENCES `images`(`url`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "image",
@@ -39,13 +39,20 @@
             "columnName": "color",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "imageClass",
+            "columnName": "class",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
             "image",
-            "color"
+            "color",
+            "class"
           ]
         },
         "indices": [
@@ -77,7 +84,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c028997d88fa40cf009046e12ca8b09d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '351bbf3026572a8f0a1b68327c105ab9')"
     ]
   }
 }

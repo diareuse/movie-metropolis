@@ -3,11 +3,11 @@ package movie.image
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
-import androidx.core.graphics.get
+import androidx.palette.graphics.Palette
+import androidx.palette.graphics.Target
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.net.URL
-import kotlin.math.roundToInt
 
 internal class ImageAnalyzerNetwork : ImageAnalyzer {
 
@@ -18,19 +18,23 @@ internal class ImageAnalyzerNetwork : ImageAnalyzer {
             }
         }
         requireNotNull(bitmap)
-        val colorMap = mutableMapOf<Int, Int>()
-        for (x in 0 until bitmap.width)
-            for (y in 0 until bitmap.height) {
-                val color = bitmap[x, y]
-                colorMap[color] = (colorMap[color] ?: 0) + 1
-            }
-        val threshold = ((bitmap.width * bitmap.height) * 0.1f).roundToInt()
-        val colors = colorMap.asSequence()
-            .takeWhile { (_, occurrence) -> occurrence >= threshold }
-            .map { (color) -> SwatchColor(color) }
-            .toList()
-        return Swatch(colors)
+        val palette = withContext(Dispatchers.Default) {
+            Palette.from(bitmap)
+                .resizeBitmapArea(200)
+                .addTarget(Target.VIBRANT)
+                .addTarget(Target.LIGHT_MUTED)
+                .addTarget(Target.DARK_MUTED)
+                .generate()
+        }
+        bitmap.recycle()
+        return Swatch(
+            vibrant = palette.vibrantSwatch?.asSwatch() ?: SwatchColor.Black,
+            light = palette.lightMutedSwatch?.asSwatch() ?: SwatchColor.White,
+            dark = palette.darkMutedSwatch?.asSwatch() ?: SwatchColor.Black
+        )
     }
+
+    private fun Palette.Swatch.asSwatch(): SwatchColor = SwatchColor(rgb or 0xff000000.toInt())
 
     private fun getOptions() = BitmapFactory.Options().apply {
         inPreferredConfig = Bitmap.Config.RGB_565
