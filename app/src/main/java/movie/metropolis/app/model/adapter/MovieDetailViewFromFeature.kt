@@ -1,5 +1,6 @@
 package movie.metropolis.app.model.adapter
 
+import androidx.compose.ui.graphics.Color
 import movie.core.model.Media
 import movie.core.model.MovieDetail
 import movie.metropolis.app.model.ImageView
@@ -39,7 +40,8 @@ data class MovieDetailViewFromFeature(
         get() = dateFormat.format(movie.screeningFrom)
     override val poster: ImageView?
         get() = movie.media.asSequence().filterIsInstance<Media.Image>()
-            .sortedByDescending { it.width * it.height }.middleOrNull()?.let(::ImageViewFromFeature)
+            .sortedByDescending { it.width * it.height }.middleOrNull()
+            ?.let { ImageViewFromFeature(it, Color(movie.spotColor)) }
     override val trailer: VideoView?
         get() = movie.media.filterIsInstance<Media.Video>().firstOrNull()
             ?.let(::VideoViewFromFeature)

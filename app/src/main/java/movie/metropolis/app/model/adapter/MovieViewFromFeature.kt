@@ -1,5 +1,6 @@
 package movie.metropolis.app.model.adapter
 
+import androidx.compose.ui.graphics.Color
 import movie.core.model.Media
 import movie.core.model.MoviePreview
 import movie.metropolis.app.model.ImageView
@@ -44,7 +45,7 @@ data class MovieViewFromFeature(
             return when (preferLargeMedia) {
                 true -> media.firstOrNull()
                 else -> media.middleOrNull()
-            }?.let(::ImageViewFromFeature)
+            }?.let { ImageViewFromFeature(it, Color(movie.spotColor)) }
         }
     override val video: VideoView?
         get() = movie.media

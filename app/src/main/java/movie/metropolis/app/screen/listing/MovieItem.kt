@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,15 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
-import androidx.palette.graphics.Palette
-import androidx.palette.graphics.Target
-import androidx.palette.graphics.get
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
@@ -70,6 +61,7 @@ fun MovieItem(
     MovieItemLayout(
         modifier = modifier,
         height = height,
+        shadowColor = poster?.spotColor ?: Color.Black,
         posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
         poster = {
             MoviePoster(url = poster?.url, onClick = onClick)
@@ -94,6 +86,7 @@ fun MovieItem(
     MovieItemLayout(
         modifier = modifier,
         height = height,
+        shadowColor = Color.Black,
         poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize(), onClick = {}) },
         text = {
             MovieSubText(text = "2021", isLoading = true)
@@ -107,6 +100,7 @@ fun MovieItem(
 fun MovieItemLayout(
     poster: @Composable BoxScope.() -> Unit,
     text: @Composable ColumnScope.() -> Unit,
+    shadowColor: Color,
     modifier: Modifier = Modifier,
     posterAspectRatio: Float = DefaultPosterAspectRatio,
     height: Dp = 225.dp
@@ -119,7 +113,7 @@ fun MovieItemLayout(
         ) {
             Box(
                 modifier = Modifier
-                    .shadow(24.dp)
+                    .shadow(24.dp, ambientColor = shadowColor, spotColor = shadowColor)
                     .clip(MaterialTheme.shapes.medium)
                     .fillMaxHeight()
                     .aspectRatio(posterAspectRatio)
@@ -141,10 +135,8 @@ fun MovieItemLayout(
 fun MoviePoster(
     url: String?,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null,
-    onSpotColorResolved: ((Color) -> Unit)? = null
+    onClick: (() -> Unit)? = null
 ) {
-    val scope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(true) }
     var size by remember { mutableStateOf(IntSize.Zero) }
     AsyncImage(
@@ -153,9 +145,7 @@ fun MoviePoster(
             .imagePlaceholder(url == null || isLoading)
             .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() })
             .onGloballyPositioned { size = it.size },
-        model = ImageRequest.Builder(imageRequestOf(url, size))
-            .allowHardware(onSpotColorResolved == null)
-            .build(),
+        model = imageRequestOf(url, size),
         contentDescription = "",
         contentScale = ContentScale.Crop,
         onLoading = {
@@ -163,17 +153,6 @@ fun MoviePoster(
         },
         onSuccess = {
             isLoading = false
-            if (onSpotColorResolved != null) scope.launch(Dispatchers.Default) {
-                val target = Target.VIBRANT
-                val bitmap = it.result.drawable.toBitmap()
-                val result = Palette.Builder(bitmap)
-                    .addTarget(target)
-                    .generate()
-                val swatch = result[target]
-                if (swatch != null) withContext(Dispatchers.Main) {
-                    onSpotColorResolved(Color(swatch.rgb))
-                }
-            }
         }
     )
 }
@@ -243,4 +222,6 @@ private fun ImageView(
         get() = aspectRatio
     override val url: String
         get() = url
+    override val spotColor: Color
+        get() = Color.Yellow
 }
