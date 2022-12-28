@@ -20,6 +20,9 @@ import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
+import movie.image.ImageAnalyzer
+import movie.image.Swatch
+import movie.image.SwatchColor
 import movie.rating.LinkProvider
 import movie.rating.RatingProvider
 import org.junit.Test
@@ -33,6 +36,7 @@ import kotlin.test.assertFails
 
 class EventFeatureTest : FeatureTest() {
 
+    private lateinit var analyzer: ImageAnalyzer
     private lateinit var rating: RatingProvider
     private lateinit var link: LinkProvider
     private lateinit var ratingDao: MovieRatingDao
@@ -61,6 +65,9 @@ class EventFeatureTest : FeatureTest() {
         movieDao = mock()
         ratingDao = mock()
         preference = mock()
+        analyzer = mock {
+            on { runBlocking { getColors(any()) } }.thenReturn(Swatch(listOf(SwatchColor.Black)))
+        }
         rating = mock {
             on { runBlocking { getRating(any()) } }.thenReturn(0)
         }
@@ -89,7 +96,8 @@ class EventFeatureTest : FeatureTest() {
             previewDao,
             bookingDao,
             preference,
-            feature
+            feature,
+            analyzer
         )
         cinema = mock()
         whenever(cinema.id).thenReturn("cinema")
@@ -314,6 +322,42 @@ class EventFeatureTest : FeatureTest() {
         val movieIds = feature.getUpcoming().getOrThrow().map { it.id }
         for (booking in bookings)
             assert(booking.movieId !in movieIds)
+    }
+
+    @Test
+    fun getUpcoming_returns_spotColor() = runTest {
+        val expectedColor = 0xFF00FF
+        whenever(analyzer.getColors(any())).thenReturn(Swatch(listOf(SwatchColor(expectedColor))))
+        responder.on(UrlResponder.MoviesByShowing("FUTURE")) {
+            fileAsBody("data-api-service-films-by-showing-type-FUTURE.json")
+        }
+        val results = feature.getUpcoming().getOrThrow()
+        for (result in results)
+            assertEquals(expectedColor, result.spotColor)
+    }
+
+    @Test
+    fun getCurrent_returns_spotColor() = runTest {
+        val expectedColor = 0xFF00FF
+        whenever(analyzer.getColors(any())).thenReturn(Swatch(listOf(SwatchColor(expectedColor))))
+        responder.on(UrlResponder.MoviesByShowing("SHOWING")) {
+            fileAsBody("data-api-service-films-by-showing-type-SHOWING.json")
+        }
+        val results = feature.getCurrent().getOrThrow()
+        for (result in results)
+            assertEquals(expectedColor, result.spotColor)
+    }
+
+    @Test
+    fun getDetail_return_spotColor() = runTest {
+        val expectedColor = 0xFF00FF
+        whenever(analyzer.getColors(any())).thenReturn(Swatch(listOf(SwatchColor(expectedColor))))
+        val id = "5376O2R"
+        responder.on(UrlResponder.Detail(id)) {
+            fileAsBody("data-api-service-films-byDistributorCode.json")
+        }
+        val result = feature.getDetail(MovieFromId(id)).getOrThrow()
+        assertEquals(expectedColor, result.spotColor)
     }
 
     // ---

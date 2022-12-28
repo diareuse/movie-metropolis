@@ -2,8 +2,8 @@ package movie.core
 
 import movie.core.adapter.CinemaFromResponse
 import movie.core.adapter.MovieDetailFromResponse
-import movie.core.adapter.MovieFromResponse
 import movie.core.adapter.MoviePreviewFromResponse
+import movie.core.adapter.MovieReferenceFromResponse
 import movie.core.adapter.ShowingFromResponse
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -29,7 +29,7 @@ internal class EventFeatureImpl(
                 .groupBy { it.movieId }
                 .map { (movieId, events) ->
                     val movie = movies.first { it.id.equals(movieId, ignoreCase = true) }
-                    val reference = MovieFromResponse(movie)
+                    val reference = MovieReferenceFromResponse(movie)
                     val showings = events.map { event -> ShowingFromResponse(event, cinema) }
                     reference to showings
                 }

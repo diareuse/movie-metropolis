@@ -15,4 +15,5 @@ interface MovieDetail : Movie {
     val linkImdb: String?
     val linkRottenTomatoes: String?
     val linkCsfd: String?
+    val spotColor: Int
 }
