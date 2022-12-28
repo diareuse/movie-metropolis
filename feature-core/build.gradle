@@ -14,6 +14,7 @@ dependencies {
     implementation project(":feature-pulse")
     implementation project(":feature-settings")
     implementation project(":feature-rating")
+    implementation project(":feature-image-analysis")
 
     testImplementation "io.ktor:ktor-client-mock:[2,3["
 

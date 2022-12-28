@@ -12,6 +12,7 @@ import movie.core.EventFeatureRating
 import movie.core.EventFeatureRecover
 import movie.core.EventFeatureRecoverSecondary
 import movie.core.EventFeatureRequireNotEmpty
+import movie.core.EventFeatureSpotColor
 import movie.core.EventFeatureStoring
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
@@ -25,6 +26,7 @@ import movie.core.db.dao.ShowingDao
 import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
 import movie.core.preference.EventPreference
+import movie.image.ImageAnalyzer
 import movie.rating.LinkProvider
 import movie.rating.RatingProvider
 import movie.rating.di.Csfd
@@ -46,7 +48,8 @@ internal class EventFeatureModule {
         bookingDao: BookingDao,
         preference: EventPreference,
         @Saving
-        saving: EventFeature
+        saving: EventFeature,
+        analyzer: ImageAnalyzer
     ): EventFeature {
         var database: EventFeature
         database = EventFeatureDatabase(
@@ -58,6 +61,7 @@ internal class EventFeatureModule {
         var network: EventFeature = saving
         network = EventFeatureRecoverSecondary(database, network)
         network = EventFeatureFilterUnseen(network, preference, bookingDao)
+        network = EventFeatureSpotColor(network, analyzer)
         return network
     }
 
@@ -80,7 +84,7 @@ internal class EventFeatureModule {
         @Imdb
         imdb: LinkProvider,
         @Csfd
-        csfd: LinkProvider,
+        csfd: LinkProvider
     ): EventFeature {
         var network: EventFeature
         network = EventFeatureImpl(event, cinema)

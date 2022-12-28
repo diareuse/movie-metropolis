@@ -1,11 +1,12 @@
 package movie.core.adapter
 
 import movie.core.model.MovieReference
+import movie.core.nwk.model.MovieResponse
 import java.util.Date
 import kotlin.time.Duration
 
-internal data class MovieFromResponse(
-    private val movie: movie.core.nwk.model.MovieResponse
+internal data class MovieReferenceFromResponse(
+    private val movie: MovieResponse
 ) : MovieReference {
 
     override val id: String
