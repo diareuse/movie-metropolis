@@ -5,10 +5,6 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
@@ -66,15 +62,18 @@ fun MoviePager(
             state = state
         ) { index ->
             val item = it[index]
-            var color by remember { mutableStateOf(Color.Black) }
             MoviePoster(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(item.poster?.aspectRatio ?: DefaultPosterAspectRatio)
-                    .interpolateSize(this, index, MaterialTheme.shapes.medium, shadowColor = color),
+                    .interpolateSize(
+                        scope = this,
+                        page = index,
+                        shape = MaterialTheme.shapes.medium,
+                        shadowColor = item.poster?.spotColor ?: Color.Black
+                    ),
                 url = item.poster?.url,
-                onClick = { onClick(item.id) },
-                onSpotColorResolved = { color = it }
+                onClick = { onClick(item.id) }
             )
         }
     }

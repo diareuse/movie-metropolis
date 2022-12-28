@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.detail
 
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.core.EventFeature
@@ -45,11 +46,12 @@ class MovieFacadeFromFeature(
     }
 
     override suspend fun getPoster(): Result<ImageView> {
-        val image = getDetail().media
+        val detail = getDetail()
+        val image = detail.media
             .asSequence()
             .filterIsInstance<Media.Image>()
             .sortedByDescending { it.height * it.width }
-            .map(::ImageViewFromFeature)
+            .map { ImageViewFromFeature(it, Color(detail.spotColor)) }
             .first()
         return Result.success(image)
     }

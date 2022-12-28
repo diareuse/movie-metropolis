@@ -7,8 +7,7 @@ import java.util.Date
 import kotlin.time.Duration
 
 class MoviePreviewFromDetail(
-    private val detail: MovieDetail,
-    override val spotColor: Int
+    private val detail: MovieDetail
 ) : MoviePreview {
 
     override val id: String
@@ -33,5 +32,6 @@ class MoviePreviewFromDetail(
         get() = detail.cast
     override val countryOfOrigin: String
         get() = detail.countryOfOrigin.orEmpty()
-
+    override val spotColor: Int
+        get() = detail.spotColor
 }

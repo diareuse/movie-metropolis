@@ -369,7 +369,11 @@ fun MovieMetadata(
     ) {
         Box(
             Modifier
-                .shadow(32.dp)
+                .shadow(
+                    elevation = 32.dp,
+                    ambientColor = poster.getOrNull()?.spotColor ?: Color.Black,
+                    spotColor = poster.getOrNull()?.spotColor ?: Color.Black
+                )
                 .clip(MaterialTheme.shapes.medium)
         ) {
             var size by remember { mutableStateOf(IntSize.Zero) }
@@ -488,7 +492,8 @@ private fun Preview(
 
 data class ImageViewPreview(
     override val aspectRatio: Float,
-    override val url: String
+    override val url: String,
+    override val spotColor: Color = Color.Yellow
 ) : ImageView
 
 class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailView>(
