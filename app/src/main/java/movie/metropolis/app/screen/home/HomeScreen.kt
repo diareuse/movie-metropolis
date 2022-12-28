@@ -34,7 +34,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -44,6 +46,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
@@ -154,10 +157,13 @@ private fun ProfileIcon(
 ) {
     IconButton(onClick = onClick) {
         var isSuccess by remember { mutableStateOf(false) }
+        var size by remember { mutableStateOf(IntSize.Zero) }
         val filter = if (isSuccess) null else ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
         AsyncImage(
-            modifier = Modifier.clip(CircleShape),
-            model = rememberUserImage(email).value,
+            modifier = Modifier
+                .clip(CircleShape)
+                .onGloballyPositioned { size = it.size },
+            model = imageRequestOf(rememberUserImage(email).value, size),
             contentDescription = null,
             placeholder = painterResource(id = R.drawable.ic_profile),
             error = painterResource(id = R.drawable.ic_profile),

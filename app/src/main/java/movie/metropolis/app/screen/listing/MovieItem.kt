@@ -32,21 +32,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Target
 import androidx.palette.graphics.get
-import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.detail.FavoriteButton
@@ -144,15 +146,16 @@ fun MoviePoster(
 ) {
     val scope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(true) }
+    var size by remember { mutableStateOf(IntSize.Zero) }
     AsyncImage(
         modifier = modifier
             .fillMaxSize()
             .imagePlaceholder(url == null || isLoading)
-            .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() }),
-        imageLoader = ImageLoader.Builder(LocalContext.current)
+            .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() })
+            .onGloballyPositioned { size = it.size },
+        model = ImageRequest.Builder(imageRequestOf(url, size))
             .allowHardware(onSpotColorResolved == null)
             .build(),
-        model = url ?: "",
         contentDescription = "",
         contentScale = ContentScale.Crop,
         onLoading = {

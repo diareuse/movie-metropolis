@@ -58,6 +58,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.zxing.BarcodeFormat
+import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.profile.Barcode
 import movie.metropolis.app.theme.Theme
 import kotlin.random.Random.Default.nextLong
@@ -148,7 +149,7 @@ private fun BookingTicketDialogContent(
                             drawContent()
                             drawRect(brush)
                         },
-                    model = poster,
+                    model = imageRequestOf(poster, size),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     alignment = Alignment.TopCenter

@@ -35,7 +35,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -47,16 +50,19 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
@@ -161,6 +167,7 @@ private fun MovieScreen(
         }
     ) { padding ->
         val surface = MaterialTheme.colorScheme.surface
+        var size by remember { mutableStateOf(IntSize.Zero) }
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize()
@@ -169,8 +176,9 @@ private fun MovieScreen(
                 .drawWithContent {
                     drawContent()
                     drawRect(Brush.verticalGradient(listOf(Color.Transparent, surface)))
-                },
-            model = poster.getOrNull()?.url,
+                }
+                .onGloballyPositioned { size = it.size },
+            model = imageRequestOf(poster.getOrNull()?.url, size),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
@@ -364,13 +372,15 @@ fun MovieMetadata(
                 .shadow(32.dp)
                 .clip(MaterialTheme.shapes.medium)
         ) {
+            var size by remember { mutableStateOf(IntSize.Zero) }
             AsyncImage(
                 modifier = Modifier
                     .fillMaxWidth(.3f)
                     .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
                     .imagePlaceholder(poster.getOrNull() == null)
-                    .background(MaterialTheme.colorScheme.surface),
-                model = poster.getOrNull()?.url,
+                    .background(MaterialTheme.colorScheme.surface)
+                    .onGloballyPositioned { size = it.size },
+                model = imageRequestOf(poster.getOrNull()?.url, size),
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
