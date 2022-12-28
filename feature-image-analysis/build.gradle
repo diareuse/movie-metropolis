@@ -1,0 +1,24 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.image'
+    defaultConfig {
+        kapt {
+            arguments {
+                arg("room.schemaLocation", "$projectDir/schemas")
+            }
+        }
+    }
+}
+
+dependencies {
+
+    implementation "androidx.work:work-runtime-ktx:[2,3["
+    implementation "androidx.startup:startup-runtime:[1,2["
+    implementation "androidx.room:room-ktx:[2,3["
+    kapt "androidx.room:room-compiler:[2,3["
+
+}

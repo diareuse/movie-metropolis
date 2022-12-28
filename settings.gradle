@@ -21,3 +21,4 @@ include ":feature-core",
 include ":feature-pulse"
 include ":feature-settings"
 include ":feature-rating"
+include ":feature-image-analysis"
