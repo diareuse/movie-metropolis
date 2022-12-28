@@ -34,6 +34,8 @@ data class EventResponse(
             if (ScreeningType4DX in tags) add("4DX")
             if (ScreeningTypeIMAX in tags) add("IMAX")
             if (ScreeningTypeVIP in tags) add("VIP")
+            if (ScreeningTypeRemaster in tags) add("Remaster")
+            if (ScreeningTypeHighFrameRate in tags) add("High Frame Rate")
         }
 
     private val labelDubbed
@@ -73,6 +75,8 @@ data class EventResponse(
         const val ScreeningType4DX = "4dx"
         const val ScreeningTypeIMAX = "imax"
         const val ScreeningTypeVIP = "vip"
+        const val ScreeningTypeRemaster = "dmr"
+        const val ScreeningTypeHighFrameRate = "hfr"
     }
 
 }
