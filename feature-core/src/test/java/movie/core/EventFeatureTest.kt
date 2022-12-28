@@ -66,7 +66,13 @@ class EventFeatureTest : FeatureTest() {
         ratingDao = mock()
         preference = mock()
         analyzer = mock {
-            on { runBlocking { getColors(any()) } }.thenReturn(Swatch(listOf(SwatchColor.Black)))
+            on { runBlocking { getColors(any()) } }.thenReturn(
+                Swatch(
+                    SwatchColor.Black,
+                    SwatchColor.Black,
+                    SwatchColor.Black
+                )
+            )
         }
         rating = mock {
             on { runBlocking { getRating(any()) } }.thenReturn(0)
@@ -327,7 +333,11 @@ class EventFeatureTest : FeatureTest() {
     @Test
     fun getUpcoming_returns_spotColor() = runTest {
         val expectedColor = 0xFF00FF
-        whenever(analyzer.getColors(any())).thenReturn(Swatch(listOf(SwatchColor(expectedColor))))
+        whenever(analyzer.getColors(any())).thenReturn(
+            Swatch(
+                SwatchColor(expectedColor), SwatchColor(expectedColor), SwatchColor(expectedColor)
+            )
+        )
         responder.on(UrlResponder.MoviesByShowing("FUTURE")) {
             fileAsBody("data-api-service-films-by-showing-type-FUTURE.json")
         }
@@ -339,7 +349,11 @@ class EventFeatureTest : FeatureTest() {
     @Test
     fun getCurrent_returns_spotColor() = runTest {
         val expectedColor = 0xFF00FF
-        whenever(analyzer.getColors(any())).thenReturn(Swatch(listOf(SwatchColor(expectedColor))))
+        whenever(analyzer.getColors(any())).thenReturn(
+            Swatch(
+                SwatchColor(expectedColor), SwatchColor(expectedColor), SwatchColor(expectedColor)
+            )
+        )
         responder.on(UrlResponder.MoviesByShowing("SHOWING")) {
             fileAsBody("data-api-service-films-by-showing-type-SHOWING.json")
         }
@@ -351,7 +365,11 @@ class EventFeatureTest : FeatureTest() {
     @Test
     fun getDetail_return_spotColor() = runTest {
         val expectedColor = 0xFF00FF
-        whenever(analyzer.getColors(any())).thenReturn(Swatch(listOf(SwatchColor(expectedColor))))
+        whenever(analyzer.getColors(any())).thenReturn(
+            Swatch(
+                SwatchColor(expectedColor), SwatchColor(expectedColor), SwatchColor(expectedColor)
+            )
+        )
         val id = "5376O2R"
         responder.on(UrlResponder.Detail(id)) {
             fileAsBody("data-api-service-films-byDistributorCode.json")
