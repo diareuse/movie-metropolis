@@ -4,6 +4,7 @@ import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -165,6 +167,7 @@ fun LazyListScope.Calendar(
     val scope = rememberCoroutineScope()
     var isVisible by rememberSaveable { mutableStateOf(false) }
     fun toggle() {
+        if (checked) return onSelected(null)
         scope.launch {
             val permissions = arrayOf(
                 Manifest.permission.READ_CALENDAR,
@@ -173,8 +176,7 @@ fun LazyListScope.Calendar(
             if (!onPermissionsRequested(permissions)) {
                 return@launch
             }
-            if (checked) onSelected(null)
-            else if (calendars.size == 1) onSelected(calendars.entries.first().key)
+            if (calendars.size == 1) onSelected(calendars.entries.first().key)
             else isVisible = true
         }
     }
@@ -182,7 +184,7 @@ fun LazyListScope.Calendar(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = ::toggle)
+            .clickable(onClick = { toggle() })
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -209,21 +211,39 @@ fun LazyListScope.Calendar(
         isVisible = isVisible,
         onVisibilityChanged = { isVisible = it }
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large),
-            contentPadding = PaddingValues(24.dp)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            items(calendars.toList(), key = { (id) -> id }) { (id, name) ->
-                Text(
-                    modifier = Modifier
-                        .padding(16.dp, 8.dp)
-                        .clickable {
-                            onSelected(id)
-                            isVisible = false
-                        },
-                    text = name
-                )
+            LazyColumn(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large),
+                contentPadding = PaddingValues(24.dp)
+            ) {
+                item("title") {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text("Select a calendar", style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            "Events will be queried and created in the selected calendar. You may want to create a special calendar in order to not interfere with existing events.",
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                        Divider()
+                    }
+                }
+                items(calendars.toList(), key = { (id) -> id }) { (id, name) ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                onSelected(id)
+                                isVisible = false
+                            }
+                            .padding(vertical = 8.dp)
+                    ) {
+                        Text(text = name)
+                    }
+                }
             }
         }
     }
