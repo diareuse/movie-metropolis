@@ -3,7 +3,7 @@ package movie.calendar
 import android.content.ContentResolver
 import android.provider.CalendarContract.Calendars
 
-class CalendarListPlatform(
+internal class CalendarListPlatform(
     private val resolver: ContentResolver
 ) : CalendarList {
 

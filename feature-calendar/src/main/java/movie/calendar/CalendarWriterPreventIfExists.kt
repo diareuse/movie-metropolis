@@ -3,7 +3,7 @@ package movie.calendar
 import android.content.ContentResolver
 import android.provider.CalendarContract
 
-class CalendarWriterPreventIfExists(
+internal class CalendarWriterPreventIfExists(
     private val origin: CalendarWriter,
     private val resolver: ContentResolver
 ) : CalendarWriter {

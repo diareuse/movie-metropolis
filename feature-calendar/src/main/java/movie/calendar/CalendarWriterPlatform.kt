@@ -5,7 +5,7 @@ import android.content.ContentValues
 import android.provider.CalendarContract
 import java.util.TimeZone
 
-class CalendarWriterPlatform(
+internal class CalendarWriterPlatform(
     private val resolver: ContentResolver,
     private val calendarId: String
 ) : CalendarWriter {
