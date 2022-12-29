@@ -8,10 +8,17 @@ class SettingsFacadeReactive(
         get() = origin.filterSeen
         set(value) {
             origin.filterSeen = value
-            synchronized(origin.listeners) {
-                for (listener in origin.listeners)
-                    listener.onChanged()
-            }
+            notifyListeners()
         }
+
+    override fun selectCalendar(id: String?) {
+        origin.selectCalendar(id)
+        notifyListeners()
+    }
+
+    private fun notifyListeners() = synchronized(origin.listeners) {
+        for (listener in origin.listeners)
+            listener.onChanged()
+    }
 
 }

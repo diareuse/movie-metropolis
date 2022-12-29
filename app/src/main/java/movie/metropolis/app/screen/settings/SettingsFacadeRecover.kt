@@ -10,4 +10,13 @@ class SettingsFacadeRecover(
             origin.runCatching { filterSeen = value }
         }
 
+    override suspend fun getCalendars(): Map<String, String> {
+        return origin.runCatching { getCalendars() }.onFailure { it.printStackTrace() }
+            .getOrDefault(emptyMap())
+    }
+
+    override fun selectCalendar(id: String?) {
+        origin.runCatching { selectCalendar(id) }
+    }
+
 }
