@@ -4,6 +4,7 @@ import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import movie.calendar.CalendarWriter
 import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.db.dao.BookingDao
@@ -20,14 +21,17 @@ import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
+import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.test.assertFails
 
 class UserFeatureTest : FeatureTest() {
 
+    private lateinit var writer: CalendarWriter
     private lateinit var event: EventFeature
     private lateinit var preference: EventPreference
     private lateinit var account: UserAccount
@@ -46,6 +50,9 @@ class UserFeatureTest : FeatureTest() {
         mediaDao = mock()
         account = spy(MockAccount())
         preference = mock()
+        writer = mock {
+            on { write(any()) }.then { }
+        }
         event = mock {
             on { runBlocking { getShowings(any(), any()) } }.thenReturn(Result.success(emptyMap()))
             on { runBlocking { getCinemas(any()) } }.thenReturn(Result.success(listOf(mock())))
@@ -55,6 +62,7 @@ class UserFeatureTest : FeatureTest() {
             on { runBlocking { getUpcoming() } }.thenReturn(Result.success(listOf(mock())))
         }
         whenever(preference.filterSeen).thenReturn(false)
+        whenever(preference.calendarId).thenReturn("")
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
         val service = network.user(clientCustomer, account, auth)
@@ -63,7 +71,9 @@ class UserFeatureTest : FeatureTest() {
             event = event,
             bookingDao = bookingDao,
             seatsDao = seatsDao,
-            account = account
+            account = account,
+            writer = { writer },
+            preference = preference
         )
         feature = UserFeatureModule().feature(
             account = account,
@@ -312,6 +322,43 @@ class UserFeatureTest : FeatureTest() {
     fun getToken_responds_withFailure() = runTest {
         assertFails {
             feature.getToken().getOrThrow()
+        }
+    }
+
+    @Test
+    fun getBooking_savesEvent() = runTest {
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("1051")
+        }
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("id")
+        }
+        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
+        whenever(event.getDetail(any())).thenReturn(Result.success(movie))
+        prepareLoggedInUser()
+        responder.on(UrlResponder.Booking) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("group-customer-service-bookings.json")
+        }
+        responder.on(UrlResponder.Booking()) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("group-customer-service-bookings-id.json")
+        }
+        responder.on(UrlResponder.Detail()) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("data-api-service-films-byDistributorCode.json")
+        }
+        responder.on(UrlResponder.Cinema) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            fileAsBody("cinemas.json")
+        }
+        feature.getBookings().getOrThrow()
+        writer.inOrder {
+            verify(times(3)).write(any())
         }
     }
 

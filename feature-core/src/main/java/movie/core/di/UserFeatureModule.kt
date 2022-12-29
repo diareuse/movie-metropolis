@@ -4,8 +4,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import movie.calendar.CalendarWriter
 import movie.core.EventFeature
 import movie.core.UserFeature
+import movie.core.UserFeatureCalendar
 import movie.core.UserFeatureDatabase
 import movie.core.UserFeatureImpl
 import movie.core.UserFeatureRecover
@@ -19,6 +21,7 @@ import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.nwk.UserService
+import movie.core.preference.EventPreference
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,11 +53,14 @@ internal class UserFeatureModule {
         event: EventFeature,
         bookingDao: BookingDao,
         seatsDao: BookingSeatsDao,
-        account: UserAccount
+        account: UserAccount,
+        writer: CalendarWriter.Factory,
+        preference: EventPreference
     ): UserFeature {
         var network: UserFeature
         network = UserFeatureImpl(service, event, account)
         network = UserFeatureStoring(network, bookingDao, seatsDao)
+        network = UserFeatureCalendar(network, writer, preference)
         return network
     }
 

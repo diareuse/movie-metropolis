@@ -11,5 +11,10 @@ class EventPreferenceStored(
         set(value) {
             store["filter-seen"] = value.toString()
         }
+    override var calendarId: String?
+        get() = store["calendar-id"]
+        set(value) {
+            store["calendar-id"] = value
+        }
 
 }
