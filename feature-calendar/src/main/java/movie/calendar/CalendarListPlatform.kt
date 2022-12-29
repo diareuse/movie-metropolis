@@ -1,7 +1,7 @@
 package movie.calendar
 
 import android.content.ContentResolver
-import android.provider.CalendarContract
+import android.provider.CalendarContract.Calendars
 
 class CalendarListPlatform(
     private val resolver: ContentResolver
@@ -9,25 +9,25 @@ class CalendarListPlatform(
 
     override fun query(): List<CalendarMetadata> {
         val projection = arrayOf(
-            CalendarContract.Calendars._ID,
-            CalendarContract.Calendars.NAME,
-            CalendarContract.Calendars.ACCOUNT_NAME,
-            CalendarContract.Calendars.SYNC_EVENTS
+            Calendars._ID,
+            Calendars.NAME,
+            Calendars.ACCOUNT_NAME,
+            Calendars.SYNC_EVENTS
         )
         val accounts = mutableListOf<CalendarMetadata>()
-        val selection = "${CalendarContract.Calendars.SYNC_EVENTS} = ?"
+        val selection = "${Calendars.SYNC_EVENTS} = ?"
         resolver.query(
-            CalendarContract.Calendars.CONTENT_URI,
+            Calendars.CONTENT_URI,
             projection,
             selection,
             arrayOf("1"),
             null
         )?.use {
             while (it.moveToNext()) {
-                val account =
-                    it.getString(projection.indexOf(CalendarContract.Calendars.ACCOUNT_NAME))
-                val id = it.getString(projection.indexOf(CalendarContract.Calendars._ID))
-                accounts += CalendarMetadata(id, account)
+                val account = it.getString(projection.indexOf(Calendars.ACCOUNT_NAME))
+                val name = it.getString(projection.indexOf(Calendars.NAME))
+                val id = it.getString(projection.indexOf(Calendars._ID))
+                accounts += CalendarMetadata(id, "$name ($account)")
             }
         }
         return accounts

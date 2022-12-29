@@ -13,12 +13,12 @@ class CalendarWriterPreventIfExists(
             CalendarContract.Events._ID
         )
         val selection =
-            "(${CalendarContract.Instances.BEGIN} = ?) AND (${CalendarContract.Instances.END} = ?)"
+            "(${CalendarContract.Events.DTSTART} = ?) AND (${CalendarContract.Events.DTEND} = ?)"
         val args = arrayOf(
             metadata.start.time.toString(),
             metadata.end.time.toString()
         )
-        resolver.query(CalendarContract.Instances.CONTENT_URI, projection, selection, args, null)
+        resolver.query(CalendarContract.Events.CONTENT_URI, projection, selection, args, null)
             ?.use {
                 if (it.count > 0) return
             }

@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
+import movie.calendar.CalendarList
 import movie.core.EventFeature
 import movie.core.FavoriteFeature
 import movie.core.UserFeature
@@ -127,9 +128,12 @@ class FacadeModule {
     }
 
     @Provides
-    fun settings(prefs: EventPreference): SettingsFacade {
+    fun settings(
+        prefs: EventPreference,
+        calendars: CalendarList
+    ): SettingsFacade {
         var facade: SettingsFacade
-        facade = SettingsFacadeFromFeature(prefs)
+        facade = SettingsFacadeFromFeature(prefs, calendars)
         facade = SettingsFacadeReactive(facade)
         facade = SettingsFacadeRecover(facade)
         return facade

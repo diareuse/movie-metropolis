@@ -23,6 +23,7 @@ android {
 dependencies {
 
     implementation project(":feature-core")
+    implementation project(":feature-calendar")
 
     def vCompose = "[1,2["
     def vMaterial = "[1,2["

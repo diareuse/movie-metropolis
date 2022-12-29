@@ -92,6 +92,7 @@ fun Navigation(
         }
         composable("/user/settings") {
             SettingsScreen(
+                onPermissionsRequested = onPermissionsRequested,
                 onBackClick = controller::navigateUp
             )
         }

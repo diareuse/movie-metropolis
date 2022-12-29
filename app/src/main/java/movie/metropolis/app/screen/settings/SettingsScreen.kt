@@ -1,5 +1,7 @@
 package movie.metropolis.app.screen.settings
 
+import android.Manifest
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -22,27 +25,47 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.launch
 import movie.metropolis.app.R
+import movie.metropolis.app.screen.booking.AppDialog
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.theme.Theme
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onPermissionsRequested: suspend (Array<String>) -> Boolean
 ) {
     val filterSeen by viewModel.filterSeen.collectAsState()
+    val addToCalendar by viewModel.addToCalendar.collectAsState()
+    val calendars by viewModel.calendars.collectAsState()
     SettingsScreen(
         filterSeen = filterSeen,
         onFilterSeenChanged = viewModel::updateFilterSeen,
-        onBackClick = onBackClick
+        addToCalendar = addToCalendar,
+        onCalendarChanged = viewModel::updateCalendar,
+        calendars = calendars,
+        onBackClick = onBackClick,
+        onPermissionsRequested = {
+            val result = onPermissionsRequested(it)
+            // abuse reactivity to refresh
+            viewModel.updateFilterSeen(filterSeen)
+            result
+        }
     )
 }
 
@@ -51,6 +74,10 @@ fun SettingsScreen(
 private fun SettingsScreen(
     filterSeen: Boolean,
     onFilterSeenChanged: (Boolean) -> Unit,
+    addToCalendar: Boolean,
+    onCalendarChanged: (String?) -> Unit,
+    calendars: Map<String, String>,
+    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -70,17 +97,24 @@ private fun SettingsScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = padding + PaddingValues(24.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
         ) {
             FilterSeen(
                 checked = filterSeen,
                 onCheckedChanged = onFilterSeenChanged
             )
+            Calendar(
+                checked = addToCalendar,
+                onSelected = onCalendarChanged,
+                calendars = calendars,
+                onPermissionsRequested = onPermissionsRequested
+            )
             item("notice") {
                 Text(
                     modifier = Modifier.navigationBarsPadding(),
                     text = "Some settings may require for you to close the app completely and start again to apply.",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.bodySmall,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -121,6 +155,80 @@ fun LazyListScope.FilterSeen(
     }
 }
 
+@Suppress("FunctionName")
+fun LazyListScope.Calendar(
+    checked: Boolean,
+    calendars: Map<String, String>,
+    onSelected: (String?) -> Unit,
+    onPermissionsRequested: suspend (Array<String>) -> Boolean
+) = item("add-to-calendar") {
+    val scope = rememberCoroutineScope()
+    var isVisible by rememberSaveable { mutableStateOf(false) }
+    fun toggle() {
+        scope.launch {
+            val permissions = arrayOf(
+                Manifest.permission.READ_CALENDAR,
+                Manifest.permission.WRITE_CALENDAR
+            )
+            if (!onPermissionsRequested(permissions)) {
+                return@launch
+            }
+            if (checked) onSelected(null)
+            else if (calendars.size == 1) onSelected(calendars.entries.first().key)
+            else isVisible = true
+        }
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(MaterialTheme.shapes.medium)
+            .clickable(onClick = ::toggle)
+            .padding(vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Checkbox(
+            checked = checked,
+            onCheckedChange = { toggle() }
+        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Add Tickets to Calendar",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "If checked, app will automatically add all of your tickets to calendar of your choosing. It will do so for past and future tickets.",
+                style = MaterialTheme.typography.bodySmall
+            )
+        }
+    }
+    AppDialog(
+        isVisible = isVisible,
+        onVisibilityChanged = { isVisible = it }
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large),
+            contentPadding = PaddingValues(24.dp)
+        ) {
+            items(calendars.toList(), key = { (id) -> id }) { (id, name) ->
+                Text(
+                    modifier = Modifier
+                        .padding(16.dp, 8.dp)
+                        .clickable {
+                            onSelected(id)
+                            isVisible = false
+                        },
+                    text = name
+                )
+            }
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
@@ -128,7 +236,11 @@ private fun Preview() {
         SettingsScreen(
             filterSeen = true,
             onFilterSeenChanged = {},
-            onBackClick = {}
+            addToCalendar = false,
+            onCalendarChanged = {},
+            calendars = emptyMap(),
+            onBackClick = {},
+            onPermissionsRequested = { false }
         )
     }
 }
