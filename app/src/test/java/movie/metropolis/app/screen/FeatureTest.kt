@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen
 
+import movie.calendar.CalendarList
 import movie.core.EventFeature
 import movie.core.UserFeature
 import movie.core.preference.EventPreference
@@ -11,6 +12,7 @@ abstract class FeatureTest {
     protected lateinit var user: UserFeature
     protected lateinit var event: EventFeature
     protected lateinit var prefs: EventPreference
+    protected lateinit var calendars: CalendarList
 
     abstract fun prepare()
 
@@ -28,6 +30,7 @@ abstract class FeatureTest {
 
     private fun prepareUser() {
         user = mock()
+        calendars = mock()
     }
 
 }

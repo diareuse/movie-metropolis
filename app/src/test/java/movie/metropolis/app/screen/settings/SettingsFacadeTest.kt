@@ -1,8 +1,10 @@
 package movie.metropolis.app.screen.settings
 
+import kotlinx.coroutines.test.runTest
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.screen.FeatureTest
 import org.junit.Test
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.concurrent.CountDownLatch
 import kotlin.test.assertEquals
@@ -14,25 +16,43 @@ class SettingsFacadeTest : FeatureTest() {
     private lateinit var facade: SettingsFacade
 
     override fun prepare() {
-        facade = FacadeModule().settings(prefs)
+        facade = FacadeModule().settings(prefs, calendars)
     }
 
     @Test
-    fun returns_true() {
+    fun filterSeen_returns_true() {
         whenever(prefs.filterSeen).thenReturn(true)
         assertTrue(facade.filterSeen)
     }
 
     @Test
-    fun returns_false() {
+    fun filterSeen_returns_false() {
         whenever(prefs.filterSeen).thenReturn(false)
         assertFalse(facade.filterSeen)
     }
 
     @Test
-    fun returns_false_onError() {
+    fun filterSeen_returns_false_onError() {
         whenever(prefs.filterSeen).thenThrow(RuntimeException())
         assertFalse(facade.filterSeen)
+    }
+
+    @Test
+    fun addToCalendar_returns_true() {
+        whenever(prefs.calendarId).thenReturn("aa")
+        assertTrue(facade.addToCalendar)
+    }
+
+    @Test
+    fun getCalendars_returns_list() = runTest {
+        whenever(calendars.query()).thenReturn(emptyList())
+        assertEquals(emptyMap(), facade.getCalendars())
+    }
+
+    @Test
+    fun selectCalendar_setsValue() = runTest {
+        facade.selectCalendar("aa")
+        verify(prefs).calendarId = "aa"
     }
 
     @Test
