@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -217,6 +220,22 @@ private fun HomeScreen(
     Scaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
+        floatingActionButton = {
+            if (!isLoggedIn) Button(
+                onClick = onNavigateToLogin,
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 8.dp
+                )
+            ) {
+                Text("Log in")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
             Surface(
                 tonalElevation = 1.dp,
@@ -245,10 +264,7 @@ private fun HomeScreen(
                         index = 2,
                         icon = R.drawable.ic_ticket,
                         label = "Tickets",
-                        onSelected = {
-                            if (isLoggedIn) onChanged(it)
-                            else onNavigateToLogin()
-                        }
+                        onSelected = onChanged
                     )
                 }
             }
