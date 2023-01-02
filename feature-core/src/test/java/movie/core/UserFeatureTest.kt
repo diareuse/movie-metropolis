@@ -337,6 +337,7 @@ class UserFeatureTest : FeatureTest() {
         val movie = mock<MovieDetail> {
             on { id }.thenReturn("id")
         }
+        prepareLoggedInUser()
         prepareBooking(cinema, movie)
         feature.getBookings().getOrThrow()
         writer.inOrder {
@@ -346,6 +347,35 @@ class UserFeatureTest : FeatureTest() {
 
     @Test
     fun getBooking_savesSharedTicket() = runTest {
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("1051")
+        }
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("id")
+            on { name }.thenReturn("name")
+        }
+        store.add(mock {
+            on { id }.thenReturn("")
+            on { startsAt }.thenReturn(Date())
+            on { venue }.thenReturn("")
+            on { movieId }.thenReturn("id")
+            on { eventId }.thenReturn("")
+            on { cinemaId }.thenReturn("1051")
+            on { seats }.thenReturn(emptyList())
+        })
+        prepareLoggedInUser()
+        prepareBooking(cinema, movie)
+        responder.on(UrlResponder.Booking) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            body = "[]"
+        }
+        feature.getBookings().getOrThrow()
+        verify(bookingDao).insertOrUpdate(any())
+    }
+
+    @Test
+    fun getBooking_savesSharedTicket_withoutLogin() = runTest {
         val cinema = mock<Cinema> {
             on { id }.thenReturn("1051")
         }
@@ -380,7 +410,6 @@ class UserFeatureTest : FeatureTest() {
     ) {
         whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
         whenever(event.getDetail(any())).thenReturn(Result.success(movie))
-        prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
             code = HttpStatusCode.OK

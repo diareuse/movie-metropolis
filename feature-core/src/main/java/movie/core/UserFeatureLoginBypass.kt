@@ -7,7 +7,11 @@ class UserFeatureLoginBypass(
 ) : UserFeature by origin {
 
     override suspend fun getBookings(): Result<Iterable<Booking>> {
-        return origin.runCatching { getBookings().getOrDefault(emptyList()) }
+        val result = origin.getBookings()
+        return when (result.exceptionOrNull()) {
+            is SecurityException -> Result.success(emptyList())
+            else -> result
+        }
     }
 
 }
