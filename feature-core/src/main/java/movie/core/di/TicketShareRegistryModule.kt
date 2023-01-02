@@ -10,6 +10,7 @@ import movie.core.TicketShareRegistryCompress
 import movie.core.TicketShareRegistryDeserialize
 import movie.core.TicketShareRegistryEncode
 import movie.core.TicketStore
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,6 +29,7 @@ class TicketShareRegistryModule {
     }
 
     @Provides
+    @Singleton
     fun store(): TicketStore = TicketStore()
 
 }
