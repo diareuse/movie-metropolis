@@ -12,6 +12,7 @@ import movie.core.UserFeatureCalendar
 import movie.core.UserFeatureDatabase
 import movie.core.UserFeatureDrainTickets
 import movie.core.UserFeatureImpl
+import movie.core.UserFeatureLoginBypass
 import movie.core.UserFeatureRecover
 import movie.core.UserFeatureRecoverSecondary
 import movie.core.UserFeatureRequireNotEmpty
@@ -62,6 +63,7 @@ internal class UserFeatureModule {
     ): UserFeature {
         var network: UserFeature
         network = UserFeatureImpl(service, event, account)
+        network = UserFeatureLoginBypass(network)
         network = UserFeatureDrainTickets(network, event, store)
         network = UserFeatureStoring(network, bookingDao, seatsDao)
         network = UserFeatureCalendar(network, writer, preference)

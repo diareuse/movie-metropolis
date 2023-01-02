@@ -14,7 +14,6 @@ import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
 import movie.metropolis.app.model.adapter.BookingViewExpiredFromFeature
 import java.io.File
-import kotlin.math.max
 
 class BookingFacadeFromFeature(
     private val feature: UserFeature,
@@ -82,11 +81,11 @@ class FormatConfig(
     suspend fun getBitmap(value: String) = withContext(Dispatchers.Default) {
         if (width * height <= 0) return@withContext null
         val matrix = writer.encode(value, format, width, height)
-        val width = max(matrix.width, width)
-        val height = max(matrix.height, height)
+        val width = matrix.width
+        val height = matrix.height
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         for (x in 0 until matrix.width) for (y in 0 until matrix.height) {
-            val pixel = if (matrix.get(x, y)) color else 0x00000000
+            val pixel = if (matrix.get(x, y)) color else 0xFFFFFFFF.toInt()
             bitmap.setPixel(x, y, pixel)
         }
         bitmap
