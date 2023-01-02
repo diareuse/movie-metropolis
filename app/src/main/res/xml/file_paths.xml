@@ -2,5 +2,5 @@
 <paths>
     <cache-path
         name="temporary"
-        path="*" />
+        path="tickets/" />
 </paths>

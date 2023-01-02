@@ -38,7 +38,8 @@ class BookingFacadeFromFeature(
             .prepare(500, 300, BarcodeFormat.PDF_417, Color.BLACK)
             .getBitmap(shareableText.decodeToString())
         requireNotNull(bitmap)
-        val file = File(cacheDir, "ticket.png")
+        val file = File(cacheDir, "tickets/ticket.png")
+        file.parentFile?.mkdirs()
         withContext(Dispatchers.IO) {
             file.outputStream().use { output ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, output)
