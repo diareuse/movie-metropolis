@@ -8,7 +8,7 @@ import java.text.DateFormat
 import java.util.Date
 
 data class BookingViewActiveFromFeature(
-    private val booking: Booking.Active
+    internal val booking: Booking.Active
 ) : BookingView.Active {
 
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)

@@ -1,5 +1,8 @@
 package movie.metropolis.app.screen.booking
 
+import movie.metropolis.app.model.BookingView
+import java.io.File
+
 class BookingFacadeRecover(
     private val origin: BookingFacade
 ) : BookingFacade {
@@ -9,6 +12,10 @@ class BookingFacadeRecover(
 
     override suspend fun refresh() {
         kotlin.runCatching { origin.refresh() }
+    }
+
+    override suspend fun saveAsFile(view: BookingView): File {
+        return origin.runCatching { saveAsFile(view) }.getOrDefault(File("/"))
     }
 
 }
