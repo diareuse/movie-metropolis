@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.calendar.CalendarWriter
 import movie.core.EventFeature
+import movie.core.TicketStore
 import movie.core.UserFeature
 import movie.core.UserFeatureCalendar
 import movie.core.UserFeatureDatabase
+import movie.core.UserFeatureDrainTickets
 import movie.core.UserFeatureImpl
 import movie.core.UserFeatureRecover
 import movie.core.UserFeatureRecoverSecondary
@@ -55,10 +57,12 @@ internal class UserFeatureModule {
         seatsDao: BookingSeatsDao,
         account: UserAccount,
         writer: CalendarWriter.Factory,
-        preference: EventPreference
+        preference: EventPreference,
+        store: TicketStore
     ): UserFeature {
         var network: UserFeature
         network = UserFeatureImpl(service, event, account)
+        network = UserFeatureDrainTickets(network, event, store)
         network = UserFeatureStoring(network, bookingDao, seatsDao)
         network = UserFeatureCalendar(network, writer, preference)
         return network

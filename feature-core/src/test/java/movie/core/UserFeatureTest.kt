@@ -25,12 +25,14 @@ import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
 import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.test.assertFails
 
 class UserFeatureTest : FeatureTest() {
 
+    private lateinit var store: TicketStore
     private lateinit var writer: CalendarWriter
     private lateinit var event: EventFeature
     private lateinit var preference: EventPreference
@@ -61,6 +63,7 @@ class UserFeatureTest : FeatureTest() {
             on { runBlocking { getCurrent() } }.thenReturn(Result.success(listOf(mock())))
             on { runBlocking { getUpcoming() } }.thenReturn(Result.success(listOf(mock())))
         }
+        store = TicketStore()
         whenever(preference.filterSeen).thenReturn(false)
         whenever(preference.calendarId).thenReturn("")
         val network = NetworkModule()
@@ -73,7 +76,8 @@ class UserFeatureTest : FeatureTest() {
             seatsDao = seatsDao,
             account = account,
             writer = { writer },
-            preference = preference
+            preference = preference,
+            store = store
         )
         feature = UserFeatureModule().feature(
             account = account,
@@ -333,6 +337,47 @@ class UserFeatureTest : FeatureTest() {
         val movie = mock<MovieDetail> {
             on { id }.thenReturn("id")
         }
+        prepareBooking(cinema, movie)
+        feature.getBookings().getOrThrow()
+        writer.inOrder {
+            verify(times(3)).write(any())
+        }
+    }
+
+    @Test
+    fun getBooking_savesSharedTicket() = runTest {
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("1051")
+        }
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("id")
+            on { name }.thenReturn("name")
+        }
+        store.add(mock {
+            on { id }.thenReturn("")
+            on { startsAt }.thenReturn(Date())
+            on { venue }.thenReturn("")
+            on { movieId }.thenReturn("id")
+            on { eventId }.thenReturn("")
+            on { cinemaId }.thenReturn("1051")
+            on { seats }.thenReturn(emptyList())
+        })
+        prepareBooking(cinema, movie)
+        responder.on(UrlResponder.Booking) {
+            method = HttpMethod.Get
+            code = HttpStatusCode.OK
+            body = "[]"
+        }
+        feature.getBookings().getOrThrow()
+        verify(bookingDao).insertOrUpdate(any())
+    }
+
+    // ---
+
+    private suspend fun prepareBooking(
+        cinema: Cinema,
+        movie: MovieDetail
+    ) {
         whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
         whenever(event.getDetail(any())).thenReturn(Result.success(movie))
         prepareLoggedInUser()
@@ -356,13 +401,7 @@ class UserFeatureTest : FeatureTest() {
             code = HttpStatusCode.OK
             fileAsBody("cinemas.json")
         }
-        feature.getBookings().getOrThrow()
-        writer.inOrder {
-            verify(times(3)).write(any())
-        }
     }
-
-    // ---
 
     private suspend fun prepareLoggedInUser() {
         responder.on(UrlResponder.Auth) {
