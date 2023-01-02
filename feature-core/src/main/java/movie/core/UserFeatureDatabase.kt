@@ -14,6 +14,8 @@ import movie.core.model.Booking
 import movie.core.model.FieldUpdate
 import movie.core.model.SignInMethod
 import movie.core.model.User
+import java.util.Date
+import kotlin.time.Duration
 
 class UserFeatureDatabase(
     private val bookingDao: BookingDao,
@@ -42,20 +44,21 @@ class UserFeatureDatabase(
     override suspend fun getBookings(): Result<Iterable<Booking>> = coroutineScope {
         bookingDao.selectAll().map { booking ->
             val seats = seatsDao.select(booking.id)
-            val movie = async { movieDao.select(booking.movieId) }
+            val movie = movieDao.select(booking.movieId)
             val cinema = async { cinemaDao.select(booking.cinemaId) }
             val media = async { mediaDao.select(booking.movieId) }
-            when (seats.isEmpty()) {
+            val expiresAt = booking.startsAt + movie.duration
+            when (Date().after(expiresAt)) {
                 true -> BookingExpiredFromDatabase(
                     bookingStored = booking,
-                    movieStored = movie.await(),
+                    movieStored = movie,
                     cinemaStored = cinema.await(),
                     mediaStored = media.await()
                 )
 
                 else -> BookingActiveFromDatabase(
                     bookingStored = booking,
-                    movieStored = movie.await(),
+                    movieStored = movie,
                     cinemaStored = cinema.await(),
                     mediaStored = media.await(),
                     seatsStored = seats
@@ -66,6 +69,10 @@ class UserFeatureDatabase(
 
     override suspend fun getToken(): Result<String> {
         return Result.failure(NotImplementedError())
+    }
+
+    private operator fun Date.plus(duration: Duration): Date {
+        return Date(time + duration.inWholeMilliseconds)
     }
 
 }
