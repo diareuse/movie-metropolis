@@ -59,6 +59,7 @@ import java.security.MessageDigest
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(
+    startWith: String? = null,
     viewModel: HomeViewModel = hiltViewModel(),
     listing: ListingViewModel = hiltViewModel(),
     cinemas: CinemasViewModel = hiltViewModel(),
@@ -78,6 +79,7 @@ fun HomeScreen(
     val email = viewModel.email
     HomeScreen(
         isLoggedIn = email != null,
+        initialScreen = startWith,
         movies = {
             MoviesScreen(
                 padding = it,
@@ -196,12 +198,22 @@ fun rememberUserImage(email: String): State<String> {
 @Composable
 private fun HomeScreen(
     isLoggedIn: Boolean,
+    initialScreen: String?,
     movies: @Composable (PaddingValues) -> Unit,
     cinemas: @Composable (PaddingValues) -> Unit,
     booking: @Composable (PaddingValues) -> Unit,
     onNavigateToLogin: () -> Unit
 ) {
-    val (selected, onChanged) = rememberSaveable { mutableStateOf(0) }
+    val (selected, onChanged) = rememberSaveable {
+        mutableStateOf(
+            when (initialScreen) {
+                "movies" -> 0
+                "cinemas" -> 1
+                "tickets" -> 2
+                else -> 0
+            }
+        )
+    }
     Scaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),

@@ -3,6 +3,7 @@ package movie.metropolis.app.screen
 import android.util.Base64
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -32,8 +33,9 @@ fun Navigation(
         navController = controller,
         startDestination = "/home"
     ) {
-        composable("/home") {
+        composable("/home?screen={screen}") {
             HomeScreen(
+                startWith = it.arguments?.getString("screen"),
                 onPermissionsRequested = onPermissionsRequested,
                 onShareFile = onShareFile,
                 onClickMovie = { id, upcoming ->
@@ -43,6 +45,12 @@ fun Navigation(
                 onClickUser = { controller.navigate("/user") },
                 onClickLogin = { controller.navigate("/user/login") }
             )
+        }
+        composable("/home") {
+            LaunchedEffect(Unit) {
+                controller.popBackStack("/home", true)
+                controller.navigate("/home?screen=movies")
+            }
         }
         composable("/user") {
             UserScreen(
