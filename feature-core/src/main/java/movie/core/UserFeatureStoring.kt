@@ -12,8 +12,6 @@ class UserFeatureStoring(
     private val bookingSeatsDao: BookingSeatsDao
 ) : UserFeature by origin {
 
-    override suspend fun getUser() = origin.getUser().onSuccess {}
-
     override suspend fun getBookings() = origin.getBookings().onSuccess {
         for (booking in it) {
             bookingDao.insertOrUpdate(booking.asStored())
