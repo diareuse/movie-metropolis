@@ -95,12 +95,16 @@ fun BookingItemActive(
                 scope.launch {
                     state.animateTo(0)
                 }
+                onShare()
             }
         ) {
             Icon(painterResource(id = R.drawable.ic_share), null, tint = LocalContentColor.current)
         }
         BookingItemActiveLayout(
-            modifier = Modifier.offset { IntOffset(state.offset.value.roundToInt(), 0) },
+            modifier = Modifier.offset {
+                val offset = state.offset.value.takeUnless { it.isNaN() } ?: 0f
+                IntOffset(offset.roundToInt(), 0)
+            },
             posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
             cinema = { Text(cinema) },
             poster = { MoviePoster(url = poster?.url) },
