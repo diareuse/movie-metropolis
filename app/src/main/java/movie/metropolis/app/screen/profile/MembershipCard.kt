@@ -156,10 +156,10 @@ fun Barcode(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.surface
 ) {
-    val writer = MultiFormatWriter()
     val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
     var image by remember { mutableStateOf(null as ImageBitmap?) }
     LaunchedEffect(size, code, format) {
+        val writer = MultiFormatWriter()
         image = withContext(Dispatchers.Default) {
             val w = size.width
             val h = size.height

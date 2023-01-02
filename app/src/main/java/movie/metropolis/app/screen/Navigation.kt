@@ -16,6 +16,7 @@ import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
+import java.io.File
 
 private const val uri = "app://movie.metropolis"
 
@@ -24,6 +25,7 @@ private const val uri = "app://movie.metropolis"
 fun Navigation(
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
     onLinkClicked: (String) -> Unit,
+    onShareFile: (File) -> Unit,
     controller: NavHostController = rememberAnimatedNavController()
 ) {
     AnimatedNavHost(
@@ -33,6 +35,7 @@ fun Navigation(
         composable("/home") {
             HomeScreen(
                 onPermissionsRequested = onPermissionsRequested,
+                onShareFile = onShareFile,
                 onClickMovie = { id, upcoming ->
                     controller.navigate("/movies/${id}?upcoming=$upcoming")
                 },

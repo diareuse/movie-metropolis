@@ -53,6 +53,7 @@ import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.listing.MoviesScreen
+import java.io.File
 import java.security.MessageDigest
 
 @OptIn(ExperimentalPagerApi::class)
@@ -68,6 +69,7 @@ fun HomeScreen(
     cinemasState: LazyListState = rememberLazyListState(),
     bookingState: LazyListState = rememberLazyListState(),
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
+    onShareFile: (File) -> Unit,
     onClickMovie: (String, Boolean) -> Unit,
     onClickCinema: (String) -> Unit,
     onClickUser: () -> Unit,
@@ -114,6 +116,7 @@ fun HomeScreen(
                 viewModel = booking,
                 state = bookingState,
                 onMovieClick = { onClickMovie(it, false) },
+                onShareFile = onShareFile,
                 profileIcon = {
                     if (email != null) ProfileIcon(
                         email = email,

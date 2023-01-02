@@ -12,6 +12,7 @@ import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.booking.BookingFacade.Companion.bookingsFlow
 import movie.metropolis.app.screen.mapLoadable
 import movie.metropolis.app.screen.retainStateIn
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
@@ -31,6 +32,10 @@ class BookingViewModel @Inject constructor(
 
     fun refresh() {
         refreshToken.trySend(facade::refresh)
+    }
+
+    suspend fun saveAsFile(booking: BookingView.Active): File {
+        return facade.saveAsFile(booking)
     }
 
 }
