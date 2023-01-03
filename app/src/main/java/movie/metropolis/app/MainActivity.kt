@@ -1,5 +1,6 @@
 package movie.metropolis.app
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.webkit.MimeTypeMap
@@ -66,6 +67,14 @@ class MainActivity : AppCompatActivity() {
             .setType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension))
             .let { Intent.createChooser(it, file.name) }
             .also(::startActivity)
+    }
+
+    companion object {
+
+        fun tickets(context: Context) = Intent(context, MainActivity::class.java)
+            .setAction(Intent.ACTION_VIEW)
+            .setData("app://movie.metropolis/home?screen=tickets".toUri())
+
     }
 
 }

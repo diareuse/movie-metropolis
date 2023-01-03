@@ -2,9 +2,11 @@ package movie.metropolis.app.screen.booking
 
 import android.Manifest
 import android.annotation.SuppressLint
+import androidx.activity.compose.LocalActivityResultRegistryOwner
+import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,12 +39,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.Loadable
@@ -52,6 +58,8 @@ import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.screen.reader.BarcodeReader
 import movie.metropolis.app.screen.share.TicketRepresentation
 import movie.metropolis.app.theme.Theme
+import movie.metropolis.app.util.register
+import movie.metropolis.app.util.toBitmap
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,14 +122,20 @@ private fun ReaderDialog(
         isVisible = isVisible && hasPermission,
         onVisibilityChanged = onVisibilityChanged
     ) {
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(32.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .padding(32.dp),
+                    .aspectRatio(1f),
                 shape = MaterialTheme.shapes.large,
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 32.dp
             ) {
                 BarcodeReader(
                     modifier = Modifier.fillMaxSize(),
@@ -131,6 +145,29 @@ private fun ReaderDialog(
                         onTicketRead(TicketRepresentation.Text(it))
                     }
                 )
+            }
+            val owner = LocalActivityResultRegistryOwner.current?.activityResultRegistry
+            val context = LocalContext.current
+            val scope = rememberCoroutineScope()
+            if (owner != null) Button(
+                onClick = {
+                    scope.launch(Dispatchers.Default) {
+                        val image = owner.register("image", GetContent(), "image/*")
+                            ?.toBitmap(context)
+                            ?.let(TicketRepresentation::Image) ?: return@launch
+                        withContext(Dispatchers.Main.immediate) {
+                            onTicketRead(image)
+                            onVisibilityChanged(false)
+                        }
+                    }
+                },
+                colors = ButtonDefaults.elevatedButtonColors(),
+                elevation = ButtonDefaults.elevatedButtonElevation(
+                    defaultElevation = 16.dp,
+                    pressedElevation = 8.dp
+                )
+            ) {
+                Text("From file")
             }
         }
     }
