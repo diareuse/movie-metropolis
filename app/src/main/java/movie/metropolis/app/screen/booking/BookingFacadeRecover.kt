@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.booking
 
 import movie.metropolis.app.model.BookingView
-import java.io.File
+import movie.metropolis.app.model.facade.Image
 
 class BookingFacadeRecover(
     private val origin: BookingFacade
@@ -14,8 +14,8 @@ class BookingFacadeRecover(
         kotlin.runCatching { origin.refresh() }
     }
 
-    override suspend fun saveAsFile(view: BookingView): File {
-        return origin.runCatching { saveAsFile(view) }.getOrDefault(File("/"))
+    override suspend fun getImage(view: BookingView): Image? {
+        return origin.runCatching { getImage(view) }.getOrNull()
     }
 
 }

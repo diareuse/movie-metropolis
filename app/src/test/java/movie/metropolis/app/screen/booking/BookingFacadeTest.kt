@@ -1,34 +1,36 @@
 package movie.metropolis.app.screen.booking
 
-import android.content.Context
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.TicketShareRegistry
+import movie.core.UserFeature
 import movie.core.model.Booking
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
+import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
 import movie.metropolis.app.screen.FeatureTest
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.spy
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
-import java.io.File
 import kotlin.test.assertIs
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 class BookingFacadeTest : FeatureTest() {
 
+    private lateinit var online: UserFeature
     private lateinit var facade: BookingFacade
     private lateinit var share: TicketShareRegistry
-    private lateinit var context: Context
 
     override fun prepare() {
-        context = mock {
-            on { cacheDir }.thenReturn(File("build/cache"))
-        }
         share = mock {
             on { runBlocking { get(any()) } }.thenReturn(ByteArray(0))
         }
-        facade = FacadeModule().booking(user, user, share, context)
+        online = spy(user)
+        facade = FacadeModule().booking(user, online, share)
     }
 
     @Test
@@ -72,6 +74,24 @@ class BookingFacadeTest : FeatureTest() {
         whenever(user.getBookings()).thenThrow(RuntimeException())
         val result = facade.getBookings()
         assert(result.isFailure) { result }
+    }
+
+    @Test
+    fun getImage_returns_null() = runTest {
+        assertNull(facade.getImage(mock()))
+    }
+
+    @Test
+    fun getImage_returns_data() = runTest {
+        val view = BookingViewActiveFromFeature(mock())
+        val image = facade.getImage(view)
+        assertNotNull(image)
+    }
+
+    @Test
+    fun refresh_pingsBookings() = runTest {
+        facade.refresh()
+        verify(online).getBookings()
     }
 
 }
