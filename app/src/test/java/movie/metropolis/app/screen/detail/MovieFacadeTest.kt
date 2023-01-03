@@ -12,7 +12,9 @@ import movie.core.model.Showing
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.FeatureTest
+import movie.metropolis.app.screen.OnChangedListener
 import org.junit.Test
+import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -162,6 +164,44 @@ class MovieFacadeTest : FeatureTest() {
         val result = facade.getShowings(Date(0), 0.0, 0.0)
         assert(result.isSuccess) { result }
         assert(result.getOrThrow().isEmpty()) { result.getOrThrow() }
+    }
+
+    @Test
+    fun returns_options() = runTest {
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("5376O2R")
+        }
+        whenever(event.getDetail(MovieFromId("5376O2R")))
+            .thenReturn(Result.success(movie))
+        val cinema = mock<Cinema> {
+            on { id }.thenReturn("id")
+        }
+        whenever(event.getCinemas(Location(0.0, 0.0)))
+            .thenReturn(Result.success(listOf(cinema)))
+        val showings = generateShowings(cinema, 4)
+        whenever(event.getShowings(movie, Date(0), Location(0.0, 0.0)))
+            .thenReturn(Result.success(showings))
+        facade.getShowings(Date(0), 0.0, 0.0)
+        val options = facade.getOptions().getOrThrow()
+        assertEquals(1, options[Filter.Type.Language]?.size)
+        assertEquals(1, options[Filter.Type.Projection]?.size)
+    }
+
+    @Test
+    fun toggle_notifiesListeners() = runTest {
+        val listener = mock<OnChangedListener>()
+        facade.addOnChangedListener(listener)
+        facade.toggle(Filter(false, ""))
+        verify(listener).onChanged()
+    }
+
+    @Test
+    fun toggle_notifiesNoRemovedListeners() = runTest {
+        val listener = mock<OnChangedListener>()
+        facade.addOnChangedListener(listener)
+        facade.removeOnChangedListener(listener)
+        facade.toggle(Filter(false, ""))
+        verify(listener, NoInteractions()).onChanged()
     }
 
     // ---
