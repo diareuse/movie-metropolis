@@ -120,6 +120,7 @@ fun HomeScreen(
                 padding = it,
                 viewModel = booking,
                 state = bookingState,
+                onPermissionsRequested = onPermissionsRequested,
                 onMovieClick = { onClickMovie(it, false) },
                 onShareFile = onShareFile,
                 profileIcon = {
