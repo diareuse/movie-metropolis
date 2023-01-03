@@ -1,5 +1,7 @@
 package movie.metropolis.app.screen.share
 
+import android.graphics.Bitmap
+import movie.metropolis.app.util.pixels
 import java.nio.IntBuffer
 
 sealed class TicketRepresentation {
@@ -10,11 +12,26 @@ sealed class TicketRepresentation {
             is Text -> value.encodeToByteArray()
         }
 
-    data class Text(val value: String) : TicketRepresentation()
+    data class Text(
+        val value: String
+    ) : TicketRepresentation()
+
     data class Image(
         val width: Int,
         val height: Int,
         val image: IntBuffer
-    ) : TicketRepresentation()
+    ) : TicketRepresentation() {
+
+        constructor(
+            bitmap: Bitmap
+        ) : this(
+            width = bitmap.width,
+            height = bitmap.height,
+            image = bitmap.pixels
+        ) {
+            bitmap.recycle()
+        }
+
+    }
 
 }
