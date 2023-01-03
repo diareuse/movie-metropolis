@@ -9,11 +9,15 @@ import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.CinemaFromView
 import movie.metropolis.app.screen.FeatureTest
+import movie.metropolis.app.screen.OnChangedListener
 import org.junit.Test
+import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.random.Random.Default.nextInt
+import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 class CinemaFacadeTest : FeatureTest() {
@@ -95,6 +99,37 @@ class CinemaFacadeTest : FeatureTest() {
         val result = facade.getShowings(Date(0))
         assert(result.isSuccess) { result }
         assert(result.getOrThrow().isEmpty()) { result.getOrThrow() }
+    }
+
+    @Test
+    fun returns_options() = runTest {
+        whenever(event.getCinemas(null))
+            .thenReturn(Result.success(listOf(cinema)))
+        val view = CinemaFromView(facade.getCinema().getOrThrow())
+        val showings = generateShowings(4)
+        whenever(event.getShowings(view, Date(0)))
+            .thenReturn(Result.success(showings))
+        facade.getShowings(Date(0))
+        val options = facade.getOptions().getOrThrow()
+        assertEquals(1, options[Filter.Type.Language]?.size)
+        assertEquals(1, options[Filter.Type.Projection]?.size)
+    }
+
+    @Test
+    fun toggle_notifiesListeners() = runTest {
+        val listener = mock<OnChangedListener>()
+        facade.addOnChangedListener(listener)
+        facade.toggle(Filter(false, ""))
+        verify(listener).onChanged()
+    }
+
+    @Test
+    fun toggle_notifiesNoRemovedListeners() = runTest {
+        val listener = mock<OnChangedListener>()
+        facade.addOnChangedListener(listener)
+        facade.removeOnChangedListener(listener)
+        facade.toggle(Filter(false, ""))
+        verify(listener, NoInteractions()).onChanged()
     }
 
     // ---
