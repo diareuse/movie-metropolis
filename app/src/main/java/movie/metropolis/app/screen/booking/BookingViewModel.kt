@@ -1,8 +1,10 @@
 package movie.metropolis.app.screen.booking
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -15,14 +17,19 @@ import movie.metropolis.app.screen.mapLoadable
 import movie.metropolis.app.screen.retainStateIn
 import movie.metropolis.app.screen.share.ShareFacade
 import movie.metropolis.app.screen.share.TicketRepresentation
+import movie.metropolis.app.util.writeTo
 import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class BookingViewModel @Inject constructor(
     private val facade: BookingFacade,
-    private val share: ShareFacade
+    private val share: ShareFacade,
+    @ApplicationContext
+    context: Context
 ) : ViewModel() {
+
+    private val cacheDir = context.cacheDir
 
     private val refreshToken = Channel<suspend () -> Unit>()
     private val items = facade.bookingsFlow(refreshToken.receiveAsFlow())
@@ -45,7 +52,11 @@ class BookingViewModel @Inject constructor(
     }
 
     suspend fun saveAsFile(booking: BookingView.Active): File {
-        return facade.saveAsFile(booking)
+        val image = facade.getImage(booking)
+        return File(cacheDir, "tickets/ticket.png").apply {
+            parentFile?.mkdirs()
+            image?.writeTo(this)
+        }
     }
 
 }

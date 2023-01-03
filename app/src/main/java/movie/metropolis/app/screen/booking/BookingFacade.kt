@@ -3,15 +3,15 @@ package movie.metropolis.app.screen.booking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import movie.metropolis.app.model.BookingView
+import movie.metropolis.app.model.facade.Image
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
-import java.io.File
 
 interface BookingFacade {
 
     suspend fun getBookings(): Result<List<BookingView>>
     suspend fun refresh()
-    suspend fun saveAsFile(view: BookingView): File
+    suspend fun getImage(view: BookingView): Image?
 
     companion object {
 

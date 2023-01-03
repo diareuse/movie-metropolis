@@ -1,11 +1,9 @@
 package movie.metropolis.app.di
 
-import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import movie.calendar.CalendarList
 import movie.core.EventFeature
 import movie.core.FavoriteFeature
@@ -61,12 +59,10 @@ class FacadeModule {
         user: UserFeature,
         @Saving
         online: UserFeature,
-        share: TicketShareRegistry,
-        @ApplicationContext
-        context: Context
+        share: TicketShareRegistry
     ): BookingFacade {
         var facade: BookingFacade
-        facade = BookingFacadeFromFeature(user, online, share, context)
+        facade = BookingFacadeFromFeature(user, online, share)
         facade = BookingFacadeRecover(facade)
         return facade
     }
