@@ -1,8 +1,13 @@
 package movie.metropolis.app.screen.booking
 
+import android.Manifest
+import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,27 +18,39 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.launch
+import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
+import movie.metropolis.app.screen.reader.BarcodeReader
+import movie.metropolis.app.screen.share.TicketRepresentation
 import movie.metropolis.app.theme.Theme
 import java.io.File
 
@@ -42,6 +59,7 @@ import java.io.File
 fun BookingScreen(
     padding: PaddingValues,
     state: LazyListState,
+    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     profileIcon: @Composable () -> Unit,
     onMovieClick: (String) -> Unit,
     onShareFile: (File) -> Unit,
@@ -50,6 +68,7 @@ fun BookingScreen(
     val active by viewModel.active.collectAsState()
     val expired by viewModel.expired.collectAsState()
     val scope = rememberCoroutineScope()
+    var isReaderActive by rememberSaveable { mutableStateOf(false) }
     HomeScreenLayout(
         profileIcon = profileIcon,
         title = { Text("Tickets") }
@@ -66,8 +85,54 @@ fun BookingScreen(
                     onShareFile(viewModel.saveAsFile(it))
                 }
             },
+            onCameraClick = { isReaderActive = true },
             state = state
         )
+    }
+    ReaderDialog(
+        onPermissionsRequested = onPermissionsRequested,
+        isVisible = isReaderActive,
+        onVisibilityChanged = { isReaderActive = it },
+        onTicketRead = viewModel::saveTicket
+    )
+}
+
+@SuppressLint("MissingPermission")
+@Composable
+private fun ReaderDialog(
+    onPermissionsRequested: suspend (Array<String>) -> Boolean,
+    isVisible: Boolean,
+    onVisibilityChanged: (Boolean) -> Unit,
+    onTicketRead: (TicketRepresentation) -> Unit
+) {
+    var hasPermission by remember { mutableStateOf(false) }
+    LaunchedEffect(isVisible) {
+        if (!isVisible) return@LaunchedEffect
+        hasPermission = onPermissionsRequested(arrayOf(Manifest.permission.CAMERA))
+    }
+    AppDialog(
+        isVisible = isVisible && hasPermission,
+        onVisibilityChanged = onVisibilityChanged
+    ) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .padding(32.dp),
+                shape = MaterialTheme.shapes.large,
+                color = MaterialTheme.colorScheme.surface
+            ) {
+                BarcodeReader(
+                    modifier = Modifier.fillMaxSize(),
+                    format = BarcodeFormat.PDF_417,
+                    onBarcodeRead = {
+                        onVisibilityChanged(false)
+                        onTicketRead(TicketRepresentation.Text(it))
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -81,6 +146,7 @@ private fun BookingScreenContent(
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
     onShareClick: (BookingView.Active) -> Unit = {},
+    onCameraClick: () -> Unit = {},
     state: LazyListState = rememberLazyListState()
 ) {
     LazyColumn(
@@ -92,15 +158,26 @@ private fun BookingScreenContent(
         userScrollEnabled = !active.isLoading || !expired.isLoading,
         state = state
     ) {
-        active.onSuccess { view ->
-            item("ticket-cta") {
+        if (!active.isLoading && !expired.isLoading) item("ticket-cta") {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
                 Button(
                     onClick = onRefreshClick,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.weight(1f)
                 ) {
                     Text("Find new tickets")
                 }
+                Button(onClick = onCameraClick) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_camera),
+                        contentDescription = null,
+                        tint = LocalContentColor.current
+                    )
+                }
             }
+        }
+        active.onSuccess { view ->
             items(view, BookingView::id) {
                 var isVisible by rememberSaveable { mutableStateOf(false) }
                 BookingItemActive(

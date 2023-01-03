@@ -46,6 +46,11 @@ import movie.metropolis.app.screen.settings.SettingsFacade
 import movie.metropolis.app.screen.settings.SettingsFacadeFromFeature
 import movie.metropolis.app.screen.settings.SettingsFacadeReactive
 import movie.metropolis.app.screen.settings.SettingsFacadeRecover
+import movie.metropolis.app.screen.share.ShareFacade
+import movie.metropolis.app.screen.share.ShareFacadeImageConvert
+import movie.metropolis.app.screen.share.ShareFacadeRecover
+import movie.metropolis.app.screen.share.ShareFacadeRefresh
+import movie.metropolis.app.screen.share.ShareFacadeText
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -149,6 +154,20 @@ class FacadeModule {
     @Provides
     fun home(user: UserFeature): HomeFacade {
         return HomeFacadeFromFeature(user)
+    }
+
+    @Provides
+    fun share(
+        share: TicketShareRegistry,
+        @Saving
+        user: UserFeature
+    ): ShareFacade {
+        var facade: ShareFacade
+        facade = ShareFacadeText(share)
+        facade = ShareFacadeImageConvert(facade)
+        facade = ShareFacadeRecover(facade)
+        facade = ShareFacadeRefresh(facade, user)
+        return facade
     }
 
 }
