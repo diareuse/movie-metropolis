@@ -5,12 +5,14 @@ import movie.core.model.User
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.UserView
+import movie.metropolis.app.model.adapter.UserViewFromFeature
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.util.nextString
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
+import kotlin.test.assertFails
 
 class ProfileFacadeTest : FeatureTest() {
 
@@ -135,6 +137,26 @@ class ProfileFacadeTest : FeatureTest() {
         whenever(user.update(any())).thenReturn(Result.failure(RuntimeException()))
         val result = facade.save(nextString(), nextString())
         assert(result.isFailure) { result }
+    }
+
+    @Test
+    fun saveEmpty_returns_failure() = runTest {
+        val remoteConsent = mock<User.Consent> {
+            on { marketing }.thenReturn(false)
+            on { premium }.thenReturn(false)
+        }
+        val remoteUser = mock<User> {
+            on { firstName }.thenReturn("")
+            on { lastName }.thenReturn("")
+            on { email }.thenReturn("")
+            on { phone }.thenReturn("")
+            on { favorite }.thenReturn(null)
+            on { consent }.thenReturn(remoteConsent)
+        }
+        whenever(user.getUser()).thenReturn(Result.success(remoteUser))
+        assertFails {
+            facade.save(UserViewFromFeature(remoteUser)).getOrThrow()
+        }
     }
 
     // ---
