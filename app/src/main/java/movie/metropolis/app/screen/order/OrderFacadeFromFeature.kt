@@ -8,10 +8,14 @@ class OrderFacadeFromFeature(
 ) : OrderFacade {
 
     override suspend fun getRequest(): Result<RequestView> {
-        val token = user.getToken().getOrThrow()
+        val token = user.getToken().getOrNull()
+        val headers = buildMap {
+            if (token != null)
+                put("access-token", token)
+        }
         return RequestView(
             url = url,
-            headers = mapOf("access-token" to token)
+            headers = headers
         ).let(Result.Companion::success)
     }
 
