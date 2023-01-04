@@ -28,6 +28,11 @@
     kotlinx.serialization.KSerializer serializer(...);
 }
 
+# Keep internal member accessed by reflection
+-keepclassmembernames class androidx.compose.ui.hapticfeedback.HapticFeedbackType {
+    int value;
+}
+
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 -dontwarn org.bouncycastle.jsse.BCSSLParameters
 -dontwarn org.bouncycastle.jsse.BCSSLSocket

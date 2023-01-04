@@ -2,9 +2,7 @@ package movie.metropolis.app.feature.image
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.IntSize
 import coil.request.CachePolicy
@@ -21,7 +19,6 @@ fun imageRequestOf(
 ): ImageRequest {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
-    LocalHapticFeedback.current.performHapticFeedback(HapticFeedbackType.LongPress)
     return remember(model, size) {
         ImageRequest.Builder(context)
             .data(model)

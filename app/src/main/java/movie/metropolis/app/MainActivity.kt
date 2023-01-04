@@ -9,10 +9,14 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalView
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
+import movie.metropolis.app.feature.haptic.PlatformHapticFeedback
 import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.theme.Theme
 import java.io.File
@@ -27,11 +31,15 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             Theme {
-                Navigation(
-                    onPermissionsRequested = { requestPermissions(it) },
-                    onLinkClicked = ::openExternal,
-                    onShareFile = ::share
-                )
+                CompositionLocalProvider(
+                    LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
+                ) {
+                    Navigation(
+                        onPermissionsRequested = { requestPermissions(it) },
+                        onLinkClicked = ::openExternal,
+                        onShareFile = ::share
+                    )
+                }
             }
         }
     }
