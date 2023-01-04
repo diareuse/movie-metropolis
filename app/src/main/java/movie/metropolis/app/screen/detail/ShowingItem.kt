@@ -130,8 +130,8 @@ fun ShowingItemTime(
     ) {
         Text(
             modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-                .clickable(enabled = onClick != null, onClick = onClick?.withHaptics() ?: {}),
+                .clickable(enabled = onClick != null, onClick = onClick?.withHaptics() ?: {})
+                .padding(horizontal = 12.dp, vertical = 8.dp),
             text = time,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold
@@ -225,7 +225,7 @@ private fun Preview() {
             title = { Text("My Cinema") },
             section = { ShowingItemSection(type = it.first, language = it.second) }
         ) {
-            ShowingItemTime(time = it)
+            ShowingItemTime(time = it, onClick = {})
         }
     }
 }
