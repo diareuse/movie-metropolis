@@ -242,13 +242,19 @@ private fun BookingScreenContent(
                     onVisibilityChanged = { isVisible = it }
                 )
             }
-            item(key = "divider") { Divider(Modifier.padding(16.dp)) }
+
         }.onLoading {
             items(1) {
                 BookingItemActive()
             }
             item(key = "divider") { Divider(Modifier.padding(16.dp)) }
         }
+
+        if (
+            active.getOrNull().orEmpty().isNotEmpty() &&
+            expired.getOrNull().orEmpty().isNotEmpty()
+        ) item(key = "divider") { Divider(Modifier.padding(16.dp)) }
+
         expired.onSuccess { view ->
             items(view, BookingView::id) {
                 BookingItemExpired(
