@@ -3,8 +3,6 @@ package movie.metropolis.app.screen
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-typealias LoadableList<Type> = Loadable<List<Type>>
-
 @JvmInline
 value class Loadable<out Result>(private val value: Any?) {
 
