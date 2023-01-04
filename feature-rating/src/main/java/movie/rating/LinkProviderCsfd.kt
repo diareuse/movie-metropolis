@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
+import movie.rating.Correlation.Companion.correlate
 
 internal class LinkProviderCsfd(
     private val client: HttpClient
