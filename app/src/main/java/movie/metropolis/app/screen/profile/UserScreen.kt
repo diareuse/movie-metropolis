@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.screen.Loadable
@@ -122,7 +123,7 @@ private fun UserScreen(
                     scrolledContainerColor = Color.Transparent
                 ),
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = onBackClick.withHaptics()) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_back),
                             contentDescription = null
@@ -130,7 +131,7 @@ private fun UserScreen(
                     }
                 },
                 actions = {
-                    IconButton(onClick = onSettingsClick) {
+                    IconButton(onClick = onSettingsClick.withHaptics()) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_settings),
                             contentDescription = null
@@ -214,7 +215,7 @@ private fun UserScreen(
             }
             if (!isLoading) Button(
                 modifier = Modifier.align(Alignment.End),
-                onClick = onSaveClick
+                onClick = onSaveClick.withHaptics()
             ) {
                 Text("Save")
             }
@@ -233,7 +234,7 @@ private fun UserScreen(
             )
             if (!isLoading) Button(
                 modifier = Modifier.align(Alignment.End),
-                onClick = onSaveClick
+                onClick = onSaveClick.withHaptics()
             ) {
                 Text("Save")
             }

@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
@@ -96,7 +97,7 @@ fun BookingItemActive(
                     state.animateTo(0)
                 }
                 onShare()
-            }
+            }.withHaptics()
         ) {
             Icon(painterResource(id = R.drawable.ic_share), null, tint = LocalContentColor.current)
         }
@@ -190,7 +191,10 @@ private fun BookingItemActiveLayout(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable(onClick = onClick ?: {}, enabled = onClick != null)
+                            .clickable(
+                                onClick = onClick?.withHaptics() ?: {},
+                                enabled = onClick != null
+                            )
                             .padding(16.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically

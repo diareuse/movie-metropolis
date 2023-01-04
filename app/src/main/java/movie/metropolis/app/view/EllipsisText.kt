@@ -13,6 +13,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import movie.metropolis.app.feature.haptic.hapticClick
 
 @Composable
 fun EllipsisText(
@@ -27,7 +28,11 @@ fun EllipsisText(
     }
     Text(
         modifier = modifier
-            .clickable(remember { MutableInteractionSource() }, null) { expanded = !expanded },
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = hapticClick { expanded = !expanded }
+            ),
         text = text,
         style = style,
         overflow = TextOverflow.Ellipsis,

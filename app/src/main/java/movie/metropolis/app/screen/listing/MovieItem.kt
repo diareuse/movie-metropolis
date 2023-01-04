@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
@@ -143,7 +144,9 @@ fun MoviePoster(
         modifier = modifier
             .fillMaxSize()
             .imagePlaceholder(url == null || isLoading)
-            .clickable(enabled = url != null && onClick != null, onClick = { onClick?.invoke() })
+            .clickable(
+                enabled = url != null && onClick != null,
+                onClick = onClick?.withHaptics() ?: {})
             .onGloballyPositioned { size = it.size },
         model = imageRequestOf(url, size),
         contentDescription = "",
