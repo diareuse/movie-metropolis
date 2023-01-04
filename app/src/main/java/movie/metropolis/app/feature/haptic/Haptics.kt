@@ -15,8 +15,12 @@ val Haptics
     @Composable get() = LocalHapticFeedback.current
 
 fun <T> HapticFeedback.click(listener: () -> T): () -> Unit = {
-    performHapticFeedback(HapticFeedbackType(HapticFeedbackConstants.CONTEXT_CLICK))
+    click()
     listener()
+}
+
+fun HapticFeedback.click() {
+    performHapticFeedback(HapticFeedbackType(HapticFeedbackConstants.CONTEXT_CLICK))
 }
 
 fun HapticFeedback.tick() {
@@ -36,6 +40,18 @@ fun <T> TickOnChange(value: T, key: Any? = Unit) {
     LaunchedEffect(value) {
         if (last != value) {
             haptics.tick()
+            last = value
+        }
+    }
+}
+
+@Composable
+fun <T> ClickOnChange(value: T, key: Any? = Unit) {
+    var last by rememberSaveable(key) { mutableStateOf(value) }
+    val haptics = Haptics
+    LaunchedEffect(value) {
+        if (last != value) {
+            haptics.click()
             last = value
         }
     }
