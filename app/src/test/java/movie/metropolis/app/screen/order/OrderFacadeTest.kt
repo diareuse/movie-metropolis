@@ -29,4 +29,10 @@ class OrderFacadeTest : FeatureTest() {
         assertEquals("token", result.headers["access-token"])
     }
 
+    @Test
+    fun getRequest_returns_noHeaders() = runTest {
+        val result = facade.getRequest().getOrThrow()
+        assertEquals(0, result.headers.size)
+    }
+
 }
