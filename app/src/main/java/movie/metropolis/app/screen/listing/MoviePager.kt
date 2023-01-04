@@ -19,6 +19,7 @@ import com.google.accompanist.pager.PagerScope
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
+import movie.metropolis.app.feature.haptic.TickOnChange
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
@@ -35,6 +36,7 @@ fun MoviePager(
     modifier: Modifier = Modifier,
     state: PagerState = rememberPagerState(),
 ) {
+    TickOnChange(key = state.currentPage)
     items.onLoading {
         HorizontalPager(
             modifier = modifier,
