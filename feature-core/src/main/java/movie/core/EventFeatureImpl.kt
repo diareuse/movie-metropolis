@@ -14,7 +14,6 @@ import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
 import movie.core.nwk.model.ShowingType
 import java.util.Date
-import kotlin.math.abs
 
 internal class EventFeatureImpl(
     private val event: EventService,
@@ -66,12 +65,10 @@ internal class EventFeatureImpl(
     override suspend fun getCurrent(): Result<Iterable<MoviePreview>> {
         return event.getMoviesByType(ShowingType.Current)
             .map { it.body.map(::MoviePreviewFromResponse) }
-            .map { it.sortedBy { abs(Date().time - it.screeningFrom.time) } }
     }
 
     override suspend fun getUpcoming(): Result<Iterable<MoviePreview>> {
         return event.getMoviesByType(ShowingType.Upcoming)
             .map { it.body.map(::MoviePreviewFromResponse) }
-            .map { it.sortedBy { abs(Date().time - it.screeningFrom.time) } }
     }
 }
