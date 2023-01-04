@@ -67,7 +67,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="movie.metropolis.PROVIDER"
+            android:authorities="${applicationId}.PROVIDER"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
