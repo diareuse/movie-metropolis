@@ -12,6 +12,7 @@ import movie.core.EventFeatureRating
 import movie.core.EventFeatureRecover
 import movie.core.EventFeatureRecoverSecondary
 import movie.core.EventFeatureRequireNotEmpty
+import movie.core.EventFeatureSort
 import movie.core.EventFeatureSpotColor
 import movie.core.EventFeatureStoring
 import movie.core.db.dao.BookingDao
@@ -62,6 +63,7 @@ internal class EventFeatureModule {
         network = EventFeatureRecoverSecondary(database, network)
         network = EventFeatureFilterUnseen(network, preference, bookingDao)
         network = EventFeatureSpotColor(network, analyzer)
+        network = EventFeatureSort(network)
         return network
     }
 
