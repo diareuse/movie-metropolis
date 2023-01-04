@@ -6,7 +6,9 @@ import movie.core.FavoriteFeature
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.adapter.MovieViewFromFeature
 import movie.metropolis.app.screen.FeatureTest
+import movie.metropolis.app.screen.OnChangedListener
 import org.junit.Test
+import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -100,6 +102,23 @@ class ListingFacadeTest : FeatureTest() {
         assertTrue {
             result.none { it.favorite }
         }
+    }
+
+    @Test
+    fun listener_notifiesOnToggle() = runTest {
+        val listener = mock<OnChangedListener>()
+        facade.addOnFavoriteChangedListener(listener)
+        facade.toggleFavorite(MovieViewFromFeature(mock(), true, true))
+        verify(listener).onChanged()
+    }
+
+    @Test
+    fun listener_doesNot_notifyRemovedListeners() = runTest {
+        val listener = mock<OnChangedListener>()
+        facade.addOnFavoriteChangedListener(listener)
+        facade.removeOnFavoriteChangedListener(listener)
+        facade.toggleFavorite(MovieViewFromFeature(mock(), true, true))
+        verify(listener, NoInteractions()).onChanged()
     }
 
 }
