@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
@@ -52,7 +53,7 @@ fun OrderScreen(
             CenterAlignedTopAppBar(
                 title = { Text("Booking") },
                 navigationIcon = {
-                    IconButton(onBackClick) {
+                    IconButton(onBackClick.withHaptics()) {
                         Icon(painterResource(id = R.drawable.ic_back), null)
                     }
                 },

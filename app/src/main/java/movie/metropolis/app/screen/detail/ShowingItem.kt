@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.textPlaceholder
@@ -130,7 +131,7 @@ fun ShowingItemTime(
         Text(
             modifier = Modifier
                 .padding(horizontal = 12.dp, vertical = 8.dp)
-                .clickable(enabled = onClick != null, onClick = onClick ?: {}),
+                .clickable(enabled = onClick != null, onClick = onClick?.withHaptics() ?: {}),
             text = time,
             style = MaterialTheme.typography.bodyMedium,
             fontWeight = FontWeight.Bold

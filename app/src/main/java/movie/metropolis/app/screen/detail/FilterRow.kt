@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.theme.Theme
 
@@ -66,7 +67,7 @@ private fun FilterItem(
     ) {
         Row(
             modifier = Modifier
-                .clickable(onClick = onClick)
+                .clickable(onClick = onClick.withHaptics())
                 .padding(16.dp, 8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically

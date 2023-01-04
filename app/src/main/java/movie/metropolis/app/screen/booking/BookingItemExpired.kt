@@ -33,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
@@ -103,7 +104,10 @@ private fun BookingItemExpiredLayout(
             ) {
                 Box(
                     modifier = Modifier
-                        .clickable(onClick = onClick ?: {}, enabled = onClick != null)
+                        .clickable(
+                            onClick = onClick?.withHaptics() ?: {},
+                            enabled = onClick != null
+                        )
                 ) {
                     Image(
                         modifier = Modifier

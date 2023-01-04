@@ -49,6 +49,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
@@ -164,7 +165,7 @@ private fun ProfileIcon(
     email: String,
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick) {
+    IconButton(onClick = onClick.withHaptics()) {
         var isSuccess by remember { mutableStateOf(false) }
         var size by remember { mutableStateOf(IntSize.Zero) }
         val filter = if (isSuccess) null else ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
@@ -223,7 +224,7 @@ private fun HomeScreen(
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
         floatingActionButton = {
             if (!isLoggedIn) Button(
-                onClick = onNavigateToLogin,
+                onClick = onNavigateToLogin.withHaptics(),
                 colors = ButtonDefaults.elevatedButtonColors(
                     containerColor = MaterialTheme.colorScheme.errorContainer,
                     contentColor = MaterialTheme.colorScheme.onErrorContainer

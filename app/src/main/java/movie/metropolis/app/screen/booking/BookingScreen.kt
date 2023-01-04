@@ -49,6 +49,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
@@ -160,7 +161,7 @@ private fun ReaderDialog(
                             onVisibilityChanged(false)
                         }
                     }
-                },
+                }.withHaptics(),
                 colors = ButtonDefaults.elevatedButtonColors(),
                 elevation = ButtonDefaults.elevatedButtonElevation(
                     defaultElevation = 16.dp,
@@ -200,12 +201,14 @@ private fun BookingScreenContent(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    onClick = onRefreshClick,
+                    onClick = onRefreshClick.withHaptics(),
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Find new tickets")
                 }
-                Button(onClick = onCameraClick) {
+                Button(
+                    onClick = onCameraClick.withHaptics()
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_camera),
                         contentDescription = null,

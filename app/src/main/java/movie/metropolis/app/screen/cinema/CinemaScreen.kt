@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
@@ -86,7 +87,7 @@ private fun CinemaScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onBackClick) {
+                    IconButton(onBackClick.withHaptics()) {
                         Icon(painterResource(id = R.drawable.ic_back), null)
                     }
                 }

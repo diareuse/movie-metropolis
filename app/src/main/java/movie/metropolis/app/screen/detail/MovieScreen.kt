@@ -62,6 +62,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
@@ -265,7 +266,7 @@ private fun MovieScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp),
-                            onClick = { onLinkClick(it.url) }
+                            onClick = { onLinkClick(it.url) }.withHaptics()
                         ) {
                             Text("View trailer")
                         }

@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.theme.Theme
 
 @Composable
@@ -38,7 +39,7 @@ fun MovieScreenAppBar(
             shape = MaterialTheme.shapes.medium
         ) {
             IconButton(
-                onClick = onBackClick
+                onClick = onBackClick.withHaptics()
             ) {
                 Icon(painterResource(id = R.drawable.ic_back), null)
             }
@@ -59,7 +60,7 @@ fun FavoriteButton(
 ) {
     IconButton(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick.withHaptics()
     ) {
         val painter = when (isChecked) {
             true -> painterResource(id = R.drawable.ic_favorite_checked)

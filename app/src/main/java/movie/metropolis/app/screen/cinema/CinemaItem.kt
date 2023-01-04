@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.textPlaceholder
 
@@ -75,7 +76,7 @@ private fun CinemaItemLayout(
         Box(
             modifier = Modifier.clickable(
                 enabled = onClick != null,
-                onClick = onClick ?: {}
+                onClick = onClick?.withHaptics() ?: {}
             )
         ) {
             Image(

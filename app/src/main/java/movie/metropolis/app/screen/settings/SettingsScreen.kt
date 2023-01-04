@@ -42,6 +42,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.hapticClick
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.screen.booking.AppDialog
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.theme.Theme
@@ -86,7 +88,7 @@ private fun SettingsScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = onBackClick.withHaptics()) {
                         Icon(painterResource(id = R.drawable.ic_back), null)
                     }
                 },
@@ -132,7 +134,7 @@ fun LazyListScope.FilterSeen(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .clickable { onCheckedChanged(!checked) }
+            .clickable(onClick = hapticClick { onCheckedChanged(!checked) })
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -184,7 +186,7 @@ fun LazyListScope.Calendar(
         modifier = Modifier
             .fillMaxWidth()
             .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = { toggle() })
+            .clickable(onClick = hapticClick { toggle() })
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {

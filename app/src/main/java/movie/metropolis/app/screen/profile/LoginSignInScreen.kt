@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.view.InputField
 
@@ -148,7 +149,7 @@ private fun LoginSignInScreen(
                 AnimatedVisibility(loading) {
                     CircularProgressIndicator(Modifier.scale(.5f))
                 }
-                Button(onClick = onSendClick, enabled = !loading) {
+                Button(onClick = onSendClick.withHaptics(), enabled = !loading) {
                     Text("Log in")
                     Spacer(Modifier.width(8.dp))
                     Icon(painterResource(id = R.drawable.ic_right), null)
