@@ -19,8 +19,9 @@ fun <T> HapticFeedback.click(listener: () -> T): () -> Unit = {
     listener()
 }
 
-fun HapticFeedback.tick() =
+fun HapticFeedback.tick() {
     performHapticFeedback(HapticFeedbackType(HapticFeedbackConstants.CLOCK_TICK))
+}
 
 @Composable
 fun <T> hapticClick(listener: () -> T) = Haptics.click(listener)
@@ -29,13 +30,13 @@ fun <T> hapticClick(listener: () -> T) = Haptics.click(listener)
 fun (() -> Any).withHaptics() = hapticClick(this)
 
 @Composable
-fun <T> TickOnChange(key: T) {
-    var last by rememberSaveable { mutableStateOf(key) }
+fun <T> TickOnChange(value: T, key: Any? = Unit) {
+    var last by rememberSaveable(key) { mutableStateOf(value) }
     val haptics = Haptics
-    LaunchedEffect(key) {
-        if (last != key) {
+    LaunchedEffect(value) {
+        if (last != value) {
             haptics.tick()
-            last = key
+            last = value
         }
     }
 }

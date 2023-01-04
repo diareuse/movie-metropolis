@@ -36,7 +36,7 @@ fun MoviePager(
     modifier: Modifier = Modifier,
     state: PagerState = rememberPagerState(),
 ) {
-    TickOnChange(key = state.currentPage)
+    TickOnChange(value = state.currentPage)
     items.onLoading {
         HorizontalPager(
             modifier = modifier,
