@@ -49,6 +49,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.haptic.ClickOnChange
 import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.booking.BookingScreen
@@ -219,6 +220,7 @@ private fun HomeScreen(
             }
         )
     }
+    ClickOnChange(selected)
     Scaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
