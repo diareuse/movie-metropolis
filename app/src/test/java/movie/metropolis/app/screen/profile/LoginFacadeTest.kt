@@ -7,6 +7,8 @@ import movie.metropolis.app.screen.FeatureTest
 import org.junit.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class LoginFacadeTest : FeatureTest() {
 
@@ -58,6 +60,17 @@ class LoginFacadeTest : FeatureTest() {
             .thenReturn(Result.failure(RuntimeException()))
         val result = facade.register("", "", "", "", "")
         assert(result.isFailure) { result }
+    }
+
+    @Test
+    fun currentUserEmail_returns_value() {
+        whenever(user.email).thenReturn("email")
+        assertEquals("email", facade.currentUserEmail)
+    }
+
+    @Test
+    fun currentUserEmail_returns_null() {
+        assertNull(facade.currentUserEmail)
     }
 
 }
