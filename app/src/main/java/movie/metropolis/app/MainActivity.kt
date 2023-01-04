@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun share(file: File) {
-        val uri = getUriForFile(this, "movie.metropolis.PROVIDER", file, file.name)
+        val uri = getUriForFile(this, "${packageName}.PROVIDER", file, file.name)
         Intent(Intent.ACTION_SEND)
             .putExtra(Intent.EXTRA_STREAM, uri)
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

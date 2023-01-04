@@ -21,6 +21,10 @@ android {
 
     buildTypes {
 
+        debug {
+            applicationIdSuffix ".dev"
+        }
+
         release {
             shrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
