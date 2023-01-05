@@ -22,7 +22,11 @@ class MovieFacadeFilterable(
             put(Filter.Type.Language, filterable.getLanguages())
             put(Filter.Type.Projection, filterable.getTypes())
         }
-        Result.success(output)
+        val count = output.toList().sumOf { (_, value) -> value.size }
+        when {
+            count <= 0 -> Result.failure(IndexOutOfBoundsException())
+            else -> Result.success(output)
+        }
     }
 
     override fun toggle(filter: Filter) {
