@@ -13,7 +13,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -111,7 +110,7 @@ fun ShowingItemSection(type: String, language: String, isLoading: Boolean = fals
             Text(
                 modifier = Modifier.textPlaceholder(isLoading),
                 text = language,
-                style = MaterialTheme.typography.bodySmall
+                style = Theme.textStyle.caption
             )
         }
     }
@@ -125,15 +124,15 @@ fun ShowingItemTime(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shape = MaterialTheme.shapes.small
+        color = Theme.color.container.secondary,
+        shape = Theme.container.button
     ) {
         Text(
             modifier = Modifier
                 .clickable(enabled = onClick != null, onClick = onClick?.withHaptics() ?: {})
                 .padding(horizontal = 12.dp, vertical = 8.dp),
             text = time,
-            style = MaterialTheme.typography.bodyMedium,
+            style = Theme.textStyle.body,
             fontWeight = FontWeight.Bold
         )
     }
@@ -152,11 +151,11 @@ fun <T, T2> ShowingLayout(
     Column(modifier = modifier) {
         Box(
             modifier = Modifier
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 24.dp)
                 .padding(bottom = 8.dp)
         ) {
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMedium.copy(
+                LocalTextStyle provides Theme.textStyle.headline.copy(
                     fontWeight = FontWeight.Bold
                 )
             ) {
@@ -165,9 +164,10 @@ fun <T, T2> ShowingLayout(
         }
         Surface(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            shape = MaterialTheme.shapes.medium,
-            tonalElevation = if (background == null) 1.dp else 0.dp
+            color = Theme.color.container.background,
+            contentColor = Theme.color.content.background,
+            shape = Theme.container.card,
+            tonalElevation = if (background == null) 4.dp else 0.dp
         ) {
             Box {
                 val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
@@ -183,15 +183,15 @@ fun <T, T2> ShowingLayout(
                 Column(
                     modifier = Modifier
                         .onSizeChanged(onSizeChanged)
-                        .padding(vertical = 16.dp),
+                        .padding(vertical = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     for ((label, collection) in items) Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Box(Modifier.padding(horizontal = 16.dp)) {
+                        Box(Modifier.padding(horizontal = 24.dp)) {
                             CompositionLocalProvider(
-                                LocalTextStyle provides MaterialTheme.typography.titleMedium
+                                LocalTextStyle provides Theme.textStyle.headline
                             ) {
                                 section(label)
                             }
@@ -199,7 +199,7 @@ fun <T, T2> ShowingLayout(
                         LazyRow(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 16.dp)
+                            contentPadding = PaddingValues(horizontal = 24.dp)
                         ) {
                             items(collection, key) {
                                 item(it)

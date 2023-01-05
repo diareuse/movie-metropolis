@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +38,7 @@ import kotlinx.coroutines.withContext
 import movie.style.imagePlaceholder
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
+import movie.style.theme.extendBy
 
 @Composable
 fun MembershipCard(
@@ -58,13 +58,13 @@ fun MembershipCard(
             Barcode(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(MaterialTheme.colorScheme.surface)
+                    .clip(Theme.container.poster.extendBy(padding = 8.dp))
+                    .background(Color.White)
                     .height(64.dp)
                     .padding(vertical = 8.dp),
                 code = cardNumber,
                 format = BarcodeFormat.CODE_128,
-                color = MaterialTheme.colorScheme.onSurface
+                color = Color.Black
             )
         }
     )
@@ -81,7 +81,7 @@ fun MembershipCard(modifier: Modifier = Modifier) {
             Box(
                 Modifier
                     .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.medium)
+                    .clip(Theme.container.poster.extendBy(padding = 8.dp))
                     .height(64.dp)
                     .imagePlaceholder(true)
             )
@@ -99,8 +99,9 @@ private fun MembershipCardLayout(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.tertiary,
-        shape = MaterialTheme.shapes.large
+        color = Theme.color.container.primary,
+        contentColor = Theme.color.content.primary,
+        shape = Theme.container.card
     ) {
         Column {
             Text(
@@ -113,15 +114,16 @@ private fun MembershipCardLayout(
             )
             Surface(
                 modifier = modifier,
-                color = MaterialTheme.colorScheme.tertiaryContainer,
-                shape = MaterialTheme.shapes.large,
+                color = Theme.color.container.secondary,
+                contentColor = Theme.color.content.secondary,
+                shape = Theme.container.card,
                 shadowElevation = 16.dp
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Column(Modifier.padding(horizontal = 16.dp)) {
-                        CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.titleLarge) {
+                        CompositionLocalProvider(LocalTextStyle provides Theme.textStyle.title) {
                             name()
                         }
                         expiration()
@@ -154,7 +156,7 @@ fun Barcode(
     code: String,
     format: BarcodeFormat,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.surface
+    color: Color = Theme.color.container.background
 ) {
     val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
     var image by remember { mutableStateOf(null as ImageBitmap?) }

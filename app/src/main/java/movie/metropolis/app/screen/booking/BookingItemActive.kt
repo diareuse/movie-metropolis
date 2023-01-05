@@ -1,14 +1,12 @@
 package movie.metropolis.app.screen.booking
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -20,7 +18,6 @@ import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,9 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
@@ -54,6 +49,7 @@ import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
 import movie.style.AppIconButton
 import movie.style.haptic.withHaptics
+import movie.style.layout.PosterLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import kotlin.math.roundToInt
@@ -127,7 +123,7 @@ fun BookingItemActive(
                 "Foo Long cinema Boo",
                 modifier = Modifier.textPlaceholder(
                     true,
-                    color = MaterialTheme.colorScheme.secondaryContainer
+                    color = Theme.color.container.secondary
                 )
             )
         },
@@ -152,8 +148,8 @@ private fun BookingItemActiveLayout(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shape = MaterialTheme.shapes.large
+        color = Theme.color.container.secondary,
+        shape = Theme.container.card
     ) {
         Column {
             Box(
@@ -163,7 +159,7 @@ private fun BookingItemActiveLayout(
                 contentAlignment = Alignment.Center
             ) {
                 CompositionLocalProvider(
-                    LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                    LocalTextStyle provides Theme.textStyle.body.copy(
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )
@@ -173,7 +169,7 @@ private fun BookingItemActiveLayout(
             }
             Surface(
                 tonalElevation = 1.dp,
-                shape = MaterialTheme.shapes.large
+                shape = Theme.container.card
             ) {
                 Box {
                     Image(
@@ -197,30 +193,24 @@ private fun BookingItemActiveLayout(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .shadow(24.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .height(150.dp)
-                                .aspectRatio(posterAspectRatio)
-                                .background(MaterialTheme.colorScheme.surface),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            poster()
-                        }
+                        PosterLayout(
+                            modifier = Modifier.height(150.dp),
+                            posterAspectRatio = posterAspectRatio,
+                            content = poster
+                        )
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             CompositionLocalProvider(
-                                LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
+                                LocalTextStyle provides Theme.textStyle.title.copy(
                                     textAlign = TextAlign.Center
                                 )
                             ) {
                                 name()
                             }
                             CompositionLocalProvider(
-                                LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                                LocalTextStyle provides Theme.textStyle.body.copy(
                                     textAlign = TextAlign.Center
                                 )
                             ) {

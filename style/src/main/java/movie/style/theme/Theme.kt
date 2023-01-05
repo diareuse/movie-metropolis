@@ -1,6 +1,7 @@
 package movie.style.theme
 
 import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -20,8 +21,12 @@ fun Theme(content: @Composable () -> Unit) = MaterialTheme(
         LocalContainer provides ThemeContainerMaterial3(MaterialTheme.shapes),
         LocalStyle provides ThemeStyleMaterial3(MaterialTheme.colorScheme)
     ) {
-        Surface {
-            content()
+        CompositionLocalProvider(
+            LocalTextStyle provides Theme.textStyle.body
+        ) {
+            Surface {
+                content()
+            }
         }
     }
 }
@@ -53,6 +58,7 @@ object Theme {
 
     interface Container {
         val button: CornerBasedShape
+        val poster: CornerBasedShape get() = button
         val buttonSmall: CornerBasedShape
         val card: CornerBasedShape
     }

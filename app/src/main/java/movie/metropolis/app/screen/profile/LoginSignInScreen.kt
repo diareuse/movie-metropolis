@@ -20,7 +20,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -89,7 +88,7 @@ private fun LoginSignInScreen(
                     .align(Alignment.TopEnd),
                 painter = painterResource(id = R.drawable.ic_cinema),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                colorFilter = ColorFilter.tint(Theme.color.container.primary)
             )
             Image(
                 modifier = Modifier
@@ -99,7 +98,7 @@ private fun LoginSignInScreen(
                     .alpha(.2f),
                 painter = painterResource(id = R.drawable.ic_movie),
                 contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary)
+                colorFilter = ColorFilter.tint(Theme.color.container.secondary)
             )
         }
         Column(
@@ -137,7 +136,7 @@ private fun LoginSignInScreen(
                 Text(
                     text = "Email or Password might be incorrect",
                     modifier = Modifier.fillMaxWidth(),
-                    color = MaterialTheme.colorScheme.error,
+                    color = Theme.color.content.error,
                     textAlign = TextAlign.Center
                 )
             }

@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -159,7 +158,7 @@ private fun MovieScreen(
             )
         }
     ) { padding ->
-        val surface = MaterialTheme.colorScheme.surface
+        val surface = Theme.color.container.background
         AppImage(
             modifier = Modifier
                 .fillMaxSize()
@@ -300,7 +299,7 @@ fun LazyListScope.MovieDetailShowings(
                     .animateItemPlacement()
                     .padding(horizontal = 24.dp),
                 text = "Filters",
-                style = MaterialTheme.typography.titleMedium
+                style = Theme.textStyle.headline
             )
         }
         item("filters") {
@@ -363,14 +362,14 @@ fun MovieMetadata(
                     ambientColor = poster.getOrNull()?.spotColor ?: Color.Black,
                     spotColor = poster.getOrNull()?.spotColor ?: Color.Black
                 )
-                .clip(MaterialTheme.shapes.medium)
+                .clip(Theme.container.poster)
         ) {
             AppImage(
                 modifier = Modifier
                     .fillMaxWidth(.3f)
                     .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
                     .imagePlaceholder(poster.getOrNull() == null)
-                    .background(MaterialTheme.colorScheme.surface),
+                    .background(Theme.color.container.background),
                 url = poster.getOrNull()?.url
             )
             detail.mapNotNull { it.rating }.onSuccess {
@@ -378,12 +377,12 @@ fun MovieMetadata(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .clip(
-                            MaterialTheme.shapes.medium.copy(
+                            Theme.container.button.copy(
                                 topStart = ZeroCornerSize,
                                 bottomEnd = ZeroCornerSize
                             )
                         )
-                        .background(MaterialTheme.colorScheme.tertiaryContainer)
+                        .background(Theme.color.container.tertiary)
                         .padding(8.dp)
                         .padding(start = 2.dp),
                     text = it
@@ -414,7 +413,7 @@ fun DetailPosterRow(
     Column(modifier = modifier) {
         Text(
             text = detailView?.name ?: "Movie Name",
-            style = MaterialTheme.typography.titleLarge,
+            style = Theme.textStyle.title,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(8.dp))
@@ -424,19 +423,19 @@ fun DetailPosterRow(
                 detailView?.countryOfOrigin ?: "USA",
                 detailView?.releasedAt ?: "2022"
             ),
-            style = MaterialTheme.typography.bodySmall,
+            style = Theme.textStyle.caption,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = detailView?.directors?.joinToString() ?: "Foobar Boobar",
-            style = MaterialTheme.typography.bodySmall,
+            style = Theme.textStyle.caption,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
         EllipsisText(
             text = detailView?.cast?.joinToString() ?: "Foobar Boobar, Foobar Boobar",
             maxLines = 3,
-            style = MaterialTheme.typography.bodySmall,
+            style = Theme.textStyle.caption,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
     }

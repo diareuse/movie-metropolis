@@ -6,7 +6,6 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,7 +38,7 @@ fun InputField(
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
         isError = isError,
-        shape = MaterialTheme.shapes.medium.copy(
+        shape = Theme.container.card.copy(
             bottomStart = CornerSize(0),
             bottomEnd = CornerSize(0)
         ),
@@ -78,7 +78,7 @@ fun <T> InputField(
             value = converter(selected),
             onValueChange = {},
             readOnly = true,
-            shape = MaterialTheme.shapes.medium.copy(
+            shape = Theme.container.card.copy(
                 bottomStart = CornerSize(0),
                 bottomEnd = CornerSize(0)
             )

@@ -7,11 +7,8 @@ internal class ThemeStyleMaterial3(
     private val scheme: ColorScheme
 ) : Theme.Style {
 
-    override val container: Theme.Style.Scheme
-        get() = ContainerScheme()
-
-    override val content: Theme.Style.Scheme
-        get() = ContentScheme()
+    override val container: Theme.Style.Scheme = ContainerScheme()
+    override val content: Theme.Style.Scheme = ContentScheme()
 
     private inner class ContainerScheme : Theme.Style.Scheme {
         override val primary: Color

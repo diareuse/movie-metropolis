@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,10 +31,11 @@ fun MovieScreenAppBar(
             .padding(24.dp)
     ) {
         Surface(
-            color = MaterialTheme.colorScheme.surface,
+            color = Theme.color.container.background,
+            contentColor = Theme.color.content.background,
             tonalElevation = 1.dp,
             shadowElevation = 16.dp,
-            shape = MaterialTheme.shapes.medium
+            shape = Theme.container.button
         ) {
             AppIconButton(
                 onClick = onBackClick,
