@@ -2,11 +2,8 @@ package movie.style
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -42,7 +39,7 @@ fun InputField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     Surface(
-        modifier = modifier.width(IntrinsicSize.Max),
+        modifier = modifier.fillMaxWidth(),
         color = Theme.color.container.background,
         contentColor = Theme.color.content.background,
         shape = Theme.container.button,
@@ -96,6 +93,7 @@ fun <T> InputField(
     items: List<T>,
     converter: (T) -> String,
     modifier: Modifier = Modifier,
+    label: String? = null,
     content: @Composable (T) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -104,18 +102,15 @@ fun <T> InputField(
         expanded = expanded,
         onExpandedChange = { expanded = it }
     ) {
-        TextField(
+        InputField(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = !expanded }
                 .menuAnchor(),
             value = converter(selected),
+            label = label,
             onValueChange = {},
             readOnly = true,
-            shape = Theme.container.card.copy(
-                bottomStart = CornerSize(0),
-                bottomEnd = CornerSize(0)
-            )
         )
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             for (item in items) content(item)
@@ -134,5 +129,19 @@ private fun Preview() {
             label = "Email",
             placeholder = "john.doe@email.com"
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview2() {
+    Theme {
+        InputField(
+            selected = "foo",
+            items = listOf("foo", "bar"),
+            converter = { it },
+            modifier = Modifier.padding(24.dp),
+            label = "items"
+        ) {}
     }
 }

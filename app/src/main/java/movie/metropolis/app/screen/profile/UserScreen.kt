@@ -175,7 +175,8 @@ private fun UserScreen(
                 modifier = Modifier.textPlaceholder(isLoading),
                 selected = favorite,
                 items = cinemas.getOrNull().orEmpty(),
-                converter = { it?.name.orEmpty() }
+                converter = { it?.name.orEmpty() },
+                label = "Favorite cinema"
             ) {
                 Text(
                     text = it?.name ?: return@InputField,
