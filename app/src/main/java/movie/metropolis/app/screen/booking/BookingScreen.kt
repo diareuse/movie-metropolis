@@ -57,6 +57,7 @@ import movie.metropolis.app.screen.share.TicketRepresentation
 import movie.metropolis.app.util.register
 import movie.metropolis.app.util.toBitmap
 import movie.style.AppButton
+import movie.style.AppDialog
 import movie.style.theme.Theme
 import java.io.File
 
