@@ -1,4 +1,4 @@
-package movie.metropolis.app.view
+package movie.style
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ColorScheme

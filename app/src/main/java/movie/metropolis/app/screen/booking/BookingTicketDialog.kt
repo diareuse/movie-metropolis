@@ -60,7 +60,7 @@ import coil.compose.AsyncImage
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.profile.Barcode
-import movie.metropolis.app.theme.Theme
+import movie.style.theme.Theme
 import kotlin.random.Random.Default.nextLong
 
 typealias Row = String

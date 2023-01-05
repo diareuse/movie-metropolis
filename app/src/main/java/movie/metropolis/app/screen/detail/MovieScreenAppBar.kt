@@ -17,8 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
-import movie.metropolis.app.theme.Theme
+import movie.style.haptic.withHaptics
+import movie.style.theme.Theme
 
 @Composable
 fun MovieScreenAppBar(

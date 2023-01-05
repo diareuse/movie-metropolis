@@ -26,7 +26,7 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
-import movie.metropolis.app.theme.Theme
+import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

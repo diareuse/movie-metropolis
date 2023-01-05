@@ -16,9 +16,9 @@ import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
-import movie.metropolis.app.feature.haptic.PlatformHapticFeedback
 import movie.metropolis.app.screen.Navigation
-import movie.metropolis.app.theme.Theme
+import movie.style.haptic.PlatformHapticFeedback
+import movie.style.theme.Theme
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine

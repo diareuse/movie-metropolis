@@ -36,9 +36,9 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import movie.metropolis.app.theme.Theme
-import movie.metropolis.app.view.imagePlaceholder
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.imagePlaceholder
+import movie.style.textPlaceholder
+import movie.style.theme.Theme
 
 @Composable
 fun MembershipCard(
