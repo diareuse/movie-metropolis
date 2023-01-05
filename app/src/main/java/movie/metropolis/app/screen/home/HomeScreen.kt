@@ -7,13 +7,9 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -31,33 +27,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.listing.MoviesScreen
+import movie.style.AppButton
+import movie.style.AppIconButton
+import movie.style.AppImage
+import movie.style.AppToolbar
 import movie.style.haptic.ClickOnChange
-import movie.style.haptic.withHaptics
+import movie.style.theme.Theme
 import java.io.File
 import java.security.MessageDigest
 
@@ -147,14 +140,10 @@ fun HomeScreenLayout(
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            AppToolbar(
                 title = title,
                 navigationIcon = profileIcon,
-                scrollBehavior = behavior,
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent
-                )
+                scrollBehavior = behavior
             )
         },
         content = { content(it, behavior) }
@@ -166,22 +155,12 @@ private fun ProfileIcon(
     email: String,
     onClick: () -> Unit
 ) {
-    IconButton(onClick = onClick.withHaptics()) {
-        var isSuccess by remember { mutableStateOf(false) }
-        var size by remember { mutableStateOf(IntSize.Zero) }
-        val filter = if (isSuccess) null else ColorFilter.tint(MaterialTheme.colorScheme.onSurface)
-        AsyncImage(
-            modifier = Modifier
-                .clip(CircleShape)
-                .onGloballyPositioned { size = it.size },
-            model = imageRequestOf(rememberUserImage(email).value, size),
-            contentDescription = null,
-            placeholder = painterResource(id = R.drawable.ic_profile),
-            error = painterResource(id = R.drawable.ic_profile),
-            fallback = painterResource(id = R.drawable.ic_profile),
-            colorFilter = filter,
-            onSuccess = { isSuccess = true },
-            contentScale = ContentScale.Crop
+    AppIconButton(onClick = onClick) {
+        val image by rememberUserImage(email)
+        AppImage(
+            modifier = Modifier.clip(CircleShape),
+            url = image,
+            placeholder = painterResource(id = R.drawable.ic_profile)
         )
     }
 }
@@ -225,16 +204,11 @@ private fun HomeScreen(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
         floatingActionButton = {
-            if (!isLoggedIn) Button(
-                onClick = onNavigateToLogin.withHaptics(),
-                colors = ButtonDefaults.elevatedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer
-                ),
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 16.dp,
-                    pressedElevation = 8.dp
-                )
+            if (!isLoggedIn) AppButton(
+                onClick = onNavigateToLogin,
+                containerColor = Theme.color.container.error,
+                contentColor = Theme.color.content.error,
+                elevation = 16.dp
             ) {
                 Text("Log in")
             }

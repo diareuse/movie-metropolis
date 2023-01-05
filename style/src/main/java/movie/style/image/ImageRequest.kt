@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.image
+package movie.style.image
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -13,7 +13,7 @@ import coil.size.Size
 import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun imageRequestOf(
+fun rememberImageRequest(
     model: Any?,
     size: IntSize = IntSize.Zero
 ): ImageRequest {

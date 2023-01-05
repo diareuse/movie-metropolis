@@ -21,30 +21,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.detail.FavoriteButton
+import movie.style.AppImage
 import movie.style.haptic.withHaptics
-import movie.style.imagePlaceholder
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -138,25 +129,13 @@ fun MoviePoster(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
-    var isLoading by remember { mutableStateOf(true) }
-    var size by remember { mutableStateOf(IntSize.Zero) }
-    AsyncImage(
+    AppImage(
         modifier = modifier
             .fillMaxSize()
-            .imagePlaceholder(url == null || isLoading)
             .clickable(
                 enabled = url != null && onClick != null,
-                onClick = onClick?.withHaptics() ?: {})
-            .onGloballyPositioned { size = it.size },
-        model = imageRequestOf(url, size),
-        contentDescription = "",
-        contentScale = ContentScale.Crop,
-        onLoading = {
-            isLoading = true
-        },
-        onSuccess = {
-            isLoading = false
-        }
+                onClick = onClick?.withHaptics() ?: {}),
+        url = url
     )
 }
 

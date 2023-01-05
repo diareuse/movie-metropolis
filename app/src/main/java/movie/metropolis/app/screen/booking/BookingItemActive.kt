@@ -16,10 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.IconButton
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -54,6 +52,7 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
+import movie.style.AppIconButton
 import movie.style.haptic.withHaptics
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -90,17 +89,16 @@ fun BookingItemActive(
         ),
         contentAlignment = Alignment.CenterEnd
     ) {
-        IconButton(
+        AppIconButton(
             modifier = Modifier.onGloballyPositioned { anchorSize = it.size.width.toFloat() },
+            painter = painterResource(id = R.drawable.ic_share),
             onClick = {
                 scope.launch {
                     state.animateTo(0)
                 }
                 onShare()
-            }.withHaptics()
-        ) {
-            Icon(painterResource(id = R.drawable.ic_share), null, tint = LocalContentColor.current)
-        }
+            }
+        )
         BookingItemActiveLayout(
             modifier = Modifier.offset {
                 val offset = state.offset.value.takeUnless { it.isNaN() } ?: 0f

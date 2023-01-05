@@ -6,15 +6,10 @@ import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -27,7 +22,8 @@ import movie.metropolis.app.R
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.style.haptic.withHaptics
+import movie.style.AppIconButton
+import movie.style.AppToolbar
 
 @Composable
 fun OrderScreen(
@@ -50,17 +46,14 @@ fun OrderScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(
+            AppToolbar(
                 title = { Text("Booking") },
                 navigationIcon = {
-                    IconButton(onBackClick.withHaptics()) {
-                        Icon(painterResource(id = R.drawable.ic_back), null)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-                    scrolledContainerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
-                )
+                    AppIconButton(
+                        onClick = onBackClick,
+                        painter = painterResource(id = R.drawable.ic_back)
+                    )
+                }
             )
         }
     ) { padding ->

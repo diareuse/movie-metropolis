@@ -17,12 +17,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,7 +56,7 @@ import movie.metropolis.app.screen.reader.BarcodeReader
 import movie.metropolis.app.screen.share.TicketRepresentation
 import movie.metropolis.app.util.register
 import movie.metropolis.app.util.toBitmap
-import movie.style.haptic.withHaptics
+import movie.style.AppButton
 import movie.style.theme.Theme
 import java.io.File
 
@@ -150,7 +147,7 @@ private fun ReaderDialog(
             val owner = LocalActivityResultRegistryOwner.current?.activityResultRegistry
             val context = LocalContext.current
             val scope = rememberCoroutineScope()
-            if (owner != null) Button(
+            if (owner != null) AppButton(
                 onClick = {
                     scope.launch(Dispatchers.Default) {
                         val image = owner.register("image", GetContent(), "image/*")
@@ -161,12 +158,8 @@ private fun ReaderDialog(
                             onVisibilityChanged(false)
                         }
                     }
-                }.withHaptics(),
-                colors = ButtonDefaults.elevatedButtonColors(),
-                elevation = ButtonDefaults.elevatedButtonElevation(
-                    defaultElevation = 16.dp,
-                    pressedElevation = 8.dp
-                )
+                },
+                elevation = 16.dp
             ) {
                 Text("From file")
             }
@@ -200,19 +193,18 @@ private fun BookingScreenContent(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Button(
-                    onClick = onRefreshClick.withHaptics(),
+                AppButton(
+                    onClick = onRefreshClick,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text("Find new tickets")
                 }
-                Button(
-                    onClick = onCameraClick.withHaptics()
+                AppButton(
+                    onClick = onCameraClick
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.ic_camera),
-                        contentDescription = null,
-                        tint = LocalContentColor.current
+                        contentDescription = null
                     )
                 }
             }

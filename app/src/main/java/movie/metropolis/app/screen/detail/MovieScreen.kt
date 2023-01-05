@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
@@ -35,10 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -49,20 +45,15 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
@@ -76,8 +67,9 @@ import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.mapNotNull
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
+import movie.style.AppButton
+import movie.style.AppImage
 import movie.style.EllipsisText
-import movie.style.haptic.withHaptics
 import movie.style.imagePlaceholder
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -168,8 +160,7 @@ private fun MovieScreen(
         }
     ) { padding ->
         val surface = MaterialTheme.colorScheme.surface
-        var size by remember { mutableStateOf(IntSize.Zero) }
-        AsyncImage(
+        AppImage(
             modifier = Modifier
                 .fillMaxSize()
                 .blur(16.dp)
@@ -177,11 +168,8 @@ private fun MovieScreen(
                 .drawWithContent {
                     drawContent()
                     drawRect(Brush.verticalGradient(listOf(Color.Transparent, surface)))
-                }
-                .onGloballyPositioned { size = it.size },
-            model = imageRequestOf(poster.getOrNull()?.url, size),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
+                },
+            url = poster.getOrNull()?.url
         )
         LazyColumn(
             modifier = Modifier
@@ -262,11 +250,11 @@ private fun MovieScreen(
             } else {
                 trailer.onSuccess {
                     item("trailer") {
-                        Button(
+                        AppButton(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp),
-                            onClick = { onLinkClick(it.url) }.withHaptics()
+                            onClick = { onLinkClick(it.url) }
                         ) {
                             Text("View trailer")
                         }
@@ -377,17 +365,13 @@ fun MovieMetadata(
                 )
                 .clip(MaterialTheme.shapes.medium)
         ) {
-            var size by remember { mutableStateOf(IntSize.Zero) }
-            AsyncImage(
+            AppImage(
                 modifier = Modifier
                     .fillMaxWidth(.3f)
                     .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
                     .imagePlaceholder(poster.getOrNull() == null)
-                    .background(MaterialTheme.colorScheme.surface)
-                    .onGloballyPositioned { size = it.size },
-                model = imageRequestOf(poster.getOrNull()?.url, size),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
+                    .background(MaterialTheme.colorScheme.surface),
+                url = poster.getOrNull()?.url
             )
             detail.mapNotNull { it.rating }.onSuccess {
                 Text(
