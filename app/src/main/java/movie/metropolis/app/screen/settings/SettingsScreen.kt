@@ -39,8 +39,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
-import movie.metropolis.app.screen.booking.AppDialog
 import movie.metropolis.app.screen.detail.plus
+import movie.style.AppDialog
 import movie.style.AppIconButton
 import movie.style.AppToolbar
 import movie.style.haptic.hapticClick

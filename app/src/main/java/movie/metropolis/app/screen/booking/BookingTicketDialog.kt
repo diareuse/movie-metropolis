@@ -57,6 +57,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.screen.profile.Barcode
+import movie.style.AppDialog
 import movie.style.AppImage
 import movie.style.theme.Theme
 import kotlin.random.Random.Default.nextLong
