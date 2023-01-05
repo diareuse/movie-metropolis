@@ -1,4 +1,4 @@
-package movie.metropolis.app.theme
+package movie.style.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import movie.metropolis.app.R
+import movie.style.R
 
 private val LexendDeca = FontFamily(
     Font(R.font.lexend_deca_black, weight = FontWeight.Black),
@@ -20,7 +20,7 @@ private val LexendDeca = FontFamily(
     Font(R.font.lexend_deca_thin, weight = FontWeight.Thin)
 )
 
-val ThemeTypography = Typography(
+internal val ThemeTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = LexendDeca,
         fontWeight = FontWeight.W400,

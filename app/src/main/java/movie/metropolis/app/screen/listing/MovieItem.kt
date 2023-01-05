@@ -39,14 +39,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.detail.FavoriteButton
-import movie.metropolis.app.theme.Theme
-import movie.metropolis.app.view.imagePlaceholder
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.haptic.withHaptics
+import movie.style.imagePlaceholder
+import movie.style.textPlaceholder
+import movie.style.theme.Theme
 
 @Composable
 fun MovieItem(

@@ -50,13 +50,13 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
-import movie.metropolis.app.theme.Theme
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.haptic.withHaptics
+import movie.style.textPlaceholder
+import movie.style.theme.Theme
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterialApi::class)

@@ -49,7 +49,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
@@ -58,9 +57,10 @@ import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.screen.reader.BarcodeReader
 import movie.metropolis.app.screen.share.TicketRepresentation
-import movie.metropolis.app.theme.Theme
 import movie.metropolis.app.util.register
 import movie.metropolis.app.util.toBitmap
+import movie.style.haptic.withHaptics
+import movie.style.theme.Theme
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)

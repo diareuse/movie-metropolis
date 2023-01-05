@@ -35,7 +35,7 @@ import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
-import movie.metropolis.app.theme.Theme
+import movie.style.theme.Theme
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextBytes
 

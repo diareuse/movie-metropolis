@@ -1,4 +1,4 @@
-package movie.metropolis.app.theme
+package movie.style.theme
 
 import android.content.Context
 import android.os.Build
@@ -72,7 +72,7 @@ private val DarkOutlineVariant = Color(0xFF52443C)
 private val DarkScrim = Color(0xFF000000)
 
 @Composable
-fun themeColors(
+internal fun themeColors(
     context: Context = LocalContext.current,
     useDarkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S

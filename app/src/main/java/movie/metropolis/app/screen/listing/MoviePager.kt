@@ -19,12 +19,12 @@ import com.google.accompanist.pager.PagerScope
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
-import movie.metropolis.app.feature.haptic.TickOnChange
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.metropolis.app.theme.Theme
+import movie.style.haptic.TickOnChange
+import movie.style.theme.Theme
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 

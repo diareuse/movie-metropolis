@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
+import movie.style.haptic.withHaptics
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

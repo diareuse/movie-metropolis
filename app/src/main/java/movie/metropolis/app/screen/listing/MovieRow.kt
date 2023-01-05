@@ -21,7 +21,7 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.metropolis.app.theme.Theme
+import movie.style.theme.Theme
 
 @Composable
 fun MovieRow(

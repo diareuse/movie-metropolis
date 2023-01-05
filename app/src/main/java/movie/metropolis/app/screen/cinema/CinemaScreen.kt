@@ -27,7 +27,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
@@ -37,7 +36,8 @@ import movie.metropolis.app.screen.detail.FilterRow
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.haptic.withHaptics
+import movie.style.textPlaceholder
 import java.util.Date
 
 @Composable

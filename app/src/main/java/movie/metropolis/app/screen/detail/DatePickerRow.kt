@@ -18,8 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import movie.metropolis.app.feature.haptic.withHaptics
-import movie.metropolis.app.theme.Theme
+import movie.style.haptic.withHaptics
+import movie.style.theme.Theme
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar

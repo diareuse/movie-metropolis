@@ -42,11 +42,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.hapticClick
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.screen.booking.AppDialog
 import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.theme.Theme
+import movie.style.haptic.hapticClick
+import movie.style.haptic.withHaptics
+import movie.style.theme.Theme
 
 @Composable
 fun SettingsScreen(

@@ -62,7 +62,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
@@ -77,10 +76,11 @@ import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.mapNotNull
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.metropolis.app.theme.Theme
-import movie.metropolis.app.view.EllipsisText
-import movie.metropolis.app.view.imagePlaceholder
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.EllipsisText
+import movie.style.haptic.withHaptics
+import movie.style.imagePlaceholder
+import movie.style.textPlaceholder
+import movie.style.theme.Theme
 import java.util.Date
 import kotlin.random.Random.Default.nextBytes
 import kotlin.random.Random.Default.nextInt

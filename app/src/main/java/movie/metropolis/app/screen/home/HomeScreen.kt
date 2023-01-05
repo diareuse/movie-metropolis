@@ -49,8 +49,6 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.ClickOnChange
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
@@ -58,6 +56,8 @@ import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.listing.MoviesScreen
+import movie.style.haptic.ClickOnChange
+import movie.style.haptic.withHaptics
 import java.io.File
 import java.security.MessageDigest
 

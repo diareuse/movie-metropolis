@@ -32,15 +32,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.haptic.withHaptics
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.metropolis.app.theme.Theme
-import movie.metropolis.app.view.InputField
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.InputField
+import movie.style.haptic.withHaptics
+import movie.style.textPlaceholder
+import movie.style.theme.Theme
 
 @Composable
 fun UserScreen(

@@ -1,4 +1,4 @@
-package movie.metropolis.app.feature.haptic
+package movie.style.haptic
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.runtime.Composable

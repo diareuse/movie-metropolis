@@ -21,7 +21,7 @@ import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.detail.ShowingItemSection
 import movie.metropolis.app.screen.detail.ShowingItemTime
 import movie.metropolis.app.screen.detail.ShowingLayout
-import movie.metropolis.app.view.textPlaceholder
+import movie.style.textPlaceholder
 
 @Composable
 fun MovieShowingItem(
