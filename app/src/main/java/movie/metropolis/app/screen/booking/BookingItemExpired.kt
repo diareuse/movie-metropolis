@@ -1,21 +1,17 @@
 package movie.metropolis.app.screen.booking
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,9 +19,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,8 +32,10 @@ import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
 import movie.style.haptic.withHaptics
+import movie.style.layout.PosterLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
+import movie.style.theme.extendBy
 
 @Composable
 fun BookingItemExpired(
@@ -88,8 +84,9 @@ private fun BookingItemExpiredLayout(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.errorContainer,
-        shape = MaterialTheme.shapes.large.copy(CornerSize(40.dp))
+        color = Theme.color.container.error,
+        shape = Theme.container.card.extendBy(padding = 8.dp),
+        contentColor = Theme.color.content.error
     ) {
         Column(
             Modifier
@@ -100,7 +97,7 @@ private fun BookingItemExpiredLayout(
             Text("Expired", Modifier.padding(8.dp), fontWeight = FontWeight.Bold)
             Surface(
                 tonalElevation = 1.dp,
-                shape = MaterialTheme.shapes.large
+                shape = Theme.container.card
             ) {
                 Box(
                     modifier = Modifier
@@ -126,30 +123,24 @@ private fun BookingItemExpiredLayout(
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .shadow(24.dp)
-                                .clip(MaterialTheme.shapes.medium)
-                                .height(100.dp)
-                                .aspectRatio(posterAspectRatio)
-                                .background(MaterialTheme.colorScheme.surface),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            poster()
-                        }
+                        PosterLayout(
+                            modifier = Modifier.height(100.dp),
+                            posterAspectRatio = posterAspectRatio,
+                            content = poster
+                        )
                         Column(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             CompositionLocalProvider(
-                                LocalTextStyle provides MaterialTheme.typography.titleLarge.copy(
+                                LocalTextStyle provides Theme.textStyle.title.copy(
                                     textAlign = TextAlign.Center
                                 )
                             ) {
                                 name()
                             }
                             CompositionLocalProvider(
-                                LocalTextStyle provides MaterialTheme.typography.bodyMedium.copy(
+                                LocalTextStyle provides Theme.textStyle.body.copy(
                                     textAlign = TextAlign.Center
                                 )
                             ) {

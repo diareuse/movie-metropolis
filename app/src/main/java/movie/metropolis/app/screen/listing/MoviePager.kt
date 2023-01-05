@@ -3,7 +3,6 @@ package movie.metropolis.app.screen.listing
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,7 +48,7 @@ fun MoviePager(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(DefaultPosterAspectRatio)
-                    .interpolateSize(this, index, MaterialTheme.shapes.medium),
+                    .interpolateSize(this, index, Theme.container.poster),
                 url = null,
                 onClick = {}
             )
@@ -71,7 +70,7 @@ fun MoviePager(
                     .interpolateSize(
                         scope = this,
                         page = index,
-                        shape = MaterialTheme.shapes.medium,
+                        shape = Theme.container.poster,
                         shadowColor = item.poster?.spotColor ?: Color.Black
                     ),
                 url = item.poster?.url,

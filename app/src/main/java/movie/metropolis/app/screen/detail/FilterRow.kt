@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
@@ -60,10 +58,10 @@ private fun FilterItem(
     Surface(
         modifier = modifier,
         color = when (selected) {
-            true -> MaterialTheme.colorScheme.tertiary
-            else -> MaterialTheme.colorScheme.tertiaryContainer
+            true -> Theme.color.container.tertiary
+            else -> Theme.color.container.surface
         },
-        shape = MaterialTheme.shapes.small
+        shape = Theme.container.buttonSmall
     ) {
         Row(
             modifier = Modifier
@@ -72,7 +70,7 @@ private fun FilterItem(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val style = MaterialTheme.typography.bodyMedium
+            val style = Theme.textStyle.body
             if (selected)
                 Icon(
                     modifier = Modifier.size(with(LocalDensity.current) { style.fontSize.toDp() }),
@@ -81,8 +79,7 @@ private fun FilterItem(
                 )
             Text(
                 text = name,
-                style = style,
-                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                style = style
             )
         }
     }

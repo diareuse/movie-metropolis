@@ -34,8 +34,8 @@ fun AppButton(
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = containerColor,
             contentColor = contentColor,
-            disabledContainerColor = Theme.color.container.surface.copy(alpha = .12f),
-            disabledContentColor = Theme.color.container.surface.copy(alpha = .38f),
+            disabledContainerColor = Theme.color.content.surface.copy(alpha = .12f),
+            disabledContentColor = Theme.color.content.surface.copy(alpha = .38f),
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = elevation,
@@ -64,7 +64,7 @@ fun AppIconButton(
             containerColor = Color.Transparent,
             contentColor = color,
             disabledContainerColor = Color.Transparent,
-            disabledContentColor = Theme.color.container.surface.copy(alpha = .5f),
+            disabledContentColor = Theme.color.content.surface.copy(alpha = .5f),
         ),
         content = content
     )

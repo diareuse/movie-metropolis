@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -132,8 +131,8 @@ private fun ReaderDialog(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f),
-                shape = MaterialTheme.shapes.large,
-                color = MaterialTheme.colorScheme.surface,
+                shape = Theme.container.card,
+                color = Theme.color.container.background,
                 shadowElevation = 32.dp
             ) {
                 BarcodeReader(

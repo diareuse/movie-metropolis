@@ -12,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -148,7 +147,7 @@ private fun UserScreen(
             }.onLoading {
                 MembershipCard()
             }
-            Text("You in Detail", style = MaterialTheme.typography.titleLarge)
+            Text("You in Detail", style = Theme.textStyle.title)
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = firstName,
@@ -207,7 +206,7 @@ private fun UserScreen(
             ) {
                 Text("Save")
             }
-            Text("Security", style = MaterialTheme.typography.titleLarge)
+            Text("Security", style = Theme.textStyle.title)
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordCurrent,

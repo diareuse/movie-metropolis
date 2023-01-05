@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,9 +68,10 @@ private fun CinemaItemLayout(
 ) {
     Surface(
         modifier = modifier,
-        color = MaterialTheme.colorScheme.surface,
-        shape = MaterialTheme.shapes.large,
-        tonalElevation = 1.dp
+        color = Theme.color.container.background,
+        contentColor = Theme.color.content.background,
+        shape = Theme.container.card,
+        tonalElevation = 2.dp
     ) {
         Box(
             modifier = Modifier.clickable(
@@ -97,7 +97,7 @@ private fun CinemaItemLayout(
                 Text(
                     modifier = textModifier,
                     text = name,
-                    style = MaterialTheme.typography.titleLarge
+                    style = Theme.textStyle.title
                 )
                 if (city !in name) Text(
                     modifier = textModifier,
@@ -106,7 +106,7 @@ private fun CinemaItemLayout(
                 Text(
                     modifier = textModifier,
                     text = address.filter { it !in name }.joinToString("\n"),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = Theme.textStyle.body
                 )
                 if (distance != null)
                     Text(

@@ -10,7 +10,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -218,7 +217,8 @@ private fun HomeScreen(
             Surface(
                 tonalElevation = 1.dp,
                 shadowElevation = 32.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Theme.color.container.background,
+                contentColor = Theme.color.content.background
             ) {
                 NavigationBar(
                     containerColor = Color.Transparent

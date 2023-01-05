@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
@@ -106,7 +105,7 @@ private fun MoviesScreenContent(
             Text(
                 text = "Now Available",
                 modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                style = MaterialTheme.typography.titleLarge
+                style = Theme.textStyle.title
             )
         }
         item("available-pager") {
@@ -121,7 +120,7 @@ private fun MoviesScreenContent(
             Text(
                 text = "Upcoming",
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp),
-                style = MaterialTheme.typography.titleLarge
+                style = Theme.textStyle.title
             )
         }
         item("upcoming-row") {

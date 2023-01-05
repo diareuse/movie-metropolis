@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -116,7 +115,7 @@ private fun SettingsScreen(
                 Text(
                     modifier = Modifier.navigationBarsPadding(),
                     text = "Some settings may require for you to close the app completely and start again to apply.",
-                    style = MaterialTheme.typography.bodySmall,
+                    style = Theme.textStyle.caption,
                     textAlign = TextAlign.Center
                 )
             }
@@ -132,7 +131,7 @@ fun LazyListScope.FilterSeen(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
+            .clip(Theme.container.button)
             .clickable(onClick = hapticClick { onCheckedChanged(!checked) })
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -147,12 +146,12 @@ fun LazyListScope.FilterSeen(
         ) {
             Text(
                 text = "Show unseen only",
-                style = MaterialTheme.typography.bodyLarge,
+                style = Theme.textStyle.body,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "If checked, app will show only movies that are not present in the Tickets section.",
-                style = MaterialTheme.typography.bodySmall
+                style = Theme.textStyle.caption
             )
         }
     }
@@ -184,7 +183,7 @@ fun LazyListScope.Calendar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(MaterialTheme.shapes.medium)
+            .clip(Theme.container.button)
             .clickable(onClick = hapticClick { toggle() })
             .padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -199,12 +198,12 @@ fun LazyListScope.Calendar(
         ) {
             Text(
                 text = "Add Tickets to Calendar",
-                style = MaterialTheme.typography.bodyLarge,
+                style = Theme.textStyle.body,
                 fontWeight = FontWeight.Bold
             )
             Text(
                 text = "If checked, app will automatically add all of your tickets to calendar of your choosing. It will do so for past and future tickets.",
-                style = MaterialTheme.typography.bodySmall
+                style = Theme.textStyle.caption
             )
         }
     }
@@ -219,15 +218,15 @@ fun LazyListScope.Calendar(
             LazyColumn(
                 modifier = Modifier
                     .padding(24.dp)
-                    .background(MaterialTheme.colorScheme.surface, MaterialTheme.shapes.large),
+                    .background(Theme.color.container.background, Theme.container.card),
                 contentPadding = PaddingValues(24.dp)
             ) {
                 item("title") {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Select a calendar", style = MaterialTheme.typography.titleLarge)
+                        Text("Select a calendar", style = Theme.textStyle.title)
                         Text(
                             "Events will be queried and created in the selected calendar. You may want to create a special calendar in order to not interfere with existing events.",
-                            style = MaterialTheme.typography.bodySmall
+                            style = Theme.textStyle.caption
                         )
                         Divider()
                     }

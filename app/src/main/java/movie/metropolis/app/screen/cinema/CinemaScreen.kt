@@ -11,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +35,7 @@ import movie.metropolis.app.screen.onSuccess
 import movie.style.AppIconButton
 import movie.style.AppToolbar
 import movie.style.textPlaceholder
+import movie.style.theme.Theme
 import java.util.Date
 
 @Composable
@@ -112,7 +112,7 @@ private fun CinemaScreen(
                             .animateItemPlacement()
                             .padding(horizontal = 24.dp),
                         text = "Filters",
-                        style = MaterialTheme.typography.titleMedium
+                        style = Theme.textStyle.headline
                     )
                 }
                 item("filters") {

@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,26 +85,22 @@ private fun DatePickerItem(
     onClick: () -> Unit
 ) {
     val color = when {
-        selected -> MaterialTheme.colorScheme.primary
-        else -> MaterialTheme.colorScheme.surface
+        selected -> Theme.color.container.primary
+        else -> Theme.color.container.background
     }
     Surface(
-        shape = MaterialTheme.shapes.small,
+        modifier = Modifier.alpha(if (enabled) 1f else .5f),
+        shape = Theme.container.button,
         color = color,
-        contentColor = contentColorFor(color).let {
-            if (enabled) it else it.copy(alpha = .5f)
-        },
-        border = BorderStroke(
-            1.dp,
-            MaterialTheme.colorScheme.outlineVariant
-        ).takeUnless { selected }
+        contentColor = contentColorFor(color),
+        border = BorderStroke(1.dp, Theme.color.container.outline).takeUnless { selected }
     ) {
         Text(
             modifier = Modifier
                 .clickable(enabled = enabled, onClick = onClick.withHaptics())
                 .padding(12.dp, 8.dp),
             text = date,
-            style = MaterialTheme.typography.bodyMedium,
+            style = Theme.textStyle.body,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center
         )

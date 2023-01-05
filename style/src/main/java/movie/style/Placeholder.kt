@@ -26,9 +26,9 @@ fun Modifier.imagePlaceholder(
 ) = composed {
     placeholder(
         visible = visible,
-        color = MaterialTheme.colorScheme.surface,
+        color = Theme.color.container.background,
         shape = shape,
-        highlight = PlaceholderHighlight.shimmer(MaterialTheme.colorScheme.surfaceVariant)
+        highlight = PlaceholderHighlight.shimmer(Theme.color.container.surface)
     )
 }
 
