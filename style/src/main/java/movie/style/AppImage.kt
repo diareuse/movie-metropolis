@@ -33,7 +33,7 @@ fun AppImage(
         else ColorFilter.tint(LocalContentColor.current)
     AsyncImage(
         modifier = modifier
-            .imagePlaceholder(isLoading, Theme.container.button)
+            .imagePlaceholder(isLoading || url == null, Theme.container.button)
             .onGloballyPositioned { size = it.size },
         model = rememberImageRequest(url, size),
         contentDescription = null,
