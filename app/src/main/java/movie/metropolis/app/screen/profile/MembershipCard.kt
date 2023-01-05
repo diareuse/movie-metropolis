@@ -114,10 +114,11 @@ private fun MembershipCardLayout(
             )
             Surface(
                 modifier = modifier,
-                color = Theme.color.container.secondary,
-                contentColor = Theme.color.content.secondary,
+                color = Theme.color.container.background,
+                contentColor = Theme.color.content.background,
                 shape = Theme.container.card,
-                shadowElevation = 16.dp
+                shadowElevation = 16.dp,
+                tonalElevation = 4.dp
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
