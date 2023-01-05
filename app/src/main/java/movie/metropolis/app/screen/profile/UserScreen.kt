@@ -14,11 +14,13 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -109,6 +111,7 @@ private fun UserScreen(
     onSettingsClick: () -> Unit,
     state: ScrollState = rememberScrollState()
 ) {
+    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     Scaffold(
         topBar = {
             AppToolbar(
@@ -124,13 +127,15 @@ private fun UserScreen(
                         onClick = onSettingsClick,
                         painter = painterResource(id = R.drawable.ic_settings)
                     )
-                }
+                },
+                scrollBehavior = behavior
             )
         }
     ) { padding ->
         Column(
             Modifier
                 .fillMaxSize()
+                .nestedScroll(behavior.nestedScrollConnection)
                 .verticalScroll(state)
                 .padding(padding)
                 .padding(24.dp),
