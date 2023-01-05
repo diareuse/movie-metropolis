@@ -1,17 +1,13 @@
 package movie.metropolis.app.screen.profile
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import movie.metropolis.app.R
-import movie.style.haptic.withHaptics
+import movie.style.AppIconButton
+import movie.style.AppToolbar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,14 +18,14 @@ fun LoginScreenLayout(
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            AppToolbar(
                 title = title,
                 navigationIcon = {
-                    IconButton(onBackClick.withHaptics()) {
-                        Icon(painterResource(id = R.drawable.ic_back), null)
-                    }
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent)
+                    AppIconButton(
+                        onClick = onBackClick,
+                        painter = painterResource(id = R.drawable.ic_back)
+                    )
+                }
             )
         },
         content = content

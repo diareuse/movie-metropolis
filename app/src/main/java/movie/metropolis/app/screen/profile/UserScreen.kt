@@ -10,22 +10,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +31,10 @@ import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
+import movie.style.AppButton
+import movie.style.AppIconButton
+import movie.style.AppToolbar
 import movie.style.InputField
-import movie.style.haptic.withHaptics
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -116,27 +112,19 @@ private fun UserScreen(
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            AppToolbar(
                 title = { Text("You") },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.Transparent,
-                    scrolledContainerColor = Color.Transparent
-                ),
                 navigationIcon = {
-                    IconButton(onClick = onBackClick.withHaptics()) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_back),
-                            contentDescription = null
-                        )
-                    }
+                    AppIconButton(
+                        onClick = onBackClick,
+                        painter = painterResource(id = R.drawable.ic_back)
+                    )
                 },
                 actions = {
-                    IconButton(onClick = onSettingsClick.withHaptics()) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_settings),
-                            contentDescription = null
-                        )
-                    }
+                    AppIconButton(
+                        onClick = onSettingsClick,
+                        painter = painterResource(id = R.drawable.ic_settings)
+                    )
                 }
             )
         }
@@ -213,9 +201,9 @@ private fun UserScreen(
                 )
                 Text(modifier = Modifier.textPlaceholder(isLoading), text = "Accept Marketing")
             }
-            if (!isLoading) Button(
+            if (!isLoading) AppButton(
                 modifier = Modifier.align(Alignment.End),
-                onClick = onSaveClick.withHaptics()
+                onClick = onSaveClick
             ) {
                 Text("Save")
             }
@@ -232,9 +220,9 @@ private fun UserScreen(
                 onValueChange = onPasswordNewChanged,
                 label = "New password"
             )
-            if (!isLoading) Button(
+            if (!isLoading) AppButton(
                 modifier = Modifier.align(Alignment.End),
-                onClick = onSaveClick.withHaptics()
+                onClick = onSaveClick
             ) {
                 Text("Save")
             }

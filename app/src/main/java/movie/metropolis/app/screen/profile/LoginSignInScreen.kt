@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,8 +37,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.style.AppButton
 import movie.style.InputField
-import movie.style.haptic.withHaptics
 import movie.style.theme.Theme
 
 @Composable
@@ -149,7 +148,10 @@ private fun LoginSignInScreen(
                 AnimatedVisibility(loading) {
                     CircularProgressIndicator(Modifier.scale(.5f))
                 }
-                Button(onClick = onSendClick.withHaptics(), enabled = !loading) {
+                AppButton(
+                    onClick = onSendClick,
+                    enabled = !loading
+                ) {
                     Text("Log in")
                     Spacer(Modifier.width(8.dp))
                     Icon(painterResource(id = R.drawable.ic_right), null)

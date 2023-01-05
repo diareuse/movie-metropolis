@@ -45,7 +45,6 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -56,10 +55,9 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.google.zxing.BarcodeFormat
-import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.screen.profile.Barcode
+import movie.style.AppImage
 import movie.style.theme.Theme
 import kotlin.random.Random.Default.nextLong
 
@@ -141,7 +139,7 @@ private fun BookingTicketDialogContent(
                 val colors = listOf(Color.Transparent, MaterialTheme.colorScheme.surface)
                 val brush = Brush.verticalGradient(colors)
                 var size by remember { mutableStateOf(IntSize.Zero) }
-                AsyncImage(
+                AppImage(
                     modifier = Modifier
                         .width(with(density) { size.width.toDp() })
                         .height(with(density) { size.height.toDp() })
@@ -149,9 +147,7 @@ private fun BookingTicketDialogContent(
                             drawContent()
                             drawRect(brush)
                         },
-                    model = imageRequestOf(poster, size),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
+                    url = poster,
                     alignment = Alignment.TopCenter
                 )
                 Column(Modifier.onGloballyPositioned { size = it.size }) {

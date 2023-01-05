@@ -9,11 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,7 +33,8 @@ import movie.metropolis.app.screen.detail.FilterRow
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
-import movie.style.haptic.withHaptics
+import movie.style.AppIconButton
+import movie.style.AppToolbar
 import movie.style.textPlaceholder
 import java.util.Date
 
@@ -76,7 +74,7 @@ private fun CinemaScreen(
 ) {
     Scaffold(
         topBar = {
-            CenterAlignedTopAppBar(
+            AppToolbar(
                 title = {
                     Text(
                         modifier = Modifier
@@ -87,9 +85,10 @@ private fun CinemaScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onBackClick.withHaptics()) {
-                        Icon(painterResource(id = R.drawable.ic_back), null)
-                    }
+                    AppIconButton(
+                        painter = painterResource(id = R.drawable.ic_back),
+                        onClick = onBackClick
+                    )
                 }
             )
         }

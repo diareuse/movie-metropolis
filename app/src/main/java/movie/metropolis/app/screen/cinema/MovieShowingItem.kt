@@ -3,24 +3,16 @@ package movie.metropolis.app.screen.cinema
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import movie.metropolis.app.feature.image.imageRequestOf
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.detail.ShowingItemSection
 import movie.metropolis.app.screen.detail.ShowingItemTime
 import movie.metropolis.app.screen.detail.ShowingLayout
+import movie.style.AppImage
 import movie.style.textPlaceholder
 
 @Composable
@@ -37,16 +29,12 @@ fun MovieShowingItem(
         title = { Text(movie.name) },
         section = { ShowingItemSection(type = it.type, language = it.language) },
         background = {
-            var size by remember { mutableStateOf(IntSize.Zero) }
-            AsyncImage(
+            AppImage(
                 modifier = Modifier
                     .fillMaxSize()
                     .alpha(.2f)
-                    .blur(4.dp)
-                    .onGloballyPositioned { size = it.size },
-                model = imageRequestOf(movie.poster, size),
-                contentDescription = null,
-                contentScale = ContentScale.Crop
+                    .blur(4.dp),
+                url = movie.poster
             )
         }
     ) {
