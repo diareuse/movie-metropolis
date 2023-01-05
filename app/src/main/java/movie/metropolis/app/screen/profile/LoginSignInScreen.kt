@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -14,12 +13,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -133,12 +131,23 @@ private fun LoginSignInScreen(
                 label = "Password"
             )
             if (error) {
-                Text(
-                    text = "Email or Password might be incorrect",
+                Box(
                     modifier = Modifier.fillMaxWidth(),
-                    color = Theme.color.content.error,
-                    textAlign = TextAlign.Center
-                )
+                    contentAlignment = Alignment.Center
+                ) {
+                    Surface(
+                        color = Theme.color.container.error,
+                        contentColor = Theme.color.content.error,
+                        shape = Theme.container.button
+                    ) {
+                        Text(
+                            text = "Email or Password might be incorrect",
+                            modifier = Modifier
+                                .padding(vertical = 6.dp, horizontal = 16.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -152,8 +161,6 @@ private fun LoginSignInScreen(
                     enabled = !loading
                 ) {
                     Text("Log in")
-                    Spacer(Modifier.width(8.dp))
-                    Icon(painterResource(id = R.drawable.ic_right), null)
                 }
             }
         }
