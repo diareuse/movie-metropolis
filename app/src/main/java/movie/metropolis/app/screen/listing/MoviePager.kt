@@ -49,8 +49,7 @@ fun MoviePager(
                     .fillMaxWidth()
                     .aspectRatio(DefaultPosterAspectRatio)
                     .interpolateSize(this, index, Theme.container.poster),
-                url = null,
-                onClick = {}
+                url = null
             )
         }
     }.onSuccess {
