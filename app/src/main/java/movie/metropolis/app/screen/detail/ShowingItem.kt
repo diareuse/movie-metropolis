@@ -132,10 +132,10 @@ fun ShowingItemTime(
         onClick = onClick,
         elevation = 0.dp,
         containerColor = Theme.color.container.secondary,
-        contentColor = Theme.color.content.secondary
+        contentColor = Theme.color.content.secondary,
+        contentPadding = PaddingValues(16.dp, 8.dp)
     ) {
         Text(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             text = time,
             style = Theme.textStyle.body,
             fontWeight = FontWeight.Bold

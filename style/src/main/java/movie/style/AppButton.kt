@@ -1,5 +1,6 @@
 package movie.style
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,6 +25,7 @@ fun AppButton(
     enabled: Boolean = true,
     containerColor: Color = Theme.color.container.primary,
     contentColor: Color = Theme.color.content.primary,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
     content: @Composable RowScope.() -> Unit,
 ) {
     Button(
@@ -31,6 +33,7 @@ fun AppButton(
         onClick = onClick.withHaptics(),
         enabled = enabled,
         shape = Theme.container.button,
+        contentPadding = contentPadding,
         colors = ButtonDefaults.elevatedButtonColors(
             containerColor = containerColor,
             contentColor = contentColor,
