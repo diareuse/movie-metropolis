@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen
 
-import android.util.Base64
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +16,7 @@ import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
+import movie.metropolis.app.util.encodeBase64
 import java.io.File
 
 private const val uri = "app://movie.metropolis"
@@ -70,12 +70,8 @@ fun Navigation(
         composable("/cinemas/{cinema}") {
             CinemaScreen(
                 onBackClick = controller::navigateUp,
-                onBookingClick = {
-                    val url = Base64.encodeToString(
-                        it.encodeToByteArray(),
-                        Base64.URL_SAFE or Base64.NO_PADDING
-                    )
-                    controller.navigate("/order/$url")
+                onBookingClick = { url ->
+                    controller.navigate("/order/${url.encodeBase64()}")
                 }
             )
         }
@@ -87,12 +83,8 @@ fun Navigation(
                 onBackClick = controller::navigateUp,
                 onPermissionsRequested = onPermissionsRequested,
                 onLinkClick = onLinkClicked,
-                onBookingClick = {
-                    val url = Base64.encodeToString(
-                        it.encodeToByteArray(),
-                        Base64.URL_SAFE or Base64.NO_PADDING
-                    )
-                    controller.navigate("/order/$url")
+                onBookingClick = { url ->
+                    controller.navigate("/order/${url.encodeBase64()}")
                 }
             )
         }
