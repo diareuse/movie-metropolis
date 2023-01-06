@@ -37,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,7 +78,7 @@ fun BookingScreen(
     var isReaderActive by rememberSaveable { mutableStateOf(false) }
     HomeScreenLayout(
         profileIcon = profileIcon,
-        title = { Text("Tickets") }
+        title = { Text(stringResource(R.string.tickets)) }
     ) { innerPadding, behavior ->
         BookingScreenContent(
             padding = innerPadding + padding,
@@ -161,7 +162,7 @@ private fun ReaderDialog(
                 },
                 elevation = 16.dp
             ) {
-                Text("From file")
+                Text(stringResource(R.string.from_file))
             }
         }
     }
@@ -197,7 +198,7 @@ private fun BookingScreenContent(
                     onClick = onRefreshClick,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Find new tickets")
+                    Text(stringResource(R.string.find_new_tickets))
                 }
                 AppButton(
                     onClick = onCameraClick

@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen.detail
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,7 +29,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.AvailabilityView
-import movie.style.haptic.withHaptics
+import movie.style.AppButton
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -62,17 +61,23 @@ fun ShowingItem(
     ShowingLayout(
         modifier = modifier,
         items = mapOf(
-            "a" to List(3) { it },
-            "b" to List(1) { it },
-            "c" to List(2) { it },
+            "#" to List(3) { it },
+            "##" to List(1) { it },
+            "###" to List(2) { it },
         ),
         key = { it },
-        title = { Text("My super awesome cinema", Modifier.textPlaceholder(true)) },
-        section = { ShowingItemSection(type = "type", language = "English", isLoading = true) }
+        title = { Text("#".repeat(23), Modifier.textPlaceholder(true)) },
+        section = {
+            ShowingItemSection(
+                type = "#".repeat(4),
+                language = "#".repeat(7),
+                isLoading = true
+            )
+        }
     ) {
         ShowingItemTime(
             modifier = Modifier.textPlaceholder(true),
-            time = "10.00"
+            time = "#".repeat(5)
         )
     }
 }
@@ -120,17 +125,17 @@ fun ShowingItemSection(type: String, language: String, isLoading: Boolean = fals
 fun ShowingItemTime(
     time: String,
     modifier: Modifier = Modifier,
-    onClick: (() -> Unit)? = null
+    onClick: () -> Unit = {}
 ) {
-    Surface(
+    AppButton(
         modifier = modifier,
-        color = Theme.color.container.secondary,
-        shape = Theme.container.button
+        onClick = onClick,
+        elevation = 0.dp,
+        containerColor = Theme.color.container.secondary,
+        contentColor = Theme.color.content.secondary
     ) {
         Text(
-            modifier = Modifier
-                .clickable(enabled = onClick != null, onClick = onClick?.withHaptics() ?: {})
-                .padding(horizontal = 12.dp, vertical = 8.dp),
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
             text = time,
             style = Theme.textStyle.body,
             fontWeight = FontWeight.Bold

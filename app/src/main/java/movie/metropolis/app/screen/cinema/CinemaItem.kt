@@ -47,9 +47,9 @@ fun CinemaItem(
 @Composable
 fun CinemaItem(modifier: Modifier = Modifier) {
     CinemaItemLayout(
-        name = "My Awesome Cinema",
-        address = listOf("4th Avenue @ 6th floor"),
-        city = "City of Wonders",
+        name = "#".repeat(17),
+        address = listOf("#".repeat(22)),
+        city = "#".repeat(15),
         distance = null,
         modifier = modifier,
         textModifier = Modifier.textPlaceholder(true)

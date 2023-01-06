@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -66,9 +67,9 @@ fun BookingItemExpired(
         modifier = modifier,
         posterAspectRatio = DefaultPosterAspectRatio,
         poster = { MoviePoster(url = null) },
-        name = { Text("Very long name", Modifier.textPlaceholder(true)) },
-        time = { Text("Mar 13 2022 @ 11:11", Modifier.textPlaceholder(true)) },
-        duration = { Text("1h 30m", Modifier.textPlaceholder(true)) }
+        name = { Text("#".repeat(14), Modifier.textPlaceholder(true)) },
+        time = { Text("#".repeat(19), Modifier.textPlaceholder(true)) },
+        duration = { Text("#".repeat(6), Modifier.textPlaceholder(true)) }
     )
 }
 
@@ -94,7 +95,11 @@ private fun BookingItemExpiredLayout(
                 .padding(bottom = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Expired", Modifier.padding(8.dp), fontWeight = FontWeight.Bold)
+            Text(
+                text = stringResource(R.string.expired),
+                modifier = Modifier.padding(8.dp),
+                fontWeight = FontWeight.Bold
+            )
             Surface(
                 tonalElevation = 1.dp,
                 shape = Theme.container.card

@@ -52,17 +52,23 @@ fun MovieShowingItem(
     ShowingLayout(
         modifier = modifier,
         items = mapOf(
-            "a" to List(3) { it },
-            "b" to List(1) { it },
-            "c" to List(2) { it },
+            "#" to List(3) { it },
+            "##" to List(1) { it },
+            "###" to List(2) { it },
         ),
         key = { it },
-        title = { Text("My super awesome cinema", Modifier.textPlaceholder(true)) },
-        section = { ShowingItemSection(type = "type", language = "English", isLoading = true) }
+        title = { Text("#".repeat(23), Modifier.textPlaceholder(true)) },
+        section = {
+            ShowingItemSection(
+                type = "#".repeat(4),
+                language = "#".repeat(7),
+                isLoading = true
+            )
+        }
     ) {
         ShowingItemTime(
             modifier = Modifier.textPlaceholder(true),
-            time = "10.00"
+            time = "#".repeat(5)
         )
     }
 }

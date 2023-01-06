@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -83,7 +84,8 @@ private fun CinemaScreen(
                         modifier = Modifier
                             .fillMaxWidth(.8f)
                             .textPlaceholder(cinema.isLoading),
-                        text = cinema.getOrNull()?.name?.substringBefore(',') ?: "Loading…",
+                        text = cinema.getOrNull()?.name?.substringBefore(',')
+                            ?: stringResource(R.string.loading),
                         textAlign = TextAlign.Center
                     )
                 },
@@ -117,7 +119,7 @@ private fun CinemaScreen(
                         modifier = Modifier
                             .animateItemPlacement()
                             .padding(horizontal = 24.dp),
-                        text = "Filters",
+                        text = stringResource(R.string.filters),
                         style = Theme.textStyle.headline
                     )
                 }

@@ -46,6 +46,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
@@ -189,7 +190,7 @@ private fun MovieScreen(
                     modifier = Modifier
                         .padding(horizontal = 24.dp)
                         .textPlaceholder(detailView == null),
-                    text = detailView?.description ?: "There was an error loading this detail.",
+                    text = detailView?.description ?: stringResource(R.string.detail_error),
                     maxLines = 5,
                     startState = hideShowings
                 )
@@ -255,7 +256,7 @@ private fun MovieScreen(
                                 .padding(horizontal = 24.dp),
                             onClick = { onLinkClick(it.url) }
                         ) {
-                            Text("View trailer")
+                            Text(stringResource(R.string.view_trailer))
                         }
                     }
                 }
@@ -298,7 +299,7 @@ fun LazyListScope.MovieDetailShowings(
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(horizontal = 24.dp),
-                text = "Filters",
+                text = stringResource(R.string.filters),
                 style = Theme.textStyle.headline
             )
         }
@@ -412,28 +413,28 @@ fun DetailPosterRow(
     val detailView = detail.getOrNull()
     Column(modifier = modifier) {
         Text(
-            text = detailView?.name ?: "Movie Name",
+            text = detailView?.name ?: "#".repeat(10),
             style = Theme.textStyle.title,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "%s • %s • %s".format(
-                detailView?.duration ?: "1h 30m",
-                detailView?.countryOfOrigin ?: "USA",
-                detailView?.releasedAt ?: "2022"
+                detailView?.duration ?: "#".repeat(6),
+                detailView?.countryOfOrigin ?: "#".repeat(3),
+                detailView?.releasedAt ?: "#".repeat(4)
             ),
             style = Theme.textStyle.caption,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = detailView?.directors?.joinToString() ?: "Foobar Boobar",
+            text = detailView?.directors?.joinToString() ?: "#".repeat(13),
             style = Theme.textStyle.caption,
             modifier = Modifier.textPlaceholder(detailView == null)
         )
         EllipsisText(
-            text = detailView?.cast?.joinToString() ?: "Foobar Boobar, Foobar Boobar",
+            text = detailView?.cast?.joinToString() ?: "#".repeat(28),
             maxLines = 3,
             style = Theme.textStyle.caption,
             modifier = Modifier.textPlaceholder(detailView == null)

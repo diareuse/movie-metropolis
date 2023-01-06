@@ -120,7 +120,7 @@ fun BookingItemActive(
         posterAspectRatio = DefaultPosterAspectRatio,
         cinema = {
             Text(
-                "Foo Long cinema Boo",
+                "#".repeat(20),
                 modifier = Modifier.textPlaceholder(
                     true,
                     color = Theme.color.container.secondary
@@ -128,9 +128,9 @@ fun BookingItemActive(
             )
         },
         poster = { MoviePoster(url = null) },
-        name = { Text("Long placeholder", modifier = Modifier.textPlaceholder(true)) },
-        time = { Text("Mar 13 2022 @ 11:11", modifier = Modifier.textPlaceholder(true)) },
-        duration = { Text("1h 30m", modifier = Modifier.textPlaceholder(true)) },
+        name = { Text("#".repeat(16), modifier = Modifier.textPlaceholder(true)) },
+        time = { Text("#".repeat(19), modifier = Modifier.textPlaceholder(true)) },
+        duration = { Text("#".repeat(6), modifier = Modifier.textPlaceholder(true)) },
         onClick = null
     )
 }
