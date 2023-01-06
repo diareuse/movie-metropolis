@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,7 +75,7 @@ private fun LoginSignInScreen(
     onBackClick: () -> Unit
 ) {
     LoginScreenLayout(
-        title = { Text("Welcome back!") },
+        title = { Text(stringResource(R.string.login_title)) },
         onBackClick = onBackClick
     ) { padding ->
         Box(Modifier.fillMaxSize()) {
@@ -118,7 +119,7 @@ private fun LoginSignInScreen(
                 isError = error,
                 readOnly = loading,
                 placeholder = "john.doe@cinema.com",
-                label = "Email"
+                label = stringResource(R.string.email)
             )
             InputField(
                 modifier = Modifier.fillMaxWidth(),
@@ -128,7 +129,7 @@ private fun LoginSignInScreen(
                 isError = error,
                 readOnly = loading,
                 placeholder = "p4$\$w0rd",
-                label = "Password"
+                label = stringResource(R.string.password)
             )
             if (error) {
                 Box(
@@ -141,7 +142,7 @@ private fun LoginSignInScreen(
                         shape = Theme.container.button
                     ) {
                         Text(
-                            text = "Email or Password might be incorrect",
+                            text = stringResource(R.string.login_error),
                             modifier = Modifier
                                 .padding(vertical = 6.dp, horizontal = 16.dp),
                             textAlign = TextAlign.Center
@@ -160,7 +161,7 @@ private fun LoginSignInScreen(
                     onClick = onSendClick,
                     enabled = !loading
                 ) {
-                    Text("Log in")
+                    Text(stringResource(R.string.sign_in))
                 }
             }
         }

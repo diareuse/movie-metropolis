@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -115,7 +116,7 @@ private fun UserScreen(
     Scaffold(
         topBar = {
             AppToolbar(
-                title = { Text("You") },
+                title = { Text(stringResource(R.string.user)) },
                 navigationIcon = {
                     AppIconButton(
                         onClick = onBackClick,
@@ -152,36 +153,36 @@ private fun UserScreen(
             }.onLoading {
                 MembershipCard()
             }
-            Text("You in Detail", style = Theme.textStyle.title)
+            Text(stringResource(R.string.user_detail), style = Theme.textStyle.title)
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = firstName,
                 onValueChange = onFirstNameChanged,
-                label = "First name"
+                label = stringResource(R.string.first_name)
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = lastName,
                 onValueChange = onLastNameChanged,
-                label = "Last name"
+                label = stringResource(R.string.last_name)
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = email, onValueChange = onEmailChanged,
-                label = "Email"
+                label = stringResource(R.string.email)
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = phone,
                 onValueChange = onPhoneChanged,
-                label = "Phone"
+                label = stringResource(R.string.phone)
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 selected = favorite,
                 items = cinemas.getOrNull().orEmpty(),
                 converter = { it?.name.orEmpty() },
-                label = "Favorite cinema"
+                label = stringResource(R.string.favorite_cinema)
             ) {
                 Text(
                     text = it?.name ?: return@InputField,
@@ -204,32 +205,35 @@ private fun UserScreen(
                     checked = hasMarketing,
                     onCheckedChange = onHasMarketingChanged
                 )
-                Text(modifier = Modifier.textPlaceholder(isLoading), text = "Accept Marketing")
+                Text(
+                    modifier = Modifier.textPlaceholder(isLoading),
+                    text = stringResource(R.string.accept_marketing)
+                )
             }
             if (!isLoading) AppButton(
                 modifier = Modifier.align(Alignment.End),
                 onClick = onSaveClick
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
-            Text("Security", style = Theme.textStyle.title)
+            Text(text = stringResource(R.string.security), style = Theme.textStyle.title)
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordCurrent,
                 onValueChange = onPasswordCurrentChanged,
-                label = "Old password"
+                label = stringResource(R.string.old_password)
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordNew,
                 onValueChange = onPasswordNewChanged,
-                label = "New password"
+                label = stringResource(R.string.new_password)
             )
             if (!isLoading) AppButton(
                 modifier = Modifier.align(Alignment.End),
                 onClick = onSaveClick
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         }
     }

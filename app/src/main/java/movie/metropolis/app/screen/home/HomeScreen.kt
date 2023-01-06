@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -209,7 +210,7 @@ private fun HomeScreen(
                 contentColor = Theme.color.content.error,
                 elevation = 16.dp
             ) {
-                Text("Log in")
+                Text(stringResource(R.string.sign_in))
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
@@ -227,21 +228,21 @@ private fun HomeScreen(
                         selected = selected,
                         index = 0,
                         icon = R.drawable.ic_movie,
-                        label = "Movies",
+                        label = stringResource(R.string.movies),
                         onSelected = onChanged
                     )
                     SelectableNavigationBarItem(
                         selected = selected,
                         index = 1,
                         icon = R.drawable.ic_cinema,
-                        label = "Cinemas",
+                        label = stringResource(R.string.cinemas),
                         onSelected = onChanged
                     )
                     SelectableNavigationBarItem(
                         selected = selected,
                         index = 2,
                         icon = R.drawable.ic_ticket,
-                        label = "Tickets",
+                        label = stringResource(R.string.tickets),
                         onSelected = onChanged
                     )
                 }

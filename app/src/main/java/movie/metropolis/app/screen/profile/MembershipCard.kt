@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +36,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import movie.metropolis.app.R
 import movie.style.imagePlaceholder
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -52,8 +54,8 @@ fun MembershipCard(
     MembershipCardLayout(
         modifier = modifier,
         name = { Text("%s %s".format(firstName, lastName)) },
-        expiration = { Text("Expires: $until") },
-        points = { Text("$points points") },
+        expiration = { Text(stringResource(R.string.expires_at, until)) },
+        points = { Text(stringResource(R.string.points_count, points)) },
         barcode = {
             Barcode(
                 modifier = Modifier
@@ -74,9 +76,9 @@ fun MembershipCard(
 fun MembershipCard(modifier: Modifier = Modifier) {
     MembershipCardLayout(
         modifier = modifier,
-        name = { Text("Jonathan Superlongname", modifier = Modifier.textPlaceholder(true)) },
-        expiration = { Text("01. 01. 1111", modifier = Modifier.textPlaceholder(true)) },
-        points = { Text("1234 points", modifier = Modifier.textPlaceholder(true)) },
+        name = { Text("#".repeat(22), modifier = Modifier.textPlaceholder(true)) },
+        expiration = { Text("#".repeat(11), modifier = Modifier.textPlaceholder(true)) },
+        points = { Text("#".repeat(10), modifier = Modifier.textPlaceholder(true)) },
         barcode = {
             Box(
                 Modifier
@@ -108,7 +110,7 @@ private fun MembershipCardLayout(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
-                text = "Club Membership",
+                text = stringResource(R.string.club_membership),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )

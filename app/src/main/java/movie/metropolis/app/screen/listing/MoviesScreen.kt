@@ -19,6 +19,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
@@ -28,6 +29,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
+import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
@@ -55,7 +57,7 @@ fun MoviesScreen(
     val scope = rememberCoroutineScope()
     HomeScreenLayout(
         profileIcon = profileIcon,
-        title = { Text("Movies") }
+        title = { Text(stringResource(R.string.movies)) }
     ) { innerPadding, behavior ->
         MoviesScreenContent(
             behavior = behavior,
@@ -103,7 +105,7 @@ private fun MoviesScreenContent(
     ) {
         item("available-headline") {
             Text(
-                text = "Now Available",
+                text = stringResource(R.string.now_available),
                 modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
                 style = Theme.textStyle.title
             )
@@ -118,7 +120,7 @@ private fun MoviesScreenContent(
         }
         item("upcoming-headline") {
             Text(
-                text = "Upcoming",
+                text = stringResource(R.string.upcoming),
                 modifier = Modifier.padding(start = 24.dp, end = 24.dp),
                 style = Theme.textStyle.title
             )

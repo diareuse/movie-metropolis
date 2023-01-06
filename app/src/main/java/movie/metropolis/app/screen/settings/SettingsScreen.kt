@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,7 +92,7 @@ private fun SettingsScreen(
                     )
                 },
                 title = {
-                    Text("Settings")
+                    Text(stringResource(R.string.settings))
                 }
             )
         }
@@ -114,7 +115,7 @@ private fun SettingsScreen(
             item("notice") {
                 Text(
                     modifier = Modifier.navigationBarsPadding(),
-                    text = "Some settings may require for you to close the app completely and start again to apply.",
+                    text = stringResource(R.string.settings_notice),
                     style = Theme.textStyle.caption,
                     textAlign = TextAlign.Center
                 )
@@ -145,12 +146,12 @@ fun LazyListScope.FilterSeen(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Show unseen only",
+                text = stringResource(R.string.settings_unseen_title),
                 style = Theme.textStyle.body,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "If checked, app will show only movies that are not present in the Tickets section.",
+                text = stringResource(R.string.settings_unseen_description),
                 style = Theme.textStyle.caption
             )
         }
@@ -197,12 +198,12 @@ fun LazyListScope.Calendar(
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Add Tickets to Calendar",
+                text = stringResource(R.string.settings_calendar_title),
                 style = Theme.textStyle.body,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "If checked, app will automatically add all of your tickets to calendar of your choosing. It will do so for past and future tickets.",
+                text = stringResource(R.string.settings_calendar_description),
                 style = Theme.textStyle.caption
             )
         }
@@ -223,9 +224,12 @@ fun LazyListScope.Calendar(
             ) {
                 item("title") {
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Select a calendar", style = Theme.textStyle.title)
                         Text(
-                            "Events will be queried and created in the selected calendar. You may want to create a special calendar in order to not interfere with existing events.",
+                            stringResource(R.string.select_calendar_title),
+                            style = Theme.textStyle.title
+                        )
+                        Text(
+                            stringResource(R.string.select_calendar_description),
                             style = Theme.textStyle.caption
                         )
                         Divider()

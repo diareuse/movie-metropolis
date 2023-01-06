@@ -77,9 +77,9 @@ fun MovieItem(
         shadowColor = Color.Black,
         poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize(), onClick = {}) },
         text = {
-            MovieSubText(text = "2021", isLoading = true)
+            MovieSubText(text = "#".repeat(4), isLoading = true)
             Spacer(Modifier.size(4.dp))
-            MovieTitleText(text = "Hi you :)", isLoading = true)
+            MovieTitleText(text = "#".repeat(9), isLoading = true)
         }
     )
 }
