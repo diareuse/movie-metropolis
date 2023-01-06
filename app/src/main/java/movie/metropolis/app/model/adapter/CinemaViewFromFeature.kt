@@ -9,7 +9,7 @@ data class CinemaViewFromFeature(
     override val id: String
         get() = cinema.id
     override val name: String
-        get() = cinema.name
+        get() = cinema.name.substringAfterLast(',').trim()
     override val address: List<String>
         get() = cinema.address.toList()
     override val city: String
