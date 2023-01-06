@@ -20,7 +20,7 @@
     <string name="login_title">Welcome back!</string>
     <string name="login_error">Email or Password might be incorrect</string>
     <string name="expires_at">Expires: %s</string>
-    <string name="points_count">%f points</string>
+    <string name="points_count">%s points</string>
     <string name="club_membership">Club Membership</string>
     <string name="user">You</string>
     <string name="user_detail">You in Detail</string>
