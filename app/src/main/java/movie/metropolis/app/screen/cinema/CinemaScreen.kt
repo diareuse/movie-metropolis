@@ -30,13 +30,13 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.detail.DatePickerRow
 import movie.metropolis.app.screen.detail.FilterRow
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.style.AppIconButton
 import movie.style.AppToolbar
+import movie.style.DatePickerRow
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Date
