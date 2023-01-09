@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.text.TextStyle
 
 @Composable
@@ -80,4 +81,22 @@ object Theme {
 
     }
 
+}
+
+fun Theme.Style.contentColorFor(color: Color) = when (color) {
+    container.primary -> content.primary
+    container.secondary -> content.secondary
+    container.tertiary -> content.tertiary
+    container.error -> content.error
+    container.surface -> content.surface
+    container.background -> content.background
+    container.outline -> content.outline
+    content.primary -> container.primary
+    content.secondary -> container.secondary
+    content.tertiary -> container.tertiary
+    content.error -> container.error
+    content.surface -> container.surface
+    content.background -> container.background
+    content.outline -> container.outline
+    else -> if (color.luminance() < .5f) Color.White else Color.Black
 }
