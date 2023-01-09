@@ -44,13 +44,6 @@ favorite and more.
     <img src="art/cinema-detail-light.png" width=19% height=19%>
     <img src="art/tickets-light.png" width=19% height=19%>
 </p>
-<p align="center">
-    <img src="art/movies-dark.png" width=19% height=19%>
-    <img src="art/movie-detail-dark.png" width=19% height=19%>
-    <img src="art/cinemas-dark.png" width=19% height=19%>
-    <img src="art/cinema-detail-dark.png" width=19% height=19%>
-    <img src="art/tickets-dark.png" width=19% height=19%>
-</p>
 
 ## Q&A
 
