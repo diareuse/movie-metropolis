@@ -4,8 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,7 +17,7 @@ import movie.metropolis.app.MainActivity
 import movie.metropolis.app.util.toBitmap
 import javax.inject.Inject
 
-abstract class AbstractShareActivity : ComponentActivity() {
+abstract class AbstractShareActivity : AppCompatActivity() {
 
     @Inject
     lateinit var facade: ShareFacade
