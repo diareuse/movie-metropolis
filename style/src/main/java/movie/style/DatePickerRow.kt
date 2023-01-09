@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.detail
+package movie.style
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
