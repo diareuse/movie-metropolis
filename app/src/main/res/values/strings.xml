@@ -49,4 +49,7 @@
     <string name="detail_error">There was an error loading this detail.</string>
     <string name="now_available">Now Available</string>
     <string name="upcoming">Upcoming</string>
+    <string name="csfd" translatable="false">ČSFD</string>
+    <string name="imdb" translatable="false">IMDB</string>
+    <string name="rotten_tomatoes" translatable="false">Rotten Tomatoes</string>
 </resources>

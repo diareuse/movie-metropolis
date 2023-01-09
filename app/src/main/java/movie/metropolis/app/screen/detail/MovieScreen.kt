@@ -3,9 +3,7 @@ package movie.metropolis.app.screen.detail
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,8 +23,9 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +42,6 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -64,10 +62,12 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
+import movie.metropolis.app.screen.map
 import movie.metropolis.app.screen.mapNotNull
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.style.AppButton
+import movie.style.AppDropdownIconButton
 import movie.style.AppImage
 import movie.style.DatePickerRow
 import movie.style.EllipsisText
@@ -156,6 +156,35 @@ private fun MovieScreen(
                         isChecked = isFavorite,
                         onClick = onFavoriteClick
                     )
+                    val links = detail.map { it.links }.getOrNull()
+                    if (links != null) AppDropdownIconButton(painterResource(id = R.drawable.ic_rate)) {
+                        val csfd = links.csfd
+                        if (csfd != null) DropdownMenuItem(
+                            text = { Text(text = stringResource(R.string.csfd)) },
+                            onClick = { onLinkClick(csfd) },
+                            leadingIcon = { Icon(painterResource(R.drawable.ic_csfd), null) },
+                            trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
+                        )
+                        val imdb = links.imdb
+                        if (imdb != null) DropdownMenuItem(
+                            text = {},
+                            onClick = { onLinkClick(imdb) },
+                            leadingIcon = { Icon(painterResource(R.drawable.ic_imdb), null) },
+                            trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
+                        )
+                        val rottenTomatoes = links.rottenTomatoes
+                        if (rottenTomatoes != null) DropdownMenuItem(
+                            text = {},
+                            onClick = { onLinkClick(rottenTomatoes) },
+                            leadingIcon = {
+                                Icon(
+                                    painterResource(R.drawable.ic_rotten_tomatoes),
+                                    null
+                                )
+                            },
+                            trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
+                        )
+                    }
                 }
             )
         }
@@ -195,48 +224,6 @@ private fun MovieScreen(
                     maxLines = 5,
                     startState = hideShowings
                 )
-            }
-            detail.mapNotNull { it.links }.onSuccess {
-                val csfd = it.csfd
-                val imdb = it.imdb
-                val rottenTomatoes = it.rottenTomatoes
-                item(key = "links") {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(
-                            16.dp,
-                            Alignment.CenterHorizontally
-                        )
-                    ) {
-                        if (csfd != null) Image(
-                            modifier = Modifier
-                                .height(32.dp)
-                                .clickable { onLinkClick(csfd) },
-                            painter = painterResource(id = R.drawable.ic_csfd),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(LocalContentColor.current)
-                        )
-                        if (imdb != null) Image(
-                            modifier = Modifier
-                                .height(32.dp)
-                                .clickable { onLinkClick(imdb) },
-                            painter = painterResource(id = R.drawable.ic_imdb),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(LocalContentColor.current)
-                        )
-                        if (rottenTomatoes != null) Image(
-                            modifier = Modifier
-                                .height(32.dp)
-                                .clickable { onLinkClick(rottenTomatoes) },
-                            painter = painterResource(id = R.drawable.ic_rotten_tomatoes),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(LocalContentColor.current)
-                        )
-                    }
-                }
             }
             if (!hideShowings) {
                 MovieDetailShowings(
