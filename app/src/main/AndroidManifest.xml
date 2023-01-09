@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
-        android:name=".App"
+        android:name="movie.metropolis.app.App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -26,7 +26,8 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".MainActivity"
+            android:name="movie.metropolis.app.MainActivity"
+            android:theme="@style/Theme.MovieMetropolis"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -41,7 +42,8 @@
         </activity>
 
         <activity
-            android:name=".ShareActivity"
+            android:name="movie.metropolis.app.ShareActivity"
+            android:theme="@style/Theme.MovieMetropolis"
             android:exported="true">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />
