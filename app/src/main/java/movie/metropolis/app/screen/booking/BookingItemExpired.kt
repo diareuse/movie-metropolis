@@ -3,8 +3,8 @@ package movie.metropolis.app.screen.booking
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -23,7 +22,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,9 +32,9 @@ import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
 import movie.style.haptic.withHaptics
 import movie.style.layout.PosterLayout
+import movie.style.layout.StackedCardLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
-import movie.style.theme.extendBy
 
 @Composable
 fun BookingItemExpired(
@@ -83,77 +81,58 @@ private fun BookingItemExpiredLayout(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
 ) {
-    Surface(
+    StackedCardLayout(
         modifier = modifier,
         color = Theme.color.container.error,
-        shape = Theme.container.card.extendBy(padding = 8.dp),
-        contentColor = Theme.color.content.error
-    ) {
-        Column(
-            Modifier
-                .padding(horizontal = 8.dp)
-                .padding(bottom = 8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = stringResource(R.string.expired),
-                modifier = Modifier.padding(8.dp),
-                fontWeight = FontWeight.Bold
+        contentPadding = PaddingValues(start = 8.dp, end = 8.dp, bottom = 8.dp),
+        headline = { Text(stringResource(R.string.expired)) },
+        background = {
+            Image(
+                modifier = Modifier
+                    .size(100.dp)
+                    .scale(1.5f)
+                    .alpha(.1f)
+                    .align(Alignment.BottomEnd),
+                painter = painterResource(id = R.drawable.ic_movie),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(LocalContentColor.current)
             )
-            Surface(
-                tonalElevation = 1.dp,
-                shape = Theme.container.card
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    onClick = onClick?.withHaptics() ?: {},
+                    enabled = onClick != null
+                )
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PosterLayout(
+                modifier = Modifier.height(100.dp),
+                posterAspectRatio = posterAspectRatio,
+                content = poster
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Box(
-                    modifier = Modifier
-                        .clickable(
-                            onClick = onClick?.withHaptics() ?: {},
-                            enabled = onClick != null
-                        )
-                ) {
-                    Image(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .scale(1.5f)
-                            .alpha(.1f)
-                            .align(Alignment.BottomEnd),
-                        painter = painterResource(id = R.drawable.ic_movie),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(LocalContentColor.current)
+                CompositionLocalProvider(
+                    LocalTextStyle provides Theme.textStyle.title.copy(
+                        textAlign = TextAlign.Center
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        PosterLayout(
-                            modifier = Modifier.height(100.dp),
-                            posterAspectRatio = posterAspectRatio,
-                            content = poster
-                        )
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CompositionLocalProvider(
-                                LocalTextStyle provides Theme.textStyle.title.copy(
-                                    textAlign = TextAlign.Center
-                                )
-                            ) {
-                                name()
-                            }
-                            CompositionLocalProvider(
-                                LocalTextStyle provides Theme.textStyle.body.copy(
-                                    textAlign = TextAlign.Center
-                                )
-                            ) {
-                                time()
-                                duration()
-                            }
-                        }
-                    }
+                ) {
+                    name()
+                }
+                CompositionLocalProvider(
+                    LocalTextStyle provides Theme.textStyle.body.copy(
+                        textAlign = TextAlign.Center
+                    )
+                ) {
+                    time()
+                    duration()
                 }
             }
         }

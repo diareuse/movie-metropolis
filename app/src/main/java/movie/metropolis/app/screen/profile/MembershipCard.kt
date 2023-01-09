@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,8 +26,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -38,6 +35,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
 import movie.style.imagePlaceholder
+import movie.style.layout.StackedCardLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import movie.style.theme.extendBy
@@ -99,43 +97,23 @@ private fun MembershipCardLayout(
     barcode: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
+    StackedCardLayout(
         modifier = modifier,
+        headline = { Text(stringResource(R.string.club_membership)) },
         color = Theme.color.container.primary,
-        contentColor = Theme.color.content.primary,
-        shape = Theme.container.card
     ) {
-        Column {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
-                text = stringResource(R.string.club_membership),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            Surface(
-                modifier = modifier,
-                color = Theme.color.container.background,
-                contentColor = Theme.color.content.background,
-                shape = Theme.container.card,
-                shadowElevation = 16.dp,
-                tonalElevation = 4.dp
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Column(Modifier.padding(horizontal = 16.dp)) {
-                        CompositionLocalProvider(LocalTextStyle provides Theme.textStyle.title) {
-                            name()
-                        }
-                        expiration()
-                        points()
-                    }
-                    Spacer(Modifier.height(16.dp))
-                    barcode()
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Column(Modifier.padding(horizontal = 16.dp)) {
+                CompositionLocalProvider(LocalTextStyle provides Theme.textStyle.title) {
+                    name()
                 }
+                expiration()
+                points()
             }
+            Spacer(Modifier.height(16.dp))
+            barcode()
         }
     }
 }

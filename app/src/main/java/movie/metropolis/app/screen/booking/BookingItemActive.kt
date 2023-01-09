@@ -18,7 +18,6 @@ import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -35,7 +34,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -50,6 +48,7 @@ import movie.metropolis.app.screen.listing.MoviePoster
 import movie.style.AppIconButton
 import movie.style.haptic.withHaptics
 import movie.style.layout.PosterLayout
+import movie.style.layout.StackedCardLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import kotlin.math.roundToInt
@@ -146,79 +145,56 @@ private fun BookingItemActiveLayout(
     onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
-    Surface(
+    StackedCardLayout(
         modifier = modifier,
-        color = Theme.color.container.secondary,
-        shape = Theme.container.card
-    ) {
-        Column {
-            Box(
+        headline = { cinema() },
+        background = {
+            Image(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                contentAlignment = Alignment.Center
+                    .size(100.dp)
+                    .scale(2f)
+                    .alpha(.1f)
+                    .align(Alignment.BottomEnd),
+                painter = painterResource(id = R.drawable.ic_movie),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(LocalContentColor.current)
+            )
+        }
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(
+                    onClick = onClick?.withHaptics() ?: {},
+                    enabled = onClick != null
+                )
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PosterLayout(
+                modifier = Modifier.height(150.dp),
+                posterAspectRatio = posterAspectRatio,
+                content = poster
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CompositionLocalProvider(
-                    LocalTextStyle provides Theme.textStyle.body.copy(
-                        fontWeight = FontWeight.Bold,
+                    LocalTextStyle provides Theme.textStyle.title.copy(
                         textAlign = TextAlign.Center
                     )
                 ) {
-                    cinema()
+                    name()
                 }
-            }
-            Surface(
-                tonalElevation = 1.dp,
-                shape = Theme.container.card
-            ) {
-                Box {
-                    Image(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .scale(2f)
-                            .alpha(.1f)
-                            .align(Alignment.BottomEnd),
-                        painter = painterResource(id = R.drawable.ic_movie),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(LocalContentColor.current)
+                CompositionLocalProvider(
+                    LocalTextStyle provides Theme.textStyle.body.copy(
+                        textAlign = TextAlign.Center
                     )
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable(
-                                onClick = onClick?.withHaptics() ?: {},
-                                enabled = onClick != null
-                            )
-                            .padding(16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        PosterLayout(
-                            modifier = Modifier.height(150.dp),
-                            posterAspectRatio = posterAspectRatio,
-                            content = poster
-                        )
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CompositionLocalProvider(
-                                LocalTextStyle provides Theme.textStyle.title.copy(
-                                    textAlign = TextAlign.Center
-                                )
-                            ) {
-                                name()
-                            }
-                            CompositionLocalProvider(
-                                LocalTextStyle provides Theme.textStyle.body.copy(
-                                    textAlign = TextAlign.Center
-                                )
-                            ) {
-                                time()
-                                duration()
-                            }
-                        }
-                    }
+                ) {
+                    time()
+                    duration()
                 }
             }
         }
