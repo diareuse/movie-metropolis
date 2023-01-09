@@ -119,7 +119,8 @@ private fun LoginSignInScreen(
                 isError = error,
                 readOnly = loading,
                 placeholder = "john.doe@cinema.com",
-                label = stringResource(R.string.email)
+                label = stringResource(R.string.email),
+                supportingText = stringResource(id = R.string.login_credentials)
             )
             InputField(
                 modifier = Modifier.fillMaxWidth(),
