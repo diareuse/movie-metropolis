@@ -35,6 +35,7 @@ fun InputField(
     readOnly: Boolean = false,
     placeholder: String? = null,
     label: String? = null,
+    supportingText: String? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
@@ -46,7 +47,9 @@ fun InputField(
         tonalElevation = 1.dp
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = if (supportingText != null) 4.dp else 0.dp)
         ) {
             if (label != null) Text(
                 text = label,
@@ -74,6 +77,11 @@ fun InputField(
                     disabledPlaceholderColor = Theme.color.content.surface.copy(alpha = .25f),
                 ),
                 placeholder = if (placeholder == null) null else (@Composable { Text(placeholder) }),
+                supportingText = if (supportingText == null) null else (@Composable {
+                    Text(
+                        supportingText
+                    )
+                }),
                 visualTransformation = when (keyboardOptions.keyboardType) {
                     KeyboardType.Password,
                     KeyboardType.NumberPassword -> PasswordVisualTransformation()
@@ -143,5 +151,20 @@ private fun Preview2() {
             modifier = Modifier.padding(24.dp),
             label = "items"
         ) {}
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview3() {
+    Theme {
+        InputField(
+            value = "",
+            onValueChange = {},
+            modifier = Modifier.padding(24.dp),
+            label = "Email",
+            placeholder = "john.doe@email.com",
+            supportingText = "Foo bar"
+        )
     }
 }

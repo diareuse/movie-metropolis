@@ -52,4 +52,5 @@
     <string name="csfd" translatable="false">ČSFD</string>
     <string name="imdb" translatable="false">IMDB</string>
     <string name="rotten_tomatoes" translatable="false">Rotten Tomatoes</string>
+    <string name="login_credentials">Use the same credentials as you\'d use in your CinemaCity app, or on cinemacity.cz</string>
 </resources>
