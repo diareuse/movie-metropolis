@@ -4,6 +4,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockEngineConfig
 import movie.core.nwk.di.NetworkModule
+import movie.log.Logger
+import movie.log.PlatformLogger
 import org.junit.Before
 
 abstract class FeatureTest {
@@ -18,6 +20,7 @@ abstract class FeatureTest {
 
     @Before
     fun prepareInternal() {
+        Logger.setLogger(PlatformLogger())
         responder = UrlResponder()
         config = MockEngineConfig()
         config.addHandler(responder)

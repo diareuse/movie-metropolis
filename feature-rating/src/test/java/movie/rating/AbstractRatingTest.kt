@@ -6,6 +6,8 @@ import io.ktor.client.engine.mock.MockEngineConfig
 import io.ktor.client.engine.mock.respondBadRequest
 import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.request.HttpRequestData
+import movie.log.Logger
+import movie.log.PlatformLogger
 import movie.rating.di.RatingProviderModule
 import org.junit.Before
 
@@ -16,6 +18,7 @@ abstract class AbstractRatingTest {
 
     @Before
     fun prepareInternal() {
+        Logger.setLogger(PlatformLogger())
         val config = MockEngineConfig().apply {
             addHandler {
                 try {

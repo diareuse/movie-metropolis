@@ -1,0 +1,14 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.log'
+}
+
+dependencies {
+
+    implementation "com.google.firebase:firebase-crashlytics-ktx:18.3.2"
+
+}

@@ -1,5 +1,7 @@
 package movie.metropolis.app.screen.booking
 
+import movie.log.logCatching
+import movie.log.logCatchingResult
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
 
@@ -8,14 +10,14 @@ class BookingFacadeRecover(
 ) : BookingFacade {
 
     override suspend fun getBookings() =
-        kotlin.runCatching { origin.getBookings().getOrThrow() }
+        origin.logCatchingResult("booking") { getBookings() }
 
     override suspend fun refresh() {
-        kotlin.runCatching { origin.refresh() }
+        origin.logCatching("booking-refresh") { refresh() }
     }
 
     override suspend fun getImage(view: BookingView): Image? {
-        return origin.runCatching { getImage(view) }.getOrNull()
+        return origin.logCatching("booking-image") { getImage(view) }.getOrNull()
     }
 
 }

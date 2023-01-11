@@ -21,6 +21,7 @@ import movie.core.nwk.model.PasswordRequest
 import movie.core.nwk.model.RegistrationRequest
 import movie.core.nwk.model.TokenRequest
 import movie.core.nwk.model.TokenResponse
+import movie.log.logCatching
 import java.util.Locale
 
 internal class UserServiceImpl(
@@ -31,8 +32,8 @@ internal class UserServiceImpl(
     private val authCaptcha: String
 ) : UserService {
 
-    override suspend fun register(request: RegistrationRequest) = kotlin.runCatching {
-        client.post {
+    override suspend fun register(request: RegistrationRequest) = client.logCatching("register") {
+        post {
             url("v1/customers")
             parameter("reCaptcha", authCaptcha)
             setBody(request)
@@ -40,23 +41,23 @@ internal class UserServiceImpl(
         }.requireBody<CustomerResponse>()
     }
 
-    override suspend fun getToken(request: TokenRequest) = kotlin.runCatching {
+    override suspend fun getToken(request: TokenRequest) = client.logCatching("token") {
         val params = Parameters.build {
             appendAll(request.toParameters())
             append("reCaptcha", authCaptcha)
         }
-        client.submitForm(params) {
+        submitForm(params) {
             url("oauth/token")
             basicAuth(authUser, authPass)
         }.requireBody<TokenResponse>()
     }
 
-    override suspend fun getCurrentToken(): Result<String> {
-        return kotlin.runCatching { requireNotNull(account.token) }
+    override suspend fun getCurrentToken() = client.logCatching("token") {
+        requireNotNull(account.token)
     }
 
-    override suspend fun updatePassword(request: PasswordRequest) = kotlin.runCatching {
-        client.put {
+    override suspend fun updatePassword(request: PasswordRequest) = client.logCatching("password") {
+        put {
             url("v1/password")
             parameter("reCaptcha", authCaptcha)
             setBody(request)
@@ -64,29 +65,30 @@ internal class UserServiceImpl(
         }.requireBody<Unit>()
     }
 
-    override suspend fun updateUser(request: CustomerDataRequest) = kotlin.runCatching {
-        client.put {
-            url("v1/customers/current")
-            bearerAuth(checkNotNull(account.token))
-        }.requireBody<CustomerResponse>()
-    }
+    override suspend fun updateUser(request: CustomerDataRequest) =
+        client.logCatching("user-update") {
+            put {
+                url("v1/customers/current")
+                bearerAuth(checkNotNull(account.token))
+            }.requireBody<CustomerResponse>()
+        }
 
-    override suspend fun getPoints() = kotlin.runCatching {
-        client.get {
+    override suspend fun getPoints() = client.logCatching("points") {
+        get {
             url("v1/customer/points")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerPointsResponse>()
     }
 
-    override suspend fun getUser() = kotlin.runCatching {
-        client.get {
+    override suspend fun getUser() = client.logCatching("user") {
+        get {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerResponse.Customer>()
     }
 
-    override suspend fun getBookings() = kotlin.runCatching {
-        client.get {
+    override suspend fun getBookings() = client.logCatching("bookings") {
+        get {
             url("v1/bookings")
             bearerAuth(checkNotNull(account.token))
             url {
@@ -95,8 +97,8 @@ internal class UserServiceImpl(
         }.requireBody<List<BookingResponse>>()
     }
 
-    override suspend fun getBooking(id: String) = kotlin.runCatching {
-        client.get {
+    override suspend fun getBooking(id: String) = client.logCatching("booking") {
+        get {
             url("v1/bookings/$id")
             bearerAuth(checkNotNull(account.token))
             url {

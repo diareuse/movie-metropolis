@@ -25,6 +25,7 @@ dependencies {
     implementation project(":feature-core")
     implementation project(":feature-calendar")
     implementation project(":style")
+    implementation project(":feature-log")
 
     def vCompose = "[1,2["
     def vMaterial = "[1,2["
