@@ -32,7 +32,7 @@ internal data class MoviePreviewFromResponse(
     override val description: String
         get() = metadata.synopsis.orEmpty()
     override val directors: Iterable<String>
-        get() = metadata.directors.split(", ", ",")
+        get() = metadata.directors?.split(", ", ",") ?: emptyList()
     override val cast: Iterable<String>
         get() = metadata.cast?.split(", ", ",").orEmpty()
     override val countryOfOrigin: String
