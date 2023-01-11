@@ -1,6 +1,5 @@
 package movie.core.nwk.model
 
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import movie.core.nwk.serializer.DateSerializer
@@ -29,28 +28,16 @@ data class CustomerResponse(
 
     @Serializable
     data class Membership(
-        @SerialName("eClub") val club: Club?,
-        @SerialName("basic") val basic: Map<String, @Contextual Any?>
+        @SerialName("eClub") val club: Club?
     )
 
     @Serializable
     data class Club(
         @SerialName("cardNumber") val cardNumber: String,
-        @SerialName("signupOptionId") val optionId: Long,
         @Serializable(LocalTimestampSerializer::class)
         @SerialName("joinDate") val joinedAt: Date,
         @Serializable(LocalTimestampSerializer::class)
-        @SerialName("expirationDate") val expiredAt: Date,
-        @SerialName("status") val status: MembershipState
+        @SerialName("expirationDate") val expiredAt: Date
     )
-
-    @Serializable
-    enum class MembershipState {
-        @SerialName("EXPIRED")
-        Expired,
-
-        @SerialName("ACTIVE")
-        Active
-    }
 
 }
