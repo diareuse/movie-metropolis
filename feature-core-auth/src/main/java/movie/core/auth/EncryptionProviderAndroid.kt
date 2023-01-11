@@ -14,9 +14,11 @@ class EncryptionProviderAndroid(
     alias: String = context.packageName
 ) : EncryptionProvider {
 
-    private val keystore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
-    private val keys = keystore.getOrCreatePrivateKey(alias)
-    private val cipher = Cipher.getInstance("RSA/ECB/OAEPwithSHA-1andMGF1Padding")
+    private val keys by lazy {
+        val keystore = KeyStore.getInstance("AndroidKeyStore").apply { load(null) }
+        keystore.getOrCreatePrivateKey(alias)
+    }
+    private val cipher by lazy { Cipher.getInstance("RSA/ECB/OAEPwithSHA-1andMGF1Padding") }
 
     override fun encrypt(value: String): Result<String> {
         val cipher = cipher
