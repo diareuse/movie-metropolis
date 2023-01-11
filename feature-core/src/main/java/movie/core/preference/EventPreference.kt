@@ -6,4 +6,3 @@ interface EventPreference {
     var calendarId: String?
 
 }
-

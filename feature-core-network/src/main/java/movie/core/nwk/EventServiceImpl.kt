@@ -16,7 +16,8 @@ import java.util.Date
 import java.util.Locale
 
 internal class EventServiceImpl(
-    private val client: HttpClient
+    private val client: HttpClient,
+    private val clientQuickbook: HttpClient
 ) : EventService {
 
     private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
@@ -24,9 +25,9 @@ internal class EventServiceImpl(
     override suspend fun getEventsInCinema(
         cinema: String,
         date: Date
-    ) = client.logCatching("film-events") {
+    ) = clientQuickbook.logCatching("film-events") {
         get {
-            url("quickbook/10101/film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
+            url("film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
         }.requireBody<BodyResponse<MovieEventResponse>>()
     }
 
@@ -35,7 +36,7 @@ internal class EventServiceImpl(
         lng: Double
     ) = client.logCatching("cinema-location") {
         get {
-            url("10101/cinema/bylocation")
+            url("cinema/bylocation")
             parameter("lat", lat)
             parameter("long", lng)
             parameter("unit", "KILOMETERS")
@@ -44,7 +45,7 @@ internal class EventServiceImpl(
 
     override suspend fun getDetail(id: String) = client.logCatching("film-detail") {
         get {
-            url("10101/films/byDistributorCode/$id")
+            url("films/byDistributorCode/$id")
             parameter("lang", Locale.getDefault().language)
         }.requireBody<BodyResponse<MovieDetailsResponse>>()
     }
@@ -52,7 +53,7 @@ internal class EventServiceImpl(
     override suspend fun getMoviesByType(type: ShowingType) =
         client.logCatching("films-by-showing") {
             get {
-                url("10101/films/by-showing-type/${type.value}")
+                url("films/by-showing-type/${type.value}")
                 parameter("ordering", "asc")
                 parameter("lang", Locale.getDefault().language)
             }.requireBody<BodyResponse<List<ExtendedMovieResponse>>>()
