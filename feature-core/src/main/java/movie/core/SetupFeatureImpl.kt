@@ -8,7 +8,7 @@ class SetupFeatureImpl(
 ) : SetupFeature {
 
     override val requiresSetup: Boolean
-        get() = preference.runCatching { domain }.isFailure
+        get() = preference.runCatching { "$domain$id" }.isFailure
 
     override var region: Region
         get() = preference.runCatching { domain to id }
@@ -16,6 +16,7 @@ class SetupFeatureImpl(
             .getOrDefault(Region.Custom("https://localhost", 0))
         set(value) {
             preference.domain = value.domain
+            preference.id = value.id
         }
 
 }
