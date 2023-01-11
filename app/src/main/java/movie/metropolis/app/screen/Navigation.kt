@@ -3,6 +3,9 @@ package movie.metropolis.app.screen
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -17,6 +20,7 @@ import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.setup.SetupScreen
+import movie.metropolis.app.screen.setup.SetupViewModel
 import movie.metropolis.app.util.encodeBase64
 import java.io.File
 
@@ -30,12 +34,15 @@ fun Navigation(
     onShareFile: (File) -> Unit,
     controller: NavHostController = rememberAnimatedNavController()
 ) {
+    val setupViewModel = hiltViewModel<SetupViewModel>()
+    val requiresSetup by setupViewModel.requiresSetup.collectAsState()
     AnimatedNavHost(
         navController = controller,
-        startDestination = "/setup"
+        startDestination = if (requiresSetup) "/setup" else "/home"
     ) {
         composable("/setup") {
             SetupScreen(
+                viewModel = setupViewModel,
                 onNavigateHome = {
                     controller.popBackStack("/setup", true)
                     controller.navigate("/home")
