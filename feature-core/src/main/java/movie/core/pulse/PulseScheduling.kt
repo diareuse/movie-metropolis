@@ -11,7 +11,6 @@ class PulseScheduling(
 
     override suspend fun execute(): Result<Unit> {
         val intent = Intent(context, BootCompletedWorker::class.java)
-            .setAction(Intent.ACTION_BOOT_COMPLETED)
         context.sendBroadcast(intent)
         return Result.success(Unit)
     }

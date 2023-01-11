@@ -25,7 +25,6 @@ class BootCompletedWorker : BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
-        if (intent.action != Intent.ACTION_BOOT_COMPLETED) return
         val scope = CoroutineScope(SupervisorJob())
         scope.launch {
             favorite.getAll().onSuccess {
