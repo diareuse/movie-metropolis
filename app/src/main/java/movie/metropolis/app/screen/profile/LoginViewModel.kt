@@ -7,10 +7,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.shareIn
 import movie.metropolis.app.model.LoginMode
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.profile.LoginFacade.Companion.stateFlow
+import movie.metropolis.app.screen.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel
@@ -19,11 +20,13 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val jobEmitter = Channel<suspend LoginFacade.() -> Result<Unit>>()
+    private val jobEmitterFlow =
+        jobEmitter.consumeAsFlow().shareIn(viewModelScope, SharingStarted.Eagerly, 1)
 
     val mode = MutableStateFlow(LoginMode.Login)
 
-    val state = facade.stateFlow(jobEmitter.consumeAsFlow())
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.success(false))
+    val state = facade.stateFlow(jobEmitterFlow)
+        .retainStateIn(viewModelScope, Loadable.success(false))
     val email = MutableStateFlow(facade.currentUserEmail.orEmpty())
     val password = MutableStateFlow("")
     val firstName = MutableStateFlow("")
