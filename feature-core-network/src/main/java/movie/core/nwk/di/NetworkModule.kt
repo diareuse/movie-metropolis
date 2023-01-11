@@ -19,6 +19,7 @@ import movie.core.auth.UserAccount
 import movie.core.nwk.CinemaService
 import movie.core.nwk.CinemaServiceImpl
 import movie.core.nwk.CinemaServicePerformance
+import movie.core.nwk.EndpointProvider
 import movie.core.nwk.EventService
 import movie.core.nwk.EventServiceImpl
 import movie.core.nwk.EventServicePerformance
@@ -44,6 +45,7 @@ class NetworkModule {
     @Provides
     fun clientRoot(
         engine: HttpClientEngine,
+        provider: EndpointProvider,
         serializer: Json = serializer()
     ): HttpClient = HttpClient(engine) {
         install(ContentNegotiation) {
@@ -51,7 +53,7 @@ class NetworkModule {
         }
         install(HttpCache)
         defaultRequest {
-            url("https://www.cinemacity.cz/mrest/")
+            url("${provider.domain}/mrest/")
             contentType(ContentType.Application.Json)
         }
     }
@@ -60,10 +62,23 @@ class NetworkModule {
     @Provides
     fun clientData(
         @ClientRoot
-        client: HttpClient
+        client: HttpClient,
+        provider: EndpointProvider
     ): HttpClient = client.config {
         defaultRequest {
-            url("https://www.cinemacity.cz/cz/data-api-service/v1/")
+            url("${provider.domain}/${provider.tld}/data-api-service/v1/${provider.id}/")
+        }
+    }
+
+    @ClientQuickbook
+    @Provides
+    fun clientQuickbook(
+        @ClientRoot
+        client: HttpClient,
+        provider: EndpointProvider
+    ): HttpClient = client.config {
+        defaultRequest {
+            url("${provider.domain}/${provider.tld}/data-api-service/v1/quickbook/${provider.id}/")
         }
     }
 
@@ -71,10 +86,11 @@ class NetworkModule {
     @Provides
     fun clientCustomer(
         @ClientRoot
-        client: HttpClient
+        client: HttpClient,
+        provider: EndpointProvider
     ): HttpClient = client.config {
         defaultRequest {
-            url("https://www.cinemacity.cz/cz/group-customer-service/")
+            url("${provider.domain}/${provider.tld}/group-customer-service/")
         }
     }
 
@@ -85,10 +101,12 @@ class NetworkModule {
     fun event(
         @ClientData
         client: HttpClient,
+        @ClientQuickbook
+        clientQuickbook: HttpClient,
         tracer: PerformanceTracer
     ): EventService {
         var service: EventService
-        service = EventServiceImpl(client)
+        service = EventServiceImpl(client, clientQuickbook)
         service = EventServicePerformance(service, tracer)
         return service
     }

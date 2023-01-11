@@ -10,3 +10,6 @@ annotation class ClientData
 
 @Qualifier
 annotation class ClientCustomer
+
+@Qualifier
+annotation class ClientQuickbook

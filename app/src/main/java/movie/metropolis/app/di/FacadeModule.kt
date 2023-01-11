@@ -7,6 +7,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.calendar.CalendarList
 import movie.core.EventFeature
 import movie.core.FavoriteFeature
+import movie.core.SetupFeature
 import movie.core.TicketShareRegistry
 import movie.core.UserFeature
 import movie.core.di.Saving
@@ -44,6 +45,8 @@ import movie.metropolis.app.screen.settings.SettingsFacade
 import movie.metropolis.app.screen.settings.SettingsFacadeFromFeature
 import movie.metropolis.app.screen.settings.SettingsFacadeReactive
 import movie.metropolis.app.screen.settings.SettingsFacadeRecover
+import movie.metropolis.app.screen.setup.SetupFacade
+import movie.metropolis.app.screen.setup.SetupFacadeFromFeature
 import movie.metropolis.app.screen.share.ShareFacade
 import movie.metropolis.app.screen.share.ShareFacadeImageConvert
 import movie.metropolis.app.screen.share.ShareFacadeRecover
@@ -163,6 +166,15 @@ class FacadeModule {
         facade = ShareFacadeImageConvert(facade)
         facade = ShareFacadeRecover(facade)
         facade = ShareFacadeRefresh(facade, user)
+        return facade
+    }
+
+    @Provides
+    fun setup(
+        feature: SetupFeature
+    ): SetupFacade {
+        val facade: SetupFacade
+        facade = SetupFacadeFromFeature(feature)
         return facade
     }
 

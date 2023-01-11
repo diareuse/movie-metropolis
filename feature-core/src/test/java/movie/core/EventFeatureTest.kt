@@ -81,7 +81,7 @@ class EventFeatureTest : FeatureTest() {
         link = mock()
         whenever(preference.filterSeen).thenReturn(false)
         feature = module.featureSaving(
-            service.event(clientData, PerformanceTracerNoop),
+            service.event(clientData, clientQuickbook, PerformanceTracerNoop),
             service.cinema(clientRoot, PerformanceTracerNoop),
             showingDao,
             cinemaDao,
