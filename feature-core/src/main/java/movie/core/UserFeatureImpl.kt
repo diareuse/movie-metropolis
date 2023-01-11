@@ -24,6 +24,7 @@ import movie.core.nwk.model.CustomerResponse
 import movie.core.nwk.model.PasswordRequest
 import movie.core.nwk.model.RegistrationRequest
 import movie.core.nwk.model.TokenRequest
+import movie.log.logCatching
 
 internal class UserFeatureImpl(
     private val service: UserService,
@@ -109,7 +110,7 @@ internal class UserFeatureImpl(
                         }
                     }
                 }
-            }.runCatching { awaitAll().filterNotNull() }
+            }.logCatching("bookings") { awaitAll().filterNotNull() }
         }
     }
 

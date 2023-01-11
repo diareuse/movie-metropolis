@@ -1,5 +1,7 @@
 package movie.metropolis.app.screen.cinema
 
+import movie.log.logCatchingResult
+
 class CinemasFacadeRecover(
     private val origin: CinemasFacade
 ) : CinemasFacade {
@@ -7,6 +9,6 @@ class CinemasFacadeRecover(
     override suspend fun getCinemas(
         latitude: Double?,
         longitude: Double?
-    ) = kotlin.runCatching { origin.getCinemas(latitude, longitude).getOrThrow() }
+    ) = origin.logCatchingResult("cinemas") { getCinemas(latitude, longitude) }
 
 }

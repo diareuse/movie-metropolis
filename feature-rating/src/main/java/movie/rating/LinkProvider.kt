@@ -1,5 +1,7 @@
 package movie.rating
 
+import movie.log.logCatching
+
 interface LinkProvider {
 
     @Throws(ResultNotFoundException::class)
@@ -8,7 +10,7 @@ interface LinkProvider {
 }
 
 suspend fun LinkProvider.getLinkOrNull(descriptor: MovieDescriptor) =
-    kotlin.runCatching { getLink(descriptor) }.getOrNull()
+    logCatching("link-provider") { getLink(descriptor) }.getOrNull()
 
 suspend fun LinkProvider.getLinkOrNull(vararg descriptors: MovieDescriptor) = descriptors
     .distinct()

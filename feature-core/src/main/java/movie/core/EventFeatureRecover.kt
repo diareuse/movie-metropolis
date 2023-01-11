@@ -3,6 +3,7 @@ package movie.core
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Movie
+import movie.log.logCatchingResult
 import java.util.Date
 
 class EventFeatureRecover(
@@ -10,18 +11,18 @@ class EventFeatureRecover(
 ) : EventFeature {
 
     override suspend fun getShowings(cinema: Cinema, at: Date) =
-        origin.runCatching { getShowings(cinema, at).getOrThrow() }
+        origin.logCatchingResult("event-showings") { getShowings(cinema, at) }
 
     override suspend fun getCinemas(location: Location?) =
-        origin.runCatching { getCinemas(location).getOrThrow() }
+        origin.logCatchingResult("event-cinemas") { getCinemas(location) }
 
     override suspend fun getDetail(movie: Movie) =
-        origin.runCatching { getDetail(movie).getOrThrow() }
+        origin.logCatchingResult("event-detail") { getDetail(movie) }
 
     override suspend fun getCurrent() =
-        origin.runCatching { getCurrent().getOrThrow() }
+        origin.logCatchingResult("event-current") { getCurrent() }
 
     override suspend fun getUpcoming() =
-        origin.runCatching { getUpcoming().getOrThrow() }
+        origin.logCatchingResult("event-upcoming") { getUpcoming() }
 
 }
