@@ -1,23 +1,24 @@
 package movie.metropolis.app.screen.settings
 
-import movie.log.logCatching
+import movie.log.logSevere
 
 class SettingsFacadeRecover(
     private val origin: SettingsFacade
 ) : SettingsFacade by origin {
 
     override var filterSeen: Boolean
-        get() = origin.logCatching("filter-seen") { filterSeen }.getOrDefault(false)
+        get() = origin.runCatching { filterSeen }.logSevere().getOrDefault(false)
         set(value) {
-            origin.logCatching("filter-seen") { filterSeen = value }
+            origin.runCatching { filterSeen = value }.logSevere()
         }
 
     override suspend fun getCalendars(): Map<String, String> = origin
-        .logCatching("calendars") { getCalendars() }
+        .runCatching { getCalendars() }
+        .logSevere()
         .getOrDefault(emptyMap())
 
     override fun selectCalendar(id: String?) {
-        origin.logCatching("calendar") { selectCalendar(id) }
+        origin.runCatching { selectCalendar(id) }.logSevere()
     }
 
 }

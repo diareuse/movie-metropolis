@@ -2,25 +2,25 @@ package movie.core
 
 import movie.core.model.FieldUpdate
 import movie.core.model.SignInMethod
-import movie.log.logCatchingResult
+import movie.log.flatMapCatching
 
 class UserFeatureRecover(
     private val origin: UserFeature
 ) : UserFeature by origin {
 
     override suspend fun signIn(method: SignInMethod) =
-        origin.logCatchingResult("user-sign-in") { signIn(method) }
+        origin.flatMapCatching { signIn(method) }
 
     override suspend fun update(data: Iterable<FieldUpdate>) =
-        origin.logCatchingResult("user-update") { update(data) }
+        origin.flatMapCatching { update(data) }
 
     override suspend fun getUser() =
-        origin.logCatchingResult("user") { getUser() }
+        origin.flatMapCatching { getUser() }
 
     override suspend fun getBookings() =
-        origin.logCatchingResult("user-bookings") { getBookings() }
+        origin.flatMapCatching { getBookings() }
 
     override suspend fun getToken() =
-        origin.logCatchingResult("user-token") { getToken() }
+        origin.flatMapCatching { getToken() }
 
 }

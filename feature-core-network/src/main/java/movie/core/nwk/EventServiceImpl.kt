@@ -10,7 +10,6 @@ import movie.core.nwk.model.MovieDetailsResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.nwk.model.NearbyCinemaResponse
 import movie.core.nwk.model.ShowingType
-import movie.log.logCatching
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -25,7 +24,7 @@ internal class EventServiceImpl(
     override suspend fun getEventsInCinema(
         cinema: String,
         date: Date
-    ) = clientQuickbook.logCatching("film-events") {
+    ) = clientQuickbook.runCatching {
         get {
             url("film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
         }.requireBody<BodyResponse<MovieEventResponse>>()
@@ -34,7 +33,7 @@ internal class EventServiceImpl(
     override suspend fun getNearbyCinemas(
         lat: Double,
         lng: Double
-    ) = client.logCatching("cinema-location") {
+    ) = client.runCatching {
         get {
             url("cinema/bylocation")
             parameter("lat", lat)
@@ -43,7 +42,7 @@ internal class EventServiceImpl(
         }.requireBody<BodyResponse<List<NearbyCinemaResponse>>>()
     }
 
-    override suspend fun getDetail(id: String) = client.logCatching("film-detail") {
+    override suspend fun getDetail(id: String) = client.runCatching {
         get {
             url("films/byDistributorCode/$id")
             parameter("lang", Locale.getDefault().language)
@@ -51,7 +50,7 @@ internal class EventServiceImpl(
     }
 
     override suspend fun getMoviesByType(type: ShowingType) =
-        client.logCatching("films-by-showing") {
+        client.runCatching {
             get {
                 url("films/by-showing-type/${type.value}")
                 parameter("ordering", "asc")

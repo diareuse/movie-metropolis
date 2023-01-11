@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.cinema
 
-import movie.log.logCatchingResult
+import movie.log.flatMapCatching
+import movie.log.logSevere
 
 class CinemasFacadeRecover(
     private val origin: CinemasFacade
@@ -9,6 +10,6 @@ class CinemasFacadeRecover(
     override suspend fun getCinemas(
         latitude: Double?,
         longitude: Double?
-    ) = origin.logCatchingResult("cinemas") { getCinemas(latitude, longitude) }
+    ) = origin.flatMapCatching { getCinemas(latitude, longitude) }.logSevere()
 
 }
