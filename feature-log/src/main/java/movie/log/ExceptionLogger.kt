@@ -5,8 +5,10 @@ import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 
 class ExceptionLogger(
-    private val crashlytics: FirebaseCrashlytics = Firebase.crashlytics
+    crashlytics: () -> FirebaseCrashlytics = { Firebase.crashlytics }
 ) : Logger {
+
+    private val crashlytics by lazy(crashlytics)
 
     override fun verbose(tag: String, message: String, throwable: Throwable?) {
         crashlytics.log(message)
