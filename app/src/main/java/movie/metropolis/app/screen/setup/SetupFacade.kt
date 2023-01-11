@@ -3,7 +3,6 @@ package movie.metropolis.app.screen.setup
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.isActive
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
