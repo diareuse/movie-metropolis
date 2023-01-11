@@ -19,6 +19,8 @@ dependencies {
     implementation project(":feature-calendar")
     implementation project(":feature-log")
 
+    implementation "com.google.firebase:firebase-perf-ktx:20.3.0"
+
     testImplementation "io.ktor:ktor-client-mock:[2,3["
 
 }
