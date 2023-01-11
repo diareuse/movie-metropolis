@@ -7,7 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.BookingView
@@ -32,7 +32,9 @@ class BookingViewModel @Inject constructor(
     private val cacheDir = context.cacheDir
 
     private val refreshToken = Channel<suspend () -> Unit>()
-    private val items = facade.bookingsFlow(refreshToken.receiveAsFlow())
+    private val refreshTokenFlow = refreshToken.consumeAsFlow()
+        .shareIn(viewModelScope, SharingStarted.Eagerly, 0)
+    private val items = facade.bookingsFlow(refreshTokenFlow)
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val expired = items
         .mapLoadable { it.filterIsInstance<BookingView.Expired>() }
