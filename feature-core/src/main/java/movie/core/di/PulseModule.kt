@@ -1,8 +1,10 @@
 package movie.core.di
 
+import android.content.Context
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import movie.core.EventFeature
@@ -22,12 +24,14 @@ class PulseModule {
     @Provides
     fun pulse(
         @Saving event: EventFeature,
-        @Saving user: UserFeature
+        @Saving user: UserFeature,
+        @ApplicationContext context: Context
     ): Pulse = PulseCombined(
         PulseSavingCurrent(event),
         PulseSavingUpcoming(event),
         PulseSavingShowings(event),
-        PulseSavingBookings(user)
+        PulseSavingBookings(user),
+        PulseScheduling(context)
     )
 
     @IntoSet
