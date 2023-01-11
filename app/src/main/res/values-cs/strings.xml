@@ -50,4 +50,6 @@
     <string name="now_available">Nyní dostupné</string>
     <string name="upcoming">Nadcházející</string>
     <string name="login_credentials">Použij stejné přístupové údaje jako v appce CinemaCity nebo na cinemacity.cz</string>
+    <string name="select_country">Zvol zemi</string>
+    <string name="select_country_description">Vezmi, prosím, na vědomí, že region není možné později změnit. Cinema City účty nejsou přenositelné mezi regiony.</string>
 </resources>

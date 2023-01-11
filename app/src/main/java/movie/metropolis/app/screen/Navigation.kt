@@ -16,6 +16,7 @@ import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
+import movie.metropolis.app.screen.setup.SetupScreen
 import movie.metropolis.app.util.encodeBase64
 import java.io.File
 
@@ -31,8 +32,16 @@ fun Navigation(
 ) {
     AnimatedNavHost(
         navController = controller,
-        startDestination = "/home"
+        startDestination = "/setup"
     ) {
+        composable("/setup") {
+            SetupScreen(
+                onNavigateHome = {
+                    controller.popBackStack("/setup", true)
+                    controller.navigate("/home")
+                }
+            )
+        }
         composable("/home?screen={screen}") {
             HomeScreen(
                 startWith = it.arguments?.getString("screen"),

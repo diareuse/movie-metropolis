@@ -52,5 +52,7 @@
     <string name="csfd" translatable="false">ČSFD</string>
     <string name="imdb" translatable="false">IMDB</string>
     <string name="rotten_tomatoes" translatable="false">Rotten Tomatoes</string>
-    <string name="login_credentials">Use the same credentials as you\'d use in your CinemaCity app, or on cinemacity.cz</string>
+    <string name="login_credentials">Use the same credentials as you\'d use in your CinemaCity app, or on their website</string>
+    <string name="select_country">Select a country</string>
+    <string name="select_country_description">Please note that you will not be able to change the country later. Cinema City accounts are not transferable between regions.</string>
 </resources>
