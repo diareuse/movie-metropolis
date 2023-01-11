@@ -1,7 +1,8 @@
 package movie.metropolis.app.screen.detail
 
-import movie.log.logCatching
-import movie.log.logCatchingResult
+import movie.log.flatMapCatching
+import movie.log.log
+import movie.log.logSevere
 import movie.metropolis.app.model.Filter
 import java.util.Date
 
@@ -10,35 +11,35 @@ class MovieFacadeRecover(
 ) : MovieFacade by origin {
 
     override suspend fun getAvailableFrom() =
-        origin.logCatchingResult("movie-available-from") { getAvailableFrom() }
+        origin.flatMapCatching { getAvailableFrom() }.logSevere()
 
     override suspend fun getMovie() =
-        origin.logCatchingResult("movie") { getMovie() }
+        origin.flatMapCatching { getMovie() }.logSevere()
 
     override suspend fun getPoster() =
-        origin.logCatchingResult("movie-poster") { getPoster() }
+        origin.flatMapCatching { getPoster() }.logSevere()
 
     override suspend fun getTrailer() =
-        origin.logCatchingResult("movie-trailer") { getTrailer() }
+        origin.flatMapCatching { getTrailer() }.logSevere()
 
     override suspend fun getShowings(
         date: Date,
         latitude: Double,
         longitude: Double
-    ) = origin.logCatchingResult("movie-showings") { getShowings(date, latitude, longitude) }
+    ) = origin.flatMapCatching { getShowings(date, latitude, longitude) }.logSevere()
 
     override suspend fun getOptions() =
-        origin.logCatchingResult("movie-options") { getOptions() }
+        origin.flatMapCatching { getOptions() }.log()
 
     override fun toggle(filter: Filter) {
-        origin.logCatching("movie-toggle-filter") { toggle(filter) }
+        origin.runCatching { toggle(filter) }.logSevere()
     }
 
     override suspend fun isFavorite() =
-        origin.logCatchingResult("movie-favorite") { isFavorite() }
+        origin.flatMapCatching { isFavorite() }.logSevere()
 
     override suspend fun toggleFavorite() {
-        origin.logCatching("movie-toggle-favorite") { toggleFavorite() }
+        origin.runCatching { toggleFavorite() }.logSevere()
     }
 
 }

@@ -1,6 +1,6 @@
 package movie.rating
 
-import movie.log.logCatching
+import movie.log.log
 
 interface LinkProvider {
 
@@ -10,7 +10,7 @@ interface LinkProvider {
 }
 
 suspend fun LinkProvider.getLinkOrNull(descriptor: MovieDescriptor) =
-    logCatching("link-provider") { getLink(descriptor) }.getOrNull()
+    runCatching { getLink(descriptor) }.log().getOrNull()
 
 suspend fun LinkProvider.getLinkOrNull(vararg descriptors: MovieDescriptor) = descriptors
     .distinct()

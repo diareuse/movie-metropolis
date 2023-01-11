@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.profile
 
-import movie.log.logCatching
-import movie.log.logCatchingResult
+import movie.log.flatMapCatching
+import movie.log.logSevere
 import movie.metropolis.app.model.UserView
 
 class ProfileFacadeRecover(
@@ -9,21 +9,21 @@ class ProfileFacadeRecover(
 ) : ProfileFacade {
 
     override suspend fun getCinemas() =
-        origin.logCatchingResult("profile-cinemas") { getCinemas() }
+        origin.flatMapCatching { getCinemas() }.logSevere()
 
     override suspend fun getMembership() =
-        origin.logCatchingResult("profile-membership") { getMembership() }
+        origin.flatMapCatching { getMembership() }.logSevere()
 
     override suspend fun getUser() =
-        origin.logCatchingResult("profile-user") { getUser() }
+        origin.flatMapCatching { getUser() }.logSevere()
 
     override suspend fun isLoggedIn() =
-        origin.logCatching("profile-logged-in") { isLoggedIn() }.getOrDefault(false)
+        origin.runCatching { isLoggedIn() }.logSevere().getOrDefault(false)
 
     override suspend fun save(view: UserView) =
-        origin.logCatchingResult("profile-save") { save(view) }
+        origin.flatMapCatching { save(view) }.logSevere()
 
     override suspend fun save(passwordOld: String, passwordNew: String) =
-        origin.logCatchingResult("profile-save-pw") { save(passwordOld, passwordNew) }
+        origin.flatMapCatching { save(passwordOld, passwordNew) }.logSevere()
 
 }

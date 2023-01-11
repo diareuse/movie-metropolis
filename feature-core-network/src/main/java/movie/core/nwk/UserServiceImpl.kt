@@ -21,7 +21,6 @@ import movie.core.nwk.model.PasswordRequest
 import movie.core.nwk.model.RegistrationRequest
 import movie.core.nwk.model.TokenRequest
 import movie.core.nwk.model.TokenResponse
-import movie.log.logCatching
 import java.util.Locale
 
 internal class UserServiceImpl(
@@ -32,7 +31,7 @@ internal class UserServiceImpl(
     private val authCaptcha: String
 ) : UserService {
 
-    override suspend fun register(request: RegistrationRequest) = client.logCatching("register") {
+    override suspend fun register(request: RegistrationRequest) = client.runCatching {
         post {
             url("v1/customers")
             parameter("reCaptcha", authCaptcha)
@@ -41,7 +40,7 @@ internal class UserServiceImpl(
         }.requireBody<CustomerResponse>()
     }
 
-    override suspend fun getToken(request: TokenRequest) = client.logCatching("token") {
+    override suspend fun getToken(request: TokenRequest) = client.runCatching {
         val params = Parameters.build {
             appendAll(request.toParameters())
             append("reCaptcha", authCaptcha)
@@ -52,11 +51,11 @@ internal class UserServiceImpl(
         }.requireBody<TokenResponse>()
     }
 
-    override suspend fun getCurrentToken() = client.logCatching("token") {
+    override suspend fun getCurrentToken() = client.runCatching {
         requireNotNull(account.token)
     }
 
-    override suspend fun updatePassword(request: PasswordRequest) = client.logCatching("password") {
+    override suspend fun updatePassword(request: PasswordRequest) = client.runCatching {
         put {
             url("v1/password")
             parameter("reCaptcha", authCaptcha)
@@ -66,28 +65,28 @@ internal class UserServiceImpl(
     }
 
     override suspend fun updateUser(request: CustomerDataRequest) =
-        client.logCatching("user-update") {
+        client.runCatching {
             put {
                 url("v1/customers/current")
                 bearerAuth(checkNotNull(account.token))
             }.requireBody<CustomerResponse>()
         }
 
-    override suspend fun getPoints() = client.logCatching("points") {
+    override suspend fun getPoints() = client.runCatching {
         get {
             url("v1/customer/points")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerPointsResponse>()
     }
 
-    override suspend fun getUser() = client.logCatching("user") {
+    override suspend fun getUser() = client.runCatching {
         get {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerResponse.Customer>()
     }
 
-    override suspend fun getBookings() = client.logCatching("bookings") {
+    override suspend fun getBookings() = client.runCatching {
         get {
             url("v1/bookings")
             bearerAuth(checkNotNull(account.token))
@@ -97,7 +96,7 @@ internal class UserServiceImpl(
         }.requireBody<List<BookingResponse>>()
     }
 
-    override suspend fun getBooking(id: String) = client.logCatching("booking") {
+    override suspend fun getBooking(id: String) = client.runCatching {
         get {
             url("v1/bookings/$id")
             bearerAuth(checkNotNull(account.token))

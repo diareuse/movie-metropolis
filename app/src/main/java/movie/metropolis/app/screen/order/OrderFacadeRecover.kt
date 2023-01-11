@@ -1,12 +1,13 @@
 package movie.metropolis.app.screen.order
 
-import movie.log.logCatchingResult
+import movie.log.flatMapCatching
+import movie.log.logSevere
 
 class OrderFacadeRecover(
     private val origin: OrderFacade
 ) : OrderFacade {
 
     override suspend fun getRequest() =
-        origin.logCatchingResult("order") { getRequest() }
+        origin.flatMapCatching { getRequest() }.logSevere()
 
 }
