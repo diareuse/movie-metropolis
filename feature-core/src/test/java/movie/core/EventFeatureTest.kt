@@ -18,6 +18,7 @@ import movie.core.db.model.BookingStored
 import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
+import movie.core.nwk.PerformanceTracerNoop
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
 import movie.image.ImageAnalyzer
@@ -80,8 +81,8 @@ class EventFeatureTest : FeatureTest() {
         link = mock()
         whenever(preference.filterSeen).thenReturn(false)
         feature = module.featureSaving(
-            service.event(clientData),
-            service.cinema(clientRoot),
+            service.event(clientData, PerformanceTracerNoop),
+            service.cinema(clientRoot, PerformanceTracerNoop),
             showingDao,
             cinemaDao,
             detailDao,

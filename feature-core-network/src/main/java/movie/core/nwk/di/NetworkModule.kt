@@ -18,11 +18,15 @@ import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.nwk.CinemaService
 import movie.core.nwk.CinemaServiceImpl
+import movie.core.nwk.CinemaServicePerformance
 import movie.core.nwk.EventService
 import movie.core.nwk.EventServiceImpl
+import movie.core.nwk.EventServicePerformance
+import movie.core.nwk.PerformanceTracer
 import movie.core.nwk.UserService
 import movie.core.nwk.UserServiceImpl
 import movie.core.nwk.UserServiceLogout
+import movie.core.nwk.UserServicePerformance
 import movie.core.nwk.UserServiceReauthorize
 import movie.core.nwk.UserServiceSaving
 
@@ -80,20 +84,24 @@ class NetworkModule {
     @Provides
     fun event(
         @ClientData
-        client: HttpClient
+        client: HttpClient,
+        tracer: PerformanceTracer
     ): EventService {
-        val service: EventService
+        var service: EventService
         service = EventServiceImpl(client)
+        service = EventServicePerformance(service, tracer)
         return service
     }
 
     @Provides
     fun cinema(
         @ClientRoot
-        client: HttpClient
+        client: HttpClient,
+        tracer: PerformanceTracer
     ): CinemaService {
-        val service: CinemaService
+        var service: CinemaService
         service = CinemaServiceImpl(client)
+        service = CinemaServicePerformance(service, tracer)
         return service
     }
 
@@ -102,13 +110,15 @@ class NetworkModule {
         @ClientCustomer
         client: HttpClient,
         account: UserAccount,
-        auth: AuthMetadata
+        auth: AuthMetadata,
+        tracer: PerformanceTracer
     ): UserService {
         var service: UserService
         service = UserServiceImpl(client, account, auth.user, auth.password, auth.captcha)
         service = UserServiceSaving(service, account)
         service = UserServiceReauthorize(service, account, auth.captcha)
         service = UserServiceLogout(service, account)
+        service = UserServicePerformance(service, tracer)
         return service
     }
 
