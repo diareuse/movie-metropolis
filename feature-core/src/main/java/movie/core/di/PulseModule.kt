@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import movie.core.EventFeature
+import movie.core.FavoriteFeature
 import movie.core.UserFeature
 import movie.core.notification.NotificationInfoProvider
 import movie.core.pulse.*
@@ -38,9 +39,10 @@ class PulseModule {
     @Provides
     fun exactPulseNotificationMovie(
         event: EventFeature,
-        info: NotificationInfoProvider
+        info: NotificationInfoProvider,
+        favorite: FavoriteFeature
     ): ExactPulse {
-        return ExactPulseNotificationMovie(event, info)
+        return ExactPulseNotificationMovie(event, info, favorite)
     }
 
 }
