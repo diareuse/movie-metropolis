@@ -10,6 +10,7 @@ import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.CinemaFromView
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.screen.OnChangedListener
+import movie.metropolis.app.util.disableAll
 import org.junit.Test
 import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.mock
@@ -94,11 +95,13 @@ class CinemaFacadeTest : FeatureTest() {
         whenever(event.getShowings(view, Date(0)))
             .thenReturn(Result.success(showings))
         facade.getShowings(Date(0)) // only to populate the filters
-        facade.toggle(Filter(true, "type"))
-        facade.toggle(Filter(true, "language"))
-        val result = facade.getShowings(Date(0))
-        assert(result.isSuccess) { result }
-        assert(result.getOrThrow().isEmpty()) { result.getOrThrow() }
+        facade.disableAll()
+        facade.toggle(Filter(false, "type"))
+        facade.toggle(Filter(false, "language"))
+        val result = facade.getShowings(Date(0)).getOrThrow()
+        val hasRequestedKeys = result.flatMap { it.availability.keys }
+            .all { it.language == "language" && "type" in it.types }
+        assert(hasRequestedKeys) { result }
     }
 
     @Test
@@ -111,8 +114,8 @@ class CinemaFacadeTest : FeatureTest() {
             .thenReturn(Result.success(showings))
         facade.getShowings(Date(0))
         val options = facade.getOptions().getOrThrow()
-        assertEquals(1, options[Filter.Type.Language]?.size)
-        assertEquals(1, options[Filter.Type.Projection]?.size)
+        assertEquals(2, options[Filter.Type.Language]?.size)
+        assertEquals(2, options[Filter.Type.Projection]?.size)
     }
 
     @Test
@@ -137,10 +140,17 @@ class CinemaFacadeTest : FeatureTest() {
     private fun generateShowings(count: Int): MovieWithShowings = buildMap {
         repeat(count) {
             val key: MovieReference = mock()
-            val items = List(nextInt(1, 20)) {
-                mock<Showing>(name = "$it") {
-                    on { types }.thenReturn(listOf("type"))
-                    on { language }.thenReturn("language")
+            val items = List<Showing>(nextInt(2, 20)) {
+                when (it % 2) {
+                    1 -> mock(name = "$it") {
+                        on { types }.thenReturn(listOf("type", "type2"))
+                        on { language }.thenReturn("language")
+                    }
+
+                    else -> mock(name = "$it") {
+                        on { types }.thenReturn(listOf("type2"))
+                        on { language }.thenReturn("language2")
+                    }
                 }
             }
             put(key, items)
