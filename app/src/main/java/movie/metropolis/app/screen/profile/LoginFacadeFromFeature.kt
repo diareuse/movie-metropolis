@@ -1,13 +1,17 @@
 package movie.metropolis.app.screen.profile
 
+import movie.core.SetupFeature
 import movie.core.UserFeature
 import movie.core.model.SignInMethod
 
 class LoginFacadeFromFeature(
     private val user: UserFeature,
+    private val setup: SetupFeature
 ) : LoginFacade {
 
     override val currentUserEmail get() = user.email
+    override val domain: String
+        get() = setup.region.domain
 
     override suspend fun login(
         email: String,

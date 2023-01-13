@@ -9,13 +9,15 @@ import movie.metropolis.app.model.LoginMode
 fun LoginScreen(
     onNavigateHome: () -> Unit,
     onBackClick: () -> Unit,
+    onLinkClick: (String) -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     when (viewModel.mode.collectAsState().value) {
         LoginMode.Login -> LoginSignInScreen(
             viewModel = viewModel,
             onNavigateHome = onNavigateHome,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onLinkClick = onLinkClick
         )
 
         LoginMode.Registration -> LoginRegistrationScreen(

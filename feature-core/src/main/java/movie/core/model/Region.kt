@@ -2,7 +2,7 @@ package movie.core.model
 
 sealed class Region {
 
-    internal abstract val domain: String
+    abstract val domain: String
     internal abstract val id: Int
 
     object Czechia : Region() {
