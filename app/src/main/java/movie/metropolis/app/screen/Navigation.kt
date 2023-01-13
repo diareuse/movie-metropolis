@@ -80,7 +80,8 @@ fun Navigation(
                     controller.popBackStack("/home", true)
                     controller.navigate("/home")
                 },
-                onBackClick = controller::navigateUp
+                onBackClick = controller::navigateUp,
+                onLinkClick = onLinkClicked
             )
         }
         composable("/cinemas/{cinema}") {

@@ -52,4 +52,6 @@
     <string name="login_credentials">Použij stejné přístupové údaje jako v appce CinemaCity nebo na cinemacity.cz</string>
     <string name="select_country">Zvol zemi</string>
     <string name="select_country_description">Vezmi, prosím, na vědomí, že region není možné později změnit. Cinema City účty nejsou přenositelné mezi regiony.</string>
+    <string name="reset_password">Resetovat heslo</string>
+    <string name="password_failure">Heslo může být správné, nicméně backendové služby CinemaCity mohly heslo omylem poškodit (heslo pravděpodobně ukládají na serveru v nešifrované formě). V takovém případě si prosím resetuj heslo.</string>
 </resources>

@@ -55,4 +55,6 @@
     <string name="login_credentials">Use the same credentials as you\'d use in your CinemaCity app, or on their website</string>
     <string name="select_country">Select a country</string>
     <string name="select_country_description">Please note that you will not be able to change the country later. Cinema City accounts are not transferable between regions.</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="password_failure">The password might be correct, however CinemaCity backend services may have corrupted the password on accident (as they are storing it in plaintext apparently), in which case please reset your password.</string>
 </resources>

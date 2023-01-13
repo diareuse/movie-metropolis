@@ -25,6 +25,7 @@ class LoginViewModel @Inject constructor(
 
     val mode = MutableStateFlow(LoginMode.Login)
 
+    val domain = facade.domain
     val state = facade.stateFlow(jobEmitterFlow)
         .retainStateIn(viewModelScope, Loadable.success(false))
     val email = MutableStateFlow(facade.currentUserEmail.orEmpty())

@@ -124,9 +124,12 @@ class FacadeModule {
     }
 
     @Provides
-    fun login(user: UserFeature): LoginFacade {
+    fun login(
+        user: UserFeature,
+        setup: SetupFeature
+    ): LoginFacade {
         val facade: LoginFacade
-        facade = LoginFacadeFromFeature(user)
+        facade = LoginFacadeFromFeature(user, setup)
         return facade
     }
 

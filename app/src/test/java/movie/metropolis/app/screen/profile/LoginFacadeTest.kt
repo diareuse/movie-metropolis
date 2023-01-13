@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.profile
 
 import kotlinx.coroutines.test.runTest
+import movie.core.model.Region
 import movie.core.model.SignInMethod
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.screen.FeatureTest
@@ -15,7 +16,7 @@ class LoginFacadeTest : FeatureTest() {
     private lateinit var facade: LoginFacade
 
     override fun prepare() {
-        facade = FacadeModule().login(user)
+        facade = FacadeModule().login(user, setup)
     }
 
     @Test
@@ -71,6 +72,12 @@ class LoginFacadeTest : FeatureTest() {
     @Test
     fun currentUserEmail_returns_null() {
         assertNull(facade.currentUserEmail)
+    }
+
+    @Test
+    fun domain_returns_currentDomain() {
+        whenever(setup.region).thenReturn(Region.Custom("foo", 0))
+        assertEquals("foo", facade.domain)
     }
 
 }
