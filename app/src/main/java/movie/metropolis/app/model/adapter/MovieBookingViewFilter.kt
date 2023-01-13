@@ -5,7 +5,8 @@ import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.cinema.ShowingFilterable
 
 data class MovieBookingViewFilter(
-    private val filter: Set<String>,
+    private val languages: Set<String>,
+    private val types: Set<String>,
     private val origin: MovieBookingView
 ) : MovieBookingView {
 
@@ -13,7 +14,8 @@ data class MovieBookingViewFilter(
         filterable: ShowingFilterable,
         origin: MovieBookingView
     ) : this(
-        filterable.getSelectedTags(),
+        filterable.getSelectedLanguages(),
+        filterable.getSelectedTypes(),
         origin
     )
 
@@ -21,10 +23,7 @@ data class MovieBookingViewFilter(
         get() = origin.movie
     override val availability: Map<AvailabilityView.Type, List<AvailabilityView>>
         get() = origin.availability.filterKeys {
-            var hasHit = it.language in filter
-            for (type in it.types)
-                hasHit = hasHit and (type in filter)
-            hasHit
+            (it.language in languages) and (it.types intersect types).isNotEmpty()
         }
 
 }
