@@ -48,8 +48,9 @@ class MovieFacadeFilterable(
         longitude: Double
     ) = origin.getShowings(date, latitude, longitude).onSuccess {
         val availableTypes = it.asSequence().flatMap { it.availability.keys }
-        filterable.addFrom(availableTypes.asIterable())
-        listenable.notify { onChanged() }
+        if (filterable.addFrom(availableTypes.asIterable())) {
+            listenable.notify { onChanged() }
+        }
         if (mutex.isLocked) {
             filterable.selectAll()
             mutex.unlock()
@@ -57,7 +58,7 @@ class MovieFacadeFilterable(
     }.map { cinemas ->
         cinemas
             .asSequence()
-            .map { CinemaBookingViewFilter(filterable.getSelectedTags(), it) }
+            .map { CinemaBookingViewFilter(filterable, it) }
             .filterNot { it.availability.isEmpty() }
             .toList()
     }

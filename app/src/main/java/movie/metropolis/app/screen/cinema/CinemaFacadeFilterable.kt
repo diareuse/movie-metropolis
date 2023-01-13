@@ -42,8 +42,9 @@ class CinemaFacadeFilterable(
 
     override suspend fun getShowings(date: Date) = origin.getShowings(date).onSuccess {
         val availableTypes = it.asSequence().flatMap { it.availability.keys }
-        filterable.addFrom(availableTypes.asIterable())
-        listenable.notify { onChanged() }
+        if (filterable.addFrom(availableTypes.asIterable())) {
+            listenable.notify { onChanged() }
+        }
         if (mutex.isLocked) {
             filterable.selectAll()
             mutex.unlock()

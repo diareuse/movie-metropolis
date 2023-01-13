@@ -9,13 +9,16 @@ class ShowingFilterable {
     private val languages = mutableSetOf<String>()
     private val types = mutableSetOf<String>()
 
-    fun addFrom(types: Iterable<AvailabilityView.Type>) {
+    fun addFrom(types: Iterable<AvailabilityView.Type>): Boolean {
+        val elements = this.types + this.languages
         this.types.clear()
         this.languages.clear()
         for (type in types) {
             this.types.addAll(type.types)
             this.languages.add(type.language)
         }
+        val updatedElements = this.types + this.languages
+        return (elements intersect updatedElements).size != elements.size
     }
 
     fun selectAll() {
@@ -36,6 +39,7 @@ class ShowingFilterable {
         .map { Filter(it in selected, it) }
         .sortedByDescending { it.isSelected }
 
-    fun getSelectedTags() = selected.toSet()
+    fun getSelectedLanguages() = selected.filter { it in languages }.toSet()
+    fun getSelectedTypes() = selected.filter { it in types }.toSet()
 
 }
