@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -35,6 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
+import movie.metropolis.app.screen.setup.Background
 import movie.style.AppButton
 import movie.style.InputField
 import movie.style.theme.Theme
@@ -78,27 +77,26 @@ private fun LoginSignInScreen(
         title = { Text(stringResource(R.string.login_title)) },
         onBackClick = onBackClick
     ) { padding ->
-        Box(Modifier.fillMaxSize()) {
-            Image(
-                modifier = Modifier
-                    .offset(64.dp, (-16).dp)
-                    .size(300.dp)
-                    .alpha(.2f)
-                    .align(Alignment.TopEnd),
-                painter = painterResource(id = R.drawable.ic_cinema),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(Theme.color.container.primary)
-            )
-            Image(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .offset((-64).dp, 64.dp)
-                    .size(300.dp)
-                    .alpha(.2f),
-                painter = painterResource(id = R.drawable.ic_movie),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(Theme.color.container.secondary)
-            )
+        Background(count = 5) {
+            when (it % 2) {
+                1 -> Image(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(.2f),
+                    painter = painterResource(id = R.drawable.ic_cinema),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(Theme.color.container.primary)
+                )
+
+                else -> Image(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .alpha(.2f),
+                    painter = painterResource(id = R.drawable.ic_movie),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(Theme.color.container.secondary)
+                )
+            }
         }
         Column(
             modifier = Modifier

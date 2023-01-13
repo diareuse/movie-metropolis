@@ -27,7 +27,8 @@ internal class UserAccountImpl(
 
     override var password: String?
         get() {
-            val encrypted = manager.getUserData(account ?: return null, "user-password")
+            val encrypted =
+                manager.getUserData(account ?: return null, "user-password") ?: return null
             return encryption.decrypt(encrypted).getOrNull()
         }
         set(value) {
