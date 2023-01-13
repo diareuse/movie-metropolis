@@ -7,7 +7,7 @@ class UserAccountLogout(
     override val isLoggedIn: Boolean
         get() {
             val isLoggedIn = origin.isLoggedIn
-            if (isLoggedIn) {
+            if (!isLoggedIn) {
                 email = null
             }
             return isLoggedIn
