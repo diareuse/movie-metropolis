@@ -14,7 +14,7 @@ internal class UserAccountImpl(
         get() = manager.getAccountsByType(Type).firstOrNull()
 
     override val isLoggedIn
-        get() = account != null
+        get() = account != null && password != null
 
     override var email: String?
         get() = account?.name
