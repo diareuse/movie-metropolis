@@ -10,15 +10,18 @@ import java.security.ProviderException
 import javax.crypto.Cipher
 
 class CipherFactory(
-    private val alias: String,
+    alias: String,
     private val keySpec: KeySpec
 ) {
 
+    private val alias = "$alias.${keySpec.suffix}"
     private val keys
         @Throws(KeyException::class)
         get() = KeyStore.getInstance("AndroidKeyStore").run {
             load(null)
-            getKeyPair() ?: generateKeyPair(type) ?: throw KeyException("Keystore unavailable")
+            synchronized(lock) {
+                getKeyPair() ?: generateKeyPair(type) ?: throw KeyException("Keystore unavailable")
+            }
         }
 
     private val cipher get() = Cipher.getInstance(keySpec.transformation)
@@ -34,7 +37,6 @@ class CipherFactory(
     }
 
     private fun KeyStore.getKeyPair(): KeyPair? {
-        if (!containsAlias(alias)) return null
         val entry = getEntry(alias, null)
         if (entry is KeyStore.PrivateKeyEntry)
             return KeyPair(entry.certificate.publicKey, entry.privateKey)
@@ -63,20 +65,29 @@ class CipherFactory(
         val transformation: String,
         val digest: String,
         val padding: String,
-        val keySize: Int?
+        val keySize: Int?,
+        val suffix: String
     ) {
         Leanback(
             transformation = "RSA/ECB/PKCS1Padding",
             digest = KeyProperties.DIGEST_SHA256,
             padding = KeyProperties.ENCRYPTION_PADDING_RSA_PKCS1,
-            keySize = 2048
+            keySize = 2048,
+            suffix = "leanback"
         ),
         Standard(
             transformation = "RSA/ECB/OAEPwithSHA-1andMGF1Padding",
             digest = KeyProperties.DIGEST_SHA1,
             padding = KeyProperties.ENCRYPTION_PADDING_RSA_OAEP,
-            keySize = null
+            keySize = null,
+            suffix = "standard"
         )
+    }
+
+    companion object {
+
+        private val lock = Any()
+
     }
 
 }

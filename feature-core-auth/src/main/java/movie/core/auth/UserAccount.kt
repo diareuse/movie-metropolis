@@ -6,7 +6,6 @@ import kotlin.time.Duration
 interface UserAccount {
 
     val isLoggedIn: Boolean
-        get() = password != null
     var email: String?
     var password: String?
     var token: String?

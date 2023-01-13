@@ -13,10 +13,10 @@ import movie.core.auth.CipherFactory
 import movie.core.auth.EncryptionProvider
 import movie.core.auth.EncryptionProviderAndroid
 import movie.core.auth.EncryptionProviderIterator
-import movie.core.auth.EncryptionProviderPlaintext
 import movie.core.auth.EncryptionProviderRetry
 import movie.core.auth.UserAccount
 import movie.core.auth.UserAccountImpl
+import movie.core.auth.UserAccountLogout
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,7 +28,10 @@ class AuthModule {
         context: Context,
         encryption: EncryptionProvider
     ): UserAccount {
-        return UserAccountImpl(AccountManager.get(context), encryption)
+        var account: UserAccount
+        account = UserAccountImpl(AccountManager.get(context), encryption)
+        account = UserAccountLogout(account)
+        return account
     }
 
     @Provides
@@ -39,8 +42,7 @@ class AuthModule {
         var provider: EncryptionProvider
         provider = EncryptionProviderIterator(
             EncryptionProviderAndroid(context, CipherFactory.KeySpec.Standard),
-            EncryptionProviderAndroid(context, CipherFactory.KeySpec.Leanback),
-            EncryptionProviderPlaintext()
+            EncryptionProviderAndroid(context, CipherFactory.KeySpec.Leanback)
         )
         provider = EncryptionProviderRetry(provider)
         return provider
