@@ -477,6 +477,8 @@ class UserFeatureTest : FeatureTest() {
         override var expirationDate: Date? = null
         override var email: String? = null
         override var password: String? = null
+        override val isLoggedIn: Boolean
+            get() = password != null
     }
 
 }
