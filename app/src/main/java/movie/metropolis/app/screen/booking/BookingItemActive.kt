@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
@@ -47,6 +50,7 @@ import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
 import movie.style.AppIconButton
 import movie.style.haptic.withHaptics
+import movie.style.layout.EmptyStackedCardLayout
 import movie.style.layout.PosterLayout
 import movie.style.layout.StackedCardLayout
 import movie.style.textPlaceholder
@@ -135,6 +139,28 @@ fun BookingItemActive(
 }
 
 @Composable
+fun BookingItemActiveEmpty(
+    modifier: Modifier = Modifier,
+) {
+    EmptyStackedCardLayout(
+        modifier = modifier,
+        contentPadding = PaddingValues(24.dp)
+    ) {
+        val tint = Theme.color.container.primary
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Icon(painterResource(id = R.drawable.ic_ticket), null, tint = tint)
+                Text(stringResource(R.string.empty_booking_active))
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Icon(painterResource(id = R.drawable.ic_share), null, tint = tint)
+                Text(stringResource(R.string.empty_booking_active_share))
+            }
+        }
+    }
+}
+
+@Composable
 private fun BookingItemActiveLayout(
     posterAspectRatio: Float,
     cinema: @Composable () -> Unit,
@@ -143,7 +169,7 @@ private fun BookingItemActiveLayout(
     time: @Composable () -> Unit,
     duration: @Composable () -> Unit,
     onClick: (() -> Unit)?,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     StackedCardLayout(
         modifier = modifier,
@@ -227,5 +253,13 @@ private fun Preview() {
 private fun PreviewLoading() {
     Theme {
         BookingItemActive(modifier = Modifier.padding(16.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEmpty() {
+    Theme {
+        BookingItemActiveEmpty(modifier = Modifier.padding(16.dp))
     }
 }

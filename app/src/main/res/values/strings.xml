@@ -57,4 +57,7 @@
     <string name="select_country_description">Please note that you will not be able to change the country later. Cinema City accounts are not transferable between regions.</string>
     <string name="reset_password">Reset Password</string>
     <string name="password_failure">The password might be correct, however CinemaCity backend services may have corrupted the password on accident (as they are storing it in plaintext apparently), in which case please reset your password.</string>
+    <string name="empty_booking_active">Your active tickets will appear here ~15 minutes after a purchase. You can refresh manually via button above.</string>
+    <string name="empty_booking_active_share">Shared tickets can be imported via camera action above or system share sheet.</string>
+    <string name="empty_booking_expired">Once your ticket expires, it will appear here.</string>
 </resources>
