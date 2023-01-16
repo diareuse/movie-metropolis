@@ -51,6 +51,10 @@ fun <T> Loadable<T>.getOrThrow(): T {
     throw exceptionOrNull() ?: return getOrNull() as T
 }
 
+inline fun <T> Loadable<List<T>>.onEmpty(body: () -> Unit) = onSuccess {
+    if (it.isEmpty()) body()
+}
+
 inline fun <T> Loadable<T>.onSuccess(body: (T) -> Unit) = apply {
     if (isSuccess) body(checkNotNull(getOrNull()))
 }

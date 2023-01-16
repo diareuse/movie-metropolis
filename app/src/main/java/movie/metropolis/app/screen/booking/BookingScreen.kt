@@ -50,6 +50,7 @@ import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
+import movie.metropolis.app.screen.onEmpty
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.screen.reader.BarcodeReader
@@ -235,18 +236,17 @@ private fun BookingScreenContent(
                     onVisibilityChanged = { isVisible = it }
                 )
             }
-
         }.onLoading {
-            items(1) {
+            item {
                 BookingItemActive()
             }
-            item(key = "divider") { Divider(Modifier.padding(16.dp)) }
+        }.onEmpty {
+            item {
+                BookingItemActiveEmpty()
+            }
         }
 
-        if (
-            active.getOrNull().orEmpty().isNotEmpty() &&
-            expired.getOrNull().orEmpty().isNotEmpty()
-        ) item(key = "divider") { Divider(Modifier.padding(16.dp)) }
+        item(key = "divider") { Divider(Modifier.padding(16.dp)) }
 
         expired.onSuccess { view ->
             items(view, BookingView::id) {
@@ -263,6 +263,10 @@ private fun BookingScreenContent(
         }.onLoading {
             items(2) {
                 BookingItemExpired()
+            }
+        }.onEmpty {
+            item {
+                BookingItemExpiredEmpty()
             }
         }
     }

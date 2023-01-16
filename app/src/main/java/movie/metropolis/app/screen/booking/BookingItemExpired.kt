@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.listing.MoviePoster
 import movie.style.haptic.withHaptics
+import movie.style.layout.EmptyStackedCardLayout
 import movie.style.layout.PosterLayout
 import movie.style.layout.StackedCardLayout
 import movie.style.textPlaceholder
@@ -139,6 +141,26 @@ private fun BookingItemExpiredLayout(
     }
 }
 
+@Composable
+fun BookingItemExpiredEmpty(
+    modifier: Modifier = Modifier,
+) {
+    EmptyStackedCardLayout(
+        modifier = modifier,
+        color = Theme.color.container.error,
+        contentPadding = PaddingValues(24.dp)
+    ) {
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            Icon(
+                painterResource(id = R.drawable.ic_hourglass),
+                null,
+                tint = Theme.color.container.error
+            )
+            Text(stringResource(R.string.empty_booking_expired))
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
@@ -163,5 +185,13 @@ private fun Preview() {
 private fun BookingItemExpired() {
     Theme {
         BookingItemExpired(modifier = Modifier.padding(16.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEmpty() {
+    Theme {
+        BookingItemExpiredEmpty(modifier = Modifier.padding(16.dp))
     }
 }
