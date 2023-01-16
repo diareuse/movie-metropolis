@@ -61,9 +61,11 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.cinema.MovieShowingItemEmpty
 import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
 import movie.metropolis.app.screen.map
 import movie.metropolis.app.screen.mapNotNull
+import movie.metropolis.app.screen.onEmpty
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.style.AppButton
@@ -326,6 +328,14 @@ fun LazyListScope.MovieDetailShowings(
     }.onLoading {
         items(2) {
             ShowingItem(
+                modifier = Modifier
+                    .animateItemPlacement()
+                    .padding(horizontal = 24.dp)
+            )
+        }
+    }.onEmpty {
+        item {
+            MovieShowingItemEmpty(
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(horizontal = 24.dp)

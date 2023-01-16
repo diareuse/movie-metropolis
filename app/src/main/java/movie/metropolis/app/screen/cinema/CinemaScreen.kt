@@ -32,6 +32,7 @@ import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.FilterRow
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.onEmpty
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.style.AppIconButton
@@ -159,6 +160,14 @@ private fun CinemaScreen(
                 items(2) {
                     MovieShowingItem(
                         Modifier
+                            .animateItemPlacement()
+                            .padding(horizontal = 24.dp)
+                    )
+                }
+            }.onEmpty {
+                item {
+                    MovieShowingItemEmpty(
+                        modifier = Modifier
                             .animateItemPlacement()
                             .padding(horizontal = 24.dp)
                     )
