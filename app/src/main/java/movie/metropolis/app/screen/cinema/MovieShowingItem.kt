@@ -1,5 +1,8 @@
 package movie.metropolis.app.screen.cinema
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -7,6 +10,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
@@ -16,17 +20,23 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import movie.metropolis.app.R
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.screen.detail.ShowingItemSection
 import movie.metropolis.app.screen.detail.ShowingItemTime
 import movie.metropolis.app.screen.detail.ShowingLayout
 import movie.style.AppImage
+import movie.style.layout.EmptyShapeLayout
 import movie.style.textPlaceholder
+import movie.style.theme.Theme
 
 @Composable
 fun MovieShowingItem(
@@ -84,6 +94,29 @@ fun MovieShowingItem(
             modifier = Modifier.textPlaceholder(true),
             time = "#".repeat(5)
         )
+    }
+}
+
+@Composable
+fun MovieShowingItemEmpty(
+    modifier: Modifier = Modifier
+) {
+    EmptyShapeLayout(
+        modifier = modifier,
+        contentPadding = PaddingValues(24.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Text("🙄", style = Theme.textStyle.title.copy(fontSize = 48.sp))
+            Text(stringResource(R.string.whoops), style = Theme.textStyle.title)
+            Text(
+                stringResource(R.string.error_showings),
+                style = Theme.textStyle.emphasis,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 

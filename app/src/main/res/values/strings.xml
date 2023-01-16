@@ -62,4 +62,6 @@
     <string name="empty_booking_expired">Once your ticket expires, it will appear here.</string>
     <string name="error_booking">Please check back later, we\'ll sort this out in the meantime.</string>
     <string name="error_cinemas">We can\'t seem to find any cinemas, check back later</string>
+    <string name="error_showings">No showings match your query, select different filters or another day</string>
+    <string name="whoops">Whoops</string>
 </resources>
