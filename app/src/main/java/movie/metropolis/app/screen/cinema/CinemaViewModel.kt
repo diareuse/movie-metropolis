@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.Loadable
@@ -34,7 +35,7 @@ class CinemaViewModel private constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
     val items = facade.showingsFlow(selectedDate)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val options = facade.optionsFlow
+    val options = items.flatMapLatest { facade.optionsFlow }
         .retainStateIn(viewModelScope)
 
     fun toggleFilter(filter: Filter) = facade.toggle(filter)

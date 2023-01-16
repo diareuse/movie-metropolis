@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import movie.core.UserFeature
@@ -56,7 +57,7 @@ class MovieViewModel private constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
     val showings = facade.showingsFlow(selectedDate.filterNotNull(), location.filterNotNull())
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val options = facade.optionsFlow
+    val options = showings.flatMapLatest { facade.optionsFlow }
         .retainStateIn(viewModelScope, Loadable.loading())
     val favorite = facade.favoriteFlow
         .retainStateIn(viewModelScope)
