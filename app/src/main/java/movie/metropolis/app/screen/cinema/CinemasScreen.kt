@@ -28,6 +28,10 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
+import movie.metropolis.app.screen.onFailure
+import movie.metropolis.app.screen.onLoading
+import movie.metropolis.app.screen.onSuccess
+import movie.style.AppErrorItem
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,22 +78,30 @@ private fun CinemasScreen(
             .fillMaxSize(),
         contentPadding = padding + PaddingValues(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        state = state
+        state = state,
+        userScrollEnabled = items.isSuccess
     ) {
-        if (items.isLoading) items(4) {
-            CinemaItem(modifier = Modifier.padding(horizontal = 24.dp))
-        }
-        items(items.getOrNull().orEmpty(), key = CinemaView::id) {
-            CinemaItem(
-                modifier = Modifier
-                    .animateItemPlacement()
-                    .padding(horizontal = 24.dp),
-                name = it.name,
-                address = it.address,
-                city = it.city,
-                distance = it.distance,
-                onClick = { onClickCinema(it.id) }
-            )
+        items.onLoading {
+            items(7) {
+                CinemaItem(modifier = Modifier.padding(horizontal = 24.dp))
+            }
+        }.onSuccess { items ->
+            items(items, key = CinemaView::id) {
+                CinemaItem(
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .padding(horizontal = 24.dp),
+                    name = it.name,
+                    address = it.address,
+                    city = it.city,
+                    distance = it.distance,
+                    onClick = { onClickCinema(it.id) }
+                )
+            }
+        }.onFailure {
+            item {
+                AppErrorItem(error = stringResource(R.string.error_cinemas))
+            }
         }
     }
 }
