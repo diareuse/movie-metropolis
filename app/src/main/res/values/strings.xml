@@ -72,4 +72,6 @@
     <string name="empty_movie_main_title">Nothing\'s here</string>
     <string name="error_movie_main_title">Oh no!</string>
     <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, ok?</string>
+    <string name="empty_cinema">Cinemas will be listed here after you first connect to the internet while using the application.</string>
+    <string name="error_cinema">Cinemas cannot be shown due to an internal issue</string>
 </resources>
