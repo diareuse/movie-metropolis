@@ -1,28 +1,41 @@
 package movie.metropolis.app.screen.listing
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
+import androidx.compose.ui.unit.sp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerScope
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
+import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.onEmpty
+import movie.metropolis.app.screen.onFailure
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.style.haptic.TickOnChange
+import movie.style.layout.EmptyShapeLayout
 import movie.style.theme.Theme
 import kotlin.math.absoluteValue
 import kotlin.math.sign
@@ -40,7 +53,7 @@ fun MoviePager(
         HorizontalPager(
             modifier = modifier,
             count = 3,
-            userScrollEnabled = true,
+            userScrollEnabled = false,
             state = rememberPagerState(1),
             contentPadding = PaddingValues(start = 64.dp, end = 64.dp, top = 32.dp, bottom = 64.dp)
         ) { index ->
@@ -75,6 +88,77 @@ fun MoviePager(
                 url = item.poster?.url,
                 onClick = { onClick(item.id) }
             )
+        }
+    }.onEmpty {
+        HorizontalPager(
+            modifier = modifier,
+            count = 1,
+            userScrollEnabled = false,
+            state = rememberPagerState(),
+            contentPadding = PaddingValues(start = 64.dp, end = 64.dp, top = 32.dp, bottom = 64.dp)
+        ) { _ ->
+            EmptyShapeLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(DefaultPosterAspectRatio),
+                shape = Theme.container.poster
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+                ) {
+                    Text("🤫", style = Theme.textStyle.title.copy(fontSize = 48.sp))
+                    Text(
+                        stringResource(R.string.empty_movie_main_title),
+                        style = Theme.textStyle.title,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        stringResource(R.string.empty_movie_main),
+                        style = Theme.textStyle.body,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+        }
+    }.onFailure {
+        HorizontalPager(
+            modifier = modifier,
+            count = 1,
+            userScrollEnabled = false,
+            state = rememberPagerState(),
+            contentPadding = PaddingValues(start = 64.dp, end = 64.dp, top = 32.dp, bottom = 64.dp)
+        ) { _ ->
+            EmptyShapeLayout(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(DefaultPosterAspectRatio),
+                shape = Theme.container.poster,
+                color = Theme.color.container.error
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+                ) {
+                    Text("😢", style = Theme.textStyle.title.copy(fontSize = 48.sp))
+                    Text(
+                        stringResource(R.string.error_movie_main_title),
+                        style = Theme.textStyle.title,
+                        textAlign = TextAlign.Center
+                    )
+                    Text(
+                        stringResource(R.string.error_movie_main),
+                        style = Theme.textStyle.body,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
         }
     }
 }
@@ -145,6 +229,34 @@ private fun Preview() {
     Theme {
         MoviePager(
             items = Loadable.loading(),
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEmpty() {
+    Theme {
+        MoviePager(
+            items = Loadable.success(emptyList()),
+            onClick = {},
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Preview(showBackground = true)
+@Composable
+private fun PreviewError() {
+    Theme {
+        MoviePager(
+            items = Loadable.failure(Throwable()),
             onClick = {},
             modifier = Modifier
                 .fillMaxWidth()
