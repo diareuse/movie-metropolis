@@ -55,11 +55,9 @@
     <string name="reset_password">Resetovat heslo</string>
     <string name="password_failure">Heslo může být správné, nicméně backendové služby CinemaCity mohly heslo omylem poškodit (heslo pravděpodobně ukládají na serveru v nešifrované formě). V takovém případě si prosím resetuj heslo.</string>
     <string name="empty_booking_active">Aktivní lístky se ti zde objeví do 15 minut po koupi. Tlačítkem nahoře můžeš obnovit list.</string>
-    <string name="empty_booking_active">A</string>
     <string name="empty_booking_active_share">Sdílené lístky jde importovat akcí kamery nahoře, nebo systémovým sdílením.</string>
     <string name="empty_booking_expired">Až ti vyprší lístek, objeví se zde.</string>
     <string name="error_booking">Mrkni sem později, do té doby to vyřešíme.</string>
-    <string name="error_booking">M</string>
     <string name="error_cinemas">Nemůžeme najít žádná kina, mrkni sem později</string>
     <string name="error_showings">Žádná promítání nejsou k dispozici, zvol jiné filtry nebo den</string>
     <string name="whoops">Jejda</string>
@@ -71,7 +69,6 @@
     <string name="empty_movie_main_title">Nic tu není</string>
     <string name="error_movie_main_title">Ale ne!</string>
     <string name="error_movie_main">Teď není možné natáhnout filmy. Mrkni sem později, ju?</string>
-    <string name="error_movie_main">N</string>
     <string name="empty_cinema">Kina tu budou vylistována potom co se poprvé připojíš k internetu při používání téhle appky.</string>
     <string name="error_cinema">Kina nelze zobrazit kvůli internímu problému</string>
 </resources>
