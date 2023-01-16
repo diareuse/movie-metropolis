@@ -51,6 +51,7 @@ import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.onEmpty
+import movie.metropolis.app.screen.onFailure
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.metropolis.app.screen.reader.BarcodeReader
@@ -59,6 +60,7 @@ import movie.metropolis.app.util.register
 import movie.metropolis.app.util.toBitmap
 import movie.style.AppButton
 import movie.style.AppDialog
+import movie.style.AppErrorItem
 import movie.style.theme.Theme
 import java.io.File
 
@@ -244,6 +246,10 @@ private fun BookingScreenContent(
             item {
                 BookingItemActiveEmpty()
             }
+        }.onFailure {
+            item {
+                AppErrorItem(error = stringResource(R.string.error_booking))
+            }
         }
 
         item(key = "divider") { Divider(Modifier.padding(16.dp)) }
@@ -267,6 +273,10 @@ private fun BookingScreenContent(
         }.onEmpty {
             item {
                 BookingItemExpiredEmpty()
+            }
+        }.onFailure {
+            item {
+                AppErrorItem(error = stringResource(R.string.error_booking))
             }
         }
     }

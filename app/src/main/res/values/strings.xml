@@ -60,4 +60,5 @@
     <string name="empty_booking_active">Your active tickets will appear here ~15 minutes after a purchase. You can refresh manually via button above.</string>
     <string name="empty_booking_active_share">Shared tickets can be imported via camera action above or system share sheet.</string>
     <string name="empty_booking_expired">Once your ticket expires, it will appear here.</string>
+    <string name="error_booking">Please check back later, we\'ll sort this out in the meantime.</string>
 </resources>
