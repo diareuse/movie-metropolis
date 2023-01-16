@@ -64,4 +64,12 @@
     <string name="error_cinemas">We can\'t seem to find any cinemas, check back later</string>
     <string name="error_showings">No showings match your query, select different filters or another day</string>
     <string name="whoops">Whoops</string>
+    <string name="empty_movie_sub">Hmm weird…</string>
+    <string name="empty_movie">Nothing\'s here</string>
+    <string name="error_movie">Movie would\'ve been here…</string>
+    <string name="error_movie_sub">This is awkward</string>
+    <string name="empty_movie_main">Movie will appear here once it becomes available. Available movies are refreshed on daily basis.</string>
+    <string name="empty_movie_main_title">Nothing\'s here</string>
+    <string name="error_movie_main_title">Oh no!</string>
+    <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, ok?</string>
 </resources>

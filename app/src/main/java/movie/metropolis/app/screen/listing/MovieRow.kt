@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.screen.onEmpty
+import movie.metropolis.app.screen.onFailure
 import movie.metropolis.app.screen.onLoading
 import movie.metropolis.app.screen.onSuccess
 import movie.style.theme.Theme
@@ -49,6 +51,28 @@ fun MovieRow(
             MovieItem()
             MovieItem()
             MovieItem()
+        }
+    }.onEmpty {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState(), enabled = false)
+                .padding(24.dp)
+        ) {
+            MovieItemEmpty()
+            MovieItemEmpty()
+            MovieItemEmpty()
+        }
+    }.onFailure {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .horizontalScroll(rememberScrollState(), enabled = false)
+                .padding(24.dp)
+        ) {
+            MovieItemError()
+            MovieItemError()
+            MovieItemError()
         }
     }
 }
@@ -97,6 +121,27 @@ private fun Preview(
             )
             MovieRow(
                 items = Loadable.success(movies),
+                isShowing = false,
+                onClickFavorite = {},
+                onClick = {}
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview2() {
+    Theme {
+        Column {
+            MovieRow(
+                items = Loadable.success(emptyList()),
+                isShowing = false,
+                onClickFavorite = {},
+                onClick = {}
+            )
+            MovieRow(
+                items = Loadable.failure(Throwable()),
                 isShowing = false,
                 onClickFavorite = {},
                 onClick = {}
