@@ -36,7 +36,7 @@ fun DatePickerRow(
     modifier: Modifier = Modifier,
     end: Date = Date(start.time + 30.days.inWholeMilliseconds),
     disabledValues: List<Date> = emptyList(),
-    formatter: DateFormat = SimpleDateFormat("MMM'\n'd", Locale.getDefault()),
+    formatter: DateFormat = SimpleDateFormat("EE'\n'MMM'\n'd", Locale.getDefault()),
 ) {
     val start = remember(start) { start.normalize() }
     val dates = remember(start, end) {
