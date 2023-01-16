@@ -3,8 +3,10 @@ package movie.metropolis.app.screen.cinema
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -18,10 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import movie.metropolis.app.R
 import movie.style.haptic.withHaptics
+import movie.style.layout.EmptyShapeLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -54,6 +60,24 @@ fun CinemaItem(modifier: Modifier = Modifier) {
         modifier = modifier,
         textModifier = Modifier.textPlaceholder(true)
     )
+}
+
+@Composable
+fun CinemaItemEmpty(
+    modifier: Modifier = Modifier,
+) {
+    EmptyShapeLayout(
+        modifier = modifier,
+        contentPadding = PaddingValues(24.dp)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically)
+        ) {
+            Text("📽", style = Theme.textStyle.title.copy(fontSize = 48.sp))
+            Text(stringResource(R.string.empty_cinema), textAlign = TextAlign.Center)
+        }
+    }
 }
 
 @Composable
@@ -143,5 +167,13 @@ private fun PreviewNight() {
             distance = "12.3km",
             onClick = {}
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEmpty() {
+    Theme {
+        CinemaItemEmpty(modifier = Modifier.padding(16.dp))
     }
 }
