@@ -1,0 +1,10 @@
+package movie.core
+
+import movie.core.model.Cinema
+import movie.core.model.Location
+
+interface EventCinemaFeature {
+
+    suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>)
+
+}
