@@ -9,12 +9,8 @@ import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.model.MovieDetail
 import movie.core.model.MoviePreview
-import movie.core.model.MovieReference
 import movie.core.model.Showing
 import java.util.Date
-
-typealias MovieWithShowings = Map<MovieReference, Iterable<Showing>>
-typealias CinemaWithShowings = Map<Cinema, Iterable<Showing>>
 
 interface EventFeature {
 
