@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import movie.core.nwk.PerformanceTracer
 import movie.core.db.PerformanceTracer as DbTracer
 import movie.core.nwk.PerformanceTracer as NetworkTracer
 
@@ -24,12 +25,16 @@ class TracingModule {
 
     @Provides
     fun network(): NetworkTracer = object : NetworkTracer {
-        override fun trace(tag: String): NetworkTracer.Trace {
-            val trace = Firebase.performance.newTrace(tag)
+        override fun trace(url: String, method: String): PerformanceTracer.Trace {
+            val trace = Firebase.performance.newHttpMetric(url, method)
+            trace.start()
             return object : NetworkTracer.Trace {
                 override fun stop() = trace.stop()
-                override fun setState(isSuccess: Boolean) =
-                    trace.putAttribute("success", isSuccess.toString())
+                override fun setResponseCode(code: Int) = trace.setHttpResponseCode(code)
+                override fun setRequestLength(length: Long) = trace.setRequestPayloadSize(length)
+                override fun setResponseLength(length: Long) = trace.setResponsePayloadSize(length)
+                override fun setAttribute(name: String, value: String) =
+                    trace.putAttribute(name, value)
             }
         }
     }
