@@ -7,10 +7,13 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.plugin
 import io.ktor.http.ContentType
+import io.ktor.http.contentLength
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -18,18 +21,16 @@ import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.nwk.CinemaService
 import movie.core.nwk.CinemaServiceImpl
-import movie.core.nwk.CinemaServicePerformance
 import movie.core.nwk.EndpointProvider
 import movie.core.nwk.EventService
 import movie.core.nwk.EventServiceImpl
-import movie.core.nwk.EventServicePerformance
 import movie.core.nwk.PerformanceTracer
 import movie.core.nwk.UserService
 import movie.core.nwk.UserServiceImpl
 import movie.core.nwk.UserServiceLogout
-import movie.core.nwk.UserServicePerformance
 import movie.core.nwk.UserServiceReauthorize
 import movie.core.nwk.UserServiceSaving
+import movie.core.nwk.trace
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -46,6 +47,7 @@ class NetworkModule {
     fun clientRoot(
         engine: HttpClientEngine,
         provider: EndpointProvider,
+        tracer: PerformanceTracer,
         serializer: Json = serializer()
     ): HttpClient = HttpClient(engine) {
         install(ContentNegotiation) {
@@ -55,6 +57,17 @@ class NetworkModule {
         defaultRequest {
             url("${provider.domain}/mrest/")
             contentType(ContentType.Application.Json)
+        }
+    }.apply {
+        plugin(HttpSend).intercept { request ->
+            tracer.trace(request.url.buildString(), request.method.value) { trace ->
+                trace.setRequestLength(request.contentLength() ?: 0)
+                execute(request).also { call ->
+                    trace.setResponseCode(call.response.status.value)
+                    trace.setResponseLength(call.response.contentLength() ?: 0)
+                    trace.setAttribute("version", call.response.version.toString())
+                }
+            }
         }
     }
 
@@ -102,24 +115,20 @@ class NetworkModule {
         @ClientData
         client: HttpClient,
         @ClientQuickbook
-        clientQuickbook: HttpClient,
-        tracer: PerformanceTracer
+        clientQuickbook: HttpClient
     ): EventService {
-        var service: EventService
+        val service: EventService
         service = EventServiceImpl(client, clientQuickbook)
-        service = EventServicePerformance(service, tracer)
         return service
     }
 
     @Provides
     fun cinema(
         @ClientRoot
-        client: HttpClient,
-        tracer: PerformanceTracer
+        client: HttpClient
     ): CinemaService {
-        var service: CinemaService
+        val service: CinemaService
         service = CinemaServiceImpl(client)
-        service = CinemaServicePerformance(service, tracer)
         return service
     }
 
@@ -128,15 +137,13 @@ class NetworkModule {
         @ClientCustomer
         client: HttpClient,
         account: UserAccount,
-        auth: AuthMetadata,
-        tracer: PerformanceTracer
+        auth: AuthMetadata
     ): UserService {
         var service: UserService
         service = UserServiceImpl(client, account, auth.user, auth.password, auth.captcha)
         service = UserServiceSaving(service, account)
         service = UserServiceReauthorize(service, account, auth.captcha)
         service = UserServiceLogout(service, account)
-        service = UserServicePerformance(service, tracer)
         return service
     }
 

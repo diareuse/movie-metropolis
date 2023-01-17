@@ -17,7 +17,6 @@ import movie.core.model.Cinema
 import movie.core.model.FieldUpdate
 import movie.core.model.MovieDetail
 import movie.core.model.SignInMethod
-import movie.core.nwk.PerformanceTracerNoop
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
 import org.junit.Test
@@ -69,7 +68,7 @@ class UserFeatureTest : FeatureTest() {
         whenever(preference.calendarId).thenReturn("")
         val network = NetworkModule()
         val auth = AuthMetadata("user", "password", "captcha")
-        val service = network.user(clientCustomer, account, auth, PerformanceTracerNoop)
+        val service = network.user(clientCustomer, account, auth)
         feature = UserFeatureModule().saving(
             service = service,
             event = event,
