@@ -15,6 +15,13 @@ import movie.core.EventFeatureRequireNotEmpty
 import movie.core.EventFeatureSort
 import movie.core.EventFeatureSpotColor
 import movie.core.EventFeatureStoring
+import movie.core.EventShowingsFeature
+import movie.core.EventShowingsFeatureCinemaCatch
+import movie.core.EventShowingsFeatureCinemaDatabase
+import movie.core.EventShowingsFeatureCinemaFold
+import movie.core.EventShowingsFeatureCinemaNetwork
+import movie.core.EventShowingsFeatureCinemaSort
+import movie.core.EventShowingsFeatureCinemaUnseen
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
@@ -24,6 +31,9 @@ import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.dao.MovieRatingDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
+import movie.core.model.Cinema
+import movie.core.model.Location
+import movie.core.model.Movie
 import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
 import movie.core.preference.EventPreference
@@ -96,6 +106,33 @@ internal class EventFeatureModule {
         )
         network = EventFeatureRating(network, ratingDao, rating, tomatoes, imdb, csfd)
         return network
+    }
+
+    @Provides
+    fun showings(
+        showing: ShowingDao,
+        reference: MovieReferenceDao,
+        service: EventService,
+        preferences: EventPreference,
+        booking: BookingDao
+    ): EventShowingsFeature.Factory {
+        return object : EventShowingsFeature.Factory {
+            override fun cinema(cinema: Cinema): EventShowingsFeature.Cinema {
+                var out: EventShowingsFeature.Cinema
+                out = EventShowingsFeatureCinemaFold(
+                    EventShowingsFeatureCinemaDatabase(showing, reference, cinema),
+                    EventShowingsFeatureCinemaNetwork(service, cinema)
+                )
+                out = EventShowingsFeatureCinemaUnseen(out, preferences, booking)
+                out = EventShowingsFeatureCinemaSort(out)
+                out = EventShowingsFeatureCinemaCatch(out)
+                return out
+            }
+
+            override fun movie(movie: Movie, location: Location): EventShowingsFeature.Movie {
+                TODO("Not yet implemented")
+            }
+        }
     }
 
 }

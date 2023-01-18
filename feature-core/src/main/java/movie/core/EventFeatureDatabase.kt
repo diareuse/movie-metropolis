@@ -65,7 +65,7 @@ class EventFeatureDatabase(
 
 }
 
-private val Date.dayStart
+val Date.dayStart
     get() = Calendar.getInstance().let {
         it.time = this
         it.set(Calendar.HOUR_OF_DAY, 0)
@@ -75,7 +75,7 @@ private val Date.dayStart
         it.time
     }
 
-private val Date.dayEnd
+val Date.dayEnd
     get() = Calendar.getInstance().let {
         it.time = dayStart
         it.add(Calendar.DAY_OF_YEAR, 1)

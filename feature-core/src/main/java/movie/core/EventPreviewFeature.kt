@@ -1,21 +1,14 @@
 package movie.core
 
-import movie.core.model.Location
-import java.util.Date
+import movie.core.model.MoviePreview
 
-sealed interface EventPreviewFeature {
+interface EventPreviewFeature {
 
-    interface Cinema : EventPreviewFeature {
-        suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>)
-    }
-
-    interface Movie : EventPreviewFeature {
-        suspend fun get(date: Date, result: ResultCallback<CinemaWithShowings>)
-    }
+    suspend fun get(): Result<Iterable<MoviePreview>>
 
     interface Factory {
-        fun cinema(cinema: Cinema): Cinema
-        fun movie(movie: Movie, location: Location): Movie
+        fun current(): EventPreviewFeature
+        fun upcoming(): EventPreviewFeature
     }
 
 }
