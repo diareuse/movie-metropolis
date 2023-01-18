@@ -13,6 +13,10 @@ class BookingDaoPerformance(
         origin.selectAll()
     }
 
+    override suspend fun selectIds() = tracer.trace("$Tag.select-ids") {
+        origin.selectIds()
+    }
+
     override suspend fun insert(model: BookingStored) = tracer.trace("$Tag.insert") {
         origin.insert(model)
     }
