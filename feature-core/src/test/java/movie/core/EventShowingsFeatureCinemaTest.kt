@@ -3,6 +3,7 @@ package movie.core
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.BookingDao
+import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
 import movie.core.db.model.MovieReferenceView
@@ -18,6 +19,8 @@ import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.test.assertEquals
@@ -26,6 +29,7 @@ import kotlin.test.assertTrue
 
 class EventShowingsFeatureCinemaTest : FeatureTest() {
 
+    private lateinit var movie: MovieDao
     private lateinit var booking: BookingDao
     private lateinit var preference: EventPreference
     private lateinit var reference: MovieReferenceDao
@@ -42,11 +46,12 @@ class EventShowingsFeatureCinemaTest : FeatureTest() {
         showing = mock {}
         reference = mock {}
         booking = mock {}
+        movie = mock {}
         preference = mock {
             on { filterSeen }.thenReturn(false)
         }
         feature = EventFeatureModule()
-            .showings(showing, reference, service, preference, booking)
+            .showings(showing, reference, service, preference, booking, movie)
             .cinema(cinema)
     }
 
@@ -132,6 +137,15 @@ class EventShowingsFeatureCinemaTest : FeatureTest() {
             )
             last = value.count()
         }
+    }
+
+    @Test
+    fun get_savesData_fromNetwork() = runTest {
+        val testData = cinemaEvents_responds_success()
+        feature.get(Date()).first().getOrThrow()
+        verify(movie, times(testData.movies.size)).insertOrUpdate(any())
+        verify(reference, times(testData.movies.size)).insertOrUpdate(any())
+        verify(showing, times(testData.events.size)).insertOrUpdate(any())
     }
 
     // ---

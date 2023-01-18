@@ -21,6 +21,7 @@ import movie.core.EventShowingsFeatureCinemaDatabase
 import movie.core.EventShowingsFeatureCinemaFold
 import movie.core.EventShowingsFeatureCinemaNetwork
 import movie.core.EventShowingsFeatureCinemaSort
+import movie.core.EventShowingsFeatureCinemaStoring
 import movie.core.EventShowingsFeatureCinemaUnseen
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
@@ -114,7 +115,8 @@ internal class EventFeatureModule {
         reference: MovieReferenceDao,
         service: EventService,
         preferences: EventPreference,
-        booking: BookingDao
+        booking: BookingDao,
+        movie: MovieDao
     ): EventShowingsFeature.Factory {
         return object : EventShowingsFeature.Factory {
             override fun cinema(cinema: Cinema): EventShowingsFeature.Cinema {
@@ -125,6 +127,7 @@ internal class EventFeatureModule {
                 )
                 out = EventShowingsFeatureCinemaUnseen(out, preferences, booking)
                 out = EventShowingsFeatureCinemaSort(out)
+                out = EventShowingsFeatureCinemaStoring(out, movie, reference, showing)
                 out = EventShowingsFeatureCinemaCatch(out)
                 return out
             }
