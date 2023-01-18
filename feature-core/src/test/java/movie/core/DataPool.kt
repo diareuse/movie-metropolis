@@ -2,9 +2,11 @@ package movie.core
 
 import movie.core.db.model.MovieReferenceView
 import movie.core.db.model.ShowingStored
+import movie.core.model.Cinema
 import movie.core.nwk.model.EventResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.nwk.model.MovieResponse
+import org.mockito.kotlin.mock
 import java.util.Date
 import kotlin.time.Duration.Companion.seconds
 
@@ -141,6 +143,16 @@ interface DataPool<T> {
                 video = null
             )
         }.map(modifier)
+
+    }
+
+    object Cinemas : DataPool<Cinema> {
+
+        override fun all(modifier: Modifier<Cinema>) = buildList {
+            this += mock<Cinema> {
+                on { id }.thenReturn("id")
+            }
+        }
 
     }
 

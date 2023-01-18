@@ -14,18 +14,17 @@ class EventShowingsFeatureCinemaNetwork(
 ) : EventShowingsFeature.Cinema {
 
     override suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>) {
-        val output = service.getEventsInCinema(cinema.id, date).map { response ->
-            val events = response.body.events
-            val movies = response.body.movies.associateBy { it.id.lowercase() }
-            buildMap<MovieReference, MutableList<Showing>> {
-                for (event in events) {
-                    val movie = movies[event.movieId.lowercase()] ?: continue
-                    val list = getOrPut(MovieReferenceFromResponse(movie)) { mutableListOf() }
-                    list.add(ShowingFromResponse(event, cinema))
-                }
+        val response = service.getEventsInCinema(cinema.id, date).getOrThrow()
+        val events = response.body.events
+        val movies = response.body.movies.associateBy { it.id.lowercase() }
+        val output = buildMap<MovieReference, MutableList<Showing>> {
+            for (event in events) {
+                val movie = movies[event.movieId.lowercase()] ?: continue
+                val list = getOrPut(MovieReferenceFromResponse(movie)) { mutableListOf() }
+                list.add(ShowingFromResponse(event, cinema))
             }
         }
-        result(output)
+        result(Result.success(output))
     }
 
 }

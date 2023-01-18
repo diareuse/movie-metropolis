@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import movie.core.EventCinemaFeature
 import movie.core.EventFeature
 import movie.core.EventFeatureDatabase
 import movie.core.EventFeatureFilterUnseen
@@ -23,6 +24,11 @@ import movie.core.EventShowingsFeatureCinemaNetwork
 import movie.core.EventShowingsFeatureCinemaSort
 import movie.core.EventShowingsFeatureCinemaStoring
 import movie.core.EventShowingsFeatureCinemaUnseen
+import movie.core.EventShowingsFeatureMovieCatch
+import movie.core.EventShowingsFeatureMovieDatabase
+import movie.core.EventShowingsFeatureMovieFold
+import movie.core.EventShowingsFeatureMovieNetwork
+import movie.core.EventShowingsFeatureMovieStoring
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
@@ -116,25 +122,37 @@ internal class EventFeatureModule {
         service: EventService,
         preferences: EventPreference,
         booking: BookingDao,
-        movie: MovieDao
-    ): EventShowingsFeature.Factory {
-        return object : EventShowingsFeature.Factory {
-            override fun cinema(cinema: Cinema): EventShowingsFeature.Cinema {
-                var out: EventShowingsFeature.Cinema
-                out = EventShowingsFeatureCinemaFold(
-                    EventShowingsFeatureCinemaDatabase(showing, reference, cinema),
-                    EventShowingsFeatureCinemaNetwork(service, cinema)
-                )
-                out = EventShowingsFeatureCinemaUnseen(out, preferences, booking)
-                out = EventShowingsFeatureCinemaSort(out)
-                out = EventShowingsFeatureCinemaStoring(out, movie, reference, showing)
-                out = EventShowingsFeatureCinemaCatch(out)
-                return out
-            }
+        movie: MovieDao,
+        cinema: EventCinemaFeature
+    ): EventShowingsFeature.Factory = object : EventShowingsFeature.Factory {
+        override fun cinema(cinema: Cinema): EventShowingsFeature.Cinema {
+            var out: EventShowingsFeature.Cinema
+            out = EventShowingsFeatureCinemaNetwork(service, cinema)
+            out = EventShowingsFeatureCinemaStoring(out, movie, reference, showing)
+            out = EventShowingsFeatureCinemaFold(
+                // todo add invalidation of database data after 1D
+                EventShowingsFeatureCinemaDatabase(showing, reference, cinema),
+                out,
+                // todo otherwise fallback to database as-is
+            )
+            out = EventShowingsFeatureCinemaUnseen(out, preferences, booking)
+            out = EventShowingsFeatureCinemaSort(out)
+            out = EventShowingsFeatureCinemaCatch(out)
+            return out
+        }
 
-            override fun movie(movie: Movie, location: Location): EventShowingsFeature.Movie {
-                TODO("Not yet implemented")
-            }
+        override fun movie(movie: Movie, location: Location): EventShowingsFeature.Movie {
+            var out: EventShowingsFeature.Movie
+            out = EventShowingsFeatureMovieNetwork(movie, location, service, cinema)
+            out = EventShowingsFeatureMovieStoring(out, movie, showing)
+            out = EventShowingsFeatureMovieFold(
+                // todo add invalidation of database data after 1D
+                EventShowingsFeatureMovieDatabase(movie, location, showing, cinema),
+                out,
+                // todo otherwise fallback to database as-is
+            )
+            out = EventShowingsFeatureMovieCatch(out)
+            return out
         }
     }
 
