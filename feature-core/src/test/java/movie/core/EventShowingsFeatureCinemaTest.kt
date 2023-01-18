@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.MovieDao
@@ -14,8 +13,8 @@ import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.preference.EventPreference
+import movie.core.util.wheneverSus
 import org.junit.Test
-import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
@@ -51,7 +50,7 @@ class EventShowingsFeatureCinemaTest : FeatureTest() {
             on { filterSeen }.thenReturn(false)
         }
         feature = EventFeatureModule()
-            .showings(showing, reference, service, preference, booking, movie)
+            .showings(showing, reference, service, preference, booking, movie, mock())
             .cinema(cinema)
     }
 
@@ -193,7 +192,3 @@ class EventShowingsFeatureCinemaTest : FeatureTest() {
     }
 
 }
-
-inline fun <T> wheneverSus(crossinline body: suspend () -> T) = whenever(runBlocking { body() })
-inline fun <T, R> KStubbing<T>.onSus(crossinline body: suspend T.() -> R) =
-    on { runBlocking { body() } }

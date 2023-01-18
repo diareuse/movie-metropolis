@@ -14,4 +14,12 @@ interface ShowingDao : DaoBase<ShowingStored> {
         cinema: String
     ): List<ShowingStored>
 
+    @Query("select * from showings where starts_at >= :rangeStart and starts_at <= :rangeEnd and cinema = :cinema and movie = :movie order by starts_at asc")
+    suspend fun selectByCinema(
+        rangeStart: Long,
+        rangeEnd: Long,
+        cinema: String,
+        movie: String
+    ): List<ShowingStored>
+
 }

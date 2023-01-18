@@ -2,11 +2,11 @@ package movie.core
 
 import java.util.Date
 
-class EventShowingsFeatureCinemaFold(
-    private vararg val options: EventShowingsFeature.Cinema
-) : EventShowingsFeature.Cinema, Recoverable {
+class EventShowingsFeatureMovieFold(
+    private vararg val options: EventShowingsFeature.Movie
+) : EventShowingsFeature.Movie, Recoverable {
 
-    override suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>) {
+    override suspend fun get(date: Date, result: ResultCallback<CinemaWithShowings>) {
         var last: Throwable = NoSuchElementException()
         for (option in options) try {
             return option.get(date) { result(it.onFailureThrow()) }
