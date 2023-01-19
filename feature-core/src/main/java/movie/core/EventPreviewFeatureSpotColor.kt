@@ -1,6 +1,7 @@
 package movie.core
 
 import movie.core.adapter.MoviePreviewWithSpotColor
+import movie.core.image.toSpotColor
 import movie.core.model.MoviePreview
 import movie.image.ImageAnalyzer
 
@@ -16,7 +17,7 @@ class EventPreviewFeatureSpotColor(
                 movies.map inner@{ movie ->
                     MoviePreviewWithSpotColor(
                         origin = movie,
-                        spotColor = movie.media.toSpotColor(analyzer) ?: return@inner movie
+                        spotColor = analyzer.toSpotColor(movie.media) ?: return@inner movie
                     )
                 }
             }
