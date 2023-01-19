@@ -12,6 +12,7 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.util.thenAnswerSus
 import movie.core.util.wheneverSus
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -22,7 +23,7 @@ import java.util.Date
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
-class EventShowingsFeatureMovieTest : FeatureTest() {
+class EventShowingsFeatureMovieTest {
 
     private lateinit var cinema: EventCinemaFeature
     private lateinit var showing: ShowingDao
@@ -30,7 +31,8 @@ class EventShowingsFeatureMovieTest : FeatureTest() {
     private lateinit var feature: EventShowingsFeature.Movie
     private lateinit var movie: Movie
 
-    override fun prepare() {
+    @Before
+    fun prepare() {
         movie = mock {
             on { id }.thenReturn("1")
         }

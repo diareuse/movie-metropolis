@@ -16,6 +16,16 @@ import movie.core.EventFeatureRequireNotEmpty
 import movie.core.EventFeatureSort
 import movie.core.EventFeatureSpotColor
 import movie.core.EventFeatureStoring
+import movie.core.EventPreviewFeature
+import movie.core.EventPreviewFeatureCatch
+import movie.core.EventPreviewFeatureDatabase
+import movie.core.EventPreviewFeatureFilter
+import movie.core.EventPreviewFeatureFold
+import movie.core.EventPreviewFeatureNetwork
+import movie.core.EventPreviewFeatureRequireNotEmpty
+import movie.core.EventPreviewFeatureSort
+import movie.core.EventPreviewFeatureSpotColor
+import movie.core.EventPreviewFeatureStoring
 import movie.core.EventShowingsFeature
 import movie.core.EventShowingsFeatureCinemaCatch
 import movie.core.EventShowingsFeatureCinemaDatabase
@@ -43,6 +53,7 @@ import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
+import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
 import movie.image.ImageAnalyzer
 import movie.rating.LinkProvider
@@ -152,6 +163,41 @@ internal class EventFeatureModule {
                 // todo otherwise fallback to database as-is
             )
             out = EventShowingsFeatureMovieCatch(out)
+            return out
+        }
+    }
+
+    @Provides
+    fun preview(
+        service: EventService,
+        movie: MovieDao,
+        preview: MoviePreviewDao,
+        media: MovieMediaDao,
+        analyzer: ImageAnalyzer,
+        preference: EventPreference,
+        booking: BookingDao
+    ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
+
+        override fun current(): EventPreviewFeature = common(ShowingType.Current)
+
+        override fun upcoming(): EventPreviewFeature = common(ShowingType.Upcoming)
+
+        private fun common(type: ShowingType): EventPreviewFeature {
+            var out: EventPreviewFeature
+            out = EventPreviewFeatureNetwork(service, type)
+            out = EventPreviewFeatureStoring(out, type, movie, preview, media)
+            out = EventPreviewFeatureFold(
+                // todo add invalidation of database data after 1D
+                EventPreviewFeatureRequireNotEmpty(
+                    EventPreviewFeatureDatabase(preview, media, type)
+                ),
+                out
+                // todo otherwise fallback to database as-is
+            )
+            out = EventPreviewFeatureSort(out)
+            out = EventPreviewFeatureSpotColor(out, analyzer)
+            out = EventPreviewFeatureFilter(out, preference, booking)
+            out = EventPreviewFeatureCatch(out)
             return out
         }
     }
