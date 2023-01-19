@@ -5,6 +5,8 @@ import movie.core.db.dao.ShowingDao
 import movie.core.model.Cinema
 import movie.core.model.MovieReference
 import movie.core.model.Showing
+import movie.core.util.dayEnd
+import movie.core.util.dayStart
 import java.util.Date
 
 class EventShowingsFeatureCinemaDatabase(
