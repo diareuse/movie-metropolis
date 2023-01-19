@@ -1,20 +1,12 @@
 package movie.core
 
-import java.io.PrintStream
-import java.io.PrintWriter
-
 class CompositeException(
-    private vararg val causes: Throwable
+    vararg causes: Throwable
 ) : RuntimeException() {
 
-    override fun printStackTrace(s: PrintStream) {
+    init {
         for (cause in causes)
-            cause.printStackTrace(s)
-    }
-
-    override fun printStackTrace(s: PrintWriter) {
-        for (cause in causes)
-            cause.printStackTrace(s)
+            addSuppressed(cause)
     }
 
 }

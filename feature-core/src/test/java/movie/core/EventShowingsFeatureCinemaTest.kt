@@ -14,6 +14,7 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.preference.EventPreference
 import movie.core.util.wheneverSus
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.eq
@@ -26,7 +27,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertTrue
 
-class EventShowingsFeatureCinemaTest : FeatureTest() {
+class EventShowingsFeatureCinemaTest {
 
     private lateinit var movie: MovieDao
     private lateinit var booking: BookingDao
@@ -37,7 +38,8 @@ class EventShowingsFeatureCinemaTest : FeatureTest() {
     private lateinit var feature: EventShowingsFeature.Cinema
     private lateinit var cinema: Cinema
 
-    override fun prepare() {
+    @Before
+    fun prepare() {
         cinema = mock {
             on { id }.thenReturn("id")
         }
