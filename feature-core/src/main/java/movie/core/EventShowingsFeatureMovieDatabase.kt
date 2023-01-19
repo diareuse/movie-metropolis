@@ -3,6 +3,8 @@ package movie.core
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Location
 import movie.core.model.Movie
+import movie.core.util.dayEnd
+import movie.core.util.dayStart
 import java.util.Date
 
 class EventShowingsFeatureMovieDatabase(
