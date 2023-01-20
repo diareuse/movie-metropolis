@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.db.model.CinemaStored
 import movie.core.db.model.MovieDetailView
 import movie.core.db.model.MovieMediaStored
 import movie.core.db.model.MovieMediaView
@@ -7,6 +8,7 @@ import movie.core.db.model.MoviePreviewView
 import movie.core.db.model.MovieReferenceView
 import movie.core.db.model.ShowingStored
 import movie.core.model.Cinema
+import movie.core.nwk.model.CinemaResponse
 import movie.core.nwk.model.EventResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.nwk.model.ExtendedMovieResponse.Metadata
@@ -304,6 +306,100 @@ interface DataPool<T> {
                 linkImdb = null,
                 linkRottenTomatoes = null,
                 linkCsfd = null
+            )
+        }.map(modifier)
+
+    }
+
+    object CinemaResponses : DataPool<CinemaResponse> {
+
+        override fun all(modifier: Modifier<CinemaResponse>) = buildList {
+            this += CinemaResponse(
+                postalCode = "",
+                id = "666",
+                addressLine = "",
+                addressLine2 = null,
+                latitude = 15.0,
+                longitude = -15.0,
+                description = "",
+                name = "",
+                city = "b"
+            )
+            this += CinemaResponse(
+                postalCode = "",
+                id = "3",
+                addressLine = "",
+                addressLine2 = null,
+                latitude = 0.6,
+                longitude = 0.6,
+                description = "",
+                name = "",
+                city = "a"
+            )
+            this += CinemaResponse(
+                postalCode = "",
+                id = "1",
+                addressLine = "",
+                addressLine2 = null,
+                latitude = 0.0,
+                longitude = 0.0,
+                description = "",
+                name = "",
+                city = "d"
+            )
+            this += CinemaResponse(
+                postalCode = "",
+                id = "2",
+                addressLine = "",
+                addressLine2 = null,
+                latitude = 0.3,
+                longitude = 0.3,
+                description = "",
+                name = "",
+                city = "c"
+            )
+        }.map(modifier)
+
+    }
+
+    object CinemasStored : DataPool<CinemaStored> {
+
+        override fun all(modifier: Modifier<CinemaStored>) = buildList {
+            this += CinemaStored(
+                id = "666",
+                name = "",
+                description = "",
+                city = "d",
+                address = emptyList(),
+                latitude = 15.0,
+                longitude = -15.0
+            )
+            this += CinemaStored(
+                id = "3",
+                name = "",
+                description = "",
+                city = "b",
+                address = emptyList(),
+                latitude = 0.6,
+                longitude = 0.6
+            )
+            this += CinemaStored(
+                id = "1",
+                name = "",
+                description = "",
+                city = "c",
+                address = emptyList(),
+                latitude = 0.0,
+                longitude = 0.0
+            )
+            this += CinemaStored(
+                id = "2",
+                name = "",
+                description = "",
+                city = "a",
+                address = emptyList(),
+                latitude = 0.3,
+                longitude = 0.3
             )
         }.map(modifier)
 

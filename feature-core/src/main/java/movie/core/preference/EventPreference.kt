@@ -4,5 +4,6 @@ interface EventPreference {
 
     var filterSeen: Boolean
     var calendarId: String?
+    var distanceKms: Int
 
 }

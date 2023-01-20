@@ -5,6 +5,15 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.EventCinemaFeature
+import movie.core.EventCinemaFeatureCatch
+import movie.core.EventCinemaFeatureDatabase
+import movie.core.EventCinemaFeatureDistance
+import movie.core.EventCinemaFeatureDistanceClosest
+import movie.core.EventCinemaFeatureFold
+import movie.core.EventCinemaFeatureNetwork
+import movie.core.EventCinemaFeatureRequireNotEmpty
+import movie.core.EventCinemaFeatureSort
+import movie.core.EventCinemaFeatureStoring
 import movie.core.EventDetailFeature
 import movie.core.EventDetailFeatureCatch
 import movie.core.EventDetailFeatureDatabase
@@ -233,6 +242,30 @@ internal class EventFeatureModule {
         )
         out = EventDetailFeatureSpotColor(out, analyzer)
         out = EventDetailFeatureCatch(out)
+        return out
+    }
+
+    @Provides
+    fun cinema(
+        service: CinemaService,
+        cinema: CinemaDao,
+        preference: EventPreference
+    ): EventCinemaFeature {
+        var out: EventCinemaFeature
+        out = EventCinemaFeatureNetwork(service)
+        out = EventCinemaFeatureStoring(out, cinema)
+        out = EventCinemaFeatureFold(
+            // todo add invalidation of database data after 1D
+            EventCinemaFeatureRequireNotEmpty(
+                EventCinemaFeatureDatabase(cinema)
+            ),
+            out
+            // todo otherwise fallback to database as-is
+        )
+        out = EventCinemaFeatureDistance(out)
+        out = EventCinemaFeatureDistanceClosest(out, preference)
+        out = EventCinemaFeatureSort(out)
+        out = EventCinemaFeatureCatch(out)
         return out
     }
 

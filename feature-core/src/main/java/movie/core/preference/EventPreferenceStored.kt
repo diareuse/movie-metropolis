@@ -16,5 +16,10 @@ class EventPreferenceStored(
         set(value) {
             store["calendar-id"] = value
         }
+    override var distanceKms: Int
+        get() = store["distance-kms"]?.toIntOrNull() ?: 50
+        set(value) {
+            store["distance-kms"] = value.toString()
+        }
 
 }
