@@ -1,21 +1,20 @@
 package movie.core
 
-import movie.core.adapter.asStored
-import movie.core.db.dao.CinemaDao
 import movie.core.model.Cinema
 import movie.core.model.Location
+import movie.core.preference.SyncPreference
+import java.util.Date
 
-class EventCinemaFeatureStoring(
+class EventCinemaFeatureSaveTimestamp(
     private val origin: EventCinemaFeature,
-    private val cinema: CinemaDao
+    private val preference: SyncPreference
 ) : EventCinemaFeature {
 
     override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
         origin.get(location) {
             result(it)
-            it.onSuccess { cinemas ->
-                for (item in cinemas)
-                    cinema.insertOrUpdate(item.asStored())
+            it.onSuccess {
+                preference.cinema = Date()
             }
         }
     }

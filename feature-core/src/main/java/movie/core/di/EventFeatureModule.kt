@@ -10,8 +10,10 @@ import movie.core.EventCinemaFeatureDatabase
 import movie.core.EventCinemaFeatureDistance
 import movie.core.EventCinemaFeatureDistanceClosest
 import movie.core.EventCinemaFeatureFold
+import movie.core.EventCinemaFeatureInvalidateAfter
 import movie.core.EventCinemaFeatureNetwork
 import movie.core.EventCinemaFeatureRequireNotEmpty
+import movie.core.EventCinemaFeatureSaveTimestamp
 import movie.core.EventCinemaFeatureSort
 import movie.core.EventCinemaFeatureStoring
 import movie.core.EventDetailFeature
@@ -27,8 +29,10 @@ import movie.core.EventPreviewFeatureCatch
 import movie.core.EventPreviewFeatureDatabase
 import movie.core.EventPreviewFeatureFilter
 import movie.core.EventPreviewFeatureFold
+import movie.core.EventPreviewFeatureInvalidateAfter
 import movie.core.EventPreviewFeatureNetwork
 import movie.core.EventPreviewFeatureRequireNotEmpty
+import movie.core.EventPreviewFeatureSaveTimestamp
 import movie.core.EventPreviewFeatureSort
 import movie.core.EventPreviewFeatureSpotColor
 import movie.core.EventPreviewFeatureStoring
@@ -63,12 +67,14 @@ import movie.core.nwk.CinemaService
 import movie.core.nwk.EventService
 import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
+import movie.core.preference.SyncPreference
 import movie.image.ImageAnalyzer
 import movie.rating.LinkProvider
 import movie.rating.RatingProvider
 import movie.rating.di.Csfd
 import movie.rating.di.Imdb
 import movie.rating.di.RottenTomatoes
+import kotlin.time.Duration.Companion.days
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -123,7 +129,8 @@ internal class EventFeatureModule {
         media: MovieMediaDao,
         analyzer: ImageAnalyzer,
         preference: EventPreference,
-        booking: BookingDao
+        booking: BookingDao,
+        sync: SyncPreference
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
         override fun current(): EventPreviewFeature = common(ShowingType.Current)
@@ -131,17 +138,16 @@ internal class EventFeatureModule {
         override fun upcoming(): EventPreviewFeature = common(ShowingType.Upcoming)
 
         private fun common(type: ShowingType): EventPreviewFeature {
+            val fallback = EventPreviewFeatureDatabase(preview, media, type)
+            var db: EventPreviewFeature
+            db = EventPreviewFeatureDatabase(preview, media, type)
+            db = EventPreviewFeatureRequireNotEmpty(db)
+            db = EventPreviewFeatureInvalidateAfter(db, sync, type, 1.days)
             var out: EventPreviewFeature
             out = EventPreviewFeatureNetwork(service, type)
             out = EventPreviewFeatureStoring(out, type, movie, preview, media)
-            out = EventPreviewFeatureFold(
-                // todo add invalidation of database data after 1D
-                EventPreviewFeatureRequireNotEmpty(
-                    EventPreviewFeatureDatabase(preview, media, type)
-                ),
-                out
-                // todo otherwise fallback to database as-is
-            )
+            out = EventPreviewFeatureSaveTimestamp(out, sync, type)
+            out = EventPreviewFeatureFold(db, out, fallback)
             out = EventPreviewFeatureSort(out)
             out = EventPreviewFeatureSpotColor(out, analyzer)
             out = EventPreviewFeatureFilter(out, preference, booking)
@@ -180,19 +186,19 @@ internal class EventFeatureModule {
     fun cinema(
         service: CinemaService,
         cinema: CinemaDao,
-        preference: EventPreference
+        preference: EventPreference,
+        sync: SyncPreference
     ): EventCinemaFeature {
+        val fallback = EventCinemaFeatureDatabase(cinema)
+        var db: EventCinemaFeature
+        db = EventCinemaFeatureDatabase(cinema)
+        db = EventCinemaFeatureRequireNotEmpty(db)
+        db = EventCinemaFeatureInvalidateAfter(db, sync, 30.days)
         var out: EventCinemaFeature
         out = EventCinemaFeatureNetwork(service)
         out = EventCinemaFeatureStoring(out, cinema)
-        out = EventCinemaFeatureFold(
-            // todo add invalidation of database data after 1M
-            EventCinemaFeatureRequireNotEmpty(
-                EventCinemaFeatureDatabase(cinema)
-            ),
-            out
-            // todo otherwise fallback to database as-is
-        )
+        out = EventCinemaFeatureSaveTimestamp(out, sync)
+        out = EventCinemaFeatureFold(db, out, fallback)
         out = EventCinemaFeatureDistance(out)
         out = EventCinemaFeatureDistanceClosest(out, preference)
         out = EventCinemaFeatureSort(out)

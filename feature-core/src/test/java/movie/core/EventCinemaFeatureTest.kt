@@ -13,6 +13,7 @@ import movie.core.nwk.CinemaService
 import movie.core.nwk.model.CinemaResponse
 import movie.core.nwk.model.ResultsResponse
 import movie.core.preference.EventPreference
+import movie.core.preference.SyncPreference
 import movie.core.util.wheneverSus
 import org.junit.Before
 import org.junit.Test
@@ -20,12 +21,14 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import java.util.Date
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 class EventCinemaFeatureTest {
 
+    private lateinit var sync: SyncPreference
     private lateinit var preference: EventPreference
     private lateinit var cinema: CinemaDao
     private lateinit var service: CinemaService
@@ -38,7 +41,11 @@ class EventCinemaFeatureTest {
         preference = mock {
             on { distanceKms }.thenReturn(100)
         }
-        feature = EventFeatureModule().cinema(service, cinema, preference)
+        sync = mock {
+            on { previewCurrent }.thenReturn(Date())
+            on { previewUpcoming }.thenReturn(Date())
+        }
+        feature = EventFeatureModule().cinema(service, cinema, preference, sync)
     }
 
     @Test
@@ -138,6 +145,13 @@ class EventCinemaFeatureTest {
     fun get_throws() = runTest {
         for (output in feature.get(null))
             assertFails { output.getOrThrow() }
+    }
+
+    @Test
+    fun get_writes_syncDate() = runTest {
+        service_responds_success()
+        feature.get(null)
+        verify(sync).cinema = any()
     }
 
     // ---
