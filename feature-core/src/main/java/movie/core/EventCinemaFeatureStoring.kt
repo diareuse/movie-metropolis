@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.adapter.asStored
 import movie.core.db.dao.CinemaDao
 import movie.core.model.Cinema
 import movie.core.model.Location

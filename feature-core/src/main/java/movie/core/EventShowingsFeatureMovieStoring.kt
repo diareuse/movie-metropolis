@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.adapter.asStored
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Movie
 import java.util.Date
