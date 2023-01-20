@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.adapter.MoviePreviewFromDatabase
 import movie.core.db.dao.MovieFavoriteDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.model.MovieFavoriteStored

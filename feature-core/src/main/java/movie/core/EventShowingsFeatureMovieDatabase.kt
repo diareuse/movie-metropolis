@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.adapter.ShowingFromDatabase
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Location
 import movie.core.model.Movie

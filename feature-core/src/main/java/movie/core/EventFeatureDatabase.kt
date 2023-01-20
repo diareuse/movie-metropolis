@@ -4,6 +4,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.CinemaFromDatabase
 import movie.core.adapter.MovieDetailFromDatabase
+import movie.core.adapter.MoviePreviewFromDatabase
+import movie.core.adapter.MovieReferenceFromDatabase
+import movie.core.adapter.ShowingFromDatabase
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao

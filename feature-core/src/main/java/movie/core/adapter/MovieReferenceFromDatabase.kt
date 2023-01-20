@@ -1,4 +1,4 @@
-package movie.core
+package movie.core.adapter
 
 import movie.core.db.model.MovieReferenceView
 import movie.core.model.MovieReference

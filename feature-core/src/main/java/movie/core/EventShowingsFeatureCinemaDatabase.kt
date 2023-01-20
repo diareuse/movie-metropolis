@@ -1,5 +1,7 @@
 package movie.core
 
+import movie.core.adapter.MovieReferenceFromDatabase
+import movie.core.adapter.ShowingFromDatabase
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Cinema
