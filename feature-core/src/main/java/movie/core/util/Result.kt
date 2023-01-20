@@ -12,3 +12,9 @@ fun <T> Result<Iterable<T>>.requireNotEmpty() = mapCatching {
     require(it.count() > 0) { "List was empty" }
     it
 }
+
+@JvmName("requireMapNotEmpty")
+fun <K, V> Result<Map<K, V>>.requireNotEmpty() = mapCatching {
+    require(it.isNotEmpty()) { "Map was empty" }
+    it
+}

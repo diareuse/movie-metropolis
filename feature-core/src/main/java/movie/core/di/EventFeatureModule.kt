@@ -37,6 +37,7 @@ import movie.core.EventShowingsFeatureCinemaCatch
 import movie.core.EventShowingsFeatureCinemaDatabase
 import movie.core.EventShowingsFeatureCinemaFold
 import movie.core.EventShowingsFeatureCinemaNetwork
+import movie.core.EventShowingsFeatureCinemaRequireNotEmpty
 import movie.core.EventShowingsFeatureCinemaSort
 import movie.core.EventShowingsFeatureCinemaStoring
 import movie.core.EventShowingsFeatureCinemaUnseen
@@ -44,6 +45,7 @@ import movie.core.EventShowingsFeatureMovieCatch
 import movie.core.EventShowingsFeatureMovieDatabase
 import movie.core.EventShowingsFeatureMovieFold
 import movie.core.EventShowingsFeatureMovieNetwork
+import movie.core.EventShowingsFeatureMovieRequireNotEmpty
 import movie.core.EventShowingsFeatureMovieStoring
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
@@ -87,10 +89,10 @@ internal class EventFeatureModule {
             out = EventShowingsFeatureCinemaNetwork(service, cinema)
             out = EventShowingsFeatureCinemaStoring(out, movie, reference, showing)
             out = EventShowingsFeatureCinemaFold(
-                // todo add invalidation of database data after 1D
-                EventShowingsFeatureCinemaDatabase(showing, reference, cinema),
-                out,
-                // todo otherwise fallback to database as-is
+                EventShowingsFeatureCinemaRequireNotEmpty(
+                    EventShowingsFeatureCinemaDatabase(showing, reference, cinema)
+                ),
+                out
             )
             out = EventShowingsFeatureCinemaUnseen(out, preferences, booking)
             out = EventShowingsFeatureCinemaSort(out)
@@ -103,10 +105,10 @@ internal class EventFeatureModule {
             out = EventShowingsFeatureMovieNetwork(movie, location, service, cinema)
             out = EventShowingsFeatureMovieStoring(out, movie, showing)
             out = EventShowingsFeatureMovieFold(
-                // todo add invalidation of database data after 1D
-                EventShowingsFeatureMovieDatabase(movie, location, showing, cinema),
-                out,
-                // todo otherwise fallback to database as-is
+                EventShowingsFeatureMovieRequireNotEmpty(
+                    EventShowingsFeatureMovieDatabase(movie, location, showing, cinema)
+                ),
+                out
             )
             out = EventShowingsFeatureMovieCatch(out)
             return out
@@ -184,7 +186,7 @@ internal class EventFeatureModule {
         out = EventCinemaFeatureNetwork(service)
         out = EventCinemaFeatureStoring(out, cinema)
         out = EventCinemaFeatureFold(
-            // todo add invalidation of database data after 1D
+            // todo add invalidation of database data after 1M
             EventCinemaFeatureRequireNotEmpty(
                 EventCinemaFeatureDatabase(cinema)
             ),
