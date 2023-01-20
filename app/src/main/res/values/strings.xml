@@ -6,7 +6,6 @@
     <string name="stat_group_movie_title">Movies</string>
     <string name="stat_group_movie_desc">Notifications regarding movies</string>
     <string name="settings">Settings</string>
-    <string name="settings_notice">Some settings may require for you to close the app completely and start again to apply.</string>
     <string name="settings_unseen_title">Show unseen only</string>
     <string name="settings_unseen_description">If checked, app will show only movies that are not present in the Tickets section.</string>
     <string name="expired">Expired</string>
@@ -74,4 +73,6 @@
     <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, ok?</string>
     <string name="empty_cinema">No cinema appears to be nearby, if you\'d like to see all cinemas turn off your location or disable location permission for this app. Otherwise readjust maximum distance in settings.</string>
     <string name="error_cinema">Cinemas cannot be shown due to an internal issue</string>
+    <string name="nearby_cinemas">Nearby Cinemas</string>
+    <string name="nearby_cinemas_description">Value is in KMs. Choosing large values can affect loading performance. Values up to 50 kms should display your city, 100 kms nearby cities and 20037 cinemas in the whole universe.</string>
 </resources>

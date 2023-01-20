@@ -10,6 +10,7 @@ interface SettingsFacade {
 
     var filterSeen: Boolean
     val addToCalendar: Boolean
+    var clipRadius: Int
 
     suspend fun getCalendars(): Map<String, String>
     fun selectCalendar(id: String?)
@@ -38,6 +39,9 @@ interface SettingsFacade {
 
         val SettingsFacade.calendarFlow
             get() = listenerFlow.map { getCalendars() }.distinctUntilChanged()
+
+        val SettingsFacade.clipRadiusFlow
+            get() = listenerFlow.map { clipRadius }.distinctUntilChanged()
 
     }
 

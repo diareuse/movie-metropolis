@@ -12,6 +12,12 @@ class SettingsFacadeRecover(
             origin.runCatching { filterSeen = value }.logSevere()
         }
 
+    override var clipRadius: Int
+        get() = origin.runCatching { clipRadius }.logSevere().getOrDefault(0)
+        set(value) {
+            origin.runCatching { clipRadius = value }.logSevere()
+        }
+
     override suspend fun getCalendars(): Map<String, String> = origin
         .runCatching { getCalendars() }
         .logSevere()

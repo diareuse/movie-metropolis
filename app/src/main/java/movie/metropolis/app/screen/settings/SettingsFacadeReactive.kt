@@ -11,6 +11,13 @@ class SettingsFacadeReactive(
             notifyListeners()
         }
 
+    override var clipRadius: Int
+        get() = origin.clipRadius
+        set(value) {
+            origin.clipRadius = value
+            notifyListeners()
+        }
+
     override fun selectCalendar(id: String?) {
         origin.selectCalendar(id)
         notifyListeners()

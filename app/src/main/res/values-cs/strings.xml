@@ -6,7 +6,6 @@
     <string name="stat_group_movie_title">Filmy</string>
     <string name="stat_group_movie_desc">Notifikace ohledně filmů</string>
     <string name="settings">Nastavení</string>
-    <string name="settings_notice">Některá nastavení můžou vyžadovat kompletně zavřít aplikaci a spustit ji znovu</string>
     <string name="settings_unseen_title">Zobrazit pouze neviděné</string>
     <string name="settings_unseen_description">Při zaškrtnutí aplikace zobrazí pouze filmy, které nejsou v sekci Lístky</string>
     <string name="expired">Prošlý</string>
@@ -71,4 +70,6 @@
     <string name="error_movie_main">Teď není možné natáhnout filmy. Mrkni sem později, ju?</string>
     <string name="empty_cinema">Žádná kina ti nejsou na blízku. Pokud chceš vidět všechna kina, zakaž polohu nebo odeber oprávnění této appce. Jinak můžeš změnit maximální vzdálenost v nastavení.</string>
     <string name="error_cinema">Kina nelze zobrazit kvůli internímu problému</string>
+    <string name="nearby_cinemas">Kina v blízkosti</string>
+    <string name="nearby_cinemas_description">Hodnota je v kilometrech. Velké hodnoty mohou ovlivnit rychlost načítání. Hodnota do 50 km zobrazí tvoje město, 100 km okolní města a 20037 kina v celém vesmíru.</string>
 </resources>
