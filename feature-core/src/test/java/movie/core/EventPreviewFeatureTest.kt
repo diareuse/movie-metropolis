@@ -15,6 +15,7 @@ import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.preference.EventPreference
+import movie.core.preference.SyncPreference
 import movie.core.util.wheneverSus
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
@@ -25,6 +26,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import java.util.Date
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -32,14 +34,15 @@ import kotlin.test.assertTrue
 
 abstract class EventPreviewFeatureTest {
 
-    private lateinit var booking: BookingDao
-    private lateinit var preference: EventPreference
-    private lateinit var analyzer: ImageAnalyzer
-    private lateinit var media: MovieMediaDao
-    private lateinit var preview: MoviePreviewDao
-    private lateinit var movie: MovieDao
-    private lateinit var service: EventService
-    private lateinit var feature: EventPreviewFeature
+    protected lateinit var sync: SyncPreference
+    protected lateinit var booking: BookingDao
+    protected lateinit var preference: EventPreference
+    protected lateinit var analyzer: ImageAnalyzer
+    protected lateinit var media: MovieMediaDao
+    protected lateinit var preview: MoviePreviewDao
+    protected lateinit var movie: MovieDao
+    protected lateinit var service: EventService
+    protected lateinit var feature: EventPreviewFeature
 
     @Before
     fun prepare() {
@@ -53,6 +56,10 @@ abstract class EventPreviewFeatureTest {
         }
         preference = mock {}
         booking = mock {}
+        sync = mock {
+            on { previewCurrent }.thenReturn(Date())
+            on { previewUpcoming }.thenReturn(Date())
+        }
         feature = EventFeatureModule().preview(
             service = service,
             movie = movie,
@@ -60,7 +67,8 @@ abstract class EventPreviewFeatureTest {
             media = media,
             analyzer = analyzer,
             preference = preference,
-            booking = booking
+            booking = booking,
+            sync = sync
         ).run(::create)
     }
 
@@ -68,10 +76,26 @@ abstract class EventPreviewFeatureTest {
 
     class Current : EventPreviewFeatureTest() {
         override fun create(factory: EventPreviewFeature.Factory) = factory.current()
+
+        @Test
+        fun get_writes_syncDate() = runTest {
+            service_responds_success()
+            feature.get()
+            verify(sync).previewCurrent = any()
+        }
+
     }
 
     class Upcoming : EventPreviewFeatureTest() {
         override fun create(factory: EventPreviewFeature.Factory) = factory.upcoming()
+
+        @Test
+        fun get_writes_syncDate() = runTest {
+            service_responds_success()
+            feature.get()
+            verify(sync).previewUpcoming = any()
+        }
+
     }
 
     @Test
@@ -197,13 +221,13 @@ abstract class EventPreviewFeatureTest {
         wheneverSus { preview.selectUpcoming() }.thenReturn(emptyList())
     }
 
-    private fun service_responds_success(): List<ExtendedMovieResponse> {
+    protected fun service_responds_success(): List<ExtendedMovieResponse> {
         val data = DataPool.ExtendedMovieResponses.all()
         wheneverSus { service.getMoviesByType(any()) }.thenReturn(Result.success(BodyResponse(data)))
         return data
     }
 
-    private suspend fun EventPreviewFeature.get(): List<Result<List<MoviePreview>>> {
+    protected suspend fun EventPreviewFeature.get(): List<Result<List<MoviePreview>>> {
         val results = mutableListOf<Result<List<MoviePreview>>>()
         get { results += it }
         return results

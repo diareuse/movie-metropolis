@@ -2,7 +2,6 @@ package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.calendar.CalendarWriter
 import movie.core.auth.AuthMetadata
@@ -32,9 +31,10 @@ import kotlin.test.assertFails
 
 class UserFeatureTest : FeatureTest() {
 
+    private lateinit var movie: EventDetailFeature
+    private lateinit var cinema: EventCinemaFeature
     private lateinit var store: TicketStore
     private lateinit var writer: CalendarWriter
-    private lateinit var event: EventFeature
     private lateinit var preference: EventPreference
     private lateinit var account: UserAccount
     private lateinit var feature: UserFeature
@@ -55,14 +55,8 @@ class UserFeatureTest : FeatureTest() {
         writer = mock {
             on { write(any()) }.then { }
         }
-        event = mock {
-            on { runBlocking { getShowings(any(), any()) } }.thenReturn(Result.success(emptyMap()))
-            on { runBlocking { getCinemas(any()) } }.thenReturn(Result.success(listOf(mock())))
-            on { runBlocking { getCinemas(null) } }.thenReturn(Result.success(listOf(mock())))
-            on { runBlocking { getDetail(any()) } }.thenReturn(Result.success(mock()))
-            on { runBlocking { getCurrent() } }.thenReturn(Result.success(listOf(mock())))
-            on { runBlocking { getUpcoming() } }.thenReturn(Result.success(listOf(mock())))
-        }
+        cinema = mock {}
+        movie = mock {}
         store = TicketStore()
         whenever(preference.filterSeen).thenReturn(false)
         whenever(preference.calendarId).thenReturn("")
@@ -71,7 +65,8 @@ class UserFeatureTest : FeatureTest() {
         val service = network.user(clientCustomer, account, auth)
         feature = UserFeatureModule().saving(
             service = service,
-            event = event,
+            cinema = cinema,
+            movie = movie,
             bookingDao = bookingDao,
             seatsDao = seatsDao,
             account = account,
@@ -251,8 +246,9 @@ class UserFeatureTest : FeatureTest() {
         val cinema = mock<Cinema> {
             on { id }.thenReturn("1051")
         }
-        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
-        whenever(event.getDetail(any())).thenReturn(Result.failure(Throwable()))
+        TODO()
+        //whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
+        //whenever(event.getDetail(any())).thenReturn(Result.failure(Throwable()))
         prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
@@ -276,8 +272,9 @@ class UserFeatureTest : FeatureTest() {
         val movie = mock<MovieDetail> {
             on { id }.thenReturn("id")
         }
-        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
-        whenever(event.getDetail(any())).thenReturn(Result.success(movie))
+        TODO()
+        //whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
+        //whenever(event.getDetail(any())).thenReturn(Result.success(movie))
         prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
@@ -408,8 +405,9 @@ class UserFeatureTest : FeatureTest() {
         cinema: Cinema,
         movie: MovieDetail
     ) {
-        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
-        whenever(event.getDetail(any())).thenReturn(Result.success(movie))
+        TODO()
+        //whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
+        //whenever(event.getDetail(any())).thenReturn(Result.success(movie))
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
             code = HttpStatusCode.OK
