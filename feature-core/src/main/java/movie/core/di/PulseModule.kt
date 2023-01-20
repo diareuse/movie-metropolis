@@ -7,7 +7,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
-import movie.core.EventFeature
+import movie.core.EventCinemaFeature
+import movie.core.EventDetailFeature
+import movie.core.EventPreviewFeature
+import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
 import movie.core.UserFeature
 import movie.core.notification.NotificationInfoProvider
@@ -24,13 +27,15 @@ class PulseModule {
     @Daily
     @Provides
     fun pulse(
-        @Saving event: EventFeature,
+        preview: EventPreviewFeature.Factory,
+        cinema: EventCinemaFeature,
+        showing: EventShowingsFeature.Factory,
         @Saving user: UserFeature,
         @ApplicationContext context: Context
     ): Pulse = PulseCombined(
-        PulseSavingCurrent(event),
-        PulseSavingUpcoming(event),
-        PulseSavingShowings(event),
+        PulseSavingCurrent(preview),
+        PulseSavingUpcoming(preview),
+        PulseSavingShowings(cinema, showing),
         PulseSavingBookings(user),
         PulseScheduling(context)
     )
@@ -38,7 +43,7 @@ class PulseModule {
     @IntoSet
     @Provides
     fun exactPulseNotificationMovie(
-        event: EventFeature,
+        event: EventDetailFeature,
         info: NotificationInfoProvider,
         favorite: FavoriteFeature
     ): ExactPulse {

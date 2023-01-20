@@ -69,6 +69,6 @@
     <string name="empty_movie_main_title">Nic tu není</string>
     <string name="error_movie_main_title">Ale ne!</string>
     <string name="error_movie_main">Teď není možné natáhnout filmy. Mrkni sem později, ju?</string>
-    <string name="empty_cinema">Kina tu budou vylistována potom co se poprvé připojíš k internetu při používání téhle appky.</string>
+    <string name="empty_cinema">Žádná kina ti nejsou na blízku. Pokud chceš vidět všechna kina, zakaž polohu nebo odeber oprávnění této appce. Jinak můžeš změnit maximální vzdálenost v nastavení.</string>
     <string name="error_cinema">Kina nelze zobrazit kvůli internímu problému</string>
 </resources>

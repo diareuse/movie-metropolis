@@ -7,7 +7,8 @@ import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
-import movie.core.EventFeature
+import movie.core.EventDetailFeature
+import movie.core.EventDetailFeature.Companion.get
 import movie.core.FavoriteFeature
 import movie.core.R
 import movie.core.adapter.MovieFromId
@@ -20,7 +21,7 @@ import movie.pulse.ExactPulseCoroutine
 import java.net.URL
 
 class ExactPulseNotificationMovie(
-    private val event: EventFeature,
+    private val detail: EventDetailFeature,
     private val info: NotificationInfoProvider,
     private val favorite: FavoriteFeature
 ) : ExactPulseCoroutine() {
@@ -29,7 +30,7 @@ class ExactPulseNotificationMovie(
         val manager = NotificationManagerCompat.from(context)
         if (!manager.areNotificationsEnabled()) return
         val id = data.getString(ExtraId).let(::checkNotNull)
-        val movie = event.getDetail(MovieFromId(id)).getOrNull() ?: return
+        val movie = detail.get(MovieFromId(id)).getOrNull() ?: return
         val notification = getNotification(context, movie)
         manager.notify(movie.id.hashCode(), notification)
         favorite.toggle(MoviePreviewFromDetail(movie))

@@ -101,11 +101,14 @@ private fun CinemasScreen(
             }
         }.onFailure {
             item {
-                AppErrorItem(error = stringResource(R.string.error_cinemas))
+                AppErrorItem(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    error = stringResource(R.string.error_cinemas)
+                )
             }
         }.onEmpty {
             item {
-                CinemaItemEmpty()
+                CinemaItemEmpty(modifier = Modifier.padding(horizontal = 24.dp))
             }
         }
     }

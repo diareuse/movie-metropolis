@@ -5,7 +5,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.calendar.CalendarWriter
-import movie.core.EventFeature
+import movie.core.EventCinemaFeature
+import movie.core.EventDetailFeature
 import movie.core.TicketStore
 import movie.core.UserFeature
 import movie.core.UserFeatureCalendar
@@ -53,7 +54,8 @@ internal class UserFeatureModule {
     @Provides
     fun saving(
         service: UserService,
-        event: EventFeature,
+        cinema: EventCinemaFeature,
+        movie: EventDetailFeature,
         bookingDao: BookingDao,
         seatsDao: BookingSeatsDao,
         account: UserAccount,
@@ -62,9 +64,9 @@ internal class UserFeatureModule {
         store: TicketStore
     ): UserFeature {
         var network: UserFeature
-        network = UserFeatureImpl(service, event, account)
+        network = UserFeatureImpl(service, cinema, movie, account)
         network = UserFeatureLoginBypass(network)
-        network = UserFeatureDrainTickets(network, event, store)
+        network = UserFeatureDrainTickets(network, movie, cinema, store)
         network = UserFeatureStoring(network, bookingDao, seatsDao)
         network = UserFeatureCalendar(network, writer, preference)
         return network

@@ -72,6 +72,6 @@
     <string name="empty_movie_main_title">Nothing\'s here</string>
     <string name="error_movie_main_title">Oh no!</string>
     <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, ok?</string>
-    <string name="empty_cinema">Cinemas will be listed here after you first connect to the internet while using this app.</string>
+    <string name="empty_cinema">No cinema appears to be nearby, if you\'d like to see all cinemas turn off your location or disable location permission for this app. Otherwise readjust maximum distance in settings.</string>
     <string name="error_cinema">Cinemas cannot be shown due to an internal issue</string>
 </resources>

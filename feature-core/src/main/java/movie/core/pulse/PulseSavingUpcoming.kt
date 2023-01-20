@@ -1,12 +1,13 @@
 package movie.core.pulse
 
-import movie.core.EventFeature
+import movie.core.EventPreviewFeature
+import movie.core.EventPreviewFeature.Companion.get
 import movie.pulse.Pulse
 
 class PulseSavingUpcoming(
-    private val event: EventFeature
+    private val event: EventPreviewFeature.Factory
 ) : Pulse {
 
-    override suspend fun execute() = event.getUpcoming()
+    override suspend fun execute() = event.upcoming().get()
 
 }

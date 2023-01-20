@@ -1,15 +1,24 @@
 package movie.metropolis.app.screen.cinema
 
-import movie.log.flatMapCatching
+import movie.core.Recoverable
+import movie.core.ResultCallback
 import movie.log.logSevere
+import movie.metropolis.app.model.CinemaView
 
 class CinemasFacadeRecover(
     private val origin: CinemasFacade
-) : CinemasFacade {
+) : CinemasFacade, Recoverable {
 
     override suspend fun getCinemas(
         latitude: Double?,
-        longitude: Double?
-    ) = origin.flatMapCatching { getCinemas(latitude, longitude) }.logSevere()
+        longitude: Double?,
+        callback: ResultCallback<List<CinemaView>>
+    ) {
+        runCatchingResult(callback) {
+            origin.getCinemas(latitude, longitude) { result ->
+                it(result.logSevere())
+            }
+        }
+    }
 
 }

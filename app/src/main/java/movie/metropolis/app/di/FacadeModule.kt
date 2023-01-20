@@ -5,7 +5,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.calendar.CalendarList
-import movie.core.EventFeature
+import movie.core.EventCinemaFeature
+import movie.core.EventDetailFeature
+import movie.core.EventPreviewFeature
+import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
 import movie.core.SetupFeature
 import movie.core.TicketShareRegistry
@@ -71,7 +74,7 @@ class FacadeModule {
     }
 
     @Provides
-    fun cinemas(event: EventFeature): CinemasFacade {
+    fun cinemas(event: EventCinemaFeature): CinemasFacade {
         var facade: CinemasFacade
         facade = CinemasFacadeFromFeature(event)
         facade = CinemasFacadeRecover(facade)
@@ -79,9 +82,12 @@ class FacadeModule {
     }
 
     @Provides
-    fun cinema(event: EventFeature) = CinemaFacade.Factory {
+    fun cinema(
+        cinemas: EventCinemaFeature,
+        showings: EventShowingsFeature.Factory
+    ) = CinemaFacade.Factory {
         var facade: CinemaFacade
-        facade = CinemaFacadeFromFeature(it, event)
+        facade = CinemaFacadeFromFeature(it, cinemas, showings)
         facade = CinemaFacadeCaching(facade)
         facade = CinemaFacadeFilterable(facade)
         facade = CinemaFacadeRecover(facade)
@@ -90,11 +96,12 @@ class FacadeModule {
 
     @Provides
     fun movie(
-        event: EventFeature,
+        showings: EventShowingsFeature.Factory,
+        detail: EventDetailFeature,
         favorite: FavoriteFeature
     ) = MovieFacade.Factory {
         var facade: MovieFacade
-        facade = MovieFacadeFromFeature(it, event, favorite)
+        facade = MovieFacadeFromFeature(it, showings, detail, favorite)
         facade = MovieFacadeFilterable(facade)
         facade = MovieFacadeRecover(facade)
         facade
@@ -102,22 +109,22 @@ class FacadeModule {
 
     @Provides
     fun listing(
-        event: EventFeature,
+        preview: EventPreviewFeature.Factory,
         favorite: FavoriteFeature
     ): ListingFacade {
         var facade: ListingFacade
-        facade = ListingFacadeFromFeature(event, favorite)
+        facade = ListingFacadeFromFeature(preview, favorite)
         facade = ListingFacadeRecover(facade)
         return facade
     }
 
     @Provides
     fun profile(
-        event: EventFeature,
+        cinema: EventCinemaFeature,
         user: UserFeature
     ): ProfileFacade {
         var facade: ProfileFacade
-        facade = ProfileFacadeFromFeature(user, event)
+        facade = ProfileFacadeFromFeature(user, cinema)
         facade = ProfileFacadeCaching(facade)
         facade = ProfileFacadeRecover(facade)
         return facade

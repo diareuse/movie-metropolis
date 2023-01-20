@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
@@ -21,15 +22,16 @@ import java.util.Date
 interface MovieFacade : BookingFilterable {
 
     suspend fun isFavorite(): Result<Boolean>
-    suspend fun getAvailableFrom(): Result<Date>
-    suspend fun getMovie(): Result<MovieDetailView>
-    suspend fun getPoster(): Result<ImageView>
-    suspend fun getTrailer(): Result<VideoView>
+    suspend fun getAvailableFrom(callback: ResultCallback<Date>)
+    suspend fun getMovie(callback: ResultCallback<MovieDetailView>)
+    suspend fun getPoster(callback: ResultCallback<ImageView>)
+    suspend fun getTrailer(callback: ResultCallback<VideoView>)
     suspend fun getShowings(
         date: Date,
         latitude: Double,
-        longitude: Double
-    ): Result<List<CinemaBookingView>>
+        longitude: Double,
+        callback: ResultCallback<List<CinemaBookingView>>
+    )
 
     suspend fun toggleFavorite()
     fun addOnFavoriteChangedListener(listener: OnChangedListener): OnChangedListener
@@ -63,25 +65,33 @@ interface MovieFacade : BookingFilterable {
         val MovieFacade.availableFromFlow
             get() = flow {
                 emit(Loadable.loading())
-                emit(getAvailableFrom().asLoadable())
+                getAvailableFrom {
+                    emit(it.asLoadable())
+                }
             }
 
         val MovieFacade.movieFlow
             get() = flow {
                 emit(Loadable.loading())
-                emit(getMovie().asLoadable())
+                getMovie {
+                    emit(it.asLoadable())
+                }
             }
 
         val MovieFacade.posterFlow
             get() = flow {
                 emit(Loadable.loading())
-                emit(getPoster().asLoadable())
+                getPoster {
+                    emit(it.asLoadable())
+                }
             }
 
         val MovieFacade.trailerFlow
             get() = flow {
                 emit(Loadable.loading())
-                emit(getTrailer().asLoadable())
+                getTrailer {
+                    emit(it.asLoadable())
+                }
             }
 
         fun MovieFacade.showingsFlow(
@@ -93,7 +103,9 @@ interface MovieFacade : BookingFilterable {
                 flow {
                     emit(Loadable.loading())
                     optionsChangedFlow.collect {
-                        emit(getShowings(date, location.latitude, location.longitude).asLoadable())
+                        getShowings(date, location.latitude, location.longitude) {
+                            emit(it.asLoadable())
+                        }
                     }
                 }
             }
