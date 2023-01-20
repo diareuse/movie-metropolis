@@ -4,6 +4,7 @@ import movie.calendar.CalendarList
 import movie.core.preference.EventPreference
 import movie.metropolis.app.screen.OnChangedListener
 import java.util.Collections
+import kotlin.math.absoluteValue
 
 class SettingsFacadeFromFeature(
     private val prefs: EventPreference,
@@ -21,6 +22,12 @@ class SettingsFacadeFromFeature(
 
     override val addToCalendar: Boolean
         get() = prefs.calendarId != null
+
+    override var clipRadius: Int
+        get() = prefs.distanceKms
+        set(value) {
+            prefs.distanceKms = value.absoluteValue.coerceAtMost(20037)
+        }
 
     override suspend fun getCalendars(): Map<String, String> {
         return calendars.query().associate { it.id to it.name }

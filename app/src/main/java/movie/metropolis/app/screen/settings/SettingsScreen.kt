@@ -1,21 +1,22 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package movie.metropolis.app.screen.settings
 
 import android.Manifest
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Checkbox
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -29,11 +30,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,8 +41,9 @@ import movie.metropolis.app.R
 import movie.metropolis.app.screen.detail.plus
 import movie.style.AppDialog
 import movie.style.AppIconButton
+import movie.style.AppSettings
 import movie.style.AppToolbar
-import movie.style.haptic.hapticClick
+import movie.style.InputField
 import movie.style.theme.Theme
 
 @Composable
@@ -55,11 +55,14 @@ fun SettingsScreen(
     val filterSeen by viewModel.filterSeen.collectAsState()
     val addToCalendar by viewModel.addToCalendar.collectAsState()
     val calendars by viewModel.calendars.collectAsState()
+    val clipRadius by viewModel.clipRadius.collectAsState()
     SettingsScreen(
         filterSeen = filterSeen,
         onFilterSeenChanged = viewModel::updateFilterSeen,
         addToCalendar = addToCalendar,
         onCalendarChanged = viewModel::updateCalendar,
+        clipRadius = clipRadius,
+        onClipRadiusChanged = viewModel::updateClipRadius,
         calendars = calendars,
         onBackClick = onBackClick,
         onPermissionsRequested = {
@@ -78,6 +81,8 @@ private fun SettingsScreen(
     onFilterSeenChanged: (Boolean) -> Unit,
     addToCalendar: Boolean,
     onCalendarChanged: (String?) -> Unit,
+    clipRadius: Int,
+    onClipRadiusChanged: (Int) -> Unit,
     calendars: Map<String, String>,
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
     onBackClick: () -> Unit
@@ -100,71 +105,84 @@ private fun SettingsScreen(
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = padding + PaddingValues(24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.Top)
+            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
         ) {
-            FilterSeen(
-                checked = filterSeen,
-                onCheckedChanged = onFilterSeenChanged
-            )
-            Calendar(
-                checked = addToCalendar,
-                onSelected = onCalendarChanged,
-                calendars = calendars,
-                onPermissionsRequested = onPermissionsRequested
-            )
-            item("notice") {
-                Text(
-                    modifier = Modifier.navigationBarsPadding(),
-                    text = stringResource(R.string.settings_notice),
-                    style = Theme.textStyle.caption,
-                    textAlign = TextAlign.Center
+            item {
+                Text(stringResource(R.string.movies), style = Theme.textStyle.headline)
+            }
+            item("filter-seen") {
+                FilterSeen(
+                    checked = filterSeen,
+                    onCheckedChanged = onFilterSeenChanged
+                )
+            }
+            item {
+                Text(stringResource(R.string.tickets), style = Theme.textStyle.headline)
+            }
+            item("add-to-calendar") {
+                Calendar(
+                    checked = addToCalendar,
+                    onSelected = onCalendarChanged,
+                    calendars = calendars,
+                    onPermissionsRequested = onPermissionsRequested
+                )
+            }
+            item {
+                Text(stringResource(R.string.cinemas), style = Theme.textStyle.headline)
+            }
+            item("clip-radius") {
+                ClipRadius(
+                    value = clipRadius,
+                    onChanged = onClipRadiusChanged
                 )
             }
         }
     }
 }
 
-@Suppress("FunctionName")
-fun LazyListScope.FilterSeen(
-    checked: Boolean,
-    onCheckedChanged: (Boolean) -> Unit
-) = item("filter-seen") {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Theme.container.button)
-            .clickable(onClick = hapticClick { onCheckedChanged(!checked) })
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+@Composable
+fun LazyItemScope.ClipRadius(
+    value: Int,
+    onChanged: (Int) -> Unit
+) {
+    Column(
+        modifier = Modifier.animateItemPlacement()
     ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChanged
+        InputField(
+            value = value.toString(),
+            onValueChange = { onChanged(it.toIntOrNull() ?: 0) },
+            label = stringResource(R.string.nearby_cinemas),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(R.string.settings_unseen_title),
-                style = Theme.textStyle.body,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = stringResource(R.string.settings_unseen_description),
-                style = Theme.textStyle.caption
-            )
-        }
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = stringResource(R.string.nearby_cinemas_description),
+            style = Theme.textStyle.caption
+        )
     }
 }
 
-@Suppress("FunctionName")
-fun LazyListScope.Calendar(
+@Composable
+fun LazyItemScope.FilterSeen(
+    checked: Boolean,
+    onCheckedChanged: (Boolean) -> Unit
+) {
+    AppSettings(
+        modifier = Modifier.animateItemPlacement(),
+        checked = checked,
+        onCheckedChanged = onCheckedChanged,
+        title = { Text(stringResource(R.string.settings_unseen_title)) },
+        description = { Text(stringResource(R.string.settings_unseen_description)) }
+    )
+}
+
+@Composable
+fun LazyItemScope.Calendar(
     checked: Boolean,
     calendars: Map<String, String>,
     onSelected: (String?) -> Unit,
     onPermissionsRequested: suspend (Array<String>) -> Boolean
-) = item("add-to-calendar") {
+) {
     val scope = rememberCoroutineScope()
     var isVisible by rememberSaveable { mutableStateOf(false) }
     fun toggle() {
@@ -181,33 +199,13 @@ fun LazyListScope.Calendar(
             else isVisible = true
         }
     }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(Theme.container.button)
-            .clickable(onClick = hapticClick { toggle() })
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = { toggle() }
-        )
-        Column(
-            modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(R.string.settings_calendar_title),
-                style = Theme.textStyle.body,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = stringResource(R.string.settings_calendar_description),
-                style = Theme.textStyle.caption
-            )
-        }
-    }
+    AppSettings(
+        modifier = Modifier.animateItemPlacement(),
+        checked = checked,
+        onCheckedChanged = { toggle() },
+        title = { Text(stringResource(R.string.settings_calendar_title)) },
+        description = { Text(stringResource(R.string.settings_calendar_description)) }
+    )
     AppDialog(
         isVisible = isVisible,
         onVisibilityChanged = { isVisible = it }
@@ -263,6 +261,8 @@ private fun Preview() {
             addToCalendar = false,
             onCalendarChanged = {},
             calendars = emptyMap(),
+            clipRadius = 100,
+            onClipRadiusChanged = {},
             onBackClick = {},
             onPermissionsRequested = { false }
         )
