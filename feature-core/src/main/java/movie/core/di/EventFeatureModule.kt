@@ -5,6 +5,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.EventCinemaFeature
+import movie.core.EventDetailFeature
+import movie.core.EventDetailFeatureCatch
+import movie.core.EventDetailFeatureDatabase
+import movie.core.EventDetailFeatureFold
+import movie.core.EventDetailFeatureNetwork
+import movie.core.EventDetailFeatureNetworkRating
+import movie.core.EventDetailFeatureSpotColor
+import movie.core.EventDetailFeatureStoring
 import movie.core.EventFeature
 import movie.core.EventFeatureDatabase
 import movie.core.EventFeatureFilterUnseen
@@ -200,6 +208,32 @@ internal class EventFeatureModule {
             out = EventPreviewFeatureCatch(out)
             return out
         }
+    }
+
+    @Provides
+    fun detail(
+        service: EventService,
+        movie: MovieDao,
+        detail: MovieDetailDao,
+        media: MovieMediaDao,
+        ratings: MovieRatingDao,
+        rating: RatingProvider,
+        @RottenTomatoes tomatoes: LinkProvider,
+        @Imdb imdb: LinkProvider,
+        @Csfd csfd: LinkProvider,
+        analyzer: ImageAnalyzer
+    ): EventDetailFeature {
+        var out: EventDetailFeature
+        out = EventDetailFeatureNetwork(service)
+        out = EventDetailFeatureStoring(out, movie, detail, media)
+        out = EventDetailFeatureNetworkRating(out, ratings, rating, tomatoes, imdb, csfd)
+        out = EventDetailFeatureFold(
+            EventDetailFeatureDatabase(detail, media),
+            out
+        )
+        out = EventDetailFeatureSpotColor(out, analyzer)
+        out = EventDetailFeatureCatch(out)
+        return out
     }
 
 }

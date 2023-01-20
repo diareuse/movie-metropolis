@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.db.model.MovieDetailView
 import movie.core.db.model.MovieMediaStored
 import movie.core.db.model.MovieMediaView
 import movie.core.db.model.MoviePreviewView
@@ -9,6 +10,7 @@ import movie.core.model.Cinema
 import movie.core.nwk.model.EventResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.nwk.model.ExtendedMovieResponse.Metadata
+import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.nwk.model.MovieResponse
 import org.mockito.kotlin.mock
@@ -253,6 +255,56 @@ interface DataPool<T> {
             this += MovieMediaView(0, 0, "", MovieMediaStored.Type.Image)
             this += MovieMediaView(0, 0, "", MovieMediaStored.Type.Image)
             this += MovieMediaView(0, 0, "", MovieMediaStored.Type.Image)
+        }.map(modifier)
+
+    }
+
+    object MovieDetailResponses : DataPool<MovieDetailResponse> {
+
+        override fun all(modifier: Modifier<MovieDetailResponse>) = buildList {
+            this += MovieDetailResponse(
+                id = "",
+                name = "",
+                nameOriginal = "",
+                duration = 0.seconds,
+                url = "",
+                releasedAt = Date(),
+                countryOfOrigin = null,
+                cast = null,
+                directors = "",
+                synopsis = null,
+                screeningFrom = Date(),
+                genres = emptyList(),
+                categories = emptyList(),
+                screeningTags = emptyList(),
+                restrictionUrl = "",
+                media = listOf(MovieDetailResponse.Media.Image(0, 0, ""))
+            )
+        }.map(modifier)
+
+    }
+
+    object MovieDetailViews : DataPool<MovieDetailView> {
+
+        override fun all(modifier: Modifier<MovieDetailView>) = buildList {
+            this += MovieDetailView(
+                id = "",
+                name = "",
+                url = "",
+                releasedAt = Date(),
+                durationMillis = 0,
+                originalName = "",
+                countryOfOrigin = null,
+                cast = emptyList(),
+                directors = emptyList(),
+                description = "",
+                screeningFrom = Date(),
+                ageRestrictionUrl = "",
+                rating = 0,
+                linkImdb = null,
+                linkRottenTomatoes = null,
+                linkCsfd = null
+            )
         }.map(modifier)
 
     }
