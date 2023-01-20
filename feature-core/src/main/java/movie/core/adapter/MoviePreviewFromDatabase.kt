@@ -1,6 +1,5 @@
-package movie.core
+package movie.core.adapter
 
-import movie.core.adapter.MediaFromDatabase
 import movie.core.db.model.MovieMediaView
 import movie.core.db.model.MoviePreviewView
 import movie.core.model.Media
