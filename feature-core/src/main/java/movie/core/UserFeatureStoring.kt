@@ -1,9 +1,8 @@
 package movie.core
 
+import movie.core.adapter.asStored
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
-import movie.core.db.model.BookingSeatsStored
-import movie.core.db.model.BookingStored
 import movie.core.model.Booking
 
 class UserFeatureStoring(
@@ -22,22 +21,5 @@ class UserFeatureStoring(
             }
         }
     }
-
-    private fun Booking.asStored() = BookingStored(
-        id = id,
-        name = name,
-        startsAt = startsAt,
-        paidAt = paidAt,
-        movieId = movie.id,
-        eventId = eventId,
-        cinemaId = cinema.id,
-        hall = (this as? Booking.Active)?.hall
-    )
-
-    private fun Booking.Active.Seat.asStored(booking: Booking) = BookingSeatsStored(
-        booking = booking.id,
-        row = row,
-        seat = seat
-    )
 
 }

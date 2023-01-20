@@ -1,5 +1,6 @@
 package movie.core
 
+import movie.core.adapter.asStored
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
