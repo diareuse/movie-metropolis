@@ -2,6 +2,8 @@ package movie.metropolis.app.screen.detail
 
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import movie.core.ResultCallback
+import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.CinemaBookingViewFilter
 import movie.metropolis.app.screen.OnChangedListener
@@ -42,25 +44,30 @@ class MovieFacadeFilterable(
         listenable -= listener
     }
 
+
     override suspend fun getShowings(
         date: Date,
         latitude: Double,
-        longitude: Double
-    ) = origin.getShowings(date, latitude, longitude).onSuccess {
-        val availableTypes = it.asSequence().flatMap { it.availability.keys }
-        if (filterable.addFrom(availableTypes.asIterable())) {
-            listenable.notify { onChanged() }
+        longitude: Double,
+        callback: ResultCallback<List<CinemaBookingView>>
+    ) = origin.getShowings(date, latitude, longitude) { result ->
+        val output = result.onSuccess {
+            val availableTypes = it.asSequence().flatMap { it.availability.keys }
+            if (filterable.addFrom(availableTypes.asIterable())) {
+                listenable.notify { onChanged() }
+            }
+            if (mutex.isLocked) {
+                filterable.selectAll()
+                mutex.unlock()
+            }
+        }.map { cinemas ->
+            cinemas
+                .asSequence()
+                .map { CinemaBookingViewFilter(filterable, it) }
+                .filterNot { it.availability.isEmpty() }
+                .toList()
         }
-        if (mutex.isLocked) {
-            filterable.selectAll()
-            mutex.unlock()
-        }
-    }.map { cinemas ->
-        cinemas
-            .asSequence()
-            .map { CinemaBookingViewFilter(filterable, it) }
-            .filterNot { it.availability.isEmpty() }
-            .toList()
+        callback(output)
     }
 
 }

@@ -16,14 +16,16 @@ interface Recoverable {
     companion object {
 
         inline fun <T, R> Array<T>.foldCatching(body: (T) -> R): R {
-            val exception = Throwable("Folding resulted in error")
+            var exception: Throwable? = null
             for (element in this) try {
                 return body(element)
             } catch (e: Throwable) {
-                exception.addSuppressed(e)
+                if (exception != null)
+                    e.addSuppressed(exception)
+                exception = e
                 continue
             }
-            throw exception
+            throw exception ?: IndexOutOfBoundsException("Nothing to fold")
         }
 
     }

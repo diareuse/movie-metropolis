@@ -1,6 +1,9 @@
 package movie.metropolis.app.screen.cinema
 
-import movie.core.EventFeature
+import movie.core.EventCinemaFeature
+import movie.core.EventShowingsFeature
+import movie.core.ResultCallback
+import movie.core.model.Cinema
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
@@ -12,7 +15,8 @@ import java.util.Date
 
 class CinemaFacadeFromFeature(
     private val id: String,
-    private val event: EventFeature
+    private val cinemas: EventCinemaFeature,
+    private val showings: EventShowingsFeature.Factory
 ) : CinemaFacade {
 
     override suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>> =
@@ -22,24 +26,25 @@ class CinemaFacadeFromFeature(
     override fun addOnChangedListener(listener: OnChangedListener) = listener
     override fun removeOnChangedListener(listener: OnChangedListener) = Unit
 
-    override suspend fun getCinema(): Result<CinemaView> {
-        return event.getCinemas(null)
-            .mapCatching { cinemas -> cinemas.first { it.id == id } }
-            .map(::CinemaViewFromFeature)
+    override suspend fun getCinema(callback: ResultCallback<CinemaView>) {
+        cinemas.get(null) { result ->
+            val output = result
+                .mapCatching { it.first { it.id == id } }
+                .map(::CinemaViewFromFeature)
+            callback(output)
+        }
     }
 
-    override suspend fun getShowings(date: Date): Result<List<MovieBookingView>> {
-        val cinema = getCinema()
-            .getOrThrow()
-            .let(::CinemaFromView)
-
-        val result = event.getShowings(cinema, date)
-            .getOrThrow()
-
-        return result.entries
-            .map { (movie, events) -> MovieBookingViewFromFeature(movie, events) }
-            .sortedByDescending { it.availability.entries.sumOf { it.value.size } }
-            .let(Result.Companion::success)
+    override suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>) {
+        var cinema: Result<Cinema> = Result.failure(IllegalStateException())
+        getCinema { cinema = it.map(::CinemaFromView) }
+        showings.cinema(cinema.getOrThrow()).get(date) { result ->
+            val output = result.getOrThrow().entries
+                .map { (movie, events) -> MovieBookingViewFromFeature(movie, events) }
+                .sortedByDescending { it.availability.entries.sumOf { it.value.size } }
+                .let(Result.Companion::success)
+            callback(output)
+        }
     }
 
 }

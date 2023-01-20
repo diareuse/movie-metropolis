@@ -10,9 +10,14 @@ class EventPreviewFeatureSpotColor(
     private val analyzer: ImageAnalyzer
 ) : EventPreviewFeature {
 
+    private var skipInitial = false
+
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
         origin.get {
-            result(it)
+            if (!skipInitial) {
+                result(it)
+                skipInitial = true
+            }
             val output = it.map { movies ->
                 movies.map inner@{ movie ->
                     MoviePreviewWithSpotColor(

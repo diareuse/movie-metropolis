@@ -11,4 +11,14 @@ interface EventPreviewFeature {
         fun upcoming(): EventPreviewFeature
     }
 
+    companion object {
+
+        suspend fun EventPreviewFeature.get(): Result<List<MoviePreview>> {
+            var out: Result<List<MoviePreview>> = Result.failure(IllegalStateException())
+            get { out = it }
+            return out
+        }
+
+    }
+
 }

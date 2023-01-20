@@ -3,8 +3,10 @@ package movie.metropolis.app.screen.detail
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import movie.core.EventFeature
+import movie.core.EventDetailFeature
+import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
+import movie.core.ResultCallback
 import movie.core.adapter.MovieFromId
 import movie.core.model.Location
 import movie.core.model.Media
@@ -25,7 +27,8 @@ import java.util.Date
 
 class MovieFacadeFromFeature(
     private val id: String,
-    private val event: EventFeature,
+    private val showings: EventShowingsFeature.Factory,
+    private val detail: EventDetailFeature,
     private val favorite: FavoriteFeature
 ) : MovieFacade {
 
@@ -34,52 +37,69 @@ class MovieFacadeFromFeature(
     private val listenableFavorite = Listenable<OnChangedListener>()
 
     override suspend fun isFavorite(): Result<Boolean> {
-        return favorite.isFavorite(getDetail())
+        return favorite.isFavorite(movie ?: return Result.failure(IllegalStateException()))
     }
 
-    override suspend fun getAvailableFrom(): Result<Date> {
-        return Result.success(getDetail().screeningFrom.coerceAtLeast(Date()))
+    override suspend fun getAvailableFrom(callback: ResultCallback<Date>) {
+        getDetail { result ->
+            val output = result.map { it.screeningFrom.coerceAtLeast(Date()) }
+            callback(output)
+        }
     }
 
-    override suspend fun getMovie(): Result<MovieDetailView> {
-        return Result.success(MovieDetailViewFromFeature(getDetail()))
+    override suspend fun getMovie(callback: ResultCallback<MovieDetailView>) {
+        getDetail { result ->
+            val output = result.map(::MovieDetailViewFromFeature)
+            callback(output)
+        }
     }
 
-    override suspend fun getPoster(): Result<ImageView> {
-        val detail = getDetail()
-        val image = detail.media
-            .asSequence()
-            .filterIsInstance<Media.Image>()
-            .sortedByDescending { it.height * it.width }
-            .map { ImageViewFromFeature(it, Color(detail.spotColor)) }
-            .first()
-        return Result.success(image)
+    override suspend fun getPoster(callback: ResultCallback<ImageView>) {
+        getDetail { result ->
+            val output = result.map { detail ->
+                detail.media
+                    .asSequence()
+                    .filterIsInstance<Media.Image>()
+                    .sortedByDescending { it.height * it.width }
+                    .map { ImageViewFromFeature(it, Color(detail.spotColor)) }
+                    .first()
+            }
+            callback(output)
+        }
     }
 
-    override suspend fun getTrailer(): Result<VideoView> {
-        val video = getDetail().media
-            .asSequence()
-            .filterIsInstance<Media.Video>()
-            .map(::VideoViewFromFeature)
-            .first()
-        return Result.success(video)
+    override suspend fun getTrailer(callback: ResultCallback<VideoView>) {
+        getDetail { result ->
+            val output = result.map { detail ->
+                detail.media
+                    .asSequence()
+                    .filterIsInstance<Media.Video>()
+                    .map(::VideoViewFromFeature)
+                    .first()
+            }
+            callback(output)
+        }
     }
 
     override suspend fun getShowings(
         date: Date,
         latitude: Double,
-        longitude: Double
-    ): Result<List<CinemaBookingView>> {
-        val items = event.getShowings(getDetail(), date, Location(latitude, longitude)).getOrThrow()
-            .asSequence()
-            .map { (cinema, showings) -> CinemaBookingViewFromFeature(cinema, showings) }
-            .filter { it.availability.isNotEmpty() }
-            .toList()
-        return Result.success(items)
+        longitude: Double,
+        callback: ResultCallback<List<CinemaBookingView>>
+    ) {
+        getDetail { detail ->
+            showings.movie(detail.getOrThrow(), Location(latitude, longitude)).get(date) {
+                val result = it.getOrThrow().asSequence()
+                    .map { (cinema, showings) -> CinemaBookingViewFromFeature(cinema, showings) }
+                    .filter { it.availability.isNotEmpty() }
+                    .toList()
+                callback(Result.success(result))
+            }
+        }
     }
 
     override suspend fun toggleFavorite() {
-        val preview = MoviePreviewFromDetail(getDetail())
+        val preview = MoviePreviewFromDetail(requireNotNull(movie))
         favorite.toggle(preview).onSuccess {
             listenableFavorite.notify { onChanged() }
         }
@@ -101,11 +121,22 @@ class MovieFacadeFromFeature(
     override fun addOnChangedListener(listener: OnChangedListener) = listener
     override fun removeOnChangedListener(listener: OnChangedListener) = Unit
 
-    //
+    // ---
 
-    private suspend fun getDetail(): MovieDetail = mutex.withLock {
-        movie ?: event.getDetail(MovieFromId(id)).getOrThrow().also {
-            movie = it
+    private suspend fun getDetail(callback: ResultCallback<MovieDetail>) {
+        val movie = movie
+        if (movie != null)
+            return callback(Result.success(movie))
+        mutex.withLock {
+            val movieLocked = this.movie
+            if (movieLocked != null)
+                return callback(Result.success(movieLocked))
+            detail.get(MovieFromId(id)) {
+                callback(it)
+                it.onSuccess {
+                    this.movie = it
+                }
+            }
         }
     }
 

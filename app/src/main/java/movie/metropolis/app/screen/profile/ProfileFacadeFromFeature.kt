@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.profile
 
-import movie.core.EventFeature
+import movie.core.EventCinemaFeature
+import movie.core.EventCinemaFeature.Companion.get
 import movie.core.UserFeature
 import movie.core.model.FieldUpdate
 import movie.metropolis.app.model.CinemaSimpleView
@@ -12,11 +13,11 @@ import movie.metropolis.app.model.adapter.UserViewFromFeature
 
 class ProfileFacadeFromFeature(
     private val user: UserFeature,
-    private val event: EventFeature
+    private val cinemas: EventCinemaFeature
 ) : ProfileFacade {
 
     override suspend fun getCinemas(): Result<List<CinemaSimpleView>> {
-        return event.getCinemas(null).map { it.map(::CinemaSimpleViewFromFeature) }
+        return cinemas.get(null).map { it.map(::CinemaSimpleViewFromFeature) }
     }
 
     override suspend fun getMembership(): Result<MembershipView?> {

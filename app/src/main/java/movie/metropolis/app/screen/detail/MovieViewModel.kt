@@ -64,9 +64,11 @@ class MovieViewModel private constructor(
 
     init {
         viewModelScope.launch {
-            facade.getAvailableFrom()
-                .map { if (it.before(Date())) Date() else it }
-                .onSuccess { selectedDate.compareAndSet(null, it) }
+            facade.getAvailableFrom { result ->
+                result
+                    .map { if (it.before(Date())) Date() else it }
+                    .onSuccess { selectedDate.compareAndSet(null, it) }
+            }
         }
         viewModelScope.launch {
             user.getUser()

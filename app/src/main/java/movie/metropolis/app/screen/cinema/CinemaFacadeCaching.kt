@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.cinema
 
+import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaView
 
 class CinemaFacadeCaching(
@@ -8,9 +9,16 @@ class CinemaFacadeCaching(
 
     private var cinema: CinemaView? = null
 
-    override suspend fun getCinema() = cinema?.let(Result.Companion::success)
-        ?: origin.getCinema().onSuccess {
-            cinema = it
+    override suspend fun getCinema(callback: ResultCallback<CinemaView>) {
+        val cinema = cinema
+        if (cinema != null)
+            return callback(Result.success(cinema))
+        origin.getCinema {
+            callback(it)
+            it.onSuccess { cinema ->
+                this.cinema = cinema
+            }
         }
+    }
 
 }

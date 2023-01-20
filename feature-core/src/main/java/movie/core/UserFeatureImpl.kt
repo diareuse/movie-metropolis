@@ -1,8 +1,9 @@
 package movie.core
 
 import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import movie.core.EventCinemaFeature.Companion.get
+import movie.core.EventDetailFeature.Companion.get
 import movie.core.adapter.BookingActiveFromResponse
 import movie.core.adapter.BookingExpiredFromResponse
 import movie.core.adapter.MovieFromId
@@ -27,7 +28,8 @@ import movie.core.nwk.model.TokenRequest
 
 internal class UserFeatureImpl(
     private val service: UserService,
-    private val event: EventFeature,
+    private val cinema: EventCinemaFeature,
+    private val movie: EventDetailFeature,
     private val account: UserAccount
 ) : UserFeature {
 
@@ -78,38 +80,31 @@ internal class UserFeatureImpl(
         if (bookingsResult.isFailure)
             return bookingsResult as Result<Iterable<Booking>>
         val bookings = bookingsResult.getOrThrow()
-        return coroutineScope {
-            val cinemas =
-                async { event.getCinemas(null).map { it.toList() }.getOrDefault(emptyList()) }
-
-            bookings.map { booking ->
-                val movie = async { event.getDetail(MovieFromId(booking.movieId)).getOrNull() }
+        return kotlin.runCatching {
+            val cinemas = cinema.get(null).getOrDefault(emptyList()).toList()
+            bookings.mapNotNull { booking ->
+                val detail = movie.get(MovieFromId(booking.movieId)).getOrNull()
                 when (booking.isExpired) {
-                    true -> async {
-                        val detail = movie.await()
+                    true ->
                         if (detail == null) null
                         else BookingExpiredFromResponse(
                             response = booking,
                             movie = detail,
-                            cinemas = cinemas.await()
+                            cinemas = cinemas
                         )
-                    }
 
                     else -> {
-                        val detail = async { service.getBooking(booking.id).getOrThrow() }
-                        async {
-                            val movieDetail = movie.await()
-                            if (movieDetail == null) null
-                            else BookingActiveFromResponse(
-                                response = booking,
-                                detail = detail.await(),
-                                movie = movieDetail,
-                                cinemas = cinemas.await()
-                            )
-                        }
+                        val bookingDetail = service.getBooking(booking.id).getOrThrow()
+                        if (detail == null) null
+                        else BookingActiveFromResponse(
+                            response = booking,
+                            detail = bookingDetail,
+                            movie = detail,
+                            cinemas = cinemas
+                        )
                     }
                 }
-            }.runCatching { awaitAll().filterNotNull() }
+            }
         }
     }
 
@@ -125,12 +120,12 @@ internal class UserFeatureImpl(
     ): Result<User> = coroutineScope {
         val customer = async { user() }
         val points = async { service.getPoints() }
-        val cinemas = async { event.getCinemas(null).map { it.toList() } }
+        val cinemas = cinema.get(null).map { it.toList() }
         password().mapCatching {
             UserFromRemote(
                 customer.await().getOrThrow(),
                 points.await().getOrThrow(),
-                cinemas.await().getOrThrow()
+                cinemas.getOrThrow()
             )
         }
     }
