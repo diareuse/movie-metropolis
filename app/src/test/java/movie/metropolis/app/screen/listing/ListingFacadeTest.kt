@@ -1,12 +1,20 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package movie.metropolis.app.screen.listing
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
+import movie.core.EventPreviewFeature
 import movie.core.FavoriteFeature
+import movie.core.model.MoviePreview
 import movie.metropolis.app.di.FacadeModule
+import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewFromFeature
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.screen.OnChangedListener
+import movie.metropolis.app.util.callback
+import movie.metropolis.app.util.thenBlocking
 import org.junit.Test
 import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.any
@@ -14,6 +22,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlin.test.assertTrue
 
 class ListingFacadeTest : FeatureTest() {
@@ -25,36 +34,43 @@ class ListingFacadeTest : FeatureTest() {
         favorite = mock {
             on { runBlocking { isFavorite(any()) } }.thenReturn(Result.success(true))
         }
-        facade = FacadeModule().listing(event, favorite)
+        facade = FacadeModule().listing(preview, favorite)
     }
 
     @Test
     fun returns_current_success() = runTest {
-        whenever(event.getCurrent()).thenReturn(Result.success(List(34) { mock() }))
-        val result = facade.getCurrent()
-        assert(result.isSuccess) { result }
-        assertEquals(34, result.getOrThrow().size)
+        responds_success(preview.current(), 34)
+        facade.getCurrent {
+            assertEquals(34, it.getOrThrow().size)
+        }
     }
 
     @Test
     fun returns_current_failure() = runTest {
-        whenever(event.getCurrent()).thenReturn(Result.failure(RuntimeException()))
-        val result = facade.getCurrent()
-        assert(result.isFailure) { result }
+        responds_failure(preview.current())
+        facade.getCurrent {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Test
     fun returns_upcoming_success() = runTest {
-        whenever(event.getUpcoming()).thenReturn(Result.success(List(18) { mock() }))
-        val result = facade.getUpcoming().getOrThrow()
-        assertEquals(18, result.size)
+        responds_success(preview.upcoming(), 18)
+        facade.getUpcoming {
+            assertEquals(18, it.getOrThrow().size)
+        }
     }
 
     @Test
     fun returns_upcoming_failure() = runTest {
-        whenever(event.getUpcoming()).thenReturn(Result.failure(RuntimeException()))
-        val result = facade.getUpcoming()
-        assert(result.isFailure) { result }
+        responds_failure(preview.upcoming())
+        facade.getUpcoming {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Suppress("BooleanLiteralArgument")
@@ -66,41 +82,45 @@ class ListingFacadeTest : FeatureTest() {
 
     @Test
     fun returns_current_withFavorites() = runTest {
-        whenever(event.getCurrent()).thenReturn(Result.success(List(5) { mock() }))
+        responds_success(preview.current(), 5)
         whenever(favorite.isFavorite(any())).thenReturn(Result.success(true))
-        val result = facade.getCurrent().getOrThrow()
+        var result: Result<List<MovieView>> = Result.failure(NotImplementedError())
+        facade.getCurrent { result = it }
         assertTrue {
-            result.all { it.favorite }
+            result.getOrThrow().all { it.favorite }
         }
     }
 
     @Test
     fun returns_upcoming_withFavorites() = runTest {
-        whenever(event.getUpcoming()).thenReturn(Result.success(List(5) { mock() }))
+        responds_success(preview.upcoming(), 5)
         whenever(favorite.isFavorite(any())).thenReturn(Result.success(true))
-        val result = facade.getUpcoming().getOrThrow()
+        var result: Result<List<MovieView>> = Result.failure(NotImplementedError())
+        facade.getUpcoming { result = it }
         assertTrue {
-            result.all { it.favorite }
+            result.getOrThrow().all { it.favorite }
         }
     }
 
     @Test
     fun returns_current_withoutFavorites() = runTest {
-        whenever(event.getCurrent()).thenReturn(Result.success(List(5) { mock() }))
+        responds_success(preview.current(), 5)
         whenever(favorite.isFavorite(any())).thenReturn(Result.success(false))
-        val result = facade.getCurrent().getOrThrow()
+        var result: Result<List<MovieView>> = Result.failure(NotImplementedError())
+        facade.getCurrent { result = it }
         assertTrue {
-            result.none { it.favorite }
+            result.getOrThrow().none { it.favorite }
         }
     }
 
     @Test
     fun returns_upcoming_withoutFavorites() = runTest {
-        whenever(event.getUpcoming()).thenReturn(Result.success(List(5) { mock() }))
+        responds_success(preview.upcoming(), 5)
         whenever(favorite.isFavorite(any())).thenReturn(Result.success(false))
-        val result = facade.getUpcoming().getOrThrow()
+        var result: Result<List<MovieView>> = Result.failure(NotImplementedError())
+        facade.getUpcoming { result = it }
         assertTrue {
-            result.none { it.favorite }
+            result.getOrThrow().none { it.favorite }
         }
     }
 
@@ -119,6 +139,24 @@ class ListingFacadeTest : FeatureTest() {
         facade.removeOnFavoriteChangedListener(listener)
         facade.toggleFavorite(MovieViewFromFeature(mock(), true, true))
         verify(listener, NoInteractions()).onChanged()
+    }
+
+    // ---
+
+    private suspend fun responds_success(feature: EventPreviewFeature, count: Int) {
+        whenever(feature.get(any())).thenBlocking {
+            callback<List<MoviePreview>>(0) {
+                Result.success(List(count) { mock() })
+            }
+        }
+    }
+
+    private suspend fun responds_failure(feature: EventPreviewFeature) {
+        whenever(feature.get(any())).thenBlocking {
+            callback<List<MoviePreview>>(0) {
+                Result.failure(RuntimeException())
+            }
+        }
     }
 
 }

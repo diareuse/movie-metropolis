@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package movie.metropolis.app.screen.detail
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.CinemaWithShowings
 import movie.core.FavoriteFeature
@@ -13,10 +16,14 @@ import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.FeatureTest
 import movie.metropolis.app.screen.OnChangedListener
+import movie.metropolis.app.util.callback
 import movie.metropolis.app.util.disableAll
+import movie.metropolis.app.util.thenBlocking
 import org.junit.Test
 import org.mockito.internal.verification.NoInteractions
+import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -32,19 +39,19 @@ class MovieFacadeTest : FeatureTest() {
 
     override fun prepare() {
         favorite = mock()
-        facade = FacadeModule().movie(event, favorite).create("5376O2R")
+        facade = FacadeModule().movie(showings, detail, favorite).create("5376O2R")
     }
 
     @Test
     fun returns_isFavorite_success() = runTest {
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
+        movie_responds_success()
         whenever(favorite.isFavorite(any())).thenReturn(Result.success(true))
         facade.isFavorite().getOrThrow()
     }
 
     @Test
     fun returns_isFavorite_failure() = runTest {
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
+        movie_responds_success()
         whenever(favorite.isFavorite(any())).thenThrow(RuntimeException())
         assertFails {
             facade.isFavorite().getOrThrow()
@@ -53,138 +60,137 @@ class MovieFacadeTest : FeatureTest() {
 
     @Test
     fun toggle_callsFavorite() = runTest {
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
+        movie_responds_success()
         facade.toggleFavorite()
         verify(favorite).toggle(any())
     }
 
     @Test
     fun returns_availableFrom_success() = runTest {
-        val detail = mock<MovieDetail> {
+        movie_responds_success {
             on { it.screeningFrom }.thenReturn(Date(3666821600000))
         }
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(detail))
-        val result = facade.getAvailableFrom()
-        assert(result.isSuccess) { result }
-        assertEquals(Date(3666821600000), result.getOrThrow())
+        facade.getAvailableFrom {
+            assertEquals(Date(3666821600000), it.getOrThrow())
+        }
     }
 
     @Test
     fun returns_availableFrom_failure() = runTest {
-        val result = facade.getAvailableFrom()
-        assert(result.isFailure) { result }
+        facade.getAvailableFrom {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Test
     fun returns_movie_success() = runTest {
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(mock()))
-        val result = facade.getMovie()
-        assert(result.isSuccess) { result }
+        movie_responds_success()
+        facade.getMovie {
+            it.getOrThrow()
+        }
     }
 
     @Test
     fun returns_movie_failure() = runTest {
-        val result = facade.getMovie()
-        assert(result.isFailure) { result }
+        facade.getMovie {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Test
     fun returns_poster_success() = runTest {
-        val detail = mock<MovieDetail> {
+        movie_responds_success {
             on { it.media }.thenReturn(listOf(Media.Image(0, 0, "")))
         }
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(detail))
-        val result = facade.getPoster()
-        assert(result.isSuccess) { result }
+        facade.getPoster {
+            it.getOrThrow()
+        }
     }
 
     @Test
     fun returns_poster_failure() = runTest {
-        val result = facade.getPoster()
-        assert(result.isFailure) { result }
+        facade.getPoster {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Test
     fun returns_trailer_success() = runTest {
-        val detail = mock<MovieDetail> {
+        movie_responds_success {
             on { it.media }.thenReturn(listOf(Media.Video("")))
         }
-        whenever(event.getDetail(MovieFromId("5376O2R"))).thenReturn(Result.success(detail))
-        val result = facade.getTrailer()
-        assert(result.isSuccess) { result }
+        facade.getTrailer {
+            it.getOrThrow()
+        }
     }
 
     @Test
     fun returns_trailer_failure() = runTest {
-        val result = facade.getTrailer()
-        assert(result.isFailure) { result }
+        facade.getTrailer {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Test
     fun returns_showings_success() = runTest {
-        val movie = mock<MovieDetail> {
+        movie_responds_success {
             on { id }.thenReturn("5376O2R")
         }
-        whenever(event.getDetail(MovieFromId("5376O2R")))
-            .thenReturn(Result.success(movie))
-        val cinema = mock<Cinema> {
+        cinema_responds_cinema {
             on { id }.thenReturn("id")
         }
-        whenever(event.getCinemas(Location(0.0, 0.0)))
-            .thenReturn(Result.success(listOf(cinema)))
-        whenever(event.getShowings(movie, Date(0), Location(0.0, 0.0)))
-            .thenReturn(Result.success(mock()))
-        val result = facade.getShowings(Date(0), 0.0, 0.0)
-        assert(result.isSuccess) { result }
+        showings_responds_success()
+        facade.getShowings(Date(0), 0.0, 0.0) {
+            it.getOrThrow()
+        }
     }
 
     @Test
     fun returns_showings_failure() = runTest {
-        val result = facade.getShowings(Date(0), 0.0, 0.0)
-        assert(result.isFailure) { result }
+        facade.getShowings(Date(0), 0.0, 0.0) {
+            assertFails {
+                it.getOrThrow()
+            }
+        }
     }
 
     @Test
     fun returns_filteredShowings() = runTest {
-        val movie = mock<MovieDetail> {
+        movie_responds_success {
             on { id }.thenReturn("5376O2R")
         }
-        whenever(event.getDetail(MovieFromId("5376O2R")))
-            .thenReturn(Result.success(movie))
-        val cinema = mock<Cinema> {
+        val cinema = cinema_responds_cinema {
             on { id }.thenReturn("id")
         }
-        whenever(event.getCinemas(Location(0.0, 0.0)))
-            .thenReturn(Result.success(listOf(cinema)))
-        val showings = generateShowings(cinema, 4)
-        whenever(event.getShowings(movie, Date(0), Location(0.0, 0.0)))
-            .thenReturn(Result.success(showings))
-        facade.getShowings(Date(0), 0.0, 0.0) // only to populate the filters
+        showings_responds_success(generateShowings(cinema, 4))
+        facade.getShowings(Date(0), 0.0, 0.0) {} // only to populate the filters
         facade.disableAll()
         facade.toggle(Filter(false, "type"))
         facade.toggle(Filter(false, "language"))
-        val result = facade.getShowings(Date(0), 0.0, 0.0).getOrThrow()
-        val hasRequestedKeys = result.flatMap { it.availability.keys }
-            .all { it.language == "language" && "type" in it.types }
-        assert(hasRequestedKeys) { result }
+        facade.getShowings(Date(0), 0.0, 0.0) {
+            val result = it.getOrThrow()
+            val hasRequestedKeys = result.flatMap { it.availability.keys }
+                .all { it.language == "language" && "type" in it.types }
+            assert(hasRequestedKeys) { result }
+        }
     }
 
     @Test
     fun returns_options() = runTest {
-        val movie = mock<MovieDetail> {
-            on { id }.thenReturn("5376O2R")
-        }
-        whenever(event.getDetail(MovieFromId("5376O2R")))
-            .thenReturn(Result.success(movie))
-        val cinema = mock<Cinema> {
+        movie_responds_success()
+        val cinema = cinema_responds_cinema {
             on { id }.thenReturn("id")
         }
-        whenever(event.getCinemas(Location(0.0, 0.0)))
-            .thenReturn(Result.success(listOf(cinema)))
-        val showings = generateShowings(cinema, 4)
-        whenever(event.getShowings(movie, Date(0), Location(0.0, 0.0)))
-            .thenReturn(Result.success(showings))
-        facade.getShowings(Date(0), 0.0, 0.0)
+        showings_responds_success(generateShowings(cinema, 4))
+        facade.getShowings(Date(0), 0.0, 0.0) {}
         val options = facade.getOptions().getOrThrow()
         assertEquals(2, options[Filter.Type.Language]?.size)
         assertEquals(2, options[Filter.Type.Projection]?.size)
@@ -208,6 +214,35 @@ class MovieFacadeTest : FeatureTest() {
     }
 
     // ---
+
+    private suspend fun movie_responds_success(
+        modifier: KStubbing<MovieDetail>.(MovieDetail) -> Unit = {}
+    ) {
+        whenever(detail.get(any(), any())).thenBlocking {
+            callback(1) {
+                Result.success(mock(stubbing = modifier))
+            }
+        }
+    }
+
+    private suspend fun cinema_responds_cinema(modifier: KStubbing<Cinema>.(Cinema) -> Unit = {}): Cinema {
+        val model = mock(stubbing = modifier)
+        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
+            callback(1) {
+                Result.success(listOf(model))
+            }
+        }
+        return model
+    }
+
+    private suspend fun showings_responds_success(model: CinemaWithShowings = mock()) {
+        val movie = showings.movie(MovieFromId(""), Location(0.0, 0.0))
+        whenever(movie.get(any(), any())).thenBlocking {
+            callback(1) {
+                Result.success(model)
+            }
+        }
+    }
 
     private fun generateShowings(cinema: Cinema, count: Int): CinemaWithShowings = buildMap {
         repeat(count) {
