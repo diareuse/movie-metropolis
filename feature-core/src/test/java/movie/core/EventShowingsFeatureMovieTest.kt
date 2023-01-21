@@ -10,8 +10,8 @@ import movie.core.model.Movie
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
-import movie.core.util.thenAnswerSus
-import movie.core.util.wheneverSus
+import movie.core.util.thenBlocking
+import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -88,7 +88,7 @@ class EventShowingsFeatureMovieTest {
 
     private fun cinema_responds_success(): List<Cinema> {
         val data = DataPool.Cinemas.all()
-        wheneverSus { cinema.get(anyOrNull(), any()) }.thenAnswerSus {
+        wheneverBlocking { cinema.get(anyOrNull(), any()) }.thenBlocking {
             val callback = getArgument<ResultCallback<Iterable<Cinema>>>(1)
             callback.invoke(Result.success(data))
         }
@@ -97,7 +97,7 @@ class EventShowingsFeatureMovieTest {
 
     private fun showings_responds_success(): List<ShowingStored> {
         val data = DataPool.ShowingsStored.all()
-        wheneverSus { showing.selectByCinema(any(), any(), any(), any()) }.thenReturn(data)
+        wheneverBlocking { showing.selectByCinema(any(), any(), any(), any()) }.thenReturn(data)
         return data
     }
 
@@ -105,7 +105,7 @@ class EventShowingsFeatureMovieTest {
         modifier: Modifier<MovieEventResponse> = { it }
     ): MovieEventResponse {
         val result = BodyResponse(DataPool.MovieEventResponses.first(modifier))
-        wheneverSus { service.getEventsInCinema(any(), any()) }
+        wheneverBlocking { service.getEventsInCinema(any(), any()) }
             .thenReturn(Result.success(result))
         return result.body
     }

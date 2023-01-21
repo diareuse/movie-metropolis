@@ -14,7 +14,7 @@ import movie.core.nwk.model.CinemaResponse
 import movie.core.nwk.model.ResultsResponse
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
-import movie.core.util.wheneverSus
+import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -160,7 +160,7 @@ class EventCinemaFeatureTest {
         modifier: Modifier<CinemaStored> = { it }
     ): List<CinemaStored> {
         val data = DataPool.CinemasStored.all(modifier = modifier)
-        wheneverSus { cinema.selectAll() }.thenReturn(data)
+        wheneverBlocking { cinema.selectAll() }.thenReturn(data)
         return data
     }
 
@@ -168,7 +168,7 @@ class EventCinemaFeatureTest {
         modifier: Modifier<CinemaResponse> = { it }
     ): List<CinemaResponse> {
         val data = DataPool.CinemaResponses.all(modifier = modifier)
-        wheneverSus { service.getCinemas() }.thenReturn(Result.success(ResultsResponse(data)))
+        wheneverBlocking { service.getCinemas() }.thenReturn(Result.success(ResultsResponse(data)))
         return data
     }
 
