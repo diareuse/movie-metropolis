@@ -16,7 +16,7 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
-import movie.core.util.wheneverSus
+import movie.core.util.wheneverBlocking
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
 import movie.image.SwatchColor
@@ -197,33 +197,39 @@ abstract class EventPreviewFeatureTest {
     private fun analyzer_responds_success(): Int {
         val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
         val swatch = Swatch(SwatchColor(color), SwatchColor(color), SwatchColor(color))
-        wheneverSus { analyzer.getColors(any()) }.thenReturn(swatch)
+        wheneverBlocking { analyzer.getColors(any()) }.thenReturn(swatch)
         return color
     }
 
     private fun booking_responds_positive(): List<String> {
         val data = listOf("1")
-        wheneverSus { booking.selectIds() }.thenReturn(data)
-        wheneverSus { preference.filterSeen }.thenReturn(true)
+        wheneverBlocking { booking.selectIds() }.thenReturn(data)
+        wheneverBlocking { preference.filterSeen }.thenReturn(true)
         return data
     }
 
     private fun database_responds_success(): List<MoviePreviewView> {
         val data = DataPool.MoviePreviewViews.all()
-        wheneverSus { preview.selectCurrent() }.thenReturn(data)
-        wheneverSus { preview.selectUpcoming() }.thenReturn(data)
-        wheneverSus { media.select(any()) }.thenReturn(DataPool.MovieMediaViews.all())
+        wheneverBlocking { preview.selectCurrent() }.thenReturn(data)
+        wheneverBlocking { preview.selectUpcoming() }.thenReturn(data)
+        wheneverBlocking { media.select(any()) }.thenReturn(DataPool.MovieMediaViews.all())
         return data
     }
 
     private fun database_responds_empty() {
-        wheneverSus { preview.selectCurrent() }.thenReturn(emptyList())
-        wheneverSus { preview.selectUpcoming() }.thenReturn(emptyList())
+        wheneverBlocking { preview.selectCurrent() }.thenReturn(emptyList())
+        wheneverBlocking { preview.selectUpcoming() }.thenReturn(emptyList())
     }
 
     protected fun service_responds_success(): List<ExtendedMovieResponse> {
         val data = DataPool.ExtendedMovieResponses.all()
-        wheneverSus { service.getMoviesByType(any()) }.thenReturn(Result.success(BodyResponse(data)))
+        wheneverBlocking { service.getMoviesByType(any()) }.thenReturn(
+            Result.success(
+                BodyResponse(
+                    data
+                )
+            )
+        )
         return data
     }
 

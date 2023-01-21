@@ -16,7 +16,7 @@ import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieDetailsResponse
-import movie.core.util.wheneverSus
+import movie.core.util.wheneverBlocking
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
 import movie.image.SwatchColor
@@ -127,29 +127,29 @@ class EventDetailFeatureTest {
     private fun analyzer_responds_success(): Int {
         val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
         val swatch = Swatch(SwatchColor(color), SwatchColor(color), SwatchColor(color))
-        wheneverSus { analyzer.getColors(any()) }.thenReturn(swatch)
+        wheneverBlocking { analyzer.getColors(any()) }.thenReturn(swatch)
         return color
     }
 
     private fun rating_responds_success(): MovieRatingStored {
         val data = MovieRatingStored("", nextInt(0, 100).toByte(), "imdb", "rtt", "csfd")
-        wheneverSus { rating.getRating(any()) }.thenReturn(data.rating)
-        wheneverSus { imdb.getLink(any()) }.thenReturn(data.linkImdb)
-        wheneverSus { tomatoes.getLink(any()) }.thenReturn(data.linkRottenTomatoes)
-        wheneverSus { csfd.getLink(any()) }.thenReturn(data.linkCsfd)
+        wheneverBlocking { rating.getRating(any()) }.thenReturn(data.rating)
+        wheneverBlocking { imdb.getLink(any()) }.thenReturn(data.linkImdb)
+        wheneverBlocking { tomatoes.getLink(any()) }.thenReturn(data.linkRottenTomatoes)
+        wheneverBlocking { csfd.getLink(any()) }.thenReturn(data.linkCsfd)
         return data
     }
 
     private fun database_responds_success() {
         val detailView = DataPool.MovieDetailViews.first()
         val mediaViews = DataPool.MovieMediaViews.all()
-        wheneverSus { detail.select(any()) }.thenReturn(detailView)
-        wheneverSus { media.select(any()) }.thenReturn(mediaViews)
+        wheneverBlocking { detail.select(any()) }.thenReturn(detailView)
+        wheneverBlocking { media.select(any()) }.thenReturn(mediaViews)
     }
 
     private fun service_responds_success(): MovieDetailResponse {
         val data = DataPool.MovieDetailResponses.first()
-        wheneverSus { service.getDetail(any()) }
+        wheneverBlocking { service.getDetail(any()) }
             .thenReturn(Result.success(BodyResponse(MovieDetailsResponse(data))))
         return data
     }

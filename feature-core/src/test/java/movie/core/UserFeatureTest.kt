@@ -22,7 +22,7 @@ import movie.core.model.SignInMethod
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
 import movie.core.util.callback
-import movie.core.util.thenAnswerSus
+import movie.core.util.thenBlocking
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
@@ -62,14 +62,14 @@ class UserFeatureTest : FeatureTest() {
             on { write(any()) }.then { }
         }
         cinema = mock {
-            onBlocking { get(anyOrNull(), any()) }.thenAnswerSus {
+            onBlocking { get(anyOrNull(), any()) }.thenBlocking {
                 callback<Iterable<Cinema>>(1) {
                     Result.success(listOf(mock()))
                 }
             }
         }
         movie = mock {
-            onBlocking { get(any(), any()) }.thenAnswerSus {
+            onBlocking { get(any(), any()) }.thenBlocking {
                 callback<MovieDetail>(1) {
                     Result.success(mock())
                 }
@@ -264,12 +264,12 @@ class UserFeatureTest : FeatureTest() {
         val model = mock<Cinema> {
             on { id }.thenReturn("1051")
         }
-        whenever(cinema.get(anyOrNull(), any())).thenAnswerSus {
+        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
             callback<Iterable<Cinema>>(1) {
                 Result.success(listOf(model))
             }
         }
-        whenever(movie.get(any(), any())).thenAnswerSus {
+        whenever(movie.get(any(), any())).thenBlocking {
             callback<MovieDetail>(1) {
                 Result.failure(Throwable())
             }
@@ -297,12 +297,12 @@ class UserFeatureTest : FeatureTest() {
         val detail = mock<MovieDetail> {
             on { id }.thenReturn("id")
         }
-        whenever(cinema.get(anyOrNull(), any())).thenAnswerSus {
+        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
             callback<Iterable<Cinema>>(1) {
                 Result.success(listOf(model))
             }
         }
-        whenever(movie.get(any(), any())).thenAnswerSus {
+        whenever(movie.get(any(), any())).thenBlocking {
             callback(1) {
                 Result.success(detail)
             }
@@ -437,12 +437,12 @@ class UserFeatureTest : FeatureTest() {
         cinema: Cinema,
         movie: MovieDetail
     ) {
-        whenever(this.cinema.get(anyOrNull(), any())).thenAnswerSus {
+        whenever(this.cinema.get(anyOrNull(), any())).thenBlocking {
             callback<Iterable<Cinema>>(1) {
                 Result.success(listOf(cinema))
             }
         }
-        whenever(this.movie.get(any(), any())).thenAnswerSus {
+        whenever(this.movie.get(any(), any())).thenBlocking {
             callback(1) {
                 Result.success(movie)
             }
