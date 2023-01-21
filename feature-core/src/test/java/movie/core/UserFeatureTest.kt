@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package movie.core
 
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.calendar.CalendarWriter
 import movie.core.auth.AuthMetadata
@@ -18,8 +21,11 @@ import movie.core.model.MovieDetail
 import movie.core.model.SignInMethod
 import movie.core.nwk.di.NetworkModule
 import movie.core.preference.EventPreference
+import movie.core.util.callback
+import movie.core.util.thenAnswerSus
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.inOrder
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.spy
@@ -55,8 +61,20 @@ class UserFeatureTest : FeatureTest() {
         writer = mock {
             on { write(any()) }.then { }
         }
-        cinema = mock {}
-        movie = mock {}
+        cinema = mock {
+            onBlocking { get(anyOrNull(), any()) }.thenAnswerSus {
+                callback<Iterable<Cinema>>(1) {
+                    Result.success(listOf(mock()))
+                }
+            }
+        }
+        movie = mock {
+            onBlocking { get(any(), any()) }.thenAnswerSus {
+                callback<MovieDetail>(1) {
+                    Result.success(mock())
+                }
+            }
+        }
         store = TicketStore()
         whenever(preference.filterSeen).thenReturn(false)
         whenever(preference.calendarId).thenReturn("")
@@ -243,12 +261,19 @@ class UserFeatureTest : FeatureTest() {
 
     @Test
     fun getBookings_responds_withSuccess() = runTest {
-        val cinema = mock<Cinema> {
+        val model = mock<Cinema> {
             on { id }.thenReturn("1051")
         }
-        TODO()
-        //whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
-        //whenever(event.getDetail(any())).thenReturn(Result.failure(Throwable()))
+        whenever(cinema.get(anyOrNull(), any())).thenAnswerSus {
+            callback<Iterable<Cinema>>(1) {
+                Result.success(listOf(model))
+            }
+        }
+        whenever(movie.get(any(), any())).thenAnswerSus {
+            callback<MovieDetail>(1) {
+                Result.failure(Throwable())
+            }
+        }
         prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
@@ -266,15 +291,22 @@ class UserFeatureTest : FeatureTest() {
 
     @Test
     fun getBookings_responds_withSuccess_hasMovie() = runTest {
-        val cinema = mock<Cinema> {
+        val model = mock<Cinema> {
             on { id }.thenReturn("1051")
         }
-        val movie = mock<MovieDetail> {
+        val detail = mock<MovieDetail> {
             on { id }.thenReturn("id")
         }
-        TODO()
-        //whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
-        //whenever(event.getDetail(any())).thenReturn(Result.success(movie))
+        whenever(cinema.get(anyOrNull(), any())).thenAnswerSus {
+            callback<Iterable<Cinema>>(1) {
+                Result.success(listOf(model))
+            }
+        }
+        whenever(movie.get(any(), any())).thenAnswerSus {
+            callback(1) {
+                Result.success(detail)
+            }
+        }
         prepareLoggedInUser()
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
@@ -405,9 +437,16 @@ class UserFeatureTest : FeatureTest() {
         cinema: Cinema,
         movie: MovieDetail
     ) {
-        TODO()
-        //whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(cinema)))
-        //whenever(event.getDetail(any())).thenReturn(Result.success(movie))
+        whenever(this.cinema.get(anyOrNull(), any())).thenAnswerSus {
+            callback<Iterable<Cinema>>(1) {
+                Result.success(listOf(cinema))
+            }
+        }
+        whenever(this.movie.get(any(), any())).thenAnswerSus {
+            callback(1) {
+                Result.success(movie)
+            }
+        }
         responder.on(UrlResponder.Booking) {
             method = HttpMethod.Get
             code = HttpStatusCode.OK
