@@ -37,6 +37,8 @@ class MovieFacadeFromFeature(
     private val listenableFavorite = Listenable<OnChangedListener>()
 
     override suspend fun isFavorite(): Result<Boolean> {
+        var movie = movie
+        getDetail { movie = it.getOrNull() }
         return favorite.isFavorite(movie ?: return Result.failure(IllegalStateException()))
     }
 
@@ -99,6 +101,8 @@ class MovieFacadeFromFeature(
     }
 
     override suspend fun toggleFavorite() {
+        var movie = movie
+        getDetail { movie = it.getOrNull() }
         val preview = MoviePreviewFromDetail(requireNotNull(movie))
         favorite.toggle(preview).onSuccess {
             listenableFavorite.notify { onChanged() }

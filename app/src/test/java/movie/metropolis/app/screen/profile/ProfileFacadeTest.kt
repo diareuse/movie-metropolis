@@ -1,15 +1,22 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package movie.metropolis.app.screen.profile
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
+import movie.core.model.Cinema
 import movie.core.model.User
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.model.adapter.UserViewFromFeature
 import movie.metropolis.app.screen.FeatureTest
+import movie.metropolis.app.util.callback
 import movie.metropolis.app.util.nextString
+import movie.metropolis.app.util.thenBlocking
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import kotlin.test.assertFails
@@ -19,19 +26,27 @@ class ProfileFacadeTest : FeatureTest() {
     private lateinit var facade: ProfileFacade
 
     override fun prepare() {
-        facade = FacadeModule().profile(event, user)
+        facade = FacadeModule().profile(cinema, user)
     }
 
     @Test
     fun returns_cinemas_success() = runTest {
-        whenever(event.getCinemas(null)).thenReturn(Result.success(listOf(mock())))
+        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
+            callback<Iterable<Cinema>>(1) {
+                Result.success(listOf(mock()))
+            }
+        }
         val result = facade.getCinemas()
         assert(result.isSuccess) { result }
     }
 
     @Test
     fun returns_cinemas_failure() = runTest {
-        whenever(event.getCinemas(null)).thenReturn(Result.failure(RuntimeException()))
+        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
+            callback<Iterable<Cinema>>(1) {
+                Result.failure(RuntimeException())
+            }
+        }
         val result = facade.getCinemas()
         assert(result.isFailure) { result }
     }
@@ -166,11 +181,11 @@ class ProfileFacadeTest : FeatureTest() {
         override val lastName: String = nextString(),
         override val email: String = nextString(),
         override val phone: String = nextString(),
-        override val favorite: CinemaSimpleView? = Cinema(),
+        override val favorite: CinemaSimpleView? = TestCinema(),
         override val consent: UserView.ConsentView = Consent()
     ) : UserView
 
-    private data class Cinema(
+    private data class TestCinema(
         override val id: String = nextString(),
         override val name: String = nextString(),
         override val city: String = nextString()
