@@ -38,8 +38,8 @@ class EventDetailFeatureNetworkRating(
                 val rating = getRatingStored(
                     detail.id,
                     descriptor,
-                    descriptorLeanback,
                     descriptorLocal,
+                    descriptorLeanback,
                     descriptorLeanbackLocal
                 )
                 ratings.insertOrUpdate(rating)
