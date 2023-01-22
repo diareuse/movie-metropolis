@@ -15,6 +15,7 @@ class ExactPulseRequest private constructor(
     fun toPendingIntent(context: Context): PendingIntent {
         val intent = Intent(context, ExactPulseReceiver::class.java)
             .setAction(ExactPulseReceiver.ActionPulse)
+            .setPackage("movie.pulse")
             .putExtra(ExactPulseReceiver.ExtraType, type)
             .putExtra(ExactPulseReceiver.ExtraData, data.toByteArray())
         val requestCode = data.hashCode()
