@@ -2,7 +2,7 @@ package movie.metropolis.app.screen.listing
 
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import movie.core.ResultCallback
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.OnChangedListener
@@ -31,19 +31,19 @@ interface ListingFacade {
             }
 
         val ListingFacade.currentFlow
-            get() = flow {
+            get() = channelFlow {
                 favoriteChangedFlow.collect {
                     getCurrent {
-                        emit(it.asLoadable())
+                        send(it.asLoadable())
                     }
                 }
             }
 
         val ListingFacade.upcomingFlow
-            get() = flow {
+            get() = channelFlow {
                 favoriteChangedFlow.collect {
                     getUpcoming {
-                        emit(it.asLoadable())
+                        send(it.asLoadable())
                     }
                 }
             }

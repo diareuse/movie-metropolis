@@ -1,6 +1,6 @@
 package movie.metropolis.app.screen.order
 
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import movie.metropolis.app.screen.asLoadable
 
 interface OrderFacade {
@@ -14,8 +14,8 @@ interface OrderFacade {
     companion object {
 
         val OrderFacade.requestFlow
-            get() = flow {
-                emit(getRequest().asLoadable())
+            get() = channelFlow {
+                send(getRequest().asLoadable())
             }
 
     }

@@ -4,9 +4,9 @@ import android.location.Location
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.ImageView
@@ -55,42 +55,42 @@ interface MovieFacade : BookingFilterable {
             }
 
         val MovieFacade.favoriteFlow
-            get() = flow {
-                emit(Loadable.loading())
+            get() = channelFlow {
+                send(Loadable.loading())
                 favoriteChangedFlow.collect {
-                    emit(isFavorite().asLoadable())
+                    send(isFavorite().asLoadable())
                 }
             }
 
         val MovieFacade.availableFromFlow
-            get() = flow {
-                emit(Loadable.loading())
+            get() = channelFlow {
+                send(Loadable.loading())
                 getAvailableFrom {
-                    emit(it.asLoadable())
+                    send(it.asLoadable())
                 }
             }
 
         val MovieFacade.movieFlow
-            get() = flow {
-                emit(Loadable.loading())
+            get() = channelFlow {
+                send(Loadable.loading())
                 getMovie {
-                    emit(it.asLoadable())
+                    send(it.asLoadable())
                 }
             }
 
         val MovieFacade.posterFlow
-            get() = flow {
-                emit(Loadable.loading())
+            get() = channelFlow {
+                send(Loadable.loading())
                 getPoster {
-                    emit(it.asLoadable())
+                    send(it.asLoadable())
                 }
             }
 
         val MovieFacade.trailerFlow
-            get() = flow {
-                emit(Loadable.loading())
+            get() = channelFlow {
+                send(Loadable.loading())
                 getTrailer {
-                    emit(it.asLoadable())
+                    send(it.asLoadable())
                 }
             }
 
@@ -100,11 +100,11 @@ interface MovieFacade : BookingFilterable {
         ) = date
             .combine(location) { date, location -> date to location }
             .flatMapLatest { (date, location) ->
-                flow {
-                    emit(Loadable.loading())
+                channelFlow {
+                    send(Loadable.loading())
                     optionsChangedFlow.collect {
                         getShowings(date, location.latitude, location.longitude) {
-                            emit(it.asLoadable())
+                            send(it.asLoadable())
                         }
                     }
                 }
