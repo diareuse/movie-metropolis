@@ -10,4 +10,5 @@ interface MoviePreview : Movie {
     val cast: Iterable<String> // link to imdb in the ui
     val countryOfOrigin: String
     val spotColor: Int
+    val rating: Byte?
 }

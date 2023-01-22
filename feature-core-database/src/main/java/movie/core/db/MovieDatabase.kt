@@ -36,7 +36,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 5,
+    version = 6,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,

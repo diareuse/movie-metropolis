@@ -31,6 +31,7 @@ import movie.core.EventPreviewFeatureFilter
 import movie.core.EventPreviewFeatureFold
 import movie.core.EventPreviewFeatureInvalidateAfter
 import movie.core.EventPreviewFeatureNetwork
+import movie.core.EventPreviewFeatureRating
 import movie.core.EventPreviewFeatureRequireNotEmpty
 import movie.core.EventPreviewFeatureSaveTimestamp
 import movie.core.EventPreviewFeatureSort
@@ -130,7 +131,8 @@ internal class EventFeatureModule {
         analyzer: ImageAnalyzer,
         preference: EventPreference,
         booking: BookingDao,
-        sync: SyncPreference
+        sync: SyncPreference,
+        detail: EventDetailFeature
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
         override fun current(): EventPreviewFeature = common(ShowingType.Current)
@@ -151,6 +153,7 @@ internal class EventFeatureModule {
             out = EventPreviewFeatureSort(out)
             out = EventPreviewFeatureSpotColor(out, analyzer)
             out = EventPreviewFeatureFilter(out, preference, booking)
+            out = EventPreviewFeatureRating(out, detail)
             out = EventPreviewFeatureCatch(out)
             return out
         }
