@@ -90,6 +90,24 @@ abstract class EventPreviewFeatureTest {
             verify(sync).previewCurrent = any()
         }
 
+        @Test
+        fun get_fetches_ratings_fromNetwork() = runTest {
+            service_responds_success()
+            val rating = detail_responds_success()
+            val outputs = feature.get().last()
+            for (output in outputs.getOrThrow())
+                assertEquals(rating, output.rating)
+        }
+
+        @Test
+        fun get_fetches_ratings_fromDatabase() = runTest {
+            database_responds_success()
+            val rating = detail_responds_success()
+            val outputs = feature.get().last()
+            for (output in outputs.getOrThrow())
+                assertEquals(rating, output.rating)
+        }
+
     }
 
     class Upcoming : EventPreviewFeatureTest() {
@@ -198,27 +216,9 @@ abstract class EventPreviewFeatureTest {
         )
     }
 
-    @Test
-    fun get_fetches_ratings_fromNetwork() = runTest {
-        service_responds_success()
-        val rating = detail_responds_success()
-        val outputs = feature.get().last()
-        for (output in outputs.getOrThrow())
-            assertEquals(rating, output.rating)
-    }
-
-    @Test
-    fun get_fetches_ratings_fromDatabase() = runTest {
-        database_responds_success()
-        val rating = detail_responds_success()
-        val outputs = feature.get().last()
-        for (output in outputs.getOrThrow())
-            assertEquals(rating, output.rating)
-    }
-
     // ---
 
-    private fun detail_responds_success(): Byte {
+    protected fun detail_responds_success(): Byte {
         val value = nextInt(1, 100).toByte()
         wheneverBlocking { detail.get(any(), any()) }.thenBlocking {
             val movie = mock<MovieDetail> {
@@ -245,7 +245,7 @@ abstract class EventPreviewFeatureTest {
         return data
     }
 
-    private fun database_responds_success(): List<MoviePreviewView> {
+    protected fun database_responds_success(): List<MoviePreviewView> {
         val data = DataPool.MoviePreviewViews.all()
         wheneverBlocking { preview.selectCurrent() }.thenReturn(data)
         wheneverBlocking { preview.selectUpcoming() }.thenReturn(data)

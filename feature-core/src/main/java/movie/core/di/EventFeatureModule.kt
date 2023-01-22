@@ -135,7 +135,11 @@ internal class EventFeatureModule {
         detail: EventDetailFeature
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
-        override fun current(): EventPreviewFeature = common(ShowingType.Current)
+        override fun current(): EventPreviewFeature {
+            var out = common(ShowingType.Current)
+            out = EventPreviewFeatureRating(out, detail)
+            return out
+        }
 
         override fun upcoming(): EventPreviewFeature = common(ShowingType.Upcoming)
 
@@ -153,7 +157,6 @@ internal class EventFeatureModule {
             out = EventPreviewFeatureSort(out)
             out = EventPreviewFeatureSpotColor(out, analyzer)
             out = EventPreviewFeatureFilter(out, preference, booking)
-            out = EventPreviewFeatureRating(out, detail)
             out = EventPreviewFeatureCatch(out)
             return out
         }
