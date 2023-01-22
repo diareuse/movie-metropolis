@@ -10,6 +10,9 @@ class EventShowingsFeatureMovieRequireNotEmpty(
     override suspend fun get(date: Date, result: ResultCallback<CinemaWithShowings>) {
         origin.get(date, result.map {
             it.requireNotEmpty()
+            for ((_, values) in it)
+                values.requireNotEmpty()
+            it
         })
     }
 
