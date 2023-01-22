@@ -9,7 +9,9 @@ class EventCinemaFeatureRequireNotEmpty(
 ) : EventCinemaFeature {
 
     override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        origin.get(location) { result(it.requireNotEmpty()) }
+        origin.get(location, result.map {
+            it.requireNotEmpty()
+        })
     }
 
 }

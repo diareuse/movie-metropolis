@@ -12,13 +12,10 @@ class EventShowingsFeatureMovieStoring(
 ) : EventShowingsFeature.Movie {
 
     override suspend fun get(date: Date, result: ResultCallback<CinemaWithShowings>) {
-        origin.get(date) { response ->
-            result(response)
-            response.onSuccess {
-                for (showing in it.values.flatten())
-                    showingDao.insertOrUpdate(showing.asStored(movie))
-            }
-        }
+        origin.get(date, result.then {
+            for (showing in it.values.flatten())
+                showingDao.insertOrUpdate(showing.asStored(movie))
+        })
     }
 
 }

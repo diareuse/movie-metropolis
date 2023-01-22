@@ -15,12 +15,9 @@ class EventDetailFeatureStoring(
 ) : EventDetailFeature {
 
     override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        origin.get(movie) {
-            result(it)
-            it.onSuccess { detail ->
-                store(detail)
-            }
-        }
+        origin.get(movie, result.then {
+            store(it)
+        })
     }
 
     private suspend fun store(model: MovieDetail) {

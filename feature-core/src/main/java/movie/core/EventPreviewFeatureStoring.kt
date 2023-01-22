@@ -17,10 +17,9 @@ class EventPreviewFeatureStoring(
 ) : EventPreviewFeature {
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get {
-            result(it)
-            it.onSuccess { movies -> store(movies) }
-        }
+        origin.get(result.then {
+            store(it)
+        })
     }
 
     private suspend fun store(movies: List<MoviePreview>) {

@@ -11,13 +11,10 @@ class EventCinemaFeatureStoring(
 ) : EventCinemaFeature {
 
     override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        origin.get(location) {
-            result(it)
-            it.onSuccess { cinemas ->
-                for (item in cinemas)
-                    cinema.insertOrUpdate(item.asStored())
-            }
-        }
+        origin.get(location, result.then { cinemas ->
+            for (item in cinemas)
+                cinema.insertOrUpdate(item.asStored())
+        })
     }
 
 }

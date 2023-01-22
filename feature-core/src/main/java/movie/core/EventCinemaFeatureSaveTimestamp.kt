@@ -11,12 +11,9 @@ class EventCinemaFeatureSaveTimestamp(
 ) : EventCinemaFeature {
 
     override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        origin.get(location) {
-            result(it)
-            it.onSuccess {
-                preference.cinema = Date()
-            }
-        }
+        origin.get(location, result.then {
+            preference.cinema = Date()
+        })
     }
 
 }

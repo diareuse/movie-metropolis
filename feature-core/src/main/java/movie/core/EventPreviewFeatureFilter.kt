@@ -11,14 +11,13 @@ class EventPreviewFeatureFilter(
 ) : EventPreviewFeature {
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get outer@{
+        origin.get(result.map outer@{
             if (!preference.filterSeen) {
-                return@outer result(it)
+                return@outer it
             }
             val booking = booking.selectIds()
-            val output = it.getOrThrow().filter { it.id !in booking }
-            result(Result.success(output))
-        }
+            it.filter { it.id !in booking }
+        })
     }
 
 }

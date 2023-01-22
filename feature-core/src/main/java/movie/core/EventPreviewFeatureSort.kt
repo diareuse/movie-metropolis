@@ -9,12 +9,9 @@ class EventPreviewFeatureSort(
 ) : EventPreviewFeature {
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get {
-            val output = it.map { items ->
-                items.sortedBy { abs(Date().time - it.screeningFrom.time) }
-            }
-            result(output)
-        }
+        origin.get(result.map { items ->
+            items.sortedBy { abs(Date().time - it.screeningFrom.time) }
+        })
     }
 
 }

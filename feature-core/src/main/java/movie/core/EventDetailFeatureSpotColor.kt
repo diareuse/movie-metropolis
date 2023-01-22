@@ -12,14 +12,10 @@ class EventDetailFeatureSpotColor(
 ) : EventDetailFeature {
 
     override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        origin.get(movie) outer@{
-            result(it)
-            val output = it.map { detail ->
-                val color = analyzer.toSpotColor(detail.media) ?: return@outer
-                MovieDetailWithSpotColor(detail, color)
-            }
-            result(output)
-        }
+        origin.get(movie, result.thenMap outer@{ detail ->
+            val color = analyzer.toSpotColor(detail.media) ?: return@outer detail
+            MovieDetailWithSpotColor(detail, color)
+        })
     }
 
 }

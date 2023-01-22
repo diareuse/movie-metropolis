@@ -12,16 +12,13 @@ class EventPreviewFeatureSaveTimestamp(
 ) : EventPreviewFeature {
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get {
-            result(it)
-            it.onSuccess {
-                @Suppress("UNUSED_VARIABLE")
-                val ignore = when (type) {
-                    ShowingType.Current -> preference.previewCurrent = Date()
-                    ShowingType.Upcoming -> preference.previewUpcoming = Date()
-                }
+        origin.get(result.then {
+            @Suppress("UNUSED_VARIABLE")
+            val ignore = when (type) {
+                ShowingType.Current -> preference.previewCurrent = Date()
+                ShowingType.Upcoming -> preference.previewUpcoming = Date()
             }
-        }
+        })
     }
 
 }

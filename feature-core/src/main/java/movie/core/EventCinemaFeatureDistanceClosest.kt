@@ -10,15 +10,12 @@ class EventCinemaFeatureDistanceClosest(
 ) : EventCinemaFeature {
 
     override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        origin.get(location) {
-            val output = it.map { cinemas ->
-                cinemas.filter { cinema ->
-                    val distance = cinema.distance
-                    distance == null || distance.toInt() in 0 until preference.distanceKms
-                }
+        origin.get(location, result.map { cinemas ->
+            cinemas.filter { cinema ->
+                val distance = cinema.distance
+                distance == null || distance.toInt() in 0 until preference.distanceKms
             }
-            result(output)
-        }
+        })
     }
 
 }
