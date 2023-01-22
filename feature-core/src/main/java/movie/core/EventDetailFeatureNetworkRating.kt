@@ -24,29 +24,25 @@ class EventDetailFeatureNetworkRating(
 ) : EventDetailFeature {
 
     override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        origin.get(movie) {
-            result(it)
-            val output = it.map { detail ->
-                val year = Calendar.getInstance().run {
-                    time = detail.releasedAt
-                    get(Calendar.YEAR)
-                }
-                val descriptor = MovieDescriptor(detail.originalName, year)
-                val descriptorLocal = MovieDescriptor(detail.name, year)
-                val descriptorLeanback = MovieDescriptor(detail.originalName, year - 1)
-                val descriptorLeanbackLocal = MovieDescriptor(detail.name, year - 1)
-                val rating = getRatingStored(
-                    detail.id,
-                    descriptor,
-                    descriptorLocal,
-                    descriptorLeanback,
-                    descriptorLeanbackLocal
-                )
-                ratings.insertOrUpdate(rating)
-                MovieDetailWithRating(detail, rating)
+        origin.get(movie, result.thenMap { detail ->
+            val year = Calendar.getInstance().run {
+                time = detail.releasedAt
+                get(Calendar.YEAR)
             }
-            result(output)
-        }
+            val descriptor = MovieDescriptor(detail.originalName, year)
+            val descriptorLocal = MovieDescriptor(detail.name, year)
+            val descriptorLeanback = MovieDescriptor(detail.originalName, year - 1)
+            val descriptorLeanbackLocal = MovieDescriptor(detail.name, year - 1)
+            val rating = getRatingStored(
+                detail.id,
+                descriptor,
+                descriptorLocal,
+                descriptorLeanback,
+                descriptorLeanbackLocal
+            )
+            ratings.insertOrUpdate(rating)
+            MovieDetailWithRating(detail, rating)
+        })
     }
 
     private suspend fun getRatingStored(

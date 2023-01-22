@@ -8,7 +8,9 @@ class EventPreviewFeatureRequireNotEmpty(
 ) : EventPreviewFeature {
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get { result(it.requireNotEmpty()) }
+        origin.get(result.map {
+            it.requireNotEmpty()
+        })
     }
 
 }

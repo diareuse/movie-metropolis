@@ -14,15 +14,12 @@ class EventShowingsFeatureCinemaUnseen(
     private var seenIds = setOf<String>()
 
     override suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>) {
-        origin.get(date) inner@{
+        origin.get(date, result.map inner@{
             if (!preferences.filterSeen)
-                return@inner result(it)
-            val output = it.map { items ->
-                val ids = getSeenIds()
-                items.filter { (key, _) -> key.id !in ids }
-            }
-            result(output)
-        }
+                return@inner it
+            val ids = getSeenIds()
+            it.filter { (key, _) -> key.id !in ids }
+        })
     }
 
     private suspend fun getSeenIds(): Set<String> {

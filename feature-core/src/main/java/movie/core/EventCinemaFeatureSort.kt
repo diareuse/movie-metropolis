@@ -8,12 +8,9 @@ class EventCinemaFeatureSort(
 ) : EventCinemaFeature {
 
     override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        origin.get(location) {
-            val output = it.map { cinemas ->
-                cinemas.sortedWith(compareBy(Cinema::distance, Cinema::city))
-            }
-            result(output)
-        }
+        origin.get(location, result.map {
+            it.sortedWith(compareBy(Cinema::distance, Cinema::city))
+        })
     }
 
 }
