@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.booking
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
 import movie.metropolis.app.screen.Loadable
@@ -15,12 +15,12 @@ interface BookingFacade {
 
     companion object {
 
-        fun BookingFacade.bookingsFlow(refresh: Flow<suspend () -> Unit>) = flow {
-            emit(getBookings().asLoadable())
+        fun BookingFacade.bookingsFlow(refresh: Flow<suspend () -> Unit>) = channelFlow {
+            send(getBookings().asLoadable())
             refresh.collect {
-                emit(Loadable.loading())
+                send(Loadable.loading())
                 it()
-                emit(getBookings().asLoadable())
+                send(getBookings().asLoadable())
             }
         }
 

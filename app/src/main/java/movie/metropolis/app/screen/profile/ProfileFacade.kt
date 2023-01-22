@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.profile
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
@@ -21,21 +21,21 @@ interface ProfileFacade {
     companion object {
 
         val ProfileFacade.cinemasFlow
-            get() = flow {
-                emit(getCinemas().asLoadable())
+            get() = channelFlow {
+                send(getCinemas().asLoadable())
             }
 
         val ProfileFacade.membershipFlow
-            get() = flow {
-                emit(getMembership().asLoadable())
+            get() = channelFlow {
+                send(getMembership().asLoadable())
             }
 
-        fun ProfileFacade.userFlow(jobEmitter: Flow<suspend () -> Unit>) = flow {
-            emit(getUser().asLoadable())
+        fun ProfileFacade.userFlow(jobEmitter: Flow<suspend () -> Unit>) = channelFlow {
+            send(getUser().asLoadable())
             jobEmitter.collect {
-                emit(Loadable.loading())
+                send(Loadable.loading())
                 it()
-                emit(getUser().asLoadable())
+                send(getUser().asLoadable())
             }
         }
 
