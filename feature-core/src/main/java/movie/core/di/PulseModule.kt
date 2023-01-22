@@ -15,6 +15,7 @@ import movie.core.FavoriteFeature
 import movie.core.UserFeature
 import movie.core.notification.NotificationInfoProvider
 import movie.core.pulse.*
+import movie.image.ImageAnalyzer
 import movie.pulse.ExactPulse
 import movie.pulse.Pulse
 import movie.pulse.PulseCombined
@@ -45,9 +46,10 @@ class PulseModule {
     fun exactPulseNotificationMovie(
         event: EventDetailFeature,
         info: NotificationInfoProvider,
-        favorite: FavoriteFeature
+        favorite: FavoriteFeature,
+        image: ImageAnalyzer
     ): ExactPulse {
-        return ExactPulseNotificationMovie(event, info, favorite)
+        return ExactPulseNotificationMovie(event, info, favorite, image)
     }
 
 }

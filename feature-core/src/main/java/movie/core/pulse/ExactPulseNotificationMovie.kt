@@ -4,6 +4,8 @@ import android.app.Notification
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
@@ -17,13 +19,15 @@ import movie.core.model.Media
 import movie.core.model.Movie
 import movie.core.model.MovieDetail
 import movie.core.notification.NotificationInfoProvider
+import movie.image.ImageAnalyzer
 import movie.pulse.ExactPulseCoroutine
 import java.net.URL
 
 class ExactPulseNotificationMovie(
     private val detail: EventDetailFeature,
     private val info: NotificationInfoProvider,
-    private val favorite: FavoriteFeature
+    private val favorite: FavoriteFeature,
+    private val image: ImageAnalyzer
 ) : ExactPulseCoroutine() {
 
     override suspend fun executeAsync(context: Context, data: Data) {
@@ -36,16 +40,23 @@ class ExactPulseNotificationMovie(
         favorite.toggle(MoviePreviewFromDetail(movie))
     }
 
-    private fun getNotification(context: Context, movie: MovieDetail): Notification {
-        val style = NotificationCompat.BigPictureStyle()
-            .setBigContentTitle("Now available!")
-            .setSummaryText("${movie.name} is now available at the cinemas.")
-            .bigPicture(getPicture(movie))
+    private suspend fun getNotification(context: Context, movie: MovieDetail): Notification {
+        val imageUrl = getPictureUrl(movie)
+        val color = if (imageUrl != null) image.getColors(imageUrl).vibrant.rgb else Color.BLACK
+        val image = getPicture(imageUrl)
+        var style = NotificationCompat.BigPictureStyle()
+            .setBigContentTitle(context.getString(R.string.now_available))
+            .setSummaryText(context.getString(R.string.now_available_description, movie.name))
+            .bigPicture(image)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            style = style.showBigPictureWhenCollapsed(true)
+        }
         return NotificationCompat.Builder(context, info.getChannel())
-            .setContentTitle("Now available!")
-            .setContentText("${movie.name} is now available at the cinemas.")
+            .setContentTitle(context.getString(R.string.now_available))
+            .setContentText(context.getString(R.string.now_available_description, movie.name))
             .setSmallIcon(R.drawable.ic_stat_movie)
             .setContentIntent(info.getDeepLink(movie))
+            .setColor(color)
             .setStyle(style)
             .setColorized(true)
             .setOnlyAlertOnce(true)
@@ -53,13 +64,14 @@ class ExactPulseNotificationMovie(
             .build()
     }
 
-    private fun getPicture(movie: MovieDetail): Bitmap? {
-        val image = movie.media
-            .asSequence()
-            .filterIsInstance<Media.Image>()
-            .maxByOrNull { it.width * it.height }
-            ?: return null
-        return URL(image.url).openStream().use {
+    private fun getPictureUrl(movie: MovieDetail) = movie.media
+        .asSequence()
+        .filterIsInstance<Media.Image>()
+        .maxByOrNull { it.width * it.height }
+        ?.url
+
+    private fun getPicture(url: String?): Bitmap? {
+        return URL(url ?: return null).openStream().use {
             BitmapFactory.decodeStream(it)
         }
     }
