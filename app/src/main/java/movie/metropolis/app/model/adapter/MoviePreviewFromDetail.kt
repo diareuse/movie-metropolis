@@ -34,4 +34,7 @@ class MoviePreviewFromDetail(
         get() = detail.countryOfOrigin.orEmpty()
     override val spotColor: Int
         get() = detail.spotColor
+    override val rating: Byte
+        get() = detail.rating
+
 }

@@ -10,12 +10,15 @@ import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.model.MoviePreviewView
 import movie.core.di.EventFeatureModule
+import movie.core.model.MovieDetail
 import movie.core.model.MoviePreview
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
+import movie.core.util.callback
+import movie.core.util.thenBlocking
 import movie.core.util.wheneverBlocking
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
@@ -34,6 +37,7 @@ import kotlin.test.assertTrue
 
 abstract class EventPreviewFeatureTest {
 
+    protected lateinit var detail: EventDetailFeature
     protected lateinit var sync: SyncPreference
     protected lateinit var booking: BookingDao
     protected lateinit var preference: EventPreference
@@ -60,6 +64,7 @@ abstract class EventPreviewFeatureTest {
             on { previewCurrent }.thenReturn(Date())
             on { previewUpcoming }.thenReturn(Date())
         }
+        detail = mock {}
         feature = EventFeatureModule().preview(
             service = service,
             movie = movie,
@@ -68,7 +73,8 @@ abstract class EventPreviewFeatureTest {
             analyzer = analyzer,
             preference = preference,
             booking = booking,
-            sync = sync
+            sync = sync,
+            detail = detail
         ).run(::create)
     }
 
@@ -192,7 +198,38 @@ abstract class EventPreviewFeatureTest {
         )
     }
 
+    @Test
+    fun get_fetches_ratings_fromNetwork() = runTest {
+        service_responds_success()
+        val rating = detail_responds_success()
+        val outputs = feature.get().last()
+        for (output in outputs.getOrThrow())
+            assertEquals(rating, output.rating)
+    }
+
+    @Test
+    fun get_fetches_ratings_fromDatabase() = runTest {
+        database_responds_success()
+        val rating = detail_responds_success()
+        val outputs = feature.get().last()
+        for (output in outputs.getOrThrow())
+            assertEquals(rating, output.rating)
+    }
+
     // ---
+
+    private fun detail_responds_success(): Byte {
+        val value = nextInt(1, 100).toByte()
+        wheneverBlocking { detail.get(any(), any()) }.thenBlocking {
+            val movie = mock<MovieDetail> {
+                on { rating }.thenReturn(value)
+            }
+            callback(1) {
+                Result.success(movie)
+            }
+        }
+        return value
+    }
 
     private fun analyzer_responds_success(): Int {
         val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
@@ -223,13 +260,8 @@ abstract class EventPreviewFeatureTest {
 
     protected fun service_responds_success(): List<ExtendedMovieResponse> {
         val data = DataPool.ExtendedMovieResponses.all()
-        wheneverBlocking { service.getMoviesByType(any()) }.thenReturn(
-            Result.success(
-                BodyResponse(
-                    data
-                )
-            )
-        )
+        wheneverBlocking { service.getMoviesByType(any()) }
+            .thenReturn(Result.success(BodyResponse(data)))
         return data
     }
 

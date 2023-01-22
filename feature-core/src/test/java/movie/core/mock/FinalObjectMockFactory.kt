@@ -20,7 +20,7 @@ class FinalObjectMockFactory<T : Any>(
     private val KParameter.defaultParam: Any?
         get() = when {
             type.isMarkedNullable -> null
-            type.isOrIsSubtypeOf<Byte>() -> 0x0b
+            type.isOrIsSubtypeOf<Byte>() -> 0.toByte()
             type.isOrIsSubtypeOf<Double>() -> 0.0
             type.isOrIsSubtypeOf<Float>() -> 0f
             type.isOrIsSubtypeOf<Int>() -> 0

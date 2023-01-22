@@ -6,7 +6,7 @@ import java.util.Date
 import kotlin.time.Duration.Companion.milliseconds
 
 @DatabaseView(
-    value = "select movies.id,movies.name,movies.url,movies.released_at,movies.duration,movie_previews.screening_from,movie_previews.description,movie_previews.directors,movie_previews.`cast`,movie_previews.country_of_origin,movie_previews.upcoming from movies, movie_previews where movies.id=movie_previews.movie",
+    value = "select movies.id,movies.name,movies.url,movies.released_at,movies.duration,movie_previews.screening_from,movie_previews.description,movie_previews.directors,movie_previews.`cast`,movie_previews.country_of_origin,movie_previews.upcoming,movie_ratings.rating from movies, movie_previews, movie_ratings where movies.id=movie_previews.movie and movies.id=movie_ratings.movie",
     viewName = "movie_preview_views"
 )
 data class MoviePreviewView(
@@ -29,7 +29,9 @@ data class MoviePreviewView(
     @ColumnInfo("cast")
     val cast: Iterable<String>,
     @ColumnInfo("country_of_origin")
-    val countryOfOrigin: String
+    val countryOfOrigin: String,
+    @ColumnInfo("rating")
+    val rating: Byte
 ) {
 
     val duration get() = durationMillis.milliseconds
