@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.listing
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -154,7 +155,7 @@ fun MovieItemLayout(
             PosterLayout(
                 modifier = Modifier.fillMaxHeight(),
                 posterAspectRatio = posterAspectRatio,
-                shadowColor = shadowColor
+                shadowColor = animateColorAsState(shadowColor).value
             ) {
                 Box(modifier = Modifier.fillMaxSize(), content = poster)
             }

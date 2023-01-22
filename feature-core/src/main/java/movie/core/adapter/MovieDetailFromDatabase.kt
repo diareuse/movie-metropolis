@@ -46,5 +46,5 @@ data class MovieDetailFromDatabase(
     override val linkCsfd: String?
         get() = movie.linkCsfd
     override val spotColor: Int
-        get() = 0x000000
+        get() = 0xff000000.toInt()
 }

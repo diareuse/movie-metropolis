@@ -45,7 +45,7 @@ internal data class MovieDetailFromResponse(
     override val linkCsfd: String?
         get() = null
     override val spotColor: Int
-        get() = 0x000000
+        get() = 0xff000000.toInt()
 
     private fun MediaFromResponse(media: MovieDetailResponse.Media) =
         when (media) {

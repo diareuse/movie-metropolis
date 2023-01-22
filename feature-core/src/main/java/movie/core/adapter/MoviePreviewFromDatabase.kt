@@ -34,5 +34,5 @@ data class MoviePreviewFromDatabase(
     override val countryOfOrigin: String
         get() = movie.countryOfOrigin
     override val spotColor: Int
-        get() = 0x000000
+        get() = 0xff000000.toInt()
 }

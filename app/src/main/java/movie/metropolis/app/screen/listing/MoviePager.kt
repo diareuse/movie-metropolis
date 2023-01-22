@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.listing
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -83,7 +84,9 @@ fun MoviePager(
                         scope = this,
                         page = index,
                         shape = Theme.container.poster,
-                        shadowColor = item.poster?.spotColor ?: Color.Black
+                        shadowColor = animateColorAsState(
+                            item.poster?.spotColor ?: Color.Black
+                        ).value
                     ),
                 url = item.poster?.url,
                 onClick = { onClick(item.id) }

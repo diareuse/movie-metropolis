@@ -38,7 +38,7 @@ internal data class MoviePreviewFromResponse(
     override val countryOfOrigin: String
         get() = metadata.countryOfOrigin.orEmpty()
     override val spotColor: Int
-        get() = 0x000000
+        get() = 0xff000000.toInt()
 
     private fun MediaFromResponse(media: ExtendedMovieResponse.Media) =
         when (media) {
