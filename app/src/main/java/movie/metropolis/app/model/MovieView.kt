@@ -13,6 +13,7 @@ interface MovieView {
     val cast: List<String>
     val countryOfOrigin: String
     val favorite: Boolean
+    val rating: String?
 
     val poster: ImageView?
     val video: VideoView?

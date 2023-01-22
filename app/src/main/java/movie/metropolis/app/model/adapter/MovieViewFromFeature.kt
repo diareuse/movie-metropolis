@@ -36,6 +36,10 @@ data class MovieViewFromFeature(
         get() = movie.cast.toList()
     override val countryOfOrigin: String
         get() = movie.countryOfOrigin
+    override val rating: String?
+        get() = movie.rating?.takeUnless { it <= 0 }?.let {
+            "%d%%".format(it)
+        }
     override val poster: ImageView?
         get() {
             val media = movie.media

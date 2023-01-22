@@ -10,17 +10,19 @@ class EventPreviewFeatureRating(
 ) : EventPreviewFeature {
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
+        var last: Result<List<MoviePreview>> = Result.failure(IllegalStateException())
         origin.get {
             result(it)
-            val output = it.map { movies ->
-                movies.map { movie ->
-                    val rating = movie.rating
-                    if (rating != null && rating > 0) movie
-                    else MoviePreviewWithRating(movie, getRating(movie))
-                }
-            }
-            result(output)
+            last = it
         }
+        val output = last.map { movies ->
+            movies.map { movie ->
+                val rating = movie.rating
+                if (rating != null && rating > 0) movie
+                else MoviePreviewWithRating(movie, getRating(movie))
+            }
+        }
+        result(output)
     }
 
     private suspend fun getRating(movie: MoviePreview): Byte? {

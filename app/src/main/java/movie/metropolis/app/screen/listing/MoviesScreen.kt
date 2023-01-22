@@ -182,7 +182,8 @@ class MovieViewProvider :
         override val countryOfOrigin: String = "USA",
         override val poster: ImageView? = PreviewImage(),
         override val video: VideoView? = PreviewVideo(),
-        override val favorite: Boolean = nextBoolean()
+        override val favorite: Boolean = nextBoolean(),
+        override val rating: String? = "75%"
     ) : MovieView
 
     private data class PreviewImage(
@@ -193,7 +194,7 @@ class MovieViewProvider :
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5228D2R-lg.jpg",
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5392S2R-lg.jpg"
         ).random(),
-        override val spotColor: Color = Color.Yellow
+        override val spotColor: Color = Color.LightGray
     ) : ImageView
 
     private data class PreviewVideo(

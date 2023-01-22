@@ -89,6 +89,7 @@ fun MoviePager(
                         ).value
                     ),
                 url = item.poster?.url,
+                rating = item.rating,
                 onClick = { onClick(item.id) }
             )
         }

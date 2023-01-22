@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.listing
 
+import androidx.compose.foundation.background
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +18,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -183,6 +187,35 @@ fun MoviePoster(
                 onClick = onClick?.withHaptics() ?: {}),
         url = url
     )
+}
+
+@Composable
+fun MoviePoster(
+    url: String?,
+    rating: String?,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
+) {
+    if (rating == null) MoviePoster(url, modifier, onClick)
+    else Box(modifier = modifier) {
+        MoviePoster(url, onClick = onClick)
+        val shape = Theme.container.card.copy(
+            topStart = ZeroCornerSize,
+            bottomEnd = ZeroCornerSize,
+            topEnd = ZeroCornerSize
+        )
+        Text(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .shadow(8.dp, shape)
+                .clip(shape)
+                .background(Theme.color.container.tertiary, shape)
+                .padding(12.dp)
+                .padding(start = 4.dp),
+            text = rating,
+            style = Theme.textStyle.title
+        )
+    }
 }
 
 @Composable
