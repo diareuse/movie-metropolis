@@ -1,8 +1,5 @@
 package movie.metropolis.app.screen.booking
 
-import android.app.Activity
-import android.content.Context
-import android.content.ContextWrapper
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -46,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.profile.Barcode
+import movie.metropolis.app.util.findActivity
 import movie.style.AppDialog
 import movie.style.AppImage
 import movie.style.layout.TicketShape
@@ -93,14 +91,6 @@ fun BookingTicketDialog(
             name = name
         )
     }
-}
-
-private fun Context.findActivity(): Activity {
-    when (this) {
-        is Activity -> return this
-        is ContextWrapper -> return baseContext.findActivity()
-    }
-    throw IllegalStateException("Unknown Context $this")
 }
 
 @Composable

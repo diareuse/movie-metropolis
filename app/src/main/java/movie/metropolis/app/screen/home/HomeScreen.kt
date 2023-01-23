@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.home
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -26,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -39,6 +41,7 @@ import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.play.PlayUpdate
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
@@ -215,36 +218,39 @@ private fun HomeScreen(
         },
         floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
-            Surface(
-                tonalElevation = 1.dp,
-                shadowElevation = 32.dp,
-                color = Theme.color.container.background,
-                contentColor = Theme.color.content.background
-            ) {
-                NavigationBar(
-                    containerColor = Color.Transparent
+            Column {
+                PlayUpdate(modifier = Modifier.align(Alignment.CenterHorizontally))
+                Surface(
+                    tonalElevation = 1.dp,
+                    shadowElevation = 32.dp,
+                    color = Theme.color.container.background,
+                    contentColor = Theme.color.content.background
                 ) {
-                    SelectableNavigationBarItem(
-                        selected = selected,
-                        index = 0,
-                        icon = R.drawable.ic_movie,
-                        label = stringResource(R.string.movies),
-                        onSelected = onChanged
-                    )
-                    SelectableNavigationBarItem(
-                        selected = selected,
-                        index = 1,
-                        icon = R.drawable.ic_cinema,
-                        label = stringResource(R.string.cinemas),
-                        onSelected = onChanged
-                    )
-                    SelectableNavigationBarItem(
-                        selected = selected,
-                        index = 2,
-                        icon = R.drawable.ic_ticket,
-                        label = stringResource(R.string.tickets),
-                        onSelected = onChanged
-                    )
+                    NavigationBar(
+                        containerColor = Color.Transparent
+                    ) {
+                        SelectableNavigationBarItem(
+                            selected = selected,
+                            index = 0,
+                            icon = R.drawable.ic_movie,
+                            label = stringResource(R.string.movies),
+                            onSelected = onChanged
+                        )
+                        SelectableNavigationBarItem(
+                            selected = selected,
+                            index = 1,
+                            icon = R.drawable.ic_cinema,
+                            label = stringResource(R.string.cinemas),
+                            onSelected = onChanged
+                        )
+                        SelectableNavigationBarItem(
+                            selected = selected,
+                            index = 2,
+                            icon = R.drawable.ic_ticket,
+                            label = stringResource(R.string.tickets),
+                            onSelected = onChanged
+                        )
+                    }
                 }
             }
         }
