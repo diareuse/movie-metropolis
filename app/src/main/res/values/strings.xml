@@ -75,4 +75,5 @@
     <string name="error_cinema">Cinemas cannot be shown due to an internal issue</string>
     <string name="nearby_cinemas">Nearby Cinemas</string>
     <string name="nearby_cinemas_description">Value is in KMs. Choosing large values can affect loading performance. Values up to 50 kms should display your city, 100 kms nearby cities and 20037 cinemas in the whole universe.</string>
+    <string name="downloading_update">Downloading update…</string>
 </resources>

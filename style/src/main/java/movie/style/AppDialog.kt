@@ -107,7 +107,7 @@ fun AppDialog(
     )
 }
 
-private val AnticipateOvershootEasing = object : Easing {
+val AnticipateOvershootEasing = object : Easing {
     val easing = AnticipateOvershootInterpolator()
     override fun transform(fraction: Float): Float {
         return easing.getInterpolation(fraction)
