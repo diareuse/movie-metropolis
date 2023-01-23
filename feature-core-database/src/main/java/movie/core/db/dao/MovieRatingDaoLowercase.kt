@@ -4,7 +4,7 @@ import movie.core.db.model.MovieRatingStored
 
 class MovieRatingDaoLowercase(
     private val origin: MovieRatingDao
-) : MovieRatingDao {
+) : MovieRatingDao by origin {
 
     override suspend fun insert(model: MovieRatingStored) {
         origin.insert(model.lowercase())
@@ -16,6 +16,10 @@ class MovieRatingDaoLowercase(
 
     override suspend fun update(model: MovieRatingStored) {
         origin.update(model.lowercase())
+    }
+
+    override suspend fun select(id: String): Byte? {
+        return origin.select(id.lowercase())
     }
 
     // ---

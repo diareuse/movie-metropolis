@@ -4,7 +4,7 @@ import movie.core.EventDetailFeature.Companion.get
 import movie.core.adapter.MoviePreviewWithRating
 import movie.core.model.MoviePreview
 
-class EventPreviewFeatureRating(
+class EventPreviewFeatureNetworkRating(
     private val origin: EventPreviewFeature,
     private val detail: EventDetailFeature
 ) : EventPreviewFeature {

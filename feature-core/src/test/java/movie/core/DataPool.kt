@@ -221,8 +221,7 @@ interface DataPool<T> {
                 description = "",
                 directors = emptyList(),
                 cast = emptyList(),
-                countryOfOrigin = "",
-                rating = 0
+                countryOfOrigin = ""
             )
             this += MoviePreviewView(
                 id = "2",
@@ -234,8 +233,7 @@ interface DataPool<T> {
                 description = "",
                 directors = emptyList(),
                 cast = emptyList(),
-                countryOfOrigin = "",
-                rating = 0
+                countryOfOrigin = ""
             )
             this += MoviePreviewView(
                 id = "1",
@@ -247,8 +245,7 @@ interface DataPool<T> {
                 description = "",
                 directors = emptyList(),
                 cast = emptyList(),
-                countryOfOrigin = "",
-                rating = 0
+                countryOfOrigin = ""
             )
         }.map(modifier)
 

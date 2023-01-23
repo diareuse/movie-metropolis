@@ -21,6 +21,10 @@ class MovieRatingDaoPerformance(
         origin.update(model)
     }
 
+    override suspend fun select(id: String) = tracer.trace("$Tag.select") {
+        origin.select(id)
+    }
+
     companion object {
         private const val Tag = "movie-rating"
     }
