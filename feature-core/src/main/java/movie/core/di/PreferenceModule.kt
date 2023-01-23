@@ -10,6 +10,8 @@ import movie.core.preference.RegionPreference
 import movie.core.preference.RegionPreferenceStored
 import movie.core.preference.SyncPreference
 import movie.core.preference.SyncPreferenceStored
+import movie.core.preference.UserPreference
+import movie.core.preference.UserPreferenceStored
 import movie.settings.PreferenceStore
 import movie.settings.di.Functionality
 import movie.settings.di.User
@@ -40,6 +42,14 @@ class PreferenceModule {
         store: PreferenceStore
     ): SyncPreference {
         return SyncPreferenceStored(store)
+    }
+
+    @Provides
+    fun user(
+        @User
+        store: PreferenceStore
+    ): UserPreference {
+        return UserPreferenceStored(store)
     }
 
 }

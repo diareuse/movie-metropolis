@@ -10,6 +10,13 @@ import movie.core.EventDetailFeature
 import movie.core.TicketStore
 import movie.core.UserCredentialFeature
 import movie.core.UserCredentialFeatureNetwork
+import movie.core.UserDataFeature
+import movie.core.UserDataFeatureCatch
+import movie.core.UserDataFeatureChain
+import movie.core.UserDataFeatureFold
+import movie.core.UserDataFeatureNetwork
+import movie.core.UserDataFeatureStored
+import movie.core.UserDataFeatureStoring
 import movie.core.UserFeature
 import movie.core.UserFeatureCalendar
 import movie.core.UserFeatureDatabase
@@ -28,6 +35,7 @@ import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.nwk.UserService
 import movie.core.preference.EventPreference
+import movie.core.preference.UserPreference
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -80,6 +88,25 @@ internal class UserFeatureModule {
         account: UserAccount
     ): UserCredentialFeature {
         return UserCredentialFeatureNetwork(service, account)
+    }
+
+    @Provides
+    fun data(
+        service: UserService,
+        cinema: EventCinemaFeature,
+        preference: UserPreference
+    ): UserDataFeature {
+        var network: UserDataFeature
+        network = UserDataFeatureNetwork(service, cinema)
+        network = UserDataFeatureStoring(network, preference)
+        var out: UserDataFeature
+        out = UserDataFeatureStored(preference, cinema)
+        out = UserDataFeatureChain(
+            UserDataFeatureFold(out, network),
+            UserDataFeatureFold(network, out)
+        )
+        out = UserDataFeatureCatch(out)
+        return out
     }
 
 }

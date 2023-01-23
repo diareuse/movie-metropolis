@@ -9,6 +9,9 @@ import movie.core.db.model.MovieReferenceView
 import movie.core.db.model.ShowingStored
 import movie.core.model.Cinema
 import movie.core.nwk.model.CinemaResponse
+import movie.core.nwk.model.ConsentRemote
+import movie.core.nwk.model.CustomerPointsResponse
+import movie.core.nwk.model.CustomerResponse
 import movie.core.nwk.model.EventResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.nwk.model.ExtendedMovieResponse.Metadata
@@ -401,6 +404,32 @@ interface DataPool<T> {
                 latitude = 0.3,
                 longitude = 0.3
             )
+        }.map(modifier)
+
+    }
+
+    object CustomerResponseCustomer : DataPool<CustomerResponse.Customer> {
+
+        override fun all(modifier: Modifier<CustomerResponse.Customer>) = buildList {
+            this += CustomerResponse.Customer(
+                id = "",
+                firstName = "",
+                lastName = "",
+                email = "",
+                phone = "",
+                birthAt = null,
+                favoriteCinema = null,
+                consent = ConsentRemote(marketing = false, marketingPremium = false),
+                membership = CustomerResponse.Membership(null)
+            )
+        }.map(modifier)
+
+    }
+
+    object CustomerPointsResponses : DataPool<CustomerPointsResponse> {
+
+        override fun all(modifier: Modifier<CustomerPointsResponse>) = buildList {
+            this += CustomerPointsResponse(0.0, 0.0, Date())
         }.map(modifier)
 
     }
