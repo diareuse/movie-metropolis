@@ -27,11 +27,12 @@ import movie.core.EventDetailFeatureStoring
 import movie.core.EventPreviewFeature
 import movie.core.EventPreviewFeatureCatch
 import movie.core.EventPreviewFeatureDatabase
+import movie.core.EventPreviewFeatureDatabaseRating
 import movie.core.EventPreviewFeatureFilter
 import movie.core.EventPreviewFeatureFold
 import movie.core.EventPreviewFeatureInvalidateAfter
 import movie.core.EventPreviewFeatureNetwork
-import movie.core.EventPreviewFeatureRating
+import movie.core.EventPreviewFeatureNetworkRating
 import movie.core.EventPreviewFeatureRequireNotEmpty
 import movie.core.EventPreviewFeatureSaveTimestamp
 import movie.core.EventPreviewFeatureSort
@@ -132,12 +133,14 @@ internal class EventFeatureModule {
         preference: EventPreference,
         booking: BookingDao,
         sync: SyncPreference,
-        detail: EventDetailFeature
+        detail: EventDetailFeature,
+        rating: MovieRatingDao
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
         override fun current(): EventPreviewFeature {
             var out = common(ShowingType.Current)
-            out = EventPreviewFeatureRating(out, detail)
+            out = EventPreviewFeatureDatabaseRating(out, rating)
+            out = EventPreviewFeatureNetworkRating(out, detail)
             return out
         }
 
