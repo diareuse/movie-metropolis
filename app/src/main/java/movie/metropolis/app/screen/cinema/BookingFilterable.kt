@@ -2,11 +2,13 @@ package movie.metropolis.app.screen.cinema
 
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flow
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.OnChangedListener
 import movie.metropolis.app.screen.asLoadable
+import kotlin.time.Duration.Companion.seconds
 
 interface BookingFilterable {
 
@@ -27,7 +29,7 @@ interface BookingFilterable {
                 awaitClose {
                     removeOnChangedListener(listener)
                 }
-            }
+            }.debounce(1.seconds)
 
         val BookingFilterable.optionsFlow
             get() = flow {
@@ -36,7 +38,7 @@ interface BookingFilterable {
                 optionsChangedFlow.collect {
                     emit(getOptions().asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
     }
 

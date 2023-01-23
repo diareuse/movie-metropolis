@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.cinema
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import movie.core.ResultCallback
@@ -10,6 +11,7 @@ import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsChangedFlow
 import java.util.Date
+import kotlin.time.Duration.Companion.seconds
 
 interface CinemaFacade : BookingFilterable {
 
@@ -28,7 +30,7 @@ interface CinemaFacade : BookingFilterable {
                 getCinema {
                     emit(it.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         fun CinemaFacade.showingsFlow(date: Flow<Date>) = date.flatMapLatest {
             flow {
@@ -39,7 +41,7 @@ interface CinemaFacade : BookingFilterable {
                     }
                 }
             }
-        }
+        }.debounce(1.seconds)
 
     }
 

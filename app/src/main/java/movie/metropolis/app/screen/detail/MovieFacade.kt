@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaBookingView
@@ -18,6 +19,7 @@ import movie.metropolis.app.screen.asLoadable
 import movie.metropolis.app.screen.cinema.BookingFilterable
 import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsChangedFlow
 import java.util.Date
+import kotlin.time.Duration.Companion.seconds
 
 interface MovieFacade : BookingFilterable {
 
@@ -52,7 +54,7 @@ interface MovieFacade : BookingFilterable {
                 awaitClose {
                     removeOnFavoriteChangedListener(listener)
                 }
-            }
+            }.debounce(1.seconds)
 
         val MovieFacade.favoriteFlow
             get() = channelFlow {
@@ -60,7 +62,7 @@ interface MovieFacade : BookingFilterable {
                 favoriteChangedFlow.collect {
                     send(isFavorite().asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         val MovieFacade.availableFromFlow
             get() = channelFlow {
@@ -68,7 +70,7 @@ interface MovieFacade : BookingFilterable {
                 getAvailableFrom {
                     send(it.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         val MovieFacade.movieFlow
             get() = channelFlow {
@@ -76,7 +78,7 @@ interface MovieFacade : BookingFilterable {
                 getMovie {
                     send(it.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         val MovieFacade.posterFlow
             get() = channelFlow {
@@ -84,7 +86,7 @@ interface MovieFacade : BookingFilterable {
                 getPoster {
                     send(it.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         val MovieFacade.trailerFlow
             get() = channelFlow {
@@ -92,7 +94,7 @@ interface MovieFacade : BookingFilterable {
                 getTrailer {
                     send(it.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         fun MovieFacade.showingsFlow(
             date: Flow<Date>,
@@ -109,6 +111,7 @@ interface MovieFacade : BookingFilterable {
                     }
                 }
             }
+            .debounce(1.seconds)
 
     }
 

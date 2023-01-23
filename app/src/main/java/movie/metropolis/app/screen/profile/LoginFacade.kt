@@ -2,8 +2,10 @@ package movie.metropolis.app.screen.profile
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.debounce
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
+import kotlin.time.Duration.Companion.seconds
 
 interface LoginFacade {
 
@@ -32,7 +34,7 @@ interface LoginFacade {
                     send(Loadable.loading())
                     send(it().map { true }.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
     }
 
