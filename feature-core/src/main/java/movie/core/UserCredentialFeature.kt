@@ -7,3 +7,4 @@ interface UserCredentialFeature {
     suspend fun signIn(method: SignInMethod): Result<Unit>
     suspend fun getToken(): Result<String>
 }
+

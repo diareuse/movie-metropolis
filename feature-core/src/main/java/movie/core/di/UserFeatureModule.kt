@@ -8,6 +8,8 @@ import movie.calendar.CalendarWriter
 import movie.core.EventCinemaFeature
 import movie.core.EventDetailFeature
 import movie.core.TicketStore
+import movie.core.UserCredentialFeature
+import movie.core.UserCredentialFeatureNetwork
 import movie.core.UserFeature
 import movie.core.UserFeatureCalendar
 import movie.core.UserFeatureDatabase
@@ -70,6 +72,14 @@ internal class UserFeatureModule {
         network = UserFeatureStoring(network, bookingDao, seatsDao)
         network = UserFeatureCalendar(network, writer, preference)
         return network
+    }
+
+    @Provides
+    fun credential(
+        service: UserService,
+        account: UserAccount
+    ): UserCredentialFeature {
+        return UserCredentialFeatureNetwork(service, account)
     }
 
 }
