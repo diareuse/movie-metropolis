@@ -2,10 +2,12 @@ package movie.metropolis.app.screen.booking
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.debounce
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
+import kotlin.time.Duration.Companion.seconds
 
 interface BookingFacade {
 
@@ -22,7 +24,7 @@ interface BookingFacade {
                 it()
                 send(getBookings().asLoadable())
             }
-        }
+        }.debounce(1.seconds)
 
     }
 
