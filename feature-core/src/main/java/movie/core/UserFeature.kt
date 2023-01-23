@@ -5,6 +5,7 @@ import movie.core.model.FieldUpdate
 import movie.core.model.SignInMethod
 import movie.core.model.User
 
+@Deprecated("")
 interface UserFeature {
 
     val email: String?
