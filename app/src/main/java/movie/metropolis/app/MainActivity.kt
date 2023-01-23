@@ -16,6 +16,7 @@ import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import dagger.hilt.android.AndroidEntryPoint
+import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
 import movie.style.haptic.PlatformHapticFeedback
 import movie.style.theme.Theme
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            PlayRating()
             Theme {
                 CompositionLocalProvider(
                     LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
