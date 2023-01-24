@@ -1,5 +1,7 @@
 package movie.core
 
+import movie.core.db.model.BookingSeatsView
+import movie.core.db.model.BookingStored
 import movie.core.db.model.CinemaStored
 import movie.core.db.model.MovieDetailView
 import movie.core.db.model.MovieMediaStored
@@ -8,6 +10,8 @@ import movie.core.db.model.MoviePreviewView
 import movie.core.db.model.MovieReferenceView
 import movie.core.db.model.ShowingStored
 import movie.core.model.Cinema
+import movie.core.nwk.model.BookingDetailResponse
+import movie.core.nwk.model.BookingResponse
 import movie.core.nwk.model.CinemaResponse
 import movie.core.nwk.model.ConsentRemote
 import movie.core.nwk.model.CustomerPointsResponse
@@ -21,6 +25,7 @@ import movie.core.nwk.model.MovieResponse
 import org.mockito.kotlin.mock
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 typealias Modifier<T> = (T) -> T
@@ -430,6 +435,159 @@ interface DataPool<T> {
 
         override fun all(modifier: Modifier<CustomerPointsResponse>) = buildList {
             this += CustomerPointsResponse(0.0, 0.0, Date())
+        }.map(modifier)
+
+    }
+
+    object BookingResponses : DataPool<BookingResponse> {
+
+        override fun all(modifier: Modifier<BookingResponse>) = buildList {
+            this += BookingResponse(
+                id = "1",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() - 2.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                isPaid = true,
+                movieId = "",
+                cinemaId = "id",
+                eventId = ""
+            )
+            this += BookingResponse(
+                id = "2",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() - 1.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                isPaid = true,
+                movieId = "",
+                cinemaId = "id",
+                eventId = ""
+            )
+            this += BookingResponse(
+                id = "3",
+                name = "",
+                startsAt = Date(),
+                paidAt = Date(),
+                isPaid = true,
+                movieId = "",
+                cinemaId = "id",
+                eventId = ""
+            )
+            this += BookingResponse(
+                id = "4",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() + 1.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                isPaid = true,
+                movieId = "",
+                cinemaId = "id",
+                eventId = ""
+            )
+            this += BookingResponse(
+                id = "5",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() + 2.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                isPaid = true,
+                movieId = "",
+                cinemaId = "id",
+                eventId = ""
+            )
+            this += BookingResponse(
+                id = "6",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() + 3.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                isPaid = true,
+                movieId = "",
+                cinemaId = "id",
+                eventId = ""
+            )
+        }.map(modifier)
+
+    }
+
+    object BookingDetailResponses : DataPool<BookingDetailResponse> {
+
+        override fun all(modifier: Modifier<BookingDetailResponse>) = buildList {
+            this += BookingDetailResponse(
+                hall = "",
+                tickets = listOf(BookingDetailResponse.Ticket("", ""))
+            )
+        }.map(modifier)
+
+    }
+
+    object BookingsStored : DataPool<BookingStored> {
+
+        override fun all(modifier: Modifier<BookingStored>) = buildList {
+            this += BookingStored(
+                id = "",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() - 2.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                movieId = "",
+                eventId = "",
+                cinemaId = "id",
+                hall = null
+            )
+            this += BookingStored(
+                id = "",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() - 1.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                movieId = "",
+                eventId = "",
+                cinemaId = "id",
+                hall = null
+            )
+            this += BookingStored(
+                id = "",
+                name = "",
+                startsAt = Date(),
+                paidAt = Date(),
+                movieId = "",
+                eventId = "",
+                cinemaId = "id",
+                hall = null
+            )
+            this += BookingStored(
+                id = "",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() + 1.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                movieId = "",
+                eventId = "",
+                cinemaId = "id",
+                hall = null
+            )
+            this += BookingStored(
+                id = "",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() + 2.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                movieId = "",
+                eventId = "",
+                cinemaId = "id",
+                hall = null
+            )
+            this += BookingStored(
+                id = "",
+                name = "",
+                startsAt = Date(System.currentTimeMillis() + 3.hours.inWholeMilliseconds),
+                paidAt = Date(),
+                movieId = "",
+                eventId = "",
+                cinemaId = "id",
+                hall = null
+            )
+        }.map(modifier)
+
+    }
+
+    object BookingSeatsViews : DataPool<BookingSeatsView> {
+
+        override fun all(modifier: Modifier<BookingSeatsView>) = buildList {
+            this += BookingSeatsView("", "")
         }.map(modifier)
 
     }
