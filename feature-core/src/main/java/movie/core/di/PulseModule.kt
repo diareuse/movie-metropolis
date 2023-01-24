@@ -12,7 +12,7 @@ import movie.core.EventDetailFeature
 import movie.core.EventPreviewFeature
 import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
-import movie.core.UserFeature
+import movie.core.UserBookingFeature
 import movie.core.notification.NotificationInfoProvider
 import movie.core.pulse.*
 import movie.image.ImageAnalyzer
@@ -31,7 +31,7 @@ class PulseModule {
         preview: EventPreviewFeature.Factory,
         cinema: EventCinemaFeature,
         showing: EventShowingsFeature.Factory,
-        @Saving user: UserFeature,
+        user: UserBookingFeature,
         @ApplicationContext context: Context
     ): Pulse = PulseCombined(
         PulseSavingCurrent(preview),

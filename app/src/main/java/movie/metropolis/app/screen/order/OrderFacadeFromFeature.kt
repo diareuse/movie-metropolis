@@ -1,10 +1,10 @@
 package movie.metropolis.app.screen.order
 
-import movie.core.UserFeature
+import movie.core.UserCredentialFeature
 
 class OrderFacadeFromFeature(
     private val url: String,
-    private val user: UserFeature
+    private val user: UserCredentialFeature
 ) : OrderFacade {
 
     override suspend fun getRequest(): Result<RequestView> {

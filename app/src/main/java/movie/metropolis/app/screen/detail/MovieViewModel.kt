@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import movie.core.UserFeature
+import movie.core.UserDataFeature
 import movie.core.model.Location
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.screen.Loadable
@@ -29,7 +29,7 @@ import android.location.Location as AndroidLocation
 @HiltViewModel
 class MovieViewModel private constructor(
     private val facade: MovieFacade,
-    private val user: UserFeature,
+    private val user: UserDataFeature,
     val hideShowings: Boolean
 ) : ViewModel() {
 
@@ -37,7 +37,7 @@ class MovieViewModel private constructor(
     constructor(
         handle: SavedStateHandle,
         facade: MovieFacade.Factory,
-        user: UserFeature
+        user: UserDataFeature
     ) : this(
         facade.create(handle.get<String>("movie").orEmpty()),
         user,
@@ -71,9 +71,9 @@ class MovieViewModel private constructor(
             }
         }
         viewModelScope.launch {
-            user.getUser()
-                .map { it.favorite?.location?.toPlatform() }
-                .onSuccess { location.compareAndSet(null, it) }
+            var favorite: AndroidLocation? = null
+            user.get { favorite = it.getOrNull()?.favorite?.location?.toPlatform() }
+            location.compareAndSet(null, favorite)
         }
     }
 

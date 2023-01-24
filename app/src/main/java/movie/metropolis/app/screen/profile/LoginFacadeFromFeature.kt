@@ -1,11 +1,11 @@
 package movie.metropolis.app.screen.profile
 
 import movie.core.SetupFeature
-import movie.core.UserFeature
+import movie.core.UserCredentialFeature
 import movie.core.model.SignInMethod
 
 class LoginFacadeFromFeature(
-    private val user: UserFeature,
+    private val user: UserCredentialFeature,
     private val setup: SetupFeature
 ) : LoginFacade {
 

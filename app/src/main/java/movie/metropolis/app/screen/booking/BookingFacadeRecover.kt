@@ -1,16 +1,21 @@
 package movie.metropolis.app.screen.booking
 
-import movie.log.flatMapCatching
+import movie.core.Recoverable
+import movie.core.ResultCallback
+import movie.core.result
 import movie.log.logSevere
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
 
 class BookingFacadeRecover(
     private val origin: BookingFacade
-) : BookingFacade {
+) : BookingFacade, Recoverable {
 
-    override suspend fun getBookings() =
-        origin.flatMapCatching { getBookings() }.logSevere()
+    override suspend fun getBookings(callback: ResultCallback<List<BookingView>>) {
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getBookings(it)
+        }
+    }
 
     override suspend fun refresh() {
         origin.runCatching { refresh() }.logSevere()
