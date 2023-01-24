@@ -8,6 +8,7 @@ import movie.core.mock.MoviePreviewView
 import movie.core.model.Movie
 import movie.core.model.MoviePreview
 import movie.pulse.ExactPulseScheduler
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -18,14 +19,15 @@ import kotlin.test.assertFails
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class FavoriteFeatureTest : FeatureTest() {
+class FavoriteFeatureTest {
 
     private lateinit var scheduler: ExactPulseScheduler
     private lateinit var feature: FavoriteFeature
     private lateinit var media: MovieMediaDao
     private lateinit var favorite: MovieFavoriteDao
 
-    override fun prepare() {
+    @Before
+    fun prepare() {
         favorite = mock()
         media = mock()
         scheduler = mock {

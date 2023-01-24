@@ -12,13 +12,13 @@ class HomeFacadeTest : FeatureTest() {
     private lateinit var facade: HomeFacade
 
     override fun prepare() {
-        facade = FacadeModule().home(user)
+        facade = FacadeModule().home(credentials)
     }
 
     @Test
     fun email_returns() {
         val email = "foo@foo.com"
-        whenever(user.email).thenReturn(email)
+        whenever(credentials.email).thenReturn(email)
         assertEquals(email, facade.email)
     }
 

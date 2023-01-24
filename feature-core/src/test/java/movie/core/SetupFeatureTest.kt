@@ -3,6 +3,7 @@ package movie.core
 import movie.core.di.SetupFeatureModule
 import movie.core.model.Region
 import movie.core.preference.RegionPreference
+import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
@@ -11,12 +12,13 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
-class SetupFeatureTest : FeatureTest() {
+class SetupFeatureTest {
 
     private lateinit var feature: SetupFeature
     private lateinit var preference: RegionPreference
 
-    override fun prepare() {
+    @Before
+    fun prepare() {
         preference = mock()
         feature = SetupFeatureModule().feature(preference)
     }

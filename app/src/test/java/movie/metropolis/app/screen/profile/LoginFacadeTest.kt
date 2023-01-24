@@ -16,18 +16,18 @@ class LoginFacadeTest : FeatureTest() {
     private lateinit var facade: LoginFacade
 
     override fun prepare() {
-        facade = FacadeModule().login(user, setup)
+        facade = FacadeModule().login(credentials, setup)
     }
 
     @Test
     fun login_callsLogin() = runTest {
         facade.login("foo", "bar")
-        verify(user).signIn(SignInMethod.Login("foo", "bar"))
+        verify(credentials).signIn(SignInMethod.Login("foo", "bar"))
     }
 
     @Test
     fun login_returns_success() = runTest {
-        whenever(user.signIn(SignInMethod.Login("foo", "bar")))
+        whenever(credentials.signIn(SignInMethod.Login("foo", "bar")))
             .thenReturn(Result.success(Unit))
         val result = facade.login("foo", "bar")
         assert(result.isSuccess) { result }
@@ -35,7 +35,7 @@ class LoginFacadeTest : FeatureTest() {
 
     @Test
     fun login_returns_failure() = runTest {
-        whenever(user.signIn(SignInMethod.Login("foo", "bar")))
+        whenever(credentials.signIn(SignInMethod.Login("foo", "bar")))
             .thenReturn(Result.failure(RuntimeException()))
         val result = facade.login("foo", "bar")
         assert(result.isFailure) { result }
@@ -44,12 +44,12 @@ class LoginFacadeTest : FeatureTest() {
     @Test
     fun register_callsRegistration() = runTest {
         facade.register("", "", "", "", "")
-        verify(user).signIn(SignInMethod.Registration("", "", "", "", ""))
+        verify(credentials).signIn(SignInMethod.Registration("", "", "", "", ""))
     }
 
     @Test
     fun register_returns_success() = runTest {
-        whenever(user.signIn(SignInMethod.Registration("", "", "", "", "")))
+        whenever(credentials.signIn(SignInMethod.Registration("", "", "", "", "")))
             .thenReturn(Result.success(Unit))
         val result = facade.register("", "", "", "", "")
         assert(result.isSuccess) { result }
@@ -57,7 +57,7 @@ class LoginFacadeTest : FeatureTest() {
 
     @Test
     fun register_returns_failure() = runTest {
-        whenever(user.signIn(SignInMethod.Registration("", "", "", "", "")))
+        whenever(credentials.signIn(SignInMethod.Registration("", "", "", "", "")))
             .thenReturn(Result.failure(RuntimeException()))
         val result = facade.register("", "", "", "", "")
         assert(result.isFailure) { result }
@@ -65,7 +65,7 @@ class LoginFacadeTest : FeatureTest() {
 
     @Test
     fun currentUserEmail_returns_value() {
-        whenever(user.email).thenReturn("email")
+        whenever(credentials.email).thenReturn("email")
         assertEquals("email", facade.currentUserEmail)
     }
 
