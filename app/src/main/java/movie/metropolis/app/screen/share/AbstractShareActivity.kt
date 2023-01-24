@@ -31,7 +31,9 @@ abstract class AbstractShareActivity : AppCompatActivity() {
         lifecycleScope.launch {
             facade.putTicket(ticket)
             startActivity(MainActivity.tickets(context))
+            overridePendingTransition(0, 0)
             finish()
+            overridePendingTransition(0, 0)
         }
     }
 
