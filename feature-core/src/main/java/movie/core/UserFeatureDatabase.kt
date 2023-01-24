@@ -2,8 +2,6 @@ package movie.core
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import movie.core.adapter.BookingActiveFromDatabase
-import movie.core.adapter.BookingExpiredFromDatabase
 import movie.core.auth.UserAccount
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
@@ -48,7 +46,8 @@ class UserFeatureDatabase(
             val cinema = async { cinemaDao.select(booking.cinemaId) }
             val media = async { mediaDao.select(booking.movieId) }
             val expiresAt = booking.startsAt + movie.duration
-            when (Date().after(expiresAt)) {
+            TODO()
+            /*when (Date().after(expiresAt)) {
                 true -> BookingExpiredFromDatabase(
                     bookingStored = booking,
                     movieStored = movie,
@@ -63,7 +62,7 @@ class UserFeatureDatabase(
                     mediaStored = media.await(),
                     seatsStored = seats
                 )
-            }
+            }*/
         }.let(Result.Companion::success)
     }
 

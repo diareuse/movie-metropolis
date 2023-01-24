@@ -8,6 +8,7 @@ interface SyncPreference {
     var previewUpcoming: Date
     var previewCurrent: Date
     var cinema: Date
+    var booking: Date
 
     companion object {
 

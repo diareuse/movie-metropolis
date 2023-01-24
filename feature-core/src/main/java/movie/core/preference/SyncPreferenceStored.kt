@@ -22,5 +22,9 @@ class SyncPreferenceStored(
         set(value) {
             store["cinema"] = value.time.toString()
         }
-
+    override var booking: Date
+        get() = store["booking"]?.toLongOrNull()?.let(::Date) ?: Date(0)
+        set(value) {
+            store["booking"] = value.time.toString()
+        }
 }

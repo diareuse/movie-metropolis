@@ -84,7 +84,7 @@ internal class UserFeatureImpl(
             val cinemas = cinema.get(null).getOrDefault(emptyList()).toList()
             bookings.mapNotNull { booking ->
                 val detail = movie.get(MovieFromId(booking.movieId)).getOrNull()
-                when (booking.isExpired) {
+                when (booking.isExpired(detail?.duration!!)) {
                     true ->
                         if (detail == null) null
                         else BookingExpiredFromResponse(
