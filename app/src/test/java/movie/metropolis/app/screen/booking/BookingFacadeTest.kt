@@ -1,27 +1,30 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package movie.metropolis.app.screen.booking
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.TicketShareRegistry
-import movie.core.UserFeature
 import movie.core.model.Booking
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
 import movie.metropolis.app.screen.FeatureTest
+import movie.metropolis.app.util.callback
+import movie.metropolis.app.util.thenBlocking
+import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.spy
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.whenever
+import kotlin.test.assertFails
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
 class BookingFacadeTest : FeatureTest() {
 
-    private lateinit var online: UserFeature
     private lateinit var facade: BookingFacade
     private lateinit var share: TicketShareRegistry
 
@@ -29,51 +32,28 @@ class BookingFacadeTest : FeatureTest() {
         share = mock {
             on { runBlocking { get(any()) } }.thenReturn(ByteArray(0))
         }
-        online = spy(user)
-        facade = FacadeModule().booking(user, online, share)
+        facade = FacadeModule().booking(booking, share)
     }
 
     @Test
-    fun returns_listFromResponse() = runTest {
-        whenever(user.getBookings()).thenReturn(Result.success(listOf(mock<Booking.Active>())))
-        val result = facade.getBookings()
-        assert(result.isSuccess) { result }
-        assert(result.getOrThrow().isNotEmpty())
-    }
-
-    @Test
-    fun returns_singleActive() = runTest {
-        whenever(user.getBookings()).thenReturn(
-            Result.success(listOf(mock<Booking.Active>(), mock<Booking.Expired>()))
-        )
-        val result = facade.getBookings()
-        assert(result.isSuccess) { result }
-        assert(result.getOrThrow().count { it is BookingView.Active } == 1) { result }
-    }
-
-    @Test
-    fun returns_multipleExpired() = runTest {
-        whenever(user.getBookings()).thenReturn(
-            Result.success(listOf(mock<Booking.Active>(), mock<Booking.Expired>()))
-        )
-        val result = facade.getBookings()
-        assert(result.isSuccess) { result }
-        assert(result.getOrThrow().count { it is BookingView.Expired } == 1) { result }
+    fun getBookings_returns_values() = runTest {
+        booking_responds_success()
+        for (result in facade.getBookings())
+            assert(result.getOrThrow().isNotEmpty())
     }
 
     @Test
     fun returns_failureWhenSignedOff() = runTest {
-        whenever(user.getBookings()).thenThrow(SecurityException())
-        val result = facade.getBookings()
-        assert(result.isFailure) { result }
-        assertIs<SecurityException>(result.exceptionOrNull())
+        booking_responds_failure(SecurityException())
+        for (result in facade.getBookings())
+            assertIs<SecurityException>(result.exceptionOrNull())
     }
 
     @Test
     fun returns_failure() = runTest {
-        whenever(user.getBookings()).thenThrow(RuntimeException())
-        val result = facade.getBookings()
-        assert(result.isFailure) { result }
+        booking_responds_failure(RuntimeException())
+        for (result in facade.getBookings())
+            assertFails { result.getOrThrow() }
     }
 
     @Test
@@ -91,7 +71,27 @@ class BookingFacadeTest : FeatureTest() {
     @Test
     fun refresh_pingsBookings() = runTest {
         facade.refresh()
-        verify(online).getBookings()
+        verify(booking).invalidate()
+    }
+
+    // ---
+
+    private suspend fun BookingFacade.getBookings(): List<Result<List<BookingView>>> {
+        val outputs = mutableListOf<Result<List<BookingView>>>()
+        getBookings { outputs += it }
+        return outputs
+    }
+
+    private fun booking_responds_failure(throwable: Throwable = SecurityException()) {
+        wheneverBlocking { booking.get(any()) }.thenThrow(throwable)
+    }
+
+    private fun booking_responds_success() {
+        wheneverBlocking { booking.get(any()) }.thenBlocking {
+            callback(0) {
+                Result.success(listOf(mock<Booking.Active>(), mock<Booking.Expired>()))
+            }
+        }
     }
 
 }

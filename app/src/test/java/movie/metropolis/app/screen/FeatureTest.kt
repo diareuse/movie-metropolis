@@ -6,7 +6,9 @@ import movie.core.EventDetailFeature
 import movie.core.EventPreviewFeature
 import movie.core.EventShowingsFeature
 import movie.core.SetupFeature
-import movie.core.UserFeature
+import movie.core.UserBookingFeature
+import movie.core.UserCredentialFeature
+import movie.core.UserDataFeature
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Movie
@@ -18,7 +20,6 @@ import org.mockito.kotlin.mock
 
 abstract class FeatureTest {
 
-    protected lateinit var user: UserFeature
     protected lateinit var preview: EventPreviewFeature.Factory
     protected lateinit var showings: EventShowingsFeature.Factory
     protected lateinit var detail: EventDetailFeature
@@ -26,6 +27,9 @@ abstract class FeatureTest {
     protected lateinit var prefs: EventPreference
     protected lateinit var calendars: CalendarList
     protected lateinit var setup: SetupFeature
+    protected lateinit var data: UserDataFeature
+    protected lateinit var credentials: UserCredentialFeature
+    protected lateinit var booking: UserBookingFeature
 
     abstract fun prepare()
 
@@ -56,7 +60,9 @@ abstract class FeatureTest {
     }
 
     private fun prepareUser() {
-        user = mock()
+        data = mock()
+        credentials = mock()
+        booking = mock()
         calendars = mock()
         setup = mock()
     }
