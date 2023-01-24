@@ -41,3 +41,11 @@ inline fun <T> ResultCallback<T>.map(
         invoke(result.mapCatching { body(it) })
     }
 }
+
+inline fun <T> ResultCallback<T>.result(
+    crossinline body: suspend (Result<T>) -> Result<T>
+): ResultCallback<T> {
+    return { result ->
+        invoke(body(result))
+    }
+}

@@ -2,8 +2,9 @@ package movie.metropolis.app.screen.booking
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
+import movie.core.ResultCallback
 import movie.core.TicketShareRegistry
-import movie.core.UserFeature
+import movie.core.UserBookingFeature
 import movie.core.model.Booking
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
@@ -12,16 +13,18 @@ import movie.metropolis.app.model.facade.Image
 import movie.metropolis.app.util.prepare
 
 class BookingFacadeFromFeature(
-    private val feature: UserFeature,
-    private val online: UserFeature,
+    private val booking: UserBookingFeature,
     private val share: TicketShareRegistry
 ) : BookingFacade {
 
-    override suspend fun getBookings() = feature.getBookings()
-        .map { it.map(::BookingViewFromFeature) }
+    override suspend fun getBookings(
+        callback: ResultCallback<List<BookingView>>
+    ) = booking.get { result ->
+        callback(result.map { it.map(::BookingViewFromFeature) })
+    }
 
     override suspend fun refresh() {
-        online.getBookings()
+        booking.invalidate()
     }
 
     override suspend fun getImage(view: BookingView): Image? {

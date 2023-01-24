@@ -12,8 +12,9 @@ import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
 import movie.core.SetupFeature
 import movie.core.TicketShareRegistry
-import movie.core.UserFeature
-import movie.core.di.Saving
+import movie.core.UserBookingFeature
+import movie.core.UserCredentialFeature
+import movie.core.UserDataFeature
 import movie.core.preference.EventPreference
 import movie.metropolis.app.screen.booking.BookingFacade
 import movie.metropolis.app.screen.booking.BookingFacadeFromFeature
@@ -62,13 +63,11 @@ class FacadeModule {
 
     @Provides
     fun booking(
-        user: UserFeature,
-        @Saving
-        online: UserFeature,
+        booking: UserBookingFeature,
         share: TicketShareRegistry
     ): BookingFacade {
         var facade: BookingFacade
-        facade = BookingFacadeFromFeature(user, online, share)
+        facade = BookingFacadeFromFeature(booking, share)
         facade = BookingFacadeRecover(facade)
         return facade
     }
@@ -121,10 +120,11 @@ class FacadeModule {
     @Provides
     fun profile(
         cinema: EventCinemaFeature,
-        user: UserFeature
+        user: UserDataFeature,
+        credential: UserCredentialFeature
     ): ProfileFacade {
         var facade: ProfileFacade
-        facade = ProfileFacadeFromFeature(user, cinema)
+        facade = ProfileFacadeFromFeature(user, cinema, credential)
         facade = ProfileFacadeCaching(facade)
         facade = ProfileFacadeRecover(facade)
         return facade
@@ -132,7 +132,7 @@ class FacadeModule {
 
     @Provides
     fun login(
-        user: UserFeature,
+        user: UserCredentialFeature,
         setup: SetupFeature
     ): LoginFacade {
         val facade: LoginFacade
@@ -141,7 +141,7 @@ class FacadeModule {
     }
 
     @Provides
-    fun order(user: UserFeature): OrderFacade.Factory = OrderFacade.Factory {
+    fun order(user: UserCredentialFeature): OrderFacade.Factory = OrderFacade.Factory {
         var facade: OrderFacade
         facade = OrderFacadeFromFeature(it, user)
         facade = OrderFacadeRecover(facade)
@@ -161,15 +161,14 @@ class FacadeModule {
     }
 
     @Provides
-    fun home(user: UserFeature): HomeFacade {
+    fun home(user: UserCredentialFeature): HomeFacade {
         return HomeFacadeFromFeature(user)
     }
 
     @Provides
     fun share(
         share: TicketShareRegistry,
-        @Saving
-        user: UserFeature
+        user: UserBookingFeature
     ): ShareFacade {
         var facade: ShareFacade
         facade = ShareFacadeText(share)

@@ -2,18 +2,19 @@ package movie.metropolis.app.screen.share
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import movie.core.UserFeature
+import movie.core.UserBookingFeature
 
 class ShareFacadeRefresh(
     private val origin: ShareFacade,
-    private val user: UserFeature
+    private val user: UserBookingFeature
 ) : ShareFacade {
 
     override suspend fun putTicket(ticket: TicketRepresentation): Result<Unit> {
         return origin.putTicket(ticket).onSuccess {
             coroutineScope {
                 launch {
-                    user.getBookings()
+                    user.invalidate()
+                    user.get {}
                 }
             }
         }
