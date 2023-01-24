@@ -35,7 +35,7 @@ interface ProfileFacade {
                 getMembership {
                     send(it.asLoadable())
                 }
-            }
+            }.debounce(1.seconds)
 
         fun ProfileFacade.userFlow(jobEmitter: Flow<suspend () -> Unit>) = channelFlow {
             getUser {
