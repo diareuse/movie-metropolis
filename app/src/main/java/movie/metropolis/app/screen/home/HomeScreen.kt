@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.home
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -26,7 +27,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +35,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.navigation.animation.AnimatedNavHost
+import com.google.accompanist.navigation.animation.composable
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -46,6 +49,7 @@ import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
+import movie.metropolis.app.screen.currentDestinationAsState
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.listing.MoviesScreen
 import movie.style.AppButton
@@ -57,7 +61,7 @@ import movie.style.theme.Theme
 import java.io.File
 import java.security.MessageDigest
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     startWith: String? = null,
@@ -78,59 +82,74 @@ fun HomeScreen(
     onClickLogin: () -> Unit
 ) {
     val email = viewModel.email
+    val controller = rememberAnimatedNavController()
+    val destination by controller.currentDestinationAsState()
     HomeScreen(
         isLoggedIn = email != null,
-        initialScreen = startWith,
-        movies = {
-            MoviesScreen(
-                padding = it,
-                onClickMovie = onClickMovie,
-                state = moviesState,
-                stateAvailable = moviesAvailableState,
-                stateUpcoming = moviesUpcomingState,
-                viewModel = listing,
-                onPermissionsRequested = onPermissionsRequested,
-                profileIcon = {
-                    if (email != null) ProfileIcon(
-                        email = email,
-                        onClick = onClickUser
-                    )
-                }
-            )
-        },
-        cinemas = {
-            CinemasScreen(
-                padding = it,
-                onPermissionRequested = onPermissionsRequested,
-                onClickCinema = onClickCinema,
-                viewModel = cinemas,
-                state = cinemasState,
-                profileIcon = {
-                    if (email != null) ProfileIcon(
-                        email = email,
-                        onClick = onClickUser
-                    )
-                }
-            )
-        },
-        booking = {
-            BookingScreen(
-                padding = it,
-                viewModel = booking,
-                state = bookingState,
-                onPermissionsRequested = onPermissionsRequested,
-                onMovieClick = { onClickMovie(it, false) },
-                onShareFile = onShareFile,
-                profileIcon = {
-                    if (email != null) ProfileIcon(
-                        email = email,
-                        onClick = onClickUser
-                    )
-                }
-            )
+        route = destination?.route ?: "movies",
+        onRouteChanged = listener@{
+            if (destination?.route == it) return@listener
+            while (controller.popBackStack()) {
+                /* no-op */
+            }
+            controller.navigate(it)
         },
         onNavigateToLogin = onClickLogin
-    )
+    ) { padding ->
+        AnimatedNavHost(
+            navController = controller,
+            startDestination = startWith ?: "movies"
+        ) {
+            composable("movies") {
+                MoviesScreen(
+                    padding = padding,
+                    onClickMovie = onClickMovie,
+                    state = moviesState,
+                    stateAvailable = moviesAvailableState,
+                    stateUpcoming = moviesUpcomingState,
+                    viewModel = listing,
+                    onPermissionsRequested = onPermissionsRequested,
+                    profileIcon = {
+                        if (email != null) ProfileIcon(
+                            email = email,
+                            onClick = onClickUser
+                        )
+                    }
+                )
+            }
+            composable("cinemas") {
+                CinemasScreen(
+                    padding = padding,
+                    onPermissionRequested = onPermissionsRequested,
+                    onClickCinema = onClickCinema,
+                    viewModel = cinemas,
+                    state = cinemasState,
+                    profileIcon = {
+                        if (email != null) ProfileIcon(
+                            email = email,
+                            onClick = onClickUser
+                        )
+                    }
+                )
+            }
+            composable("tickets") {
+                BookingScreen(
+                    padding = padding,
+                    viewModel = booking,
+                    state = bookingState,
+                    onPermissionsRequested = onPermissionsRequested,
+                    onMovieClick = { onClickMovie(it, false) },
+                    onShareFile = onShareFile,
+                    profileIcon = {
+                        if (email != null) ProfileIcon(
+                            email = email,
+                            onClick = onClickUser
+                        )
+                    }
+                )
+            }
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -182,27 +201,16 @@ fun rememberUserImage(email: String): State<String> {
     return url
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 private fun HomeScreen(
     isLoggedIn: Boolean,
-    initialScreen: String?,
-    movies: @Composable (PaddingValues) -> Unit,
-    cinemas: @Composable (PaddingValues) -> Unit,
-    booking: @Composable (PaddingValues) -> Unit,
-    onNavigateToLogin: () -> Unit
+    route: String,
+    onNavigateToLogin: () -> Unit,
+    onRouteChanged: (String) -> Unit,
+    content: @Composable (PaddingValues) -> Unit
 ) {
-    val (selected, onChanged) = rememberSaveable {
-        mutableStateOf(
-            when (initialScreen) {
-                "movies" -> 0
-                "cinemas" -> 1
-                "tickets" -> 2
-                else -> 0
-            }
-        )
-    }
-    ClickOnChange(selected)
+    ClickOnChange(route)
     Scaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
@@ -230,46 +238,42 @@ private fun HomeScreen(
                         containerColor = Color.Transparent
                     ) {
                         SelectableNavigationBarItem(
-                            selected = selected,
-                            index = 0,
+                            selected = route,
+                            index = "movies",
                             icon = R.drawable.ic_movie,
                             label = stringResource(R.string.movies),
-                            onSelected = onChanged
+                            onSelected = onRouteChanged
                         )
                         SelectableNavigationBarItem(
-                            selected = selected,
-                            index = 1,
+                            selected = route,
+                            index = "cinemas",
                             icon = R.drawable.ic_cinema,
                             label = stringResource(R.string.cinemas),
-                            onSelected = onChanged
+                            onSelected = onRouteChanged
                         )
                         SelectableNavigationBarItem(
-                            selected = selected,
-                            index = 2,
+                            selected = route,
+                            index = "tickets",
                             icon = R.drawable.ic_ticket,
                             label = stringResource(R.string.tickets),
-                            onSelected = onChanged
+                            onSelected = onRouteChanged
                         )
                     }
                 }
             }
         }
     ) {
-        when (selected) {
-            0 -> movies(it)
-            1 -> cinemas(it)
-            2 -> booking(it)
-        }
+        content(it)
     }
 }
 
 @Composable
-fun RowScope.SelectableNavigationBarItem(
-    selected: Int,
-    index: Int,
+fun <T> RowScope.SelectableNavigationBarItem(
+    selected: T,
+    index: T,
     icon: Int,
     label: String,
-    onSelected: (Int) -> Unit,
+    onSelected: (T) -> Unit,
 ) {
     NavigationBarItem(
         selected = selected == index,

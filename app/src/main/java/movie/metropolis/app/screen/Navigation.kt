@@ -3,15 +3,20 @@ package movie.metropolis.app.screen
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import movie.metropolis.app.screen.cinema.CinemaScreen
 import movie.metropolis.app.screen.detail.MovieScreen
 import movie.metropolis.app.screen.home.HomeScreen
@@ -119,3 +124,18 @@ fun Navigation(
     }
 }
 
+val NavHostController.currentDestinationFlow
+    get() = callbackFlow {
+        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+            trySend(destination)
+        }
+        addOnDestinationChangedListener(listener)
+        awaitClose {
+            removeOnDestinationChangedListener(listener)
+        }
+    }
+
+@Composable
+fun NavHostController.currentDestinationAsState(): State<NavDestination?> {
+    return currentDestinationFlow.collectAsState(currentDestination)
+}
