@@ -77,4 +77,6 @@
     <string name="nearby_cinemas_description">Value is in KMs. Choosing large values can affect loading performance. Values up to 50 kms should display your city, 100 kms nearby cities and 20037 cinemas in the whole universe.</string>
     <string name="downloading_update">Downloading update…</string>
     <string name="share_method">Your ticket is being imported…\nPlease wait</string>
+    <string name="settings_only_movies_title">Show only movies</string>
+    <string name="settings_only_movies_description">If checked, app will show only movies and hides operas, concers or similar events.</string>
 </resources>

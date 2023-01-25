@@ -9,6 +9,7 @@ import movie.metropolis.app.screen.OnChangedListener
 interface SettingsFacade {
 
     var filterSeen: Boolean
+    var onlyMovies: Boolean
     val addToCalendar: Boolean
     var clipRadius: Int
 
@@ -33,6 +34,9 @@ interface SettingsFacade {
 
         val SettingsFacade.filterSeenFlow
             get() = listenerFlow.map { filterSeen }.distinctUntilChanged()
+
+        val SettingsFacade.onlyMoviesFlow
+            get() = listenerFlow.map { onlyMovies }.distinctUntilChanged()
 
         val SettingsFacade.addToCalendarFlow
             get() = listenerFlow.map { addToCalendar }.distinctUntilChanged()

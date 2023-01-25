@@ -29,6 +29,7 @@ import movie.core.EventPreviewFeatureCatch
 import movie.core.EventPreviewFeatureDatabase
 import movie.core.EventPreviewFeatureDatabaseRating
 import movie.core.EventPreviewFeatureFilter
+import movie.core.EventPreviewFeatureFilterMovie
 import movie.core.EventPreviewFeatureFold
 import movie.core.EventPreviewFeatureInvalidateAfter
 import movie.core.EventPreviewFeatureNetwork
@@ -157,6 +158,7 @@ internal class EventFeatureModule {
             out = EventPreviewFeatureStoring(out, type, movie, preview, media)
             out = EventPreviewFeatureSaveTimestamp(out, sync, type)
             out = EventPreviewFeatureFold(db, out, fallback)
+            out = EventPreviewFeatureFilterMovie(out, preference)
             out = EventPreviewFeatureSort(out)
             out = EventPreviewFeatureSpotColor(out, analyzer)
             out = EventPreviewFeatureFilter(out, preference, booking)
