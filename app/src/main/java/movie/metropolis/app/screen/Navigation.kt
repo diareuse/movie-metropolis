@@ -1,6 +1,10 @@
 package movie.metropolis.app.screen
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
@@ -43,7 +47,11 @@ fun Navigation(
     val requiresSetup by setupViewModel.requiresSetup.collectAsState()
     AnimatedNavHost(
         navController = controller,
-        startDestination = if (requiresSetup) "/setup" else "/home"
+        startDestination = if (requiresSetup) "/setup" else "/home",
+        enterTransition = { slideInHorizontally { it } },
+        exitTransition = { fadeOut() + slideOutHorizontally() },
+        popEnterTransition = { fadeIn() + slideInHorizontally() },
+        popExitTransition = { slideOutHorizontally { it } }
     ) {
         composable("/setup") {
             SetupScreen(
