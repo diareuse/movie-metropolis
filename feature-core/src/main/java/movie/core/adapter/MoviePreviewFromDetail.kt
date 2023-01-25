@@ -36,5 +36,7 @@ data class MoviePreviewFromDetail(
         get() = detail.spotColor
     override val rating: Byte
         get() = detail.rating
+    override val genres: Iterable<String>
+        get() = emptyList()
 
 }

@@ -11,4 +11,5 @@ interface MoviePreview : Movie {
     val countryOfOrigin: String
     val spotColor: Int
     val rating: Byte?
+    val genres: Iterable<String>
 }

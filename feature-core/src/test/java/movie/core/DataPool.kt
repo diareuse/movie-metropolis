@@ -183,11 +183,11 @@ interface DataPool<T> {
                 releasedAt = Date(),
                 screeningFrom = Date(System.currentTimeMillis() + 5000),
                 duration = 0.seconds,
-                distributorCodes = emptyList(),
                 media = listOf(ExtendedMovieResponse.Media.Image(0, 0, "")),
                 metadata = mapOf(
                     Locale.getDefault() to Metadata("", null, null, null, null)
-                )
+                ),
+                attributes = listOf(ExtendedMovieResponse.Key("action"))
             )
             this += ExtendedMovieResponse(
                 id = ExtendedMovieResponse.Key("2"),
@@ -195,11 +195,11 @@ interface DataPool<T> {
                 releasedAt = Date(),
                 screeningFrom = Date(System.currentTimeMillis() - 2000),
                 duration = 0.seconds,
-                distributorCodes = emptyList(),
                 media = listOf(ExtendedMovieResponse.Media.Image(0, 0, "")),
                 metadata = mapOf(
                     Locale.getDefault() to Metadata("", null, null, null, null)
-                )
+                ),
+                attributes = emptyList()
             )
             this += ExtendedMovieResponse(
                 id = ExtendedMovieResponse.Key("1"),
@@ -207,11 +207,11 @@ interface DataPool<T> {
                 releasedAt = Date(),
                 screeningFrom = Date(),
                 duration = 0.seconds,
-                distributorCodes = emptyList(),
                 media = listOf(ExtendedMovieResponse.Media.Image(0, 0, "")),
                 metadata = mapOf(
                     Locale.getDefault() to Metadata("", null, null, null, null)
-                )
+                ),
+                attributes = emptyList()
             )
         }.map(modifier)
     }
@@ -229,7 +229,8 @@ interface DataPool<T> {
                 description = "",
                 directors = emptyList(),
                 cast = emptyList(),
-                countryOfOrigin = ""
+                countryOfOrigin = "",
+                genres = listOf("action")
             )
             this += MoviePreviewView(
                 id = "2",
@@ -241,7 +242,8 @@ interface DataPool<T> {
                 description = "",
                 directors = emptyList(),
                 cast = emptyList(),
-                countryOfOrigin = ""
+                countryOfOrigin = "",
+                genres = emptyList()
             )
             this += MoviePreviewView(
                 id = "1",
@@ -253,7 +255,8 @@ interface DataPool<T> {
                 description = "",
                 directors = emptyList(),
                 cast = emptyList(),
-                countryOfOrigin = ""
+                countryOfOrigin = "",
+                genres = emptyList()
             )
         }.map(modifier)
 

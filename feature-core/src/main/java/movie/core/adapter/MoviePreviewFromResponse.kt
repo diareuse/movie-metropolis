@@ -1,5 +1,6 @@
 package movie.core.adapter
 
+import movie.core.model.Category
 import movie.core.model.Media
 import movie.core.model.MoviePreview
 import movie.core.nwk.model.ExtendedMovieResponse
@@ -41,6 +42,11 @@ internal data class MoviePreviewFromResponse(
         get() = 0xff000000.toInt()
     override val rating: Byte?
         get() = null
+    override val genres: Iterable<String>
+        get() = response.attributes.asSequence()
+            .map { it.key }
+            .filter { it in Category.values }
+            .asIterable()
 
     private fun MediaFromResponse(media: ExtendedMovieResponse.Media) =
         when (media) {

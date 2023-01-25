@@ -94,7 +94,8 @@ fun MoviePreview.asStored(upcoming: Boolean) = MoviePreviewStored(
     directors = directors,
     cast = cast,
     countryOfOrigin = countryOfOrigin,
-    isUpcoming = upcoming
+    isUpcoming = upcoming,
+    genres = genres
 )
 
 fun Booking.asStored() = BookingStored(

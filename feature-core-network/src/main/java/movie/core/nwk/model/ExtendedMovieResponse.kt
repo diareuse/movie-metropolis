@@ -22,9 +22,9 @@ data class ExtendedMovieResponse(
     @SerialName("dateStarted") val screeningFrom: Date,
     @Serializable(MinutesDurationSerializer::class)
     @SerialName("length") val duration: Duration,
-    @SerialName("exportCodes") val distributorCodes: List<String>,
     @SerialName("media") val media: List<@Serializable(ExtendedMediaSerializer::class) Media>,
-    @SerialName("i18nFieldsMap") val metadata: Map<@Serializable(LocaleSerializer::class) Locale, Metadata>
+    @SerialName("i18nFieldsMap") val metadata: Map<@Serializable(LocaleSerializer::class) Locale, Metadata>,
+    @SerialName("allAttributes") val attributes: List<Key>
 ) {
 
     @Serializable
