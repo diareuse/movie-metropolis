@@ -6,7 +6,7 @@ import java.util.Date
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-class MovieDetailFromId(
+data class MovieDetailFromId(
     override val id: String
 ) : MovieDetail {
 
