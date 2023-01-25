@@ -2,13 +2,13 @@ package movie.metropolis.app.screen.profile
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.debounce
 import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.screen.Loadable
 import movie.metropolis.app.screen.asLoadable
+import movie.metropolis.app.util.throttleWithTimeout
 import kotlin.time.Duration.Companion.seconds
 
 interface ProfileFacade {
@@ -35,7 +35,7 @@ interface ProfileFacade {
                 getMembership {
                     send(it.asLoadable())
                 }
-            }.debounce(1.seconds)
+            }.throttleWithTimeout(1.seconds)
 
         fun ProfileFacade.userFlow(jobEmitter: Flow<suspend () -> Unit>) = channelFlow {
             getUser {
@@ -48,7 +48,7 @@ interface ProfileFacade {
                     send(it.asLoadable())
                 }
             }
-        }.debounce(1.seconds)
+        }.throttleWithTimeout(1.seconds)
 
     }
 
