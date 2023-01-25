@@ -11,7 +11,7 @@ class IterableStringConverter : BaseConverter<Iterable<String>, String> {
 
     @TypeConverter
     override fun convertTo(from: String): Iterable<String> {
-        return from.split("<|>")
+        return from.split("<|>").filterNot { it.isBlank() }
     }
 
 }
