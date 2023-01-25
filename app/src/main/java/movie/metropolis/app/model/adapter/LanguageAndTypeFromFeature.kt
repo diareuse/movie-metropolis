@@ -3,7 +3,7 @@ package movie.metropolis.app.model.adapter
 import movie.core.model.Showing
 import movie.metropolis.app.model.AvailabilityView
 
-class LanguageAndTypeFromFeature(
+data class LanguageAndTypeFromFeature(
     private val item: Showing
 ) : AvailabilityView.Type {
 
