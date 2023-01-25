@@ -8,10 +8,11 @@ class EventPreviewFeatureFilterMovie(
     private val preference: EventPreference
 ) : EventPreviewFeature {
 
+    @Suppress("ReplaceSizeCheckWithIsNotEmpty")
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
         origin.get(result.map { movies ->
             when (preference.onlyMovies) {
-                true -> movies.filter { it.genres.toList().isNotEmpty() }
+                true -> movies.filter { it.genres.count() > 0 }
                 else -> movies
             }
         })
