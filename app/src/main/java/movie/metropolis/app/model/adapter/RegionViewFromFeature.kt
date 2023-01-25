@@ -4,7 +4,7 @@ import movie.core.model.Region
 import movie.metropolis.app.model.RegionView
 import java.util.Locale
 
-class RegionViewFromFeature(
+data class RegionViewFromFeature(
     val region: Region,
     private val locale: Locale
 ) : RegionView {
