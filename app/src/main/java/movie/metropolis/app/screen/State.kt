@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.stateIn
 
 fun <T> Flow<T>.retainStateIn(scope: CoroutineScope, initial: T) = stateIn(
     scope = scope,
-    started = SharingStarted.WhileSubscribed(replayExpirationMillis = Long.MAX_VALUE),
+    started = SharingStarted.Lazily,
     initialValue = initial
 )
 
