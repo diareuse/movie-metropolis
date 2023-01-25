@@ -11,7 +11,7 @@ class UserPreferenceStored(
     override var firstName: String
         get() = store["name-first"].orEmpty()
         set(value) {
-            store["name-last"] = value.takeUnless { it.isBlank() }
+            store["name-first"] = value.takeUnless { it.isBlank() }
         }
     override var lastName: String
         get() = store["name-last"].orEmpty()
