@@ -6,7 +6,7 @@ import movie.core.model.MoviePreview
 import java.util.Date
 import kotlin.time.Duration
 
-class MoviePreviewFromDetail(
+data class MoviePreviewFromDetail(
     private val detail: MovieDetail
 ) : MoviePreview {
 
