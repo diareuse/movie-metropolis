@@ -32,6 +32,18 @@ class SettingsFacadeTest : FeatureTest() {
     }
 
     @Test
+    fun onlyMovies_returns_true() {
+        whenever(prefs.onlyMovies).thenReturn(true)
+        assertTrue(facade.onlyMovies)
+    }
+
+    @Test
+    fun onlyMovies_returns_false() {
+        whenever(prefs.onlyMovies).thenReturn(false)
+        assertFalse(facade.onlyMovies)
+    }
+
+    @Test
     fun filterSeen_returns_false_onError() {
         whenever(prefs.filterSeen).thenThrow(RuntimeException())
         assertFalse(facade.filterSeen)

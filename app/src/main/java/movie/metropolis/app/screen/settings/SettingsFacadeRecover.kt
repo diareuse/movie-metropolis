@@ -12,6 +12,15 @@ class SettingsFacadeRecover(
             origin.runCatching { filterSeen = value }.logSevere()
         }
 
+    override var onlyMovies: Boolean
+        get() = origin.runCatching { onlyMovies }.logSevere().getOrDefault(false)
+        set(value) {
+            origin.runCatching { onlyMovies = value }.logSevere()
+        }
+
+    override val addToCalendar: Boolean
+        get() = origin.runCatching { addToCalendar }.logSevere().getOrDefault(false)
+
     override var clipRadius: Int
         get() = origin.runCatching { clipRadius }.logSevere().getOrDefault(0)
         set(value) {

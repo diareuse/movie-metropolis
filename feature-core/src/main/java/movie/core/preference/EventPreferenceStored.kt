@@ -11,6 +11,11 @@ class EventPreferenceStored(
         set(value) {
             store["filter-seen"] = value.toString()
         }
+    override var onlyMovies: Boolean
+        get() = store["only-movies"]?.toBoolean() == true
+        set(value) {
+            store["only-movies"] = value.toString()
+        }
     override var calendarId: String?
         get() = store["calendar-id"]
         set(value) {

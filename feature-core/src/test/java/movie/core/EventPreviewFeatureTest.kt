@@ -30,6 +30,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
@@ -238,7 +239,31 @@ abstract class EventPreviewFeatureTest {
         )
     }
 
+    @Test
+    fun get_filtersMovies_fromDatabase() = runTest {
+        database_responds_success()
+        onlyMovies_responds_true()
+        for (output in feature.get())
+            assertTrue {
+                output.getOrThrow().all { it.genres.toList().isNotEmpty() }
+            }
+    }
+
+    @Test
+    fun get_filtersMovies_fromNetwork() = runTest {
+        service_responds_success()
+        onlyMovies_responds_true()
+        for (output in feature.get())
+            assertTrue {
+                output.getOrThrow().all { it.genres.toList().isNotEmpty() }
+            }
+    }
+
     // ---
+
+    protected fun onlyMovies_responds_true() {
+        whenever(preference.onlyMovies).thenReturn(true)
+    }
 
     protected fun databaseRating_responds_success(): Byte {
         val value = nextInt(1, 100).toByte()

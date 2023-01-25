@@ -11,6 +11,13 @@ class SettingsFacadeReactive(
             notifyListeners()
         }
 
+    override var onlyMovies: Boolean
+        get() = origin.onlyMovies
+        set(value) {
+            origin.onlyMovies = value
+            notifyListeners()
+        }
+
     override var clipRadius: Int
         get() = origin.clipRadius
         set(value) {

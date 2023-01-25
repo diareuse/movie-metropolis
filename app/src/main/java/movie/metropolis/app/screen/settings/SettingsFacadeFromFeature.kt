@@ -20,6 +20,12 @@ class SettingsFacadeFromFeature(
             prefs.filterSeen = value
         }
 
+    override var onlyMovies: Boolean
+        get() = prefs.onlyMovies
+        set(value) {
+            prefs.onlyMovies = value
+        }
+
     override val addToCalendar: Boolean
         get() = prefs.calendarId != null
 

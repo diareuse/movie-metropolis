@@ -56,6 +56,7 @@ fun SettingsScreen(
     val addToCalendar by viewModel.addToCalendar.collectAsState()
     val calendars by viewModel.calendars.collectAsState()
     val clipRadius by viewModel.clipRadius.collectAsState()
+    val onlyMovies by viewModel.onlyMovies.collectAsState()
     SettingsScreen(
         filterSeen = filterSeen,
         onFilterSeenChanged = viewModel::updateFilterSeen,
@@ -63,6 +64,8 @@ fun SettingsScreen(
         onCalendarChanged = viewModel::updateCalendar,
         clipRadius = clipRadius,
         onClipRadiusChanged = viewModel::updateClipRadius,
+        onlyMovies = onlyMovies,
+        onOnlyMoviesChanged = viewModel::updateOnlyMovies,
         calendars = calendars,
         onBackClick = onBackClick,
         onPermissionsRequested = {
@@ -83,6 +86,8 @@ private fun SettingsScreen(
     onCalendarChanged: (String?) -> Unit,
     clipRadius: Int,
     onClipRadiusChanged: (Int) -> Unit,
+    onlyMovies: Boolean,
+    onOnlyMoviesChanged: (Boolean) -> Unit,
     calendars: Map<String, String>,
     onPermissionsRequested: suspend (Array<String>) -> Boolean,
     onBackClick: () -> Unit
@@ -114,6 +119,12 @@ private fun SettingsScreen(
                 FilterSeen(
                     checked = filterSeen,
                     onCheckedChanged = onFilterSeenChanged
+                )
+            }
+            item("only-movies") {
+                OnlyMovies(
+                    checked = onlyMovies,
+                    onCheckedChanged = onOnlyMoviesChanged
                 )
             }
             item {
@@ -173,6 +184,20 @@ fun LazyItemScope.FilterSeen(
         onCheckedChanged = onCheckedChanged,
         title = { Text(stringResource(R.string.settings_unseen_title)) },
         description = { Text(stringResource(R.string.settings_unseen_description)) }
+    )
+}
+
+@Composable
+fun LazyItemScope.OnlyMovies(
+    checked: Boolean,
+    onCheckedChanged: (Boolean) -> Unit
+) {
+    AppSettings(
+        modifier = Modifier.animateItemPlacement(),
+        checked = checked,
+        onCheckedChanged = onCheckedChanged,
+        title = { Text(stringResource(R.string.settings_only_movies_title)) },
+        description = { Text(stringResource(R.string.settings_only_movies_description)) }
     )
 }
 
@@ -258,6 +283,8 @@ private fun Preview() {
         SettingsScreen(
             filterSeen = true,
             onFilterSeenChanged = {},
+            onlyMovies = true,
+            onOnlyMoviesChanged = {},
             addToCalendar = false,
             onCalendarChanged = {},
             calendars = emptyMap(),

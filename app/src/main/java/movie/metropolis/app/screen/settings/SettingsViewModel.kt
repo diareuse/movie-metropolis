@@ -8,6 +8,7 @@ import movie.metropolis.app.screen.settings.SettingsFacade.Companion.addToCalend
 import movie.metropolis.app.screen.settings.SettingsFacade.Companion.calendarFlow
 import movie.metropolis.app.screen.settings.SettingsFacade.Companion.clipRadiusFlow
 import movie.metropolis.app.screen.settings.SettingsFacade.Companion.filterSeenFlow
+import movie.metropolis.app.screen.settings.SettingsFacade.Companion.onlyMoviesFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +28,9 @@ class SettingsViewModel @Inject constructor(
     val clipRadius = facade.clipRadiusFlow
         .retainStateIn(viewModelScope, 0)
 
+    val onlyMovies = facade.onlyMoviesFlow
+        .retainStateIn(viewModelScope, false)
+
     fun updateFilterSeen(value: Boolean) {
         facade.filterSeen = value
     }
@@ -37,6 +41,10 @@ class SettingsViewModel @Inject constructor(
 
     fun updateClipRadius(value: Int) {
         facade.clipRadius = value
+    }
+
+    fun updateOnlyMovies(value: Boolean) {
+        facade.onlyMovies = value
     }
 
 }
