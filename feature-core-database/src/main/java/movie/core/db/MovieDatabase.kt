@@ -36,7 +36,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 7,
+    version = 8,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -90,6 +90,20 @@ internal abstract class MovieDatabase : RoomDatabase() {
             database.execSQL("drop table movie_media")
             database.execSQL("alter table movie_media_copy rename to movie_media")
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_media_movie` ON `movie_media` (`movie`)")
+        }
+    }
+
+    class Migration7to8 : Migration(7, 8) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // --- table
+            database.execSQL("CREATE TABLE IF NOT EXISTS `movie_previews_copy` (`movie` TEXT NOT NULL, `screening_from` INTEGER NOT NULL, `description` TEXT NOT NULL, `directors` TEXT NOT NULL, `cast` TEXT NOT NULL, `country_of_origin` TEXT NOT NULL, `upcoming` INTEGER NOT NULL, `genres` TEXT NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            database.execSQL("insert into movie_previews_copy (`movie`, `screening_from`, `description`, `directors`, `cast`, `country_of_origin`, `upcoming`, `genres`) select `movie`, `screening_from`, `description`, `directors`, `cast`, `country_of_origin`, `upcoming`, \"\" from movie_previews")
+            database.execSQL("drop table movie_previews")
+            database.execSQL("alter table movie_previews_copy rename to movie_previews")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_previews_movie` ON `movie_previews` (`movie`)")
+            // --- view
+            database.execSQL("drop view `movie_preview_views`")
+            database.execSQL("CREATE VIEW `movie_preview_views` AS select movies.id,movies.name,movies.url,movies.released_at,movies.duration,movie_previews.screening_from,movie_previews.description,movie_previews.directors,movie_previews.`cast`,movie_previews.country_of_origin,movie_previews.upcoming,movie_previews.genres from movies, movie_previews where movies.id=movie_previews.movie")
         }
     }
 

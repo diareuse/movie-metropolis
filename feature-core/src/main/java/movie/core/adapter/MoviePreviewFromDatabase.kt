@@ -37,4 +37,6 @@ data class MoviePreviewFromDatabase(
         get() = 0xff000000.toInt()
     override val rating: Byte?
         get() = null
+    override val genres: Iterable<String>
+        get() = movie.genres
 }

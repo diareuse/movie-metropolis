@@ -24,7 +24,7 @@ class DatabaseModule {
         return Room
             .databaseBuilder(context, MovieDatabase::class.java, name)
             .addMigrations(MovieDatabase.Migration2to3())
-            .fallbackToDestructiveMigration()
+            .addMigrations(MovieDatabase.Migration7to8())
             .build()
     }
 
