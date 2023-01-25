@@ -9,56 +9,51 @@ import androidx.compose.ui.unit.sp
 import movie.style.R
 
 private val LexendDeca = FontFamily(
-    Font(R.font.lexend_deca_black, weight = FontWeight.Black),
-    Font(R.font.lexend_deca_bold, weight = FontWeight.Bold),
     Font(R.font.lexend_deca_extra_bold, weight = FontWeight.ExtraBold),
-    Font(R.font.lexend_deca_extra_light, weight = FontWeight.ExtraLight),
-    Font(R.font.lexend_deca_light, weight = FontWeight.Light),
+    Font(R.font.lexend_deca_bold, weight = FontWeight.Bold),
     Font(R.font.lexend_deca_medium, weight = FontWeight.Medium),
-    Font(R.font.lexend_deca_regular, weight = FontWeight.Normal),
-    Font(R.font.lexend_deca_semi_bold, weight = FontWeight.SemiBold),
-    Font(R.font.lexend_deca_thin, weight = FontWeight.Thin)
+    Font(R.font.lexend_deca_regular, weight = FontWeight.Normal)
 )
 
 internal val ThemeTypography = Typography(
     displayLarge = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 57.sp,
         lineHeight = 57.sp,
         letterSpacing = (-0.25).sp,
     ),
     displayMedium = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 45.sp,
         lineHeight = 45.sp,
         letterSpacing = 0.sp,
     ),
     displaySmall = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 36.sp,
         lineHeight = 36.sp,
         letterSpacing = 0.sp,
     ),
     headlineLarge = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 32.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.sp,
     ),
     headlineMedium = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 28.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp,
     ),
     headlineSmall = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 24.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.sp,
@@ -93,21 +88,21 @@ internal val ThemeTypography = Typography(
     ),
     bodyLarge = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.5.sp,
     ),
     bodyMedium = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.25.sp,
     ),
     bodySmall = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.W400,
+        fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
         letterSpacing = 0.4.sp,
