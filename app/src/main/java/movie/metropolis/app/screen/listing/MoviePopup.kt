@@ -5,8 +5,11 @@ import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -39,18 +42,21 @@ private fun MoviePopup(
     director: String,
     name: String,
     modifier: Modifier = Modifier,
+    aspectRatio: Float = DefaultPosterAspectRatio,
 ) {
     Column(
         modifier = modifier
+            .fillMaxSize()
             .padding(24.dp)
             .navigationBarsPadding()
             .statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
         AppImage(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
+                .aspectRatio(aspectRatio)
                 .clip(Theme.container.card),
             url = url
         )
@@ -68,6 +74,7 @@ fun MoviePopup(
     year: String,
     director: String,
     name: String,
+    aspectRatio: Float = DefaultPosterAspectRatio,
 ) {
     if (isVisible) Dialog(
         properties = DialogProperties(
@@ -76,7 +83,7 @@ fun MoviePopup(
         ),
         onDismissRequest = {}
     ) {
-        MoviePopup(url, year, director, name)
+        MoviePopup(url, year, director, name, aspectRatio = aspectRatio)
     }
 }
 
@@ -95,7 +102,6 @@ private fun Preview() {
 
 fun Modifier.detectLongPress(onStateChanged: (Boolean) -> Unit) = composed {
     val density = LocalDensity.current
-    val threshold = with(density) { 24.dp.toPx() }
     pointerInput(density) {
         coroutineScope {
             val pressScope = PressGestureScopeImpl(density)

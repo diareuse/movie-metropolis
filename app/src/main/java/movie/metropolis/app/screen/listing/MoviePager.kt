@@ -104,7 +104,8 @@ fun MoviePager(
                 url = item.posterLarge?.url.orEmpty(),
                 year = item.releasedAt,
                 director = item.directors.joinToString(),
-                name = item.name
+                name = item.name,
+                aspectRatio = item.posterLarge?.aspectRatio ?: DefaultPosterAspectRatio
             )
         }
     }.onEmpty {
