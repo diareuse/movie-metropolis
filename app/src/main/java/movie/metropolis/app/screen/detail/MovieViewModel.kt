@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import movie.core.UserDataFeature
@@ -61,6 +62,8 @@ class MovieViewModel private constructor(
         .retainStateIn(viewModelScope, Loadable.loading())
     val favorite = facade.favoriteFlow
         .retainStateIn(viewModelScope)
+    val showFavorite = startDate.map { hideShowings && (it.getOrNull() ?: Date(0)) >= Date() }
+        .retainStateIn(viewModelScope, false)
 
     init {
         viewModelScope.launch {

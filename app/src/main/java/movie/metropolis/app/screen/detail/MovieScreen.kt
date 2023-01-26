@@ -96,6 +96,7 @@ fun MovieScreen(
     val showings by viewModel.showings.collectAsState()
     val options by viewModel.options.collectAsState()
     val favorite by viewModel.favorite.collectAsState()
+    val showFavorite by viewModel.showFavorite.collectAsState()
     val location by rememberLocation(onPermissionsRequested)
     val scope = rememberCoroutineScope()
     LaunchedEffect(location) {
@@ -111,6 +112,7 @@ fun MovieScreen(
         selectionAvailableStart = startDate.getOrNull(),
         selectedDate = selectedDate,
         hideShowings = viewModel.hideShowings,
+        showFavorite = showFavorite,
         onBackClick = onBackClick,
         onSelectedDateUpdated = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
@@ -142,6 +144,7 @@ private fun MovieScreen(
     selectionAvailableStart: Date?,
     selectedDate: Date?,
     hideShowings: Boolean,
+    showFavorite: Boolean,
     onSelectedDateUpdated: (Date) -> Unit,
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
@@ -154,7 +157,7 @@ private fun MovieScreen(
             MovieScreenAppBar(
                 onBackClick = onBackClick,
                 actions = {
-                    if (hideShowings) FavoriteButton(
+                    if (showFavorite) FavoriteButton(
                         isChecked = isFavorite,
                         onClick = onFavoriteClick
                     )
@@ -463,6 +466,7 @@ private fun Preview(
             isFavorite = true,
             showings = Loadable.success(showings),
             hideShowings = false,
+            showFavorite = false,
             selectionAvailableStart = Date(),
             onSelectedDateUpdated = {},
             onBookingClick = {},

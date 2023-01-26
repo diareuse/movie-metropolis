@@ -138,7 +138,7 @@ fun HomeScreen(
                     viewModel = booking,
                     state = bookingState,
                     onPermissionsRequested = onPermissionsRequested,
-                    onMovieClick = { onClickMovie(it, false) },
+                    onMovieClick = { onClickMovie(it, true) },
                     onShareFile = onShareFile,
                     profileIcon = {
                         if (email != null) ProfileIcon(
