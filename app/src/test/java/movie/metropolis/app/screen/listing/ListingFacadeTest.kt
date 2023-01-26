@@ -76,7 +76,7 @@ class ListingFacadeTest : FeatureTest() {
     @Suppress("BooleanLiteralArgument")
     @Test
     fun toggleFavorite_callsFavorite() = runTest {
-        facade.toggleFavorite(MovieViewFromFeature(mock(), true, true))
+        facade.toggleFavorite(MovieViewFromFeature(mock(), true))
         verify(favorite).toggle(any())
     }
 
@@ -128,7 +128,7 @@ class ListingFacadeTest : FeatureTest() {
     fun listener_notifiesOnToggle() = runTest {
         val listener = mock<OnChangedListener>()
         facade.addOnFavoriteChangedListener(listener)
-        facade.toggleFavorite(MovieViewFromFeature(mock(), true, true))
+        facade.toggleFavorite(MovieViewFromFeature(mock(), true))
         verify(listener).onChanged()
     }
 
@@ -137,7 +137,7 @@ class ListingFacadeTest : FeatureTest() {
         val listener = mock<OnChangedListener>()
         facade.addOnFavoriteChangedListener(listener)
         facade.removeOnFavoriteChangedListener(listener)
-        facade.toggleFavorite(MovieViewFromFeature(mock(), true, true))
+        facade.toggleFavorite(MovieViewFromFeature(mock(), true))
         verify(listener, NoInteractions()).onChanged()
     }
 

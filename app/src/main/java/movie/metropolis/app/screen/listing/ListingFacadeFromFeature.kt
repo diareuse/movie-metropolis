@@ -18,11 +18,11 @@ class ListingFacadeFromFeature(
     private val upcoming = preview.upcoming()
 
     override suspend fun getCurrent(callback: ResultCallback<List<MovieView>>) {
-        current.getMovies(true, callback)
+        current.getMovies(callback)
     }
 
     override suspend fun getUpcoming(callback: ResultCallback<List<MovieView>>) {
-        upcoming.getMovies(false, callback)
+        upcoming.getMovies(callback)
     }
 
     override suspend fun toggleFavorite(movie: MovieView) {
@@ -43,20 +43,19 @@ class ListingFacadeFromFeature(
     // ---
 
     private suspend fun EventPreviewFeature.getMovies(
-        largeMedia: Boolean,
         callback: ResultCallback<List<MovieView>>
     ) {
         get { result ->
             var output = result.map { movies ->
                 movies.map {
-                    MovieViewFromFeature(it, false, largeMedia)
+                    MovieViewFromFeature(it, false)
                 }
             }
             callback(output)
             output = result.map { movies ->
                 movies.map {
                     val isFavorite = favorite.isFavorite(it).getOrDefault(false)
-                    MovieViewFromFeature(it, isFavorite, largeMedia)
+                    MovieViewFromFeature(it, isFavorite)
                 }
             }
             callback(output)

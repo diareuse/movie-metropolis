@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,11 +63,11 @@ fun MoviePager(
             contentPadding = PaddingValues(start = 64.dp, end = 64.dp, top = 32.dp, bottom = 64.dp)
         ) { index ->
             MoviePoster(
+                url = null,
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(DefaultPosterAspectRatio)
-                    .interpolateSize(this, index, Theme.container.poster),
-                url = null
+                    .interpolateSize(this, index, Theme.container.poster)
             )
         }
     }.onSuccess {
@@ -76,8 +80,12 @@ fun MoviePager(
             state = state
         ) { index ->
             val item = it[index]
+            var showPopup by remember { mutableStateOf(false) }
             MoviePoster(
+                url = item.posterLarge?.url,
+                rating = item.rating,
                 modifier = Modifier
+                    .detectLongPress { showPopup = true }
                     .fillMaxWidth()
                     .aspectRatio(item.poster?.aspectRatio ?: DefaultPosterAspectRatio)
                     .interpolateSize(
@@ -88,9 +96,15 @@ fun MoviePager(
                             item.poster?.spotColor ?: Color.Black
                         ).value
                     ),
-                url = item.poster?.url,
-                rating = item.rating,
-                onClick = { onClick(item.id) }
+                onClick = { onClick(item.id) },
+                onLongPress = { showPopup = it }
+            )
+            MoviePopup(
+                isVisible = showPopup,
+                url = item.posterLarge?.url.orEmpty(),
+                year = item.releasedAt,
+                director = item.directors.joinToString(),
+                name = item.name
             )
         }
     }.onEmpty {
