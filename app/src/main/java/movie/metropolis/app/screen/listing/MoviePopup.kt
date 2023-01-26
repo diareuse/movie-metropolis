@@ -143,7 +143,10 @@ class PressGestureScopeImpl(
      */
     fun cancel() {
         isCanceled = true
-        mutex.unlock()
+        try {
+            mutex.unlock()
+        } catch (ignore: IllegalStateException) {
+        }
     }
 
     /**
@@ -151,7 +154,10 @@ class PressGestureScopeImpl(
      */
     fun release() {
         isReleased = true
-        mutex.unlock()
+        try {
+            mutex.unlock()
+        } catch (ignore: IllegalStateException) {
+        }
     }
 
     /**
