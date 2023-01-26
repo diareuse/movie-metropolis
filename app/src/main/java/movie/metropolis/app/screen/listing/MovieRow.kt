@@ -13,6 +13,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -93,13 +97,22 @@ private fun MovieRow(
         state = state
     ) {
         items(items, key = MovieView::id) { item ->
+            var showPopup by remember { mutableStateOf(false) }
             MovieItem(
                 name = item.name,
                 subtext = if (isShowing) item.releasedAt else item.availableFrom,
-                isFavorite = item.favorite,
                 poster = item.poster,
+                isFavorite = item.favorite,
+                onClick = { onClick(item.id) },
                 onClickFavorite = { onClickFavorite(item) },
-                onClick = { onClick(item.id) }
+                onLongPress = { showPopup = it }
+            )
+            MoviePopup(
+                isVisible = showPopup,
+                url = item.posterLarge?.url ?: "",
+                year = item.releasedAt,
+                director = item.directors.joinToString(),
+                name = item.name
             )
         }
     }

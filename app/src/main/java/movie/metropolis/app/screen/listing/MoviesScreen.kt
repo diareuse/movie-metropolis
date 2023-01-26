@@ -183,7 +183,8 @@ class MovieViewProvider :
         override val poster: ImageView? = PreviewImage(),
         override val video: VideoView? = PreviewVideo(),
         override val favorite: Boolean = nextBoolean(),
-        override val rating: String? = "75%"
+        override val rating: String? = "75%",
+        override val posterLarge: ImageView? = PreviewImage()
     ) : MovieView
 
     private data class PreviewImage(

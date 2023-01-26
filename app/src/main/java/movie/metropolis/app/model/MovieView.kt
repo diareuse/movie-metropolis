@@ -16,5 +16,6 @@ interface MovieView {
     val rating: String?
 
     val poster: ImageView?
+    val posterLarge: ImageView?
     val video: VideoView?
 }
