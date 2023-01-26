@@ -109,6 +109,7 @@ private fun MovieRow(
             )
             MoviePopup(
                 isVisible = showPopup,
+                onVisibilityChanged = { showPopup = false },
                 url = item.posterLarge?.url ?: "",
                 year = item.releasedAt,
                 director = item.directors.joinToString(),
