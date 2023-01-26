@@ -17,7 +17,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '11'
-        freeCompilerArgs = ['-Xjvm-default=enable', '-opt-in=kotlin.RequiresOptIn']
+        freeCompilerArgs = ['-Xjvm-default=enable', '-opt-in=kotlin.RequiresOptIn', "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true"]
     }
     buildTypes {
         debug {
