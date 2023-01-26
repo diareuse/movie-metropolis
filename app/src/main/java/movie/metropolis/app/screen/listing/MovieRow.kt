@@ -112,7 +112,8 @@ private fun MovieRow(
                 url = item.posterLarge?.url ?: "",
                 year = item.releasedAt,
                 director = item.directors.joinToString(),
-                name = item.name
+                name = item.name,
+                aspectRatio = item.posterLarge?.aspectRatio ?: DefaultPosterAspectRatio
             )
         }
     }
