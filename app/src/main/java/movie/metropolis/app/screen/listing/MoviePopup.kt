@@ -70,6 +70,7 @@ private fun MoviePopup(
 @Composable
 fun MoviePopup(
     isVisible: Boolean,
+    onVisibilityChanged: (Boolean) -> Unit,
     url: String,
     year: String,
     director: String,
@@ -81,7 +82,7 @@ fun MoviePopup(
             usePlatformDefaultWidth = false,
             decorFitsSystemWindows = false
         ),
-        onDismissRequest = {}
+        onDismissRequest = { onVisibilityChanged(false) }
     ) {
         MoviePopup(url, year, director, name, aspectRatio = aspectRatio)
     }
