@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.booking.components
+package movie.metropolis.app.screen.booking.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

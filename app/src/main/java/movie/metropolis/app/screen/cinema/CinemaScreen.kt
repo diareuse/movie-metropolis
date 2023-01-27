@@ -33,7 +33,9 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
-import movie.metropolis.app.screen.detail.FilterRow
+import movie.metropolis.app.screen.cinema.component.MovieShowingItem
+import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
+import movie.metropolis.app.screen.detail.component.FilterRow
 import movie.metropolis.app.screen.detail.plus
 import movie.style.AppIconButton
 import movie.style.AppToolbar

@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.detail
+package movie.metropolis.app.screen.detail.component
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope

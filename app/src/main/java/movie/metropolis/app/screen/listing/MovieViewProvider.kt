@@ -5,6 +5,7 @@ import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameter
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
+import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import kotlin.random.Random
 
 class MovieViewProvider :

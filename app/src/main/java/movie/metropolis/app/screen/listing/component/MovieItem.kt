@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.listing
+package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
-import movie.metropolis.app.screen.detail.FavoriteButton
+import movie.metropolis.app.screen.detail.component.FavoriteButton
 import movie.style.layout.PosterLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme

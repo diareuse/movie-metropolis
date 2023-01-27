@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.cinema
+package movie.metropolis.app.screen.cinema.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,9 +30,9 @@ import androidx.compose.ui.unit.sp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.MovieBookingView
-import movie.metropolis.app.screen.detail.ShowingItemSection
-import movie.metropolis.app.screen.detail.ShowingItemTime
-import movie.metropolis.app.screen.detail.ShowingLayout
+import movie.metropolis.app.screen.detail.component.ShowingItemSection
+import movie.metropolis.app.screen.detail.component.ShowingItemTime
+import movie.metropolis.app.screen.detail.component.ShowingLayout
 import movie.style.AppImage
 import movie.style.layout.EmptyShapeLayout
 import movie.style.state.ImmutableMap

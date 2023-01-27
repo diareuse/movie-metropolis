@@ -35,7 +35,8 @@ import androidx.compose.ui.unit.dp
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
-import movie.metropolis.app.screen.setup.Background
+import movie.metropolis.app.screen.profile.component.LoginScreenLayout
+import movie.metropolis.app.screen.setup.component.Background
 import movie.style.AppButton
 import movie.style.AppIconButton
 import movie.style.InputField

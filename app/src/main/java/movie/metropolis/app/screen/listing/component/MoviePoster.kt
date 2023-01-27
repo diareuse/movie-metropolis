@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.listing
+package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

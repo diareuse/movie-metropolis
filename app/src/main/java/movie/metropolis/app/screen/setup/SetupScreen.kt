@@ -32,6 +32,8 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.setup.component.Background
+import movie.metropolis.app.screen.setup.component.RegionItem
 import movie.style.AppToolbar
 import movie.style.theme.Theme
 

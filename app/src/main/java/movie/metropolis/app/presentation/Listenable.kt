@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.cinema
+package movie.metropolis.app.presentation
 
 import java.util.Collections
 

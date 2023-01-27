@@ -55,11 +55,11 @@ import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.presentation.share.TicketRepresentation
-import movie.metropolis.app.screen.booking.components.BookingItemActive
-import movie.metropolis.app.screen.booking.components.BookingItemActiveEmpty
-import movie.metropolis.app.screen.booking.components.BookingItemExpired
-import movie.metropolis.app.screen.booking.components.BookingItemExpiredEmpty
-import movie.metropolis.app.screen.booking.components.BookingTicketDialog
+import movie.metropolis.app.screen.booking.component.BookingItemActive
+import movie.metropolis.app.screen.booking.component.BookingItemActiveEmpty
+import movie.metropolis.app.screen.booking.component.BookingItemExpired
+import movie.metropolis.app.screen.booking.component.BookingItemExpiredEmpty
+import movie.metropolis.app.screen.booking.component.BookingTicketDialog
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.reader.BarcodeReader

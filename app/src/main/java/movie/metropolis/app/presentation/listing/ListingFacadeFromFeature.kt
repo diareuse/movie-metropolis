@@ -5,8 +5,8 @@ import movie.core.FavoriteFeature
 import movie.core.ResultCallback
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewFromFeature
+import movie.metropolis.app.presentation.Listenable
 import movie.metropolis.app.presentation.OnChangedListener
-import movie.metropolis.app.screen.cinema.Listenable
 
 class ListingFacadeFromFeature(
     preview: EventPreviewFeature.Factory,

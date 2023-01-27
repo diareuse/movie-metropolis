@@ -68,8 +68,12 @@ import movie.metropolis.app.presentation.mapNotNull
 import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
-import movie.metropolis.app.screen.cinema.MovieShowingItemEmpty
-import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
+import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
+import movie.metropolis.app.screen.detail.component.FavoriteButton
+import movie.metropolis.app.screen.detail.component.FilterRow
+import movie.metropolis.app.screen.detail.component.MovieScreenAppBar
+import movie.metropolis.app.screen.detail.component.ShowingItem
+import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.style.AppButton
 import movie.style.AppDropdownIconButton
 import movie.style.AppImage
