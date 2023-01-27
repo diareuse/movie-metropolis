@@ -19,6 +19,7 @@ interface MovieDetailView {
     val rating: String?
     val links: Links?
 
+    @Stable
     interface Links {
         val imdb: String?
         val csfd: String?
