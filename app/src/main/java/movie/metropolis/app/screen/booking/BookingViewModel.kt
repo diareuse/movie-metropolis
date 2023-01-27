@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.booking
 
 import android.content.Context
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +20,11 @@ import movie.metropolis.app.presentation.share.ShareFacade
 import movie.metropolis.app.presentation.share.TicketRepresentation
 import movie.metropolis.app.util.retainStateIn
 import movie.metropolis.app.util.writeTo
+import movie.style.state.ImmutableList.Companion.immutable
 import java.io.File
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class BookingViewModel @Inject constructor(
     private val facade: BookingFacade,
@@ -39,9 +42,11 @@ class BookingViewModel @Inject constructor(
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val expired = items
         .mapLoadable { it.filterIsInstance<BookingView.Expired>() }
+        .mapLoadable { it.immutable() }
         .retainStateIn(viewModelScope, Loadable.loading())
     val active = items
         .mapLoadable { it.filterIsInstance<BookingView.Active>() }
+        .mapLoadable { it.immutable() }
         .retainStateIn(viewModelScope, Loadable.loading())
 
     fun refresh() {

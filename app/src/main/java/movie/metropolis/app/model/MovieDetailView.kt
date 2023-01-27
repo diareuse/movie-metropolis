@@ -1,8 +1,8 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 interface MovieDetailView {
     val id: String
     val name: String
@@ -19,7 +19,7 @@ interface MovieDetailView {
     val rating: String?
     val links: Links?
 
-    @Stable
+    @Immutable
     interface Links {
         val imdb: String?
         val csfd: String?

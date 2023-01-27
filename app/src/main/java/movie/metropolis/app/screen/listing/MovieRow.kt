@@ -27,11 +27,13 @@ import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.style.state.ImmutableList
+import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
 
 @Composable
 fun MovieRow(
-    items: Loadable<List<MovieView>>,
+    items: Loadable<ImmutableList<MovieView>>,
     isShowing: Boolean,
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String) -> Unit,
@@ -39,7 +41,7 @@ fun MovieRow(
 ) {
     items.onSuccess {
         MovieRow(
-            items = items.getOrNull().orEmpty(),
+            items = it,
             isShowing = isShowing,
             onClick = onClick,
             onClickFavorite = onClickFavorite,
@@ -83,7 +85,7 @@ fun MovieRow(
 
 @Composable
 private fun MovieRow(
-    items: List<MovieView>,
+    items: ImmutableList<MovieView>,
     isShowing: Boolean,
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String) -> Unit,
@@ -135,7 +137,7 @@ private fun Preview(
                 onClick = {}
             )
             MovieRow(
-                items = Loadable.success(movies),
+                items = Loadable.success(movies.immutable()),
                 isShowing = false,
                 onClickFavorite = {},
                 onClick = {}
@@ -150,7 +152,7 @@ private fun Preview2() {
     Theme {
         Column {
             MovieRow(
-                items = Loadable.success(emptyList()),
+                items = Loadable.success(emptyList<MovieView>().immutable()),
                 isShowing = false,
                 onClickFavorite = {},
                 onClick = {}

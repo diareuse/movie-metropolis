@@ -35,13 +35,15 @@ import movie.metropolis.app.screen.detail.ShowingItemTime
 import movie.metropolis.app.screen.detail.ShowingLayout
 import movie.style.AppImage
 import movie.style.layout.EmptyShapeLayout
+import movie.style.state.ImmutableMap
+import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
 @Composable
 fun MovieShowingItem(
     movie: MovieBookingView.Movie,
-    availability: Map<AvailabilityView.Type, List<AvailabilityView>>,
+    availability: ImmutableMap<AvailabilityView.Type, List<AvailabilityView>>,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -79,7 +81,7 @@ fun MovieShowingItem(
             "#" to List(3) { it },
             "##" to List(1) { it },
             "###" to List(2) { it },
-        ),
+        ).immutable(),
         key = { it },
         title = { Text("#".repeat(23), Modifier.textPlaceholder(true)) },
         section = {

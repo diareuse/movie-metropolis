@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.order
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,7 @@ import movie.metropolis.app.util.decodeBase64
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class OrderViewModel(
     facade: OrderFacade

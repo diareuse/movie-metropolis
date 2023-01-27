@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.profile
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.userFlo
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val facade: ProfileFacade

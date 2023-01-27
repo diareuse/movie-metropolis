@@ -1,8 +1,8 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 interface AvailabilityView {
 
     val id: String
@@ -10,7 +10,7 @@ interface AvailabilityView {
     val startsAt: String
     val isEnabled: Boolean
 
-    @Stable
+    @Immutable
     interface Type {
         val types: List<String>
         val language: String

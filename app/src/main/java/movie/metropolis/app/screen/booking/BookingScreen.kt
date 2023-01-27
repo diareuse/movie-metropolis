@@ -45,6 +45,8 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import movie.metropolis.app.ActivityActions
+import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.presentation.Loadable
@@ -53,6 +55,11 @@ import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.presentation.share.TicketRepresentation
+import movie.metropolis.app.screen.booking.components.BookingItemActive
+import movie.metropolis.app.screen.booking.components.BookingItemActiveEmpty
+import movie.metropolis.app.screen.booking.components.BookingItemExpired
+import movie.metropolis.app.screen.booking.components.BookingItemExpiredEmpty
+import movie.metropolis.app.screen.booking.components.BookingTicketDialog
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.reader.BarcodeReader
@@ -61,19 +68,19 @@ import movie.metropolis.app.util.toBitmap
 import movie.style.AppButton
 import movie.style.AppDialog
 import movie.style.AppErrorItem
+import movie.style.state.ImmutableList
+import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
-import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingScreen(
     padding: PaddingValues,
     state: LazyListState,
-    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     profileIcon: @Composable () -> Unit,
     onMovieClick: (String) -> Unit,
-    onShareFile: (File) -> Unit,
-    viewModel: BookingViewModel = hiltViewModel()
+    viewModel: BookingViewModel = hiltViewModel(),
+    actions: ActivityActions = LocalActivityActions.current
 ) {
     val active by viewModel.active.collectAsState()
     val expired by viewModel.expired.collectAsState()
@@ -92,7 +99,7 @@ fun BookingScreen(
             onMovieClick = onMovieClick,
             onShareClick = {
                 scope.launch {
-                    onShareFile(viewModel.saveAsFile(it))
+                    actions.actionShare(viewModel.saveAsFile(it))
                 }
             },
             onCameraClick = { isReaderActive = true },
@@ -100,7 +107,6 @@ fun BookingScreen(
         )
     }
     ReaderDialog(
-        onPermissionsRequested = onPermissionsRequested,
         isVisible = isReaderActive,
         onVisibilityChanged = { isReaderActive = it },
         onTicketRead = viewModel::saveTicket
@@ -110,15 +116,15 @@ fun BookingScreen(
 @SuppressLint("MissingPermission")
 @Composable
 private fun ReaderDialog(
-    onPermissionsRequested: suspend (Array<String>) -> Boolean,
     isVisible: Boolean,
     onVisibilityChanged: (Boolean) -> Unit,
-    onTicketRead: (TicketRepresentation) -> Unit
+    onTicketRead: (TicketRepresentation) -> Unit,
+    actions: ActivityActions = LocalActivityActions.current
 ) {
     var hasPermission by remember { mutableStateOf(false) }
     LaunchedEffect(isVisible) {
         if (!isVisible) return@LaunchedEffect
-        hasPermission = onPermissionsRequested(arrayOf(Manifest.permission.CAMERA))
+        hasPermission = actions.requestPermissions(arrayOf(Manifest.permission.CAMERA))
     }
     AppDialog(
         isVisible = isVisible && hasPermission,
@@ -175,8 +181,8 @@ private fun ReaderDialog(
 @Composable
 private fun BookingScreenContent(
     padding: PaddingValues,
-    active: Loadable<List<BookingView.Active>>,
-    expired: Loadable<List<BookingView.Expired>>,
+    active: Loadable<ImmutableList<BookingView.Active>>,
+    expired: Loadable<ImmutableList<BookingView.Expired>>,
     behavior: TopAppBarScrollBehavior,
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
@@ -231,7 +237,7 @@ private fun BookingScreenContent(
                     code = it.id,
                     poster = it.movie.poster?.url.orEmpty(),
                     hall = it.hall,
-                    seats = it.seats.map { it.row to it.seat },
+                    seats = it.seats.map { it.row to it.seat }.immutable(),
                     time = it.time,
                     name = it.name,
                     isVisible = isVisible,

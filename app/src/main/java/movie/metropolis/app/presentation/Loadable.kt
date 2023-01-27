@@ -1,12 +1,12 @@
 package movie.metropolis.app.presentation
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-@Stable
-@JvmInline
-value class Loadable<out Result>(private val value: Any?) {
+// do not convert to value class, it's being marked as unstable by compose compiler
+@Immutable
+class Loadable<out Result>(private val value: Any?) {
 
     val isLoading get() = value is Loading
     val isFailure get() = value is Failure

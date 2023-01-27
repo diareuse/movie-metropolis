@@ -51,6 +51,8 @@ import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
+import movie.metropolis.app.ActivityActions
+import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.AvailabilityView
@@ -74,6 +76,10 @@ import movie.style.AppImage
 import movie.style.DatePickerRow
 import movie.style.EllipsisText
 import movie.style.imagePlaceholder
+import movie.style.state.ImmutableDate
+import movie.style.state.ImmutableDate.Companion.immutable
+import movie.style.state.ImmutableList.Companion.immutable
+import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Date
@@ -84,9 +90,8 @@ import kotlin.random.Random.Default.nextInt
 fun MovieScreen(
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
-    onLinkClick: (String) -> Unit,
-    onPermissionsRequested: suspend (Array<String>) -> Boolean,
-    viewModel: MovieViewModel = hiltViewModel()
+    viewModel: MovieViewModel = hiltViewModel(),
+    actions: ActivityActions = LocalActivityActions.current
 ) {
     val poster by viewModel.poster.collectAsState(initial = Loadable.loading())
     val trailer by viewModel.trailer.collectAsState(initial = Loadable.loading())
@@ -97,7 +102,7 @@ fun MovieScreen(
     val options by viewModel.options.collectAsState()
     val favorite by viewModel.favorite.collectAsState()
     val showFavorite by viewModel.showFavorite.collectAsState()
-    val location by rememberLocation(onPermissionsRequested)
+    val location by rememberLocation()
     val scope = rememberCoroutineScope()
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
@@ -109,19 +114,18 @@ fun MovieScreen(
         showings = showings,
         options = options,
         isFavorite = favorite.getOrNull() ?: false,
-        selectionAvailableStart = startDate.getOrNull(),
-        selectedDate = selectedDate,
+        selectionAvailableStart = startDate.getOrNull()?.immutable(),
+        selectedDate = selectedDate?.immutable(),
         hideShowings = viewModel.hideShowings,
         showFavorite = showFavorite,
         onBackClick = onBackClick,
         onSelectedDateUpdated = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
-        onLinkClick = onLinkClick,
         onFilterClick = viewModel::toggleFilter,
         onFavoriteClick = {
             scope.launch {
                 val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    onPermissionsRequested(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                    actions.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
                 } else {
                     true
                 }
@@ -141,16 +145,16 @@ private fun MovieScreen(
     showings: Loadable<List<CinemaBookingView>>,
     options: Loadable<Map<Filter.Type, List<Filter>>>,
     isFavorite: Boolean,
-    selectionAvailableStart: Date?,
-    selectedDate: Date?,
+    selectionAvailableStart: ImmutableDate?,
+    selectedDate: ImmutableDate?,
     hideShowings: Boolean,
     showFavorite: Boolean,
     onSelectedDateUpdated: (Date) -> Unit,
     onBackClick: () -> Unit,
     onBookingClick: (String) -> Unit,
-    onLinkClick: (String) -> Unit,
     onFilterClick: (Filter) -> Unit,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    actions: ActivityActions = LocalActivityActions.current
 ) {
     Scaffold(
         topBar = {
@@ -166,21 +170,21 @@ private fun MovieScreen(
                         val csfd = links.csfd
                         if (csfd != null) DropdownMenuItem(
                             text = { Text(text = stringResource(R.string.csfd)) },
-                            onClick = { onLinkClick(csfd) },
+                            onClick = { actions.actionView(csfd) },
                             leadingIcon = { Icon(painterResource(R.drawable.ic_csfd), null) },
                             trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
                         )
                         val imdb = links.imdb
                         if (imdb != null) DropdownMenuItem(
                             text = {},
-                            onClick = { onLinkClick(imdb) },
+                            onClick = { actions.actionView(imdb) },
                             leadingIcon = { Icon(painterResource(R.drawable.ic_imdb), null) },
                             trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
                         )
                         val rottenTomatoes = links.rottenTomatoes
                         if (rottenTomatoes != null) DropdownMenuItem(
                             text = {},
-                            onClick = { onLinkClick(rottenTomatoes) },
+                            onClick = { actions.actionView(rottenTomatoes) },
                             leadingIcon = {
                                 Icon(
                                     painterResource(R.drawable.ic_rotten_tomatoes),
@@ -247,7 +251,7 @@ private fun MovieScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 24.dp),
-                            onClick = { onLinkClick(it.url) }
+                            onClick = { actions.actionView(it.url) }
                         ) {
                             Text(stringResource(R.string.view_trailer))
                         }
@@ -265,8 +269,8 @@ private fun MovieScreen(
 fun LazyListScope.MovieDetailShowings(
     showings: Loadable<List<CinemaBookingView>>,
     options: Loadable<Map<Filter.Type, List<Filter>>>,
-    selectionAvailableStart: Date?,
-    selectedDate: Date?,
+    selectionAvailableStart: ImmutableDate?,
+    selectedDate: ImmutableDate?,
     onSelectedDateUpdated: (Date) -> Unit,
     onBookingClick: (String) -> Unit,
     onFilterClick: (Filter) -> Unit
@@ -302,12 +306,12 @@ fun LazyListScope.MovieDetailShowings(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 FilterRow(
-                    filters = filters[Filter.Type.Language].orEmpty(),
+                    filters = filters[Filter.Type.Language].orEmpty().immutable(),
                     onFilterToggle = onFilterClick,
                     contentPadding = PaddingValues(horizontal = 24.dp)
                 )
                 FilterRow(
-                    filters = filters[Filter.Type.Projection].orEmpty(),
+                    filters = filters[Filter.Type.Projection].orEmpty().immutable(),
                     onFilterToggle = onFilterClick,
                     contentPadding = PaddingValues(horizontal = 24.dp)
                 )
@@ -324,7 +328,7 @@ fun LazyListScope.MovieDetailShowings(
                     .animateItemPlacement()
                     .padding(horizontal = 24.dp),
                 title = it.cinema.name,
-                showings = it.availability,
+                showings = it.availability.immutable(),
                 onClick = onBookingClick
             )
         }
@@ -461,16 +465,15 @@ private fun Preview(
             ),
             trailer = Loadable.loading(),
             options = Loadable.loading(),
-            selectedDate = Date(),
+            selectedDate = Date().immutable(),
             onBackClick = {},
             isFavorite = true,
             showings = Loadable.success(showings),
             hideShowings = false,
             showFavorite = false,
-            selectionAvailableStart = Date(),
+            selectionAvailableStart = Date().immutable(),
             onSelectedDateUpdated = {},
             onBookingClick = {},
-            onLinkClick = {},
             onFilterClick = {},
             onFavoriteClick = {}
         )

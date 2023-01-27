@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.booking
+package movie.metropolis.app.screen.booking.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
@@ -47,6 +47,8 @@ import movie.metropolis.app.util.findActivity
 import movie.style.AppDialog
 import movie.style.AppImage
 import movie.style.layout.TicketShape
+import movie.style.state.ImmutableList
+import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
 import kotlin.random.Random.Default.nextLong
 
@@ -58,7 +60,7 @@ fun BookingTicketDialog(
     code: String,
     poster: String,
     hall: String,
-    seats: List<Pair<Row, Seat>>,
+    seats: ImmutableList<Pair<Row, Seat>>,
     time: String,
     name: String,
     isVisible: Boolean,
@@ -98,7 +100,7 @@ private fun BookingTicketDialogContent(
     code: String,
     poster: String,
     hall: String,
-    seats: List<Pair<Row, Seat>>,
+    seats: ImmutableList<Pair<Row, Seat>>,
     time: String,
     name: String,
 ) {
@@ -171,7 +173,7 @@ private fun BookingTicketDialogContent(
                             )
                             for ((row, seat) in seats)
                                 this += TableRow(row, seat)
-                        }
+                        }.immutable()
                         Table(
                             rows = rows,
                             textAlign = TextAlign.Center,
@@ -222,7 +224,7 @@ private fun Preview() {
             code = "3921492517",
             poster = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
             hall = "IMAX",
-            seats = listOf("12" to "10", "12" to "11"),
+            seats = listOf("12" to "10", "12" to "11").immutable(),
             time = "12:10",
             name = "Wonder Woman"
         )
@@ -237,7 +239,7 @@ private fun PreviewDark() {
             code = "3921492517",
             poster = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
             hall = "IMAX",
-            seats = listOf("12" to "10", "12" to "11"),
+            seats = listOf("12" to "10", "12" to "11").immutable(),
             time = "12:10",
             name = "Wonder Woman"
         )

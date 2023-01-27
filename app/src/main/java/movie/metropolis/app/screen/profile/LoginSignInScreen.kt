@@ -32,6 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import movie.metropolis.app.ActivityActions
+import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.setup.Background
 import movie.style.AppButton
@@ -43,8 +45,7 @@ import movie.style.theme.Theme
 fun LoginSignInScreen(
     viewModel: LoginViewModel,
     onNavigateHome: () -> Unit,
-    onBackClick: () -> Unit,
-    onLinkClick: (String) -> Unit,
+    onBackClick: () -> Unit
 ) {
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
@@ -62,8 +63,7 @@ fun LoginSignInScreen(
         onEmailChanged = { viewModel.email.value = it },
         onPasswordChanged = { viewModel.password.value = it },
         onSendClick = viewModel::send,
-        onBackClick = onBackClick,
-        onLinkClick = onLinkClick
+        onBackClick = onBackClick
     )
 }
 
@@ -78,7 +78,7 @@ private fun LoginSignInScreen(
     onPasswordChanged: (String) -> Unit,
     onSendClick: () -> Unit,
     onBackClick: () -> Unit,
-    onLinkClick: (String) -> Unit
+    actions: ActivityActions = LocalActivityActions.current
 ) {
     LoginScreenLayout(
         title = { Text(stringResource(R.string.login_title)) },
@@ -163,7 +163,7 @@ private fun LoginSignInScreen(
                 AnimatedVisibility(error) {
                     AppButton(
                         onClick = {
-                            onLinkClick("$domain/account#/password-reset")
+                            actions.actionView("$domain/account#/password-reset")
                         },
                         elevation = 0.dp,
                         containerColor = Theme.color.container.error,
@@ -196,8 +196,7 @@ private fun Preview() {
             onEmailChanged = {},
             onPasswordChanged = {},
             onSendClick = {},
-            onBackClick = {},
-            onLinkClick = {}
+            onBackClick = {}
         )
     }
 }

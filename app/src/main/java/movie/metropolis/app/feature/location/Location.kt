@@ -16,19 +16,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.os.bundleOf
 import com.google.android.gms.location.LocationServices
+import movie.metropolis.app.LocalActivityActions
 
 @Composable
-fun rememberLocation(
-    onPermissionRequested: suspend (Array<String>) -> Boolean
-): State<Location?> {
+fun rememberLocation(): State<Location?> {
     val context = LocalContext.current
     val provider = remember { LocationServices.getFusedLocationProviderClient(context) }
     val snapshotState = rememberSaveable(key = "location", stateSaver = LocationSaver) {
         mutableStateOf(null as Location?)
     }
-    LaunchedEffect(onPermissionRequested) {
+    val actions = LocalActivityActions.current
+    LaunchedEffect(actions) {
         if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-            if (!onPermissionRequested(arrayOf(ACCESS_COARSE_LOCATION))) {
+            if (!actions.requestPermissions(arrayOf(ACCESS_COARSE_LOCATION))) {
                 return@LaunchedEffect
             }
         }
