@@ -38,6 +38,10 @@ import movie.metropolis.app.screen.detail.plus
 import movie.style.AppIconButton
 import movie.style.AppToolbar
 import movie.style.DatePickerRow
+import movie.style.state.ImmutableDate
+import movie.style.state.ImmutableDate.Companion.immutable
+import movie.style.state.ImmutableList.Companion.immutable
+import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Date
@@ -56,7 +60,7 @@ fun CinemaScreen(
         cinema = cinema,
         items = items,
         options = options,
-        selectedDate = selectedDate,
+        selectedDate = selectedDate.immutable(),
         onSelectedDateChanged = { viewModel.selectedDate.value = it },
         onBookingClick = onBookingClick,
         onBackClick = onBackClick,
@@ -70,7 +74,7 @@ private fun CinemaScreen(
     cinema: Loadable<CinemaView>,
     items: Loadable<List<MovieBookingView>>,
     options: Loadable<Map<Filter.Type, List<Filter>>>,
-    selectedDate: Date,
+    selectedDate: ImmutableDate,
     onSelectedDateChanged: (Date) -> Unit,
     onBookingClick: (String) -> Unit,
     onBackClick: () -> Unit,
@@ -130,12 +134,12 @@ private fun CinemaScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         FilterRow(
-                            filters = filters[Filter.Type.Language].orEmpty(),
+                            filters = filters[Filter.Type.Language].orEmpty().immutable(),
                             onFilterToggle = onFilterClick,
                             contentPadding = PaddingValues(horizontal = 24.dp)
                         )
                         FilterRow(
-                            filters = filters[Filter.Type.Projection].orEmpty(),
+                            filters = filters[Filter.Type.Projection].orEmpty().immutable(),
                             onFilterToggle = onFilterClick,
                             contentPadding = PaddingValues(horizontal = 24.dp)
                         )
@@ -152,7 +156,7 @@ private fun CinemaScreen(
                             .animateItemPlacement()
                             .padding(horizontal = 24.dp),
                         movie = it.movie,
-                        availability = it.availability,
+                        availability = it.availability.immutable(),
                         onClick = onBookingClick
                     )
                 }

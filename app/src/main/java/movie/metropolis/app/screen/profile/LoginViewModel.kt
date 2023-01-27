@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.profile
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import movie.metropolis.app.presentation.login.LoginFacade.Companion.stateFlow
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     facade: LoginFacade,

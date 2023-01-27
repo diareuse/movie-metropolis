@@ -31,16 +31,12 @@ import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.setup.SetupScreen
 import movie.metropolis.app.screen.setup.SetupViewModel
 import movie.metropolis.app.util.encodeBase64
-import java.io.File
 
 private const val uri = "app://movie.metropolis"
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
 @Composable
 fun Navigation(
-    onPermissionsRequested: suspend (Array<String>) -> Boolean,
-    onLinkClicked: (String) -> Unit,
-    onShareFile: (File) -> Unit,
     controller: NavHostController = rememberAnimatedNavController()
 ) {
     val setupViewModel = hiltViewModel<SetupViewModel>()
@@ -65,8 +61,6 @@ fun Navigation(
         composable("/home?screen={screen}") {
             HomeScreen(
                 startWith = it.arguments?.getString("screen"),
-                onPermissionsRequested = onPermissionsRequested,
-                onShareFile = onShareFile,
                 onClickMovie = { id, upcoming ->
                     controller.navigate("/movies/${id}?upcoming=$upcoming")
                 },
@@ -93,8 +87,7 @@ fun Navigation(
                     controller.popBackStack("/home", true)
                     controller.navigate("/home")
                 },
-                onBackClick = controller::navigateUp,
-                onLinkClick = onLinkClicked
+                onBackClick = controller::navigateUp
             )
         }
         composable("/cinemas/{cinema}") {
@@ -111,8 +104,6 @@ fun Navigation(
         ) {
             MovieScreen(
                 onBackClick = controller::navigateUp,
-                onPermissionsRequested = onPermissionsRequested,
-                onLinkClick = onLinkClicked,
                 onBookingClick = { url ->
                     controller.navigate("/order/${url.encodeBase64()}")
                 }
@@ -125,7 +116,6 @@ fun Navigation(
         }
         composable("/user/settings") {
             SettingsScreen(
-                onPermissionsRequested = onPermissionsRequested,
                 onBackClick = controller::navigateUp
             )
         }

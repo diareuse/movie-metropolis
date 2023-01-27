@@ -19,12 +19,14 @@ import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.Filter
 import movie.style.AppButton
+import movie.style.state.ImmutableList
+import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun FilterRow(
-    filters: List<Filter>,
+    filters: ImmutableList<Filter>,
     onFilterToggle: (Filter) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -86,7 +88,7 @@ private fun FilterItem(
 @Composable
 private fun Preview() {
     Theme {
-        val filters = listOf(Filter(true, "IMAX"), Filter(false, "English"))
+        val filters = listOf(Filter(true, "IMAX"), Filter(false, "English")).immutable()
         FilterRow(
             filters = filters,
             onFilterToggle = {}

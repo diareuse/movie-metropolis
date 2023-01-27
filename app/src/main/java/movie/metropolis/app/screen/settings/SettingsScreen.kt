@@ -37,6 +37,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
+import movie.metropolis.app.ActivityActions
+import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.detail.plus
 import movie.style.AppDialog
@@ -44,13 +46,14 @@ import movie.style.AppIconButton
 import movie.style.AppSettings
 import movie.style.AppToolbar
 import movie.style.InputField
+import movie.style.state.ImmutableMap
+import movie.style.state.ImmutableMap.Companion.immutableMapOf
 import movie.style.theme.Theme
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
-    onBackClick: () -> Unit,
-    onPermissionsRequested: suspend (Array<String>) -> Boolean
+    onBackClick: () -> Unit
 ) {
     val filterSeen by viewModel.filterSeen.collectAsState()
     val addToCalendar by viewModel.addToCalendar.collectAsState()
@@ -67,30 +70,23 @@ fun SettingsScreen(
         onlyMovies = onlyMovies,
         onOnlyMoviesChanged = viewModel::updateOnlyMovies,
         calendars = calendars,
-        onBackClick = onBackClick,
-        onPermissionsRequested = {
-            val result = onPermissionsRequested(it)
-            // abuse reactivity to refresh
-            viewModel.updateFilterSeen(filterSeen)
-            result
-        }
+        onBackClick = onBackClick
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
-    filterSeen: Boolean,
-    onFilterSeenChanged: (Boolean) -> Unit,
-    addToCalendar: Boolean,
-    onCalendarChanged: (String?) -> Unit,
-    clipRadius: Int,
-    onClipRadiusChanged: (Int) -> Unit,
-    onlyMovies: Boolean,
-    onOnlyMoviesChanged: (Boolean) -> Unit,
-    calendars: Map<String, String>,
-    onPermissionsRequested: suspend (Array<String>) -> Boolean,
-    onBackClick: () -> Unit
+    filterSeen: Boolean = false,
+    onFilterSeenChanged: (Boolean) -> Unit = {},
+    addToCalendar: Boolean = false,
+    onCalendarChanged: (String?) -> Unit = {},
+    clipRadius: Int = 100,
+    onClipRadiusChanged: (Int) -> Unit = {},
+    onlyMovies: Boolean = false,
+    onOnlyMoviesChanged: (Boolean) -> Unit = {},
+    calendars: ImmutableMap<String, String> = immutableMapOf(),
+    onBackClick: () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
@@ -134,8 +130,7 @@ private fun SettingsScreen(
                 Calendar(
                     checked = addToCalendar,
                     onSelected = onCalendarChanged,
-                    calendars = calendars,
-                    onPermissionsRequested = onPermissionsRequested
+                    calendars = calendars
                 )
             }
             item {
@@ -204,9 +199,9 @@ fun LazyItemScope.OnlyMovies(
 @Composable
 fun LazyItemScope.Calendar(
     checked: Boolean,
-    calendars: Map<String, String>,
+    calendars: ImmutableMap<String, String>,
     onSelected: (String?) -> Unit,
-    onPermissionsRequested: suspend (Array<String>) -> Boolean
+    actions: ActivityActions = LocalActivityActions.current
 ) {
     val scope = rememberCoroutineScope()
     var isVisible by rememberSaveable { mutableStateOf(false) }
@@ -217,7 +212,7 @@ fun LazyItemScope.Calendar(
                 Manifest.permission.READ_CALENDAR,
                 Manifest.permission.WRITE_CALENDAR
             )
-            if (!onPermissionsRequested(permissions)) {
+            if (!actions.requestPermissions(permissions)) {
                 return@launch
             }
             if (calendars.size == 1) onSelected(calendars.entries.first().key)
@@ -280,18 +275,6 @@ fun LazyItemScope.Calendar(
 @Composable
 private fun Preview() {
     Theme {
-        SettingsScreen(
-            filterSeen = true,
-            onFilterSeenChanged = {},
-            onlyMovies = true,
-            onOnlyMoviesChanged = {},
-            addToCalendar = false,
-            onCalendarChanged = {},
-            calendars = emptyMap(),
-            clipRadius = 100,
-            onClipRadiusChanged = {},
-            onBackClick = {},
-            onPermissionsRequested = { false }
-        )
+        SettingsScreen()
     }
 }

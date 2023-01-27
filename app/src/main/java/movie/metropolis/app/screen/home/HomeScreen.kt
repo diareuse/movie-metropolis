@@ -58,7 +58,6 @@ import movie.style.AppImage
 import movie.style.AppToolbar
 import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
-import java.io.File
 import java.security.MessageDigest
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)
@@ -74,8 +73,6 @@ fun HomeScreen(
     moviesUpcomingState: LazyListState = rememberLazyListState(),
     cinemasState: LazyListState = rememberLazyListState(),
     bookingState: LazyListState = rememberLazyListState(),
-    onPermissionsRequested: suspend (Array<String>) -> Boolean,
-    onShareFile: (File) -> Unit,
     onClickMovie: (String, Boolean) -> Unit,
     onClickCinema: (String) -> Unit,
     onClickUser: () -> Unit,
@@ -108,7 +105,6 @@ fun HomeScreen(
                     stateAvailable = moviesAvailableState,
                     stateUpcoming = moviesUpcomingState,
                     viewModel = listing,
-                    onPermissionsRequested = onPermissionsRequested,
                     profileIcon = {
                         if (email != null) ProfileIcon(
                             email = email,
@@ -120,7 +116,6 @@ fun HomeScreen(
             composable("cinemas") {
                 CinemasScreen(
                     padding = padding,
-                    onPermissionRequested = onPermissionsRequested,
                     onClickCinema = onClickCinema,
                     viewModel = cinemas,
                     state = cinemasState,
@@ -137,9 +132,7 @@ fun HomeScreen(
                     padding = padding,
                     viewModel = booking,
                     state = bookingState,
-                    onPermissionsRequested = onPermissionsRequested,
                     onMovieClick = { onClickMovie(it, true) },
-                    onShareFile = onShareFile,
                     profileIcon = {
                         if (email != null) ProfileIcon(
                             email = email,

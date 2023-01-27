@@ -1,8 +1,8 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 sealed interface BookingView {
 
     val id: String
@@ -13,16 +13,16 @@ sealed interface BookingView {
     val movie: MovieDetailView
     val cinema: CinemaView
 
-    @Stable
+    @Immutable
     interface Expired : BookingView
 
-    @Stable
+    @Immutable
     interface Active : BookingView {
 
         val hall: String
         val seats: List<Seat>
 
-        @Stable
+        @Immutable
         interface Seat {
             val row: String
             val seat: String

@@ -1,8 +1,8 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 interface UserView {
 
     val firstName: String
@@ -12,7 +12,7 @@ interface UserView {
     val favorite: CinemaSimpleView?
     val consent: ConsentView
 
-    @Stable
+    @Immutable
     interface ConsentView {
         val marketing: Boolean
         val premium: Boolean

@@ -27,20 +27,24 @@ import kotlin.coroutines.suspendCoroutine
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
+    private val actions = ActivityActions(
+        requestPermissions = ::requestPermissions,
+        actionView = ::openExternal,
+        actionShare = ::share
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PlayRating()
             Theme {
-                CompositionLocalProvider(
-                    LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
-                ) {
-                    Navigation(
-                        onPermissionsRequested = { requestPermissions(it) },
-                        onLinkClicked = ::openExternal,
-                        onShareFile = ::share
-                    )
+                ProvideActivityActions(actions = actions) {
+                    CompositionLocalProvider(
+                        LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
+                    ) {
+                        Navigation()
+                    }
                 }
             }
         }

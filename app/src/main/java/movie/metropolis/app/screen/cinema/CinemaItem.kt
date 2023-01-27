@@ -28,13 +28,15 @@ import androidx.compose.ui.unit.sp
 import movie.metropolis.app.R
 import movie.style.haptic.withHaptics
 import movie.style.layout.EmptyShapeLayout
+import movie.style.state.ImmutableList
+import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
 @Composable
 fun CinemaItem(
     name: String,
-    address: List<String>,
+    address: ImmutableList<String>,
     city: String,
     distance: String?,
     onClick: () -> Unit,
@@ -54,7 +56,7 @@ fun CinemaItem(
 fun CinemaItem(modifier: Modifier = Modifier) {
     CinemaItemLayout(
         name = "#".repeat(17),
-        address = listOf("#".repeat(22)),
+        address = listOf("#".repeat(22)).immutable(),
         city = "#".repeat(15),
         distance = null,
         modifier = modifier,
@@ -83,7 +85,7 @@ fun CinemaItemEmpty(
 @Composable
 private fun CinemaItemLayout(
     name: String,
-    address: List<String>,
+    address: ImmutableList<String>,
     city: String,
     distance: String?,
     modifier: Modifier = Modifier,
@@ -148,7 +150,7 @@ private fun Preview() {
     Theme {
         CinemaItem(
             name = "Cinema Something Something",
-            address = listOf("Yes at 23/3", "4th floor"),
+            address = listOf("Yes at 23/3", "4th floor").immutable(),
             city = "Warsaw",
             distance = "12.3km",
             onClick = {}
@@ -162,7 +164,7 @@ private fun PreviewNight() {
     Theme {
         CinemaItem(
             name = "Cinema Something Something",
-            address = listOf("Yes at 23/3", "4th floor"),
+            address = listOf("Yes at 23/3", "4th floor").immutable(),
             city = "Warsaw",
             distance = "12.3km",
             onClick = {}

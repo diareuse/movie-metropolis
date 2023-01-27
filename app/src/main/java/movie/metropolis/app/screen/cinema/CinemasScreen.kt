@@ -33,20 +33,20 @@ import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.style.AppErrorItem
+import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CinemasScreen(
     padding: PaddingValues,
-    onPermissionRequested: suspend (Array<String>) -> Boolean,
     onClickCinema: (String) -> Unit,
     state: LazyListState,
     profileIcon: @Composable () -> Unit,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
     val items by viewModel.items.collectAsState()
-    val location by rememberLocation(onPermissionRequested)
+    val location by rememberLocation()
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
     }
@@ -93,7 +93,7 @@ private fun CinemasScreen(
                         .animateItemPlacement()
                         .padding(horizontal = 24.dp),
                     name = it.name,
-                    address = it.address,
+                    address = it.address.immutable(),
                     city = it.city,
                     distance = it.distance,
                     onClick = { onClickCinema(it.id) }

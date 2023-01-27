@@ -1,13 +1,13 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 interface MovieBookingView : HasAvailability {
 
     val movie: Movie
 
-    @Stable
+    @Immutable
     interface Movie {
         val id: String
         val name: String

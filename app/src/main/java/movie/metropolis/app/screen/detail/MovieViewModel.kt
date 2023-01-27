@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.detail
 
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,6 +29,7 @@ import java.util.Date
 import javax.inject.Inject
 import android.location.Location as AndroidLocation
 
+@Stable
 @HiltViewModel
 class MovieViewModel private constructor(
     private val facade: MovieFacade,

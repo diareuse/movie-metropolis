@@ -1,8 +1,8 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
 
-@Stable
+@Immutable
 interface MembershipView {
     val isExpired: Boolean
     val cardNumber: String

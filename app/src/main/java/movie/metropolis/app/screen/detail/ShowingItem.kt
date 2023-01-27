@@ -30,13 +30,15 @@ import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.AvailabilityView
 import movie.style.AppButton
+import movie.style.state.ImmutableMap
+import movie.style.state.ImmutableMap.Companion.immutableMapOf
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
 @Composable
 fun ShowingItem(
     title: String,
-    showings: Map<AvailabilityView.Type, List<AvailabilityView>>,
+    showings: ImmutableMap<AvailabilityView.Type, List<AvailabilityView>>,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -60,7 +62,7 @@ fun ShowingItem(
 ) {
     ShowingLayout(
         modifier = modifier,
-        items = mapOf(
+        items = immutableMapOf(
             "#" to List(3) { it },
             "##" to List(1) { it },
             "###" to List(2) { it },
@@ -145,7 +147,7 @@ fun ShowingItemTime(
 
 @Composable
 fun <T, T2> ShowingLayout(
-    items: Map<T2, List<T>>,
+    items: ImmutableMap<T2, List<T>>,
     key: (T) -> Any,
     title: @Composable () -> Unit,
     section: @Composable (T2) -> Unit,
@@ -222,7 +224,7 @@ fun <T, T2> ShowingLayout(
 private fun Preview() {
     Theme {
         ShowingLayout(
-            items = mapOf(
+            items = immutableMapOf(
                 ("2D" to "English (Czech)") to listOf("11:11", "12:34", "22:22"),
                 ("3D" to "English") to listOf("11:11", "12:34", "22:22"),
             ),
