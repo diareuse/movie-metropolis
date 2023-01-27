@@ -3,12 +3,13 @@ package movie.metropolis.app.screen.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import movie.metropolis.app.screen.retainStateIn
-import movie.metropolis.app.screen.settings.SettingsFacade.Companion.addToCalendarFlow
-import movie.metropolis.app.screen.settings.SettingsFacade.Companion.calendarFlow
-import movie.metropolis.app.screen.settings.SettingsFacade.Companion.clipRadiusFlow
-import movie.metropolis.app.screen.settings.SettingsFacade.Companion.filterSeenFlow
-import movie.metropolis.app.screen.settings.SettingsFacade.Companion.onlyMoviesFlow
+import movie.metropolis.app.presentation.settings.SettingsFacade
+import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.addToCalendarFlow
+import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.calendarFlow
+import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.clipRadiusFlow
+import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.filterSeenFlow
+import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.onlyMoviesFlow
+import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel

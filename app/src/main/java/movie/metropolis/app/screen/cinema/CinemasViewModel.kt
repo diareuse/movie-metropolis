@@ -4,9 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.cinema.CinemasFacade.Companion.cinemasFlow
-import movie.metropolis.app.screen.retainStateIn
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.cinema.CinemasFacade
+import movie.metropolis.app.presentation.cinema.CinemasFacade.Companion.cinemasFlow
+import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel

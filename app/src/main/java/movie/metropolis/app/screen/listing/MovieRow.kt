@@ -22,11 +22,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.onEmpty
-import movie.metropolis.app.screen.onFailure
-import movie.metropolis.app.screen.onLoading
-import movie.metropolis.app.screen.onSuccess
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onEmpty
+import movie.metropolis.app.presentation.onFailure
+import movie.metropolis.app.presentation.onLoading
+import movie.metropolis.app.presentation.onSuccess
 import movie.style.theme.Theme
 
 @Composable
