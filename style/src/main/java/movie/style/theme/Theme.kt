@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
@@ -49,6 +50,7 @@ object Theme {
 
     val color: Style @Composable get() = LocalStyle.current
 
+    @Immutable
     interface Text {
         val caption: TextStyle
         val body: TextStyle
@@ -57,6 +59,7 @@ object Theme {
         val headline: TextStyle
     }
 
+    @Immutable
     interface Container {
         val button: CornerBasedShape
         val poster: CornerBasedShape get() = button
@@ -64,11 +67,13 @@ object Theme {
         val card: CornerBasedShape
     }
 
+    @Immutable
     interface Style {
 
         val container: Scheme
         val content: Scheme
 
+        @Immutable
         interface Scheme {
             val primary: Color
             val secondary: Color

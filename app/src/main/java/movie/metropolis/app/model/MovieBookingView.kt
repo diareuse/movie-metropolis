@@ -7,6 +7,7 @@ interface MovieBookingView : HasAvailability {
 
     val movie: Movie
 
+    @Stable
     interface Movie {
         val id: String
         val name: String
