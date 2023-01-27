@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.listing.ListingFacade.Companion.currentFlow
-import movie.metropolis.app.screen.listing.ListingFacade.Companion.upcomingFlow
-import movie.metropolis.app.screen.retainStateIn
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.listing.ListingFacade
+import movie.metropolis.app.presentation.listing.ListingFacade.Companion.currentFlow
+import movie.metropolis.app.presentation.listing.ListingFacade.Companion.upcomingFlow
+import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel

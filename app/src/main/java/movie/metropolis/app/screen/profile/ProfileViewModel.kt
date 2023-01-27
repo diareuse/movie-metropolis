@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.update
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.model.adapter.UserViewFromView
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.onSuccess
-import movie.metropolis.app.screen.profile.ProfileFacade.Companion.cinemasFlow
-import movie.metropolis.app.screen.profile.ProfileFacade.Companion.membershipFlow
-import movie.metropolis.app.screen.profile.ProfileFacade.Companion.userFlow
-import movie.metropolis.app.screen.retainStateIn
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onSuccess
+import movie.metropolis.app.presentation.profile.ProfileFacade
+import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.cinemasFlow
+import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.membershipFlow
+import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.userFlow
+import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel

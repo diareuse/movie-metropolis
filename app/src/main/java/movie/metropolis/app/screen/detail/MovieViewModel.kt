@@ -14,15 +14,16 @@ import kotlinx.coroutines.launch
 import movie.core.UserDataFeature
 import movie.core.model.Location
 import movie.metropolis.app.model.Filter
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsFlow
-import movie.metropolis.app.screen.detail.MovieFacade.Companion.availableFromFlow
-import movie.metropolis.app.screen.detail.MovieFacade.Companion.favoriteFlow
-import movie.metropolis.app.screen.detail.MovieFacade.Companion.movieFlow
-import movie.metropolis.app.screen.detail.MovieFacade.Companion.posterFlow
-import movie.metropolis.app.screen.detail.MovieFacade.Companion.showingsFlow
-import movie.metropolis.app.screen.detail.MovieFacade.Companion.trailerFlow
-import movie.metropolis.app.screen.retainStateIn
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.optionsFlow
+import movie.metropolis.app.presentation.detail.MovieFacade
+import movie.metropolis.app.presentation.detail.MovieFacade.Companion.availableFromFlow
+import movie.metropolis.app.presentation.detail.MovieFacade.Companion.favoriteFlow
+import movie.metropolis.app.presentation.detail.MovieFacade.Companion.movieFlow
+import movie.metropolis.app.presentation.detail.MovieFacade.Companion.posterFlow
+import movie.metropolis.app.presentation.detail.MovieFacade.Companion.showingsFlow
+import movie.metropolis.app.presentation.detail.MovieFacade.Companion.trailerFlow
+import movie.metropolis.app.util.retainStateIn
 import java.util.Date
 import javax.inject.Inject
 import android.location.Location as AndroidLocation

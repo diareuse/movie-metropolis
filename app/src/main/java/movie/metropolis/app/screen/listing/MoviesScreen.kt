@@ -33,7 +33,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
-import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.style.theme.Theme

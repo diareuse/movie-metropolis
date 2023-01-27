@@ -1,6 +1,6 @@
 package movie.metropolis.app.util
 
-import movie.metropolis.app.screen.cinema.BookingFilterable
+import movie.metropolis.app.presentation.cinema.BookingFilterable
 
 suspend fun BookingFilterable.disableAll() {
     val options = getOptions().getOrThrow()

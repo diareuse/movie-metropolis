@@ -28,10 +28,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.RegionView
-import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onLoading
+import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.screen.onLoading
-import movie.metropolis.app.screen.onSuccess
 import movie.style.AppToolbar
 import movie.style.theme.Theme
 

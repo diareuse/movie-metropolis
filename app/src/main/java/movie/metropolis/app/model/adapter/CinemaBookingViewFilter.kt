@@ -3,7 +3,7 @@ package movie.metropolis.app.model.adapter
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.screen.cinema.ShowingFilterable
+import movie.metropolis.app.presentation.cinema.ShowingFilterable
 
 data class CinemaBookingViewFilter(
     private val languages: Set<String>,

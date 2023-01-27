@@ -29,12 +29,12 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
-import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onEmpty
+import movie.metropolis.app.presentation.onLoading
+import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.FilterRow
 import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.screen.onEmpty
-import movie.metropolis.app.screen.onLoading
-import movie.metropolis.app.screen.onSuccess
 import movie.style.AppIconButton
 import movie.style.AppToolbar
 import movie.style.DatePickerRow

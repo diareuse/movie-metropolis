@@ -9,11 +9,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import movie.metropolis.app.model.Filter
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.cinema.BookingFilterable.Companion.optionsFlow
-import movie.metropolis.app.screen.cinema.CinemaFacade.Companion.cinemaFlow
-import movie.metropolis.app.screen.cinema.CinemaFacade.Companion.showingsFlow
-import movie.metropolis.app.screen.retainStateIn
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.optionsFlow
+import movie.metropolis.app.presentation.cinema.CinemaFacade
+import movie.metropolis.app.presentation.cinema.CinemaFacade.Companion.cinemaFlow
+import movie.metropolis.app.presentation.cinema.CinemaFacade.Companion.showingsFlow
+import movie.metropolis.app.util.retainStateIn
 import java.util.Date
 import javax.inject.Inject
 

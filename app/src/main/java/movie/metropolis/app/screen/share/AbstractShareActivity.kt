@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import movie.metropolis.app.MainActivity
+import movie.metropolis.app.presentation.share.ShareFacade
+import movie.metropolis.app.presentation.share.TicketRepresentation
 import movie.metropolis.app.util.toBitmap
 import movie.style.theme.Theme
 import javax.inject.Inject

@@ -25,13 +25,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.screen.Loadable
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onEmpty
+import movie.metropolis.app.presentation.onFailure
+import movie.metropolis.app.presentation.onLoading
+import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
-import movie.metropolis.app.screen.onEmpty
-import movie.metropolis.app.screen.onFailure
-import movie.metropolis.app.screen.onLoading
-import movie.metropolis.app.screen.onSuccess
 import movie.style.AppErrorItem
 import movie.style.theme.Theme
 

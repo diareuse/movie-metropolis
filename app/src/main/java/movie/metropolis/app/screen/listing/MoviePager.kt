@@ -34,11 +34,11 @@ import com.google.accompanist.pager.calculateCurrentOffsetForPage
 import com.google.accompanist.pager.rememberPagerState
 import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.onEmpty
-import movie.metropolis.app.screen.onFailure
-import movie.metropolis.app.screen.onLoading
-import movie.metropolis.app.screen.onSuccess
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onEmpty
+import movie.metropolis.app.presentation.onFailure
+import movie.metropolis.app.presentation.onLoading
+import movie.metropolis.app.presentation.onSuccess
 import movie.style.haptic.TickOnChange
 import movie.style.layout.EmptyShapeLayout
 import movie.style.theme.Theme

@@ -9,9 +9,10 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.shareIn
 import movie.metropolis.app.model.LoginMode
-import movie.metropolis.app.screen.Loadable
-import movie.metropolis.app.screen.profile.LoginFacade.Companion.stateFlow
-import movie.metropolis.app.screen.retainStateIn
+import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.login.LoginFacade
+import movie.metropolis.app.presentation.login.LoginFacade.Companion.stateFlow
+import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel
