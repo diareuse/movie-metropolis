@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.booking.components
+package movie.metropolis.app.screen.booking.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.background
@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.R
-import movie.metropolis.app.screen.profile.Barcode
+import movie.metropolis.app.screen.profile.component.Barcode
 import movie.metropolis.app.util.findActivity
 import movie.style.AppDialog
 import movie.style.AppImage

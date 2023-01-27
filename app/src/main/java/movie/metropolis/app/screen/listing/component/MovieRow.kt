@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.listing
+package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,7 @@ import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.metropolis.app.screen.listing.ListMovieViewProvider
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme

@@ -21,8 +21,8 @@ import movie.metropolis.app.model.adapter.ImageViewFromFeature
 import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
 import movie.metropolis.app.model.adapter.MoviePreviewFromDetail
 import movie.metropolis.app.model.adapter.VideoViewFromFeature
+import movie.metropolis.app.presentation.Listenable
 import movie.metropolis.app.presentation.OnChangedListener
-import movie.metropolis.app.screen.cinema.Listenable
 import java.util.Date
 
 class MovieFacadeFromFeature(

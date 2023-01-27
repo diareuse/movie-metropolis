@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.setup
+package movie.metropolis.app.screen.setup.component
 
 import androidx.compose.animation.core.animateIntOffsetAsState
 import androidx.compose.animation.core.tween

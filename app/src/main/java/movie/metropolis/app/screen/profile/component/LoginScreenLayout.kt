@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.profile
+package movie.metropolis.app.screen.profile.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.ExperimentalMaterial3Api

@@ -33,6 +33,7 @@ import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.metropolis.app.screen.profile.component.MembershipCard
 import movie.style.AppButton
 import movie.style.AppIconButton
 import movie.style.AppToolbar

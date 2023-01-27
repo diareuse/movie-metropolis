@@ -30,6 +30,8 @@ import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.metropolis.app.screen.cinema.component.CinemaItem
+import movie.metropolis.app.screen.cinema.component.CinemaItemEmpty
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.style.AppErrorItem

@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.detail
+package movie.metropolis.app.screen.detail.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box

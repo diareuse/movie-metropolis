@@ -34,6 +34,8 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
+import movie.metropolis.app.screen.listing.component.MoviePager
+import movie.metropolis.app.screen.listing.component.MovieRow
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme

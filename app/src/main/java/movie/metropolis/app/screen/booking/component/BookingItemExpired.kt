@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.booking.components
+package movie.metropolis.app.screen.booking.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.dp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.screen.detail.ImageViewPreview
-import movie.metropolis.app.screen.listing.DefaultPosterAspectRatio
-import movie.metropolis.app.screen.listing.MoviePoster
+import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
+import movie.metropolis.app.screen.listing.component.MoviePoster
 import movie.style.haptic.withHaptics
 import movie.style.layout.EmptyStackedCardLayout
 import movie.style.layout.PosterLayout

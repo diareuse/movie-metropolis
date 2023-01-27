@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.profile
+package movie.metropolis.app.screen.profile.component
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Canvas

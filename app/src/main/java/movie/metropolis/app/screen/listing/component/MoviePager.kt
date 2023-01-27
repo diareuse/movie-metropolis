@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.listing
+package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement

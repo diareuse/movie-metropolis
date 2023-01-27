@@ -6,9 +6,9 @@ import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.adapter.CinemaBookingViewFilter
+import movie.metropolis.app.presentation.Listenable
 import movie.metropolis.app.presentation.OnChangedListener
 import movie.metropolis.app.presentation.cinema.ShowingFilterable
-import movie.metropolis.app.screen.cinema.Listenable
 import java.util.Date
 
 class MovieFacadeFilterable(

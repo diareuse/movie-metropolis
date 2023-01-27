@@ -18,7 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import movie.metropolis.app.R
-import movie.metropolis.app.screen.setup.Background
+import movie.metropolis.app.screen.setup.component.Background
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
