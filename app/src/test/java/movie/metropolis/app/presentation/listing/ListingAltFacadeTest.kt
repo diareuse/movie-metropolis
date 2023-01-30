@@ -6,6 +6,7 @@ import movie.core.EventPreviewFeature
 import movie.core.model.MoviePreview
 import movie.core.model.MoviePromoPoster
 import movie.metropolis.app.di.FacadeModule
+import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.util.callback
@@ -65,7 +66,10 @@ abstract class ListingAltFacadeTest : FeatureTest() {
         }
         for (action in facade.get())
             for (output in action.getOrThrow().groupUp())
-                assertContentEquals(setOf("1", "2"), output.getOrThrow().keys.asIterable())
+                assertContentEquals(
+                    setOf(Genre("1"), Genre("2")),
+                    output.getOrThrow().keys.asIterable()
+                )
     }
 
     @Test
@@ -180,8 +184,8 @@ abstract class ListingAltFacadeTest : FeatureTest() {
         return outputs
     }
 
-    private suspend fun ListingAltFacade.Action.groupUp(): List<Result<Map<String, List<MovieView>>>> {
-        val outputs = mutableListOf<Result<Map<String, List<MovieView>>>>()
+    private suspend fun ListingAltFacade.Action.groupUp(): List<Result<Map<Genre, List<MovieView>>>> {
+        val outputs = mutableListOf<Result<Map<Genre, List<MovieView>>>>()
         groupUp { outputs += it }
         return outputs
     }

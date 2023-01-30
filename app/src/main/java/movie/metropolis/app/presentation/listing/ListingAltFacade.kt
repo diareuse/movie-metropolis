@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import movie.core.ResultCallback
+import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
@@ -18,7 +19,7 @@ interface ListingAltFacade {
     interface Action {
 
         suspend fun promotions(callback: ResultCallback<List<MovieView>>)
-        suspend fun groupUp(callback: ResultCallback<Map<String, List<MovieView>>>)
+        suspend fun groupUp(callback: ResultCallback<Map<Genre, List<MovieView>>>)
 
     }
 
