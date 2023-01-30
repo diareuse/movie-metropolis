@@ -50,8 +50,8 @@ import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.currentDestinationAsState
+import movie.metropolis.app.screen.listing.ListingScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
-import movie.metropolis.app.screen.listing.MoviesScreen
 import movie.style.AppButton
 import movie.style.AppIconButton
 import movie.style.AppImage
@@ -98,13 +98,10 @@ fun HomeScreen(
             startDestination = startWith ?: "movies"
         ) {
             composable("movies") {
-                MoviesScreen(
+                ListingScreen(
                     padding = padding,
                     onClickMovie = onClickMovie,
                     state = moviesState,
-                    stateAvailable = moviesAvailableState,
-                    stateUpcoming = moviesUpcomingState,
-                    viewModel = listing,
                     profileIcon = {
                         if (email != null) ProfileIcon(
                             email = email,
