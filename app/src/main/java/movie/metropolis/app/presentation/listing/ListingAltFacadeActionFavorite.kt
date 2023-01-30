@@ -4,6 +4,7 @@ import movie.core.FavoriteFeature
 import movie.core.ResultCallback
 import movie.core.adapter.MovieFromId
 import movie.core.thenMap
+import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithFavorite
 
@@ -18,7 +19,7 @@ class ListingAltFacadeActionFavorite(
         })
     }
 
-    override suspend fun groupUp(callback: ResultCallback<Map<String, List<MovieView>>>) {
+    override suspend fun groupUp(callback: ResultCallback<Map<Genre, List<MovieView>>>) {
         origin.groupUp(callback.thenMap { groups ->
             groups.mapValues { (_, items) ->
                 items.markFavorite()
