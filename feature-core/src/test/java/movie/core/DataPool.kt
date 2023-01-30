@@ -22,6 +22,7 @@ import movie.core.nwk.model.ExtendedMovieResponse.Metadata
 import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.nwk.model.MovieResponse
+import movie.core.nwk.model.PromoCardResponse
 import org.mockito.kotlin.mock
 import java.util.Date
 import java.util.Locale
@@ -591,6 +592,14 @@ interface DataPool<T> {
 
         override fun all(modifier: Modifier<BookingSeatsView>) = buildList {
             this += BookingSeatsView("", "")
+        }.map(modifier)
+
+    }
+
+    object PromoCardResponses : DataPool<PromoCardResponse> {
+
+        override fun all(modifier: Modifier<PromoCardResponse>) = buildList {
+            this += PromoCardResponse("id", "qwe:12345")
         }.map(modifier)
 
     }

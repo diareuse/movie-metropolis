@@ -149,4 +149,15 @@ class DatabaseModule {
         return dao
     }
 
+    @Provides
+    internal fun moviePromo(
+        database: MovieDatabase,
+        tracer: PerformanceTracer
+    ): MoviePromoDao {
+        var dao: MoviePromoDao = database.moviePromo()
+        dao = MoviePromoDaoLowercase(dao)
+        dao = MoviePromoDaoPerformance(dao, tracer)
+        return dao
+    }
+
 }

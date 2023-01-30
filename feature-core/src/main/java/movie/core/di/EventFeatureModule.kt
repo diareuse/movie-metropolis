@@ -39,6 +39,13 @@ import movie.core.EventPreviewFeatureSaveTimestamp
 import movie.core.EventPreviewFeatureSort
 import movie.core.EventPreviewFeatureSpotColor
 import movie.core.EventPreviewFeatureStoring
+import movie.core.EventPromoFeature
+import movie.core.EventPromoFeatureCatch
+import movie.core.EventPromoFeatureDatabase
+import movie.core.EventPromoFeatureFold
+import movie.core.EventPromoFeatureNetworkAndUpdate
+import movie.core.EventPromoFeatureSpotColor
+import movie.core.EventPromoFeatureUrlWrap
 import movie.core.EventShowingsFeature
 import movie.core.EventShowingsFeatureCinemaCatch
 import movie.core.EventShowingsFeatureCinemaDatabase
@@ -60,6 +67,7 @@ import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MoviePromoDao
 import movie.core.db.dao.MovieRatingDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
@@ -67,6 +75,7 @@ import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.nwk.CinemaService
+import movie.core.nwk.EndpointProvider
 import movie.core.nwk.EventService
 import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
@@ -214,6 +223,24 @@ internal class EventFeatureModule {
         out = EventCinemaFeatureDistanceClosest(out, preference)
         out = EventCinemaFeatureSort(out)
         out = EventCinemaFeatureCatch(out)
+        return out
+    }
+
+    @Provides
+    fun promo(
+        dao: MoviePromoDao,
+        service: CinemaService,
+        provider: EndpointProvider,
+        analyzer: ImageAnalyzer
+    ): EventPromoFeature {
+        var out: EventPromoFeature
+        out = EventPromoFeatureFold(
+            EventPromoFeatureDatabase(dao),
+            EventPromoFeatureNetworkAndUpdate(service, dao)
+        )
+        out = EventPromoFeatureUrlWrap(out, provider)
+        out = EventPromoFeatureSpotColor(out, analyzer)
+        out = EventPromoFeatureCatch(out)
         return out
     }
 
