@@ -17,9 +17,16 @@ data class ListingAltFacadeActionFromData(
 
     override suspend fun groupUp(callback: ResultCallback<Map<Genre, List<MovieView>>>) {
         val groups = mutableMapOf<Genre, MutableList<MoviePreview>>()
-        for (item in data)
-            for (genre in item.genres)
+        for (item in data) {
+            var count = 0
+            for (genre in item.genres) {
+                count++
                 groups.getOrPut(Genre(genre)) { mutableListOf() } += item
+            }
+            if (count == 0) {
+                groups.getOrPut(Genre("other")) { mutableListOf() } += item
+            }
+        }
         val out = groups
             .mapValues { (_, values) -> values.map { MovieViewFromFeature(it, false) } }
         callback(Result.success(out))
