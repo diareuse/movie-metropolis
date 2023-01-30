@@ -3,10 +3,8 @@
 package movie.metropolis.app.presentation.listing
 
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.EventPreviewFeature
-import movie.core.FavoriteFeature
 import movie.core.model.MoviePreview
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.MovieView
@@ -15,6 +13,7 @@ import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.presentation.OnChangedListener
 import movie.metropolis.app.util.callback
 import movie.metropolis.app.util.thenBlocking
+import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
 import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.any
@@ -27,13 +26,10 @@ import kotlin.test.assertTrue
 
 class ListingFacadeTest : FeatureTest() {
 
-    private lateinit var favorite: FavoriteFeature
     private lateinit var facade: ListingFacade
 
     override fun prepare() {
-        favorite = mock {
-            on { runBlocking { isFavorite(any()) } }.thenReturn(Result.success(true))
-        }
+        wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(Result.success(true))
         facade = FacadeModule().listing(preview, favorite)
     }
 

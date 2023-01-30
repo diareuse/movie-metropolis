@@ -4,7 +4,9 @@ import movie.calendar.CalendarList
 import movie.core.EventCinemaFeature
 import movie.core.EventDetailFeature
 import movie.core.EventPreviewFeature
+import movie.core.EventPromoFeature
 import movie.core.EventShowingsFeature
+import movie.core.FavoriteFeature
 import movie.core.SetupFeature
 import movie.core.UserBookingFeature
 import movie.core.UserCredentialFeature
@@ -20,6 +22,8 @@ import org.mockito.kotlin.mock
 
 abstract class FeatureTest {
 
+    protected lateinit var promo: EventPromoFeature
+    protected lateinit var favorite: FavoriteFeature
     protected lateinit var preview: EventPreviewFeature.Factory
     protected lateinit var showings: EventShowingsFeature.Factory
     protected lateinit var detail: EventDetailFeature
@@ -65,6 +69,8 @@ abstract class FeatureTest {
         booking = mock()
         calendars = mock()
         setup = mock()
+        favorite = mock()
+        promo = mock()
     }
 
 }

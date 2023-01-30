@@ -5,7 +5,6 @@ package movie.metropolis.app.presentation.detail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.CinemaWithShowings
-import movie.core.FavoriteFeature
 import movie.core.adapter.MovieFromId
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -34,11 +33,9 @@ import kotlin.test.assertFails
 
 class MovieFacadeTest : FeatureTest() {
 
-    private lateinit var favorite: FavoriteFeature
     private lateinit var facade: MovieFacade
 
     override fun prepare() {
-        favorite = mock()
         facade = FacadeModule().movie(showings, detail, favorite).create("5376O2R")
     }
 
