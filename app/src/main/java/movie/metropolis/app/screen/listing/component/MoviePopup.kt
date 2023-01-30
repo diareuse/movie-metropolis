@@ -113,7 +113,7 @@ fun Modifier.detectLongPress(onStateChanged: (Boolean) -> Unit) = composed {
                     pressScope.reset()
                 }
                 launch {
-                    delay(200)
+                    delay(500)
                     onStateChanged(true)
                     isHooked = true
                     pressScope.tryAwaitRelease()
