@@ -16,6 +16,7 @@ import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieFavoriteDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
+import movie.core.db.dao.MoviePromoDao
 import movie.core.db.dao.MovieRatingDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
@@ -29,6 +30,7 @@ import movie.core.db.model.MovieFavoriteStored
 import movie.core.db.model.MovieMediaStored
 import movie.core.db.model.MoviePreviewStored
 import movie.core.db.model.MoviePreviewView
+import movie.core.db.model.MoviePromoStored
 import movie.core.db.model.MovieRatingStored
 import movie.core.db.model.MovieReferenceStored
 import movie.core.db.model.MovieReferenceView
@@ -36,7 +38,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 8,
+    version = 9,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -48,7 +50,8 @@ import movie.core.db.model.ShowingStored
         MovieReferenceStored::class,
         ShowingStored::class,
         MovieFavoriteStored::class,
-        MovieRatingStored::class
+        MovieRatingStored::class,
+        MoviePromoStored::class
     ],
     views = [
         MovieDetailView::class,
@@ -61,7 +64,8 @@ import movie.core.db.model.ShowingStored
         AutoMigration(3, 4),
         AutoMigration(4, 5),
         AutoMigration(5, 6),
-        AutoMigration(6, 7)
+        AutoMigration(6, 7),
+        AutoMigration(8, 9)
     ]
 )
 @TypeConverters(
@@ -82,6 +86,7 @@ internal abstract class MovieDatabase : RoomDatabase() {
     abstract fun moviePreview(): MoviePreviewDao
     abstract fun movieFavorite(): MovieFavoriteDao
     abstract fun movieRating(): MovieRatingDao
+    abstract fun moviePromo(): MoviePromoDao
 
     class Migration2to3 : Migration(2, 3) {
         override fun migrate(database: SupportSQLiteDatabase) {
