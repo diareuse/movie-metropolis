@@ -101,13 +101,14 @@ private fun MovieRow(
     ) {
         items(items, key = MovieView::id) { item ->
             var showPopup by remember { mutableStateOf(false) }
+            val listener = { onClickFavorite(item) }
             MovieItem(
                 name = item.name,
                 subtext = if (isShowing) item.releasedAt else item.availableFrom,
                 poster = item.poster,
                 isFavorite = item.favorite,
                 onClick = { onClick(item.id) },
-                onClickFavorite = { onClickFavorite(item) },
+                onClickFavorite = if (isShowing) null else listener,
                 onLongPress = { showPopup = it }
             )
             MoviePopup(

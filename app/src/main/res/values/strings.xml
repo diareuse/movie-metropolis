@@ -105,4 +105,5 @@
     <string name="thriller">Thriller</string>
     <string name="war">War</string>
     <string name="western">Western</string>
+    <string name="other">Other</string>
 </resources>

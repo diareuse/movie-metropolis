@@ -44,9 +44,9 @@ fun MovieItem(
     poster: ImageView?,
     isFavorite: Boolean,
     onClick: () -> Unit,
-    onClickFavorite: () -> Unit,
     onLongPress: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    onClickFavorite: (() -> Unit)? = null,
     height: Dp = 225.dp
 ) {
     MovieItemLayout(
@@ -60,7 +60,7 @@ fun MovieItem(
                 onClick = onClick,
                 onLongPress = onLongPress
             )
-            FavoriteButton(
+            if (onClickFavorite != null) FavoriteButton(
                 modifier = Modifier.align(Alignment.TopEnd),
                 isChecked = isFavorite,
                 onClick = onClickFavorite
