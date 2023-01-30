@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,9 +38,12 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.detail.component.FavoriteButton
+import movie.style.layout.CutoutShape
 import movie.style.layout.PosterLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
+import movie.style.theme.contentColorFor
+import movie.style.theme.extendBy
 
 @Composable
 fun MovieItem(
@@ -54,16 +62,29 @@ fun MovieItem(
         height = height,
         shadowColor = poster?.spotColor ?: Color.Black,
         posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
+        shape =
+        if (onClickFavorite == null) Theme.container.poster
+        else CutoutShape.from(Theme.container.poster.extendBy(8.dp), 56.dp),
         poster = {
             MoviePoster(
                 url = poster?.url,
                 onClick = onClick,
                 onLongPress = onLongPress
             )
+        },
+        posterOverlay = {
+            val spotColor = poster?.spotColor ?: Theme.color.container.background
+            val color = Theme.color.contentColorFor(spotColor)
             if (onClickFavorite != null) FavoriteButton(
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .shadow(16.dp, shape = Theme.container.button, clip = false)
+                    .background(spotColor, Theme.container.button)
+                    .clip(Theme.container.button),
                 isChecked = isFavorite,
-                onClick = onClickFavorite
+                onClick = onClickFavorite,
+                tintChecked = color,
+                tint = color
             )
         },
         text = {
@@ -141,12 +162,14 @@ fun MovieItemError(modifier: Modifier = Modifier) {
 
 @Composable
 fun MovieItemLayout(
-    poster: @Composable BoxScope.() -> Unit,
+    poster: @Composable () -> Unit,
     text: @Composable ColumnScope.() -> Unit,
     shadowColor: Color,
     modifier: Modifier = Modifier,
+    posterOverlay: @Composable BoxScope.() -> Unit = {},
     posterAspectRatio: Float = DefaultPosterAspectRatio,
-    height: Dp = 225.dp
+    height: Dp = 225.dp,
+    shape: Shape = Theme.container.poster
 ) {
     Column(modifier = modifier.width(IntrinsicSize.Min)) {
         Row(
@@ -154,12 +177,19 @@ fun MovieItemLayout(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PosterLayout(
-                modifier = Modifier.fillMaxHeight(),
-                posterAspectRatio = posterAspectRatio,
-                shadowColor = animateColorAsState(shadowColor).value
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .aspectRatio(posterAspectRatio)
             ) {
-                Box(modifier = Modifier.fillMaxSize(), content = poster)
+                PosterLayout(
+                    modifier = Modifier.fillMaxSize(),
+                    posterAspectRatio = posterAspectRatio,
+                    shadowColor = animateColorAsState(shadowColor).value,
+                    shape = shape,
+                    content = poster
+                )
+                posterOverlay()
             }
         }
         Column(
@@ -254,5 +284,5 @@ private fun ImageView(
     override val url: String
         get() = url
     override val spotColor: Color
-        get() = Color.Yellow
+        get() = Color.Black
 }

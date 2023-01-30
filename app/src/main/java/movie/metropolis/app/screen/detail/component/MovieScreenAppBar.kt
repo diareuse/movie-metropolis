@@ -11,6 +11,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,20 +56,22 @@ fun FavoriteButton(
     isChecked: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    tintChecked: Color = Theme.color.content.tertiary,
+    tint: Color = LocalContentColor.current
 ) {
     val painter = when (isChecked) {
         true -> painterResource(id = R.drawable.ic_favorite_checked)
         else -> painterResource(id = R.drawable.ic_favorite_unchecked)
     }
-    val tint = when (isChecked) {
-        true -> Theme.color.content.tertiary
-        else -> LocalContentColor.current
+    val color = when (isChecked) {
+        true -> tintChecked
+        else -> tint
     }
     AppIconButton(
         modifier = modifier,
         onClick = onClick,
         painter = painter,
-        color = tint
+        color = color
     )
 }
 

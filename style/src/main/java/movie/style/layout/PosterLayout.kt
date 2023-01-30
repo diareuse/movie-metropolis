@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
 import movie.style.theme.Theme
 
@@ -13,11 +14,12 @@ import movie.style.theme.Theme
 fun PosterLayout(
     posterAspectRatio: Float,
     modifier: Modifier = Modifier,
+    shape: Shape = Theme.container.poster,
     content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier.aspectRatio(posterAspectRatio),
-        shape = Theme.container.poster,
+        shape = shape,
         color = Theme.color.container.background,
         shadowElevation = 24.dp
     ) {
@@ -30,6 +32,7 @@ fun PosterLayout(
     posterAspectRatio: Float,
     shadowColor: Color,
     modifier: Modifier = Modifier,
+    shape: Shape = Theme.container.poster,
     content: @Composable () -> Unit,
 ) {
     Surface(
@@ -37,11 +40,12 @@ fun PosterLayout(
             .aspectRatio(posterAspectRatio)
             .shadow(
                 elevation = 24.dp,
-                shape = Theme.container.poster,
+                shape = shape,
                 ambientColor = shadowColor,
-                spotColor = shadowColor
+                spotColor = shadowColor,
+                clip = false
             ),
-        shape = Theme.container.poster,
+        shape = shape,
         color = Theme.color.container.background
     ) {
         content()
