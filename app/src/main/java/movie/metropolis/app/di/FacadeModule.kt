@@ -8,6 +8,7 @@ import movie.calendar.CalendarList
 import movie.core.EventCinemaFeature
 import movie.core.EventDetailFeature
 import movie.core.EventPreviewFeature
+import movie.core.EventPromoFeature
 import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
 import movie.core.SetupFeature
@@ -33,6 +34,9 @@ import movie.metropolis.app.presentation.detail.MovieFacadeFromFeature
 import movie.metropolis.app.presentation.detail.MovieFacadeRecover
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.home.HomeFacadeFromFeature
+import movie.metropolis.app.presentation.listing.ListingAltFacade
+import movie.metropolis.app.presentation.listing.ListingAltFacadeFromFeature
+import movie.metropolis.app.presentation.listing.ListingAltFacadeRecover
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.listing.ListingFacadeFromFeature
 import movie.metropolis.app.presentation.listing.ListingFacadeRecover
@@ -115,6 +119,25 @@ class FacadeModule {
         facade = ListingFacadeFromFeature(preview, favorite)
         facade = ListingFacadeRecover(facade)
         return facade
+    }
+
+    @Provides
+    fun listingAlt(
+        preview: EventPreviewFeature.Factory,
+        favorite: FavoriteFeature,
+        promo: EventPromoFeature
+    ): ListingAltFacade.Factory {
+        return object : ListingAltFacade.Factory {
+            override fun upcoming(): ListingAltFacade = create(preview.upcoming())
+            override fun current(): ListingAltFacade = create(preview.current())
+
+            private fun create(preview: EventPreviewFeature): ListingAltFacade {
+                var out: ListingAltFacade
+                out = ListingAltFacadeFromFeature(preview, favorite, promo)
+                out = ListingAltFacadeRecover(out)
+                return out
+            }
+        }
     }
 
     @Provides
