@@ -125,6 +125,18 @@ abstract class ListingAltFacadeTest : FeatureTest() {
             assertEquals(value, output.favorite)
     }
 
+    @Test
+    fun groups_returns_defaultGroup() = runTest {
+        preview_responds_success {
+            on { genres }.thenReturn(emptyList())
+        }
+        for (action in facade.get())
+            for (output in action.getOrThrow().groupUp())
+                assertContentEquals(
+                    setOf(Genre("other")),
+                    output.getOrThrow().keys.asIterable()
+                )
+    }
 
     // ---
 
