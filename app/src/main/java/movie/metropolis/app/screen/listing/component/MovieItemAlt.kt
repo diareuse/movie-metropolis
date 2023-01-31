@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -69,8 +70,12 @@ fun MovieItemAlt(
                 tint = color
             )
         },
+        textPadding = PaddingValues(top = 8.dp),
         text = {
-            MovieSubText(text = subtext)
+            MovieSubText(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = subtext
+            )
         }
     )
 }
