@@ -163,9 +163,9 @@ fun MovieItemError(modifier: Modifier = Modifier) {
 @Composable
 fun MovieItemLayout(
     poster: @Composable () -> Unit,
-    text: @Composable ColumnScope.() -> Unit,
     shadowColor: Color,
     modifier: Modifier = Modifier,
+    text: (@Composable ColumnScope.() -> Unit)? = null,
     posterOverlay: @Composable BoxScope.() -> Unit = {},
     posterAspectRatio: Float = DefaultPosterAspectRatio,
     height: Dp = 225.dp,
@@ -192,7 +192,7 @@ fun MovieItemLayout(
                 posterOverlay()
             }
         }
-        Column(
+        if (text != null) Column(
             modifier = Modifier
                 .padding(top = 16.dp, start = 12.dp, end = 12.dp)
                 .fillMaxWidth(),

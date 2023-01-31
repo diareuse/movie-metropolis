@@ -4,7 +4,6 @@ import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -35,7 +34,7 @@ import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.listing.component.MoviePromo
-import movie.metropolis.app.screen.listing.component.MovieRow
+import movie.metropolis.app.screen.listing.component.MovieRowAlt
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -109,7 +108,7 @@ private fun ListingScreenContent(
             for ((genre, items) in it) {
                 item(key = "current-$genre-title") { SectionTitle(genre.getName(context)) }
                 item(key = "current-$genre-content") {
-                    MovieRow(
+                    MovieRowAlt(
                         items = Loadable.success(items.immutable()),
                         isShowing = true,
                         onClickFavorite = onClickFavorite,
@@ -125,7 +124,7 @@ private fun ListingScreenContent(
                 )
             }
             item(key = "current-content") {
-                MovieRow(
+                MovieRowAlt(
                     items = Loadable.loading(),
                     isShowing = true,
                     onClickFavorite = onClickFavorite,
@@ -134,7 +133,7 @@ private fun ListingScreenContent(
             }
         }.onFailure {
             item(key = "current-content") {
-                MovieRow(
+                MovieRowAlt(
                     items = Loadable.failure(it),
                     isShowing = true,
                     onClickFavorite = onClickFavorite,
@@ -150,7 +149,7 @@ private fun ListingScreenContent(
             for ((genre, items) in it) {
                 item(key = "upcoming-$genre-title") { SectionTitle(genre.getName(context)) }
                 item(key = "upcoming-$genre-content") {
-                    MovieRow(
+                    MovieRowAlt(
                         items = Loadable.success(items.immutable()),
                         isShowing = false,
                         onClickFavorite = onClickFavorite,
@@ -166,7 +165,7 @@ private fun ListingScreenContent(
                 )
             }
             item(key = "upcoming-content") {
-                MovieRow(
+                MovieRowAlt(
                     items = Loadable.loading(),
                     isShowing = false,
                     onClickFavorite = onClickFavorite,
@@ -175,7 +174,7 @@ private fun ListingScreenContent(
             }
         }.onFailure {
             item(key = "upcoming-content") {
-                MovieRow(
+                MovieRowAlt(
                     items = Loadable.failure(it),
                     isShowing = false,
                     onClickFavorite = onClickFavorite,
@@ -193,10 +192,8 @@ fun SectionTitle(
     modifier: Modifier = Modifier
 ) {
     Text(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
+        modifier = modifier.padding(horizontal = 24.dp),
         text = name,
-        style = Theme.textStyle.headline
+        style = Theme.textStyle.title
     )
 }
