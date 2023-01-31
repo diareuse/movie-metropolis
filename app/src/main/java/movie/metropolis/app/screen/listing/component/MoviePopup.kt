@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.listing.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.GestureCancellationException
 import androidx.compose.foundation.gestures.PressGestureScope
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -15,12 +16,14 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,12 +64,15 @@ private fun MoviePopup(
             url = url
         )
         Spacer(Modifier.height(24.dp))
-        MovieSubText(text = "%s • %s".format(year, director))
-        MovieTitleText(text = name)
+        CompositionLocalProvider(
+            LocalContentColor provides Color.White
+        ) {
+            MovieSubText(text = "%s • %s".format(year, director))
+            MovieTitleText(text = name)
+        }
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MoviePopup(
     isVisible: Boolean,
@@ -93,6 +99,7 @@ fun MoviePopup(
 private fun Preview() {
     Theme {
         MoviePopup(
+            modifier = Modifier.background(Color.Black.copy(alpha = .5f)),
             url = "https://images.unsplash.com/photo-1674707488760-4ec87e969368?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3864&q=80",
             year = "2022",
             director = "Movie Director",
