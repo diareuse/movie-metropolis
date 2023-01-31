@@ -98,7 +98,7 @@ fun MovieItemAlt(
         shadowColor = poster?.spotColor ?: Color.Black,
         posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
         shape =
-        if (rating == null) Theme.container.poster
+        if (rating == null) Theme.container.poster.extendBy(8.dp)
         else CutoutShape.from(
             shape = Theme.container.poster.extendBy(8.dp),
             width = ratingWidth + 8.dp,
