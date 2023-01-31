@@ -38,10 +38,12 @@ fun MovieRowAlt(
     isShowing: Boolean,
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState()
 ) {
     items.onSuccess {
         MovieRow(
+            modifier = modifier,
             items = it,
             isShowing = isShowing,
             onClick = onClick,
@@ -51,7 +53,7 @@ fun MovieRowAlt(
     }.onLoading {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
@@ -62,7 +64,7 @@ fun MovieRowAlt(
     }.onEmpty {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
@@ -73,7 +75,7 @@ fun MovieRowAlt(
     }.onFailure {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {

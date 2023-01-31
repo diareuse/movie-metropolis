@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.listing
 
 import android.Manifest
 import android.os.Build
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -82,7 +83,10 @@ fun ListingScreen(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalPagerApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class
+)
 @Composable
 private fun ListingScreenContent(
     currentPromotions: Loadable<List<MovieView>>,
@@ -106,9 +110,15 @@ private fun ListingScreenContent(
         item { MoviePromo(items = currentPromotions, onClick = { onClick(it, false) }) }
         currentGroups.onSuccess {
             for ((genre, items) in it) {
-                item(key = "current-$genre-title") { SectionHeadline(genre.getName(context)) }
+                item(key = "current-$genre-title") {
+                    SectionHeadline(
+                        modifier = Modifier.animateItemPlacement(),
+                        name = genre.getName(context)
+                    )
+                }
                 item(key = "current-$genre-content") {
                     MovieRowAlt(
+                        modifier = Modifier.animateItemPlacement(),
                         items = Loadable.success(items.immutable()),
                         isShowing = true,
                         onClickFavorite = onClickFavorite,
@@ -119,12 +129,15 @@ private fun ListingScreenContent(
         }.onLoading {
             item(key = "current-title") {
                 SectionHeadline(
-                    "#".repeat(10),
-                    modifier = Modifier.textPlaceholder(true)
+                    name = "#".repeat(10),
+                    modifier = Modifier
+                        .textPlaceholder(true)
+                        .animateItemPlacement()
                 )
             }
             item(key = "current-content") {
                 MovieRowAlt(
+                    modifier = Modifier.animateItemPlacement(),
                     items = Loadable.loading(),
                     isShowing = true,
                     onClickFavorite = onClickFavorite,
@@ -134,6 +147,7 @@ private fun ListingScreenContent(
         }.onFailure {
             item(key = "current-content") {
                 MovieRowAlt(
+                    modifier = Modifier.animateItemPlacement(),
                     items = Loadable.failure(it),
                     isShowing = true,
                     onClickFavorite = onClickFavorite,
@@ -144,13 +158,28 @@ private fun ListingScreenContent(
 
         // ---
 
-        item { SectionTitle(stringResource(id = R.string.upcoming)) }
-        item { MoviePromo(items = upcomingPromotions, onClick = { onClick(it, true) }) }
+        item {
+            SectionTitle(
+                modifier = Modifier.animateItemPlacement(),
+                name = stringResource(id = R.string.upcoming)
+            )
+        }
+        item {
+            MoviePromo(
+                modifier = Modifier.animateItemPlacement(),
+                items = upcomingPromotions, onClick = { onClick(it, true) })
+        }
         upcomingGroups.onSuccess {
             for ((genre, items) in it) {
-                item(key = "upcoming-$genre-title") { SectionHeadline(genre.getName(context)) }
+                item(key = "upcoming-$genre-title") {
+                    SectionHeadline(
+                        modifier = Modifier.animateItemPlacement(),
+                        name = genre.getName(context)
+                    )
+                }
                 item(key = "upcoming-$genre-content") {
                     MovieRowAlt(
+                        modifier = Modifier.animateItemPlacement(),
                         items = Loadable.success(items.immutable()),
                         isShowing = false,
                         onClickFavorite = onClickFavorite,
@@ -161,12 +190,15 @@ private fun ListingScreenContent(
         }.onLoading {
             item(key = "upcoming-title") {
                 SectionHeadline(
-                    "#".repeat(10),
-                    modifier = Modifier.textPlaceholder(true)
+                    modifier = Modifier
+                        .textPlaceholder(true)
+                        .animateItemPlacement(),
+                    name = "#".repeat(10)
                 )
             }
             item(key = "upcoming-content") {
                 MovieRowAlt(
+                    modifier = Modifier.animateItemPlacement(),
                     items = Loadable.loading(),
                     isShowing = false,
                     onClickFavorite = onClickFavorite,
@@ -176,6 +208,7 @@ private fun ListingScreenContent(
         }.onFailure {
             item(key = "upcoming-content") {
                 MovieRowAlt(
+                    modifier = Modifier.animateItemPlacement(),
                     items = Loadable.failure(it),
                     isShowing = false,
                     onClickFavorite = onClickFavorite,
