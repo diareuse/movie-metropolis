@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -169,7 +170,13 @@ fun MovieItemLayout(
     posterOverlay: @Composable BoxScope.() -> Unit = {},
     posterAspectRatio: Float = DefaultPosterAspectRatio,
     height: Dp = 225.dp,
-    shape: Shape = Theme.container.poster
+    shape: Shape = Theme.container.poster,
+    textPadding: PaddingValues = PaddingValues(
+        top = 16.dp,
+        start = 12.dp,
+        end = 12.dp,
+        bottom = 0.dp
+    )
 ) {
     Column(modifier = modifier.width(IntrinsicSize.Min)) {
         Row(
@@ -194,7 +201,7 @@ fun MovieItemLayout(
         }
         if (text != null) Column(
             modifier = Modifier
-                .padding(top = 16.dp, start = 12.dp, end = 12.dp)
+                .padding(textPadding)
                 .fillMaxWidth(),
             content = text
         )
