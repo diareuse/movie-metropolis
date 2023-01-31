@@ -38,10 +38,12 @@ fun MovieRow(
     isShowing: Boolean,
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
     state: LazyListState = rememberLazyListState()
 ) {
     items.onSuccess {
         MovieRow(
+            modifier = modifier,
             items = it,
             isShowing = isShowing,
             onClick = onClick,
@@ -51,7 +53,7 @@ fun MovieRow(
     }.onLoading {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
@@ -62,7 +64,7 @@ fun MovieRow(
     }.onEmpty {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
@@ -73,7 +75,7 @@ fun MovieRow(
     }.onFailure {
         Row(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier
+            modifier = modifier
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
@@ -101,16 +103,22 @@ private fun MovieRow(
     ) {
         items(items, key = MovieView::id) { item ->
             var showPopup by remember { mutableStateOf(false) }
-            val listener = { onClickFavorite(item) }
-            MovieItem(
-                name = item.name,
-                subtext = if (isShowing) item.releasedAt else item.availableFrom,
-                poster = item.poster,
-                isFavorite = item.favorite,
-                onClick = { onClick(item.id) },
-                onClickFavorite = if (isShowing) null else listener,
-                onLongPress = { showPopup = it }
-            )
+            if (isShowing)
+                MovieItem(
+                    rating = item.rating,
+                    poster = item.poster,
+                    onClick = { onClick(item.id) },
+                    onLongPress = { showPopup = it }
+                )
+            else
+                MovieItem(
+                    subtext = item.availableFrom,
+                    poster = item.poster,
+                    isFavorite = item.favorite,
+                    onClick = { onClick(item.id) },
+                    onClickFavorite = { onClickFavorite(item) },
+                    onLongPress = { showPopup = it }
+                )
             MoviePopup(
                 isVisible = showPopup,
                 onVisibilityChanged = { showPopup = false },

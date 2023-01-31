@@ -10,10 +10,10 @@ import movie.core.thenMap
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithPoster
 
-data class ListingAltFacadeActionWithPoster(
-    private val origin: ListingAltFacade.Action,
+data class ListingFacadeActionWithPoster(
+    private val origin: ListingFacade.Action,
     private val promo: EventPromoFeature
-) : ListingAltFacade.Action by origin {
+) : ListingFacade.Action by origin {
 
     override suspend fun promotions(callback: ResultCallback<List<MovieView>>) = coroutineScope {
         origin.promotions(callback.thenMap { movies ->

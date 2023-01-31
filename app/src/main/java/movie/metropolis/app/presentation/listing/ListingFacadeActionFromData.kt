@@ -6,9 +6,9 @@ import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewFromFeature
 
-data class ListingAltFacadeActionFromData(
+data class ListingFacadeActionFromData(
     val data: List<MoviePreview>
-) : ListingAltFacade.Action {
+) : ListingFacade.Action {
 
     override suspend fun promotions(callback: ResultCallback<List<MovieView>>) {
         val data = data.take(3).map { MovieViewFromFeature(it, false) }

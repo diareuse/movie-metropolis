@@ -28,9 +28,9 @@ import kotlin.test.assertTrue
 abstract class ListingAltFacadeTest : FeatureTest() {
 
     private lateinit var previewFork: EventPreviewFeature
-    private lateinit var facade: ListingAltFacade
+    private lateinit var facade: ListingFacade
 
-    abstract fun choose(factory: ListingAltFacade.Factory): ListingAltFacade
+    abstract fun choose(factory: ListingFacade.Factory): ListingFacade
     abstract fun choose(factory: EventPreviewFeature.Factory): EventPreviewFeature
 
     override fun prepare() {
@@ -40,12 +40,12 @@ abstract class ListingAltFacadeTest : FeatureTest() {
     }
 
     class Upcoming : ListingAltFacadeTest() {
-        override fun choose(factory: ListingAltFacade.Factory) = factory.upcoming()
+        override fun choose(factory: ListingFacade.Factory) = factory.upcoming()
         override fun choose(factory: EventPreviewFeature.Factory) = factory.upcoming()
     }
 
     class Current : ListingAltFacadeTest() {
-        override fun choose(factory: ListingAltFacade.Factory) = factory.current()
+        override fun choose(factory: ListingFacade.Factory) = factory.current()
         override fun choose(factory: EventPreviewFeature.Factory) = factory.current()
     }
 
@@ -218,19 +218,19 @@ abstract class ListingAltFacadeTest : FeatureTest() {
         }
     }
 
-    private suspend fun ListingAltFacade.get(): List<Result<ListingAltFacade.Action>> {
-        val outputs = mutableListOf<Result<ListingAltFacade.Action>>()
+    private suspend fun ListingFacade.get(): List<Result<ListingFacade.Action>> {
+        val outputs = mutableListOf<Result<ListingFacade.Action>>()
         get { outputs += it }
         return outputs
     }
 
-    private suspend fun ListingAltFacade.Action.promotions(): List<Result<List<MovieView>>> {
+    private suspend fun ListingFacade.Action.promotions(): List<Result<List<MovieView>>> {
         val outputs = mutableListOf<Result<List<MovieView>>>()
         promotions { outputs += it }
         return outputs
     }
 
-    private suspend fun ListingAltFacade.Action.groupUp(): List<Result<Map<Genre, List<MovieView>>>> {
+    private suspend fun ListingFacade.Action.groupUp(): List<Result<Map<Genre, List<MovieView>>>> {
         val outputs = mutableListOf<Result<Map<Genre, List<MovieView>>>>()
         groupUp { outputs += it }
         return outputs
