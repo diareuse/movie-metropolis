@@ -3,25 +3,19 @@ package movie.metropolis.app.screen.detail
 import android.Manifest
 import android.os.Build
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.ZeroCornerSize
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,12 +27,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -62,13 +53,13 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.map
-import movie.metropolis.app.presentation.mapNotNull
 import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
 import movie.metropolis.app.screen.detail.component.FavoriteButton
 import movie.metropolis.app.screen.detail.component.FilterRow
+import movie.metropolis.app.screen.detail.component.MovieMetadata
 import movie.metropolis.app.screen.detail.component.MovieScreenAppBar
 import movie.metropolis.app.screen.detail.component.ShowingItem
 import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
@@ -77,7 +68,6 @@ import movie.style.AppDropdownIconButton
 import movie.style.AppImage
 import movie.style.DatePickerRow
 import movie.style.EllipsisText
-import movie.style.imagePlaceholder
 import movie.style.modifier.overlay
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
@@ -351,54 +341,6 @@ fun LazyListScope.MovieDetailShowings(
 }
 
 @Composable
-fun MovieMetadata(
-    detail: Loadable<MovieDetailView>,
-    poster: Loadable<ImageView>,
-    modifier: Modifier = Modifier,
-) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(24.dp),
-    ) {
-        Box(
-            Modifier
-                .shadow(
-                    elevation = 32.dp,
-                    ambientColor = poster.getOrNull()?.spotColor ?: Color.Black,
-                    spotColor = poster.getOrNull()?.spotColor ?: Color.Black
-                )
-                .clip(Theme.container.poster)
-        ) {
-            AppImage(
-                modifier = Modifier
-                    .fillMaxWidth(.3f)
-                    .aspectRatio(poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio)
-                    .imagePlaceholder(poster.getOrNull() == null)
-                    .background(Theme.color.container.background),
-                url = poster.getOrNull()?.url
-            )
-            detail.mapNotNull { it.rating }.onSuccess {
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .clip(
-                            Theme.container.button.copy(
-                                topStart = ZeroCornerSize,
-                                bottomEnd = ZeroCornerSize
-                            )
-                        )
-                        .background(Theme.color.container.tertiary)
-                        .padding(8.dp)
-                        .padding(start = 2.dp),
-                    text = it
-                )
-            }
-        }
-        DetailPosterRow(detail = detail)
-    }
-}
-
-@Composable
 operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
     val dir = LocalLayoutDirection.current
     return PaddingValues(
@@ -409,42 +351,6 @@ operator fun PaddingValues.plus(other: PaddingValues): PaddingValues {
     )
 }
 
-@Composable
-fun DetailPosterRow(
-    detail: Loadable<MovieDetailView>,
-    modifier: Modifier = Modifier,
-) {
-    val detailView = detail.getOrNull()
-    Column(modifier = modifier) {
-        Text(
-            text = detailView?.name ?: "#".repeat(10),
-            style = Theme.textStyle.title,
-            modifier = Modifier.textPlaceholder(detailView == null)
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = "%s • %s • %s".format(
-                detailView?.duration ?: "#".repeat(6),
-                detailView?.countryOfOrigin ?: "#".repeat(3),
-                detailView?.releasedAt ?: "#".repeat(4)
-            ),
-            style = Theme.textStyle.caption,
-            modifier = Modifier.textPlaceholder(detailView == null)
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = detailView?.directors?.joinToString() ?: "#".repeat(13),
-            style = Theme.textStyle.caption,
-            modifier = Modifier.textPlaceholder(detailView == null)
-        )
-        EllipsisText(
-            text = detailView?.cast?.joinToString() ?: "#".repeat(28),
-            maxLines = 3,
-            style = Theme.textStyle.caption,
-            modifier = Modifier.textPlaceholder(detailView == null)
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

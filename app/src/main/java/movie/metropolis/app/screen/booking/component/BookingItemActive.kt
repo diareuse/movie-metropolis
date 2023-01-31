@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -51,8 +52,8 @@ import movie.metropolis.app.screen.listing.component.MoviePoster
 import movie.style.AppIconButton
 import movie.style.haptic.withHaptics
 import movie.style.layout.EmptyStackedCardLayout
-import movie.style.layout.PosterLayout
 import movie.style.layout.StackedCardLayout
+import movie.style.modifier.surfacePoster
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import kotlin.math.roundToInt
@@ -198,11 +199,14 @@ private fun BookingItemActiveLayout(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            PosterLayout(
-                modifier = Modifier.height(150.dp),
-                posterAspectRatio = posterAspectRatio,
-                content = poster
-            )
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .aspectRatio(posterAspectRatio)
+                    .surfacePoster()
+            ) {
+                poster()
+            }
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
