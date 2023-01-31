@@ -48,7 +48,7 @@ fun MovieMetadata(
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     text = rating,
                     color = Theme.color.contentColorFor(color),
-                    style = Theme.textStyle.emphasis
+                    style = Theme.textStyle.body
                 )
             }
         ) {
