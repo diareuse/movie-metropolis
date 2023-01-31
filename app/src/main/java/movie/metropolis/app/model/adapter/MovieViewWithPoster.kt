@@ -6,7 +6,7 @@ import movie.metropolis.app.model.MovieView
 
 data class MovieViewWithPoster(
     private val origin: MovieView,
-    override val poster: ImageView
+    override val poster: ImageView? = null
 ) : MovieView by origin {
 
     constructor(
