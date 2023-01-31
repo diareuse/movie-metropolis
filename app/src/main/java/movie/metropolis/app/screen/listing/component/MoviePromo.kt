@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.aspectRatio
@@ -40,6 +41,7 @@ import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.style.haptic.TickOnChange
 import movie.style.layout.EmptyShapeLayout
+import movie.style.modifier.overlay
 import movie.style.theme.Theme
 import kotlin.math.absoluteValue
 
@@ -80,24 +82,34 @@ fun MoviePromo(
         ) { index ->
             val item = it[index]
             var showPopup by remember { mutableStateOf(false) }
-            MoviePoster(
-                url = item.poster?.url,
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .detectLongPress { showPopup = true }
-                    .fillMaxWidth()
-                    .aspectRatio(item.poster?.aspectRatio ?: 1.5f)
-                    .interpolateSize(
-                        scope = this,
-                        page = index,
-                        shape = Theme.container.poster,
-                        shadowColor = animateColorAsState(
-                            item.poster?.spotColor ?: Color.Black
-                        ).value
-                    ),
-                onClick = { onClick(item.id) },
-                onLongPress = { showPopup = it }
-            )
+            Box {
+                MoviePoster(
+                    url = item.poster?.url,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .detectLongPress { showPopup = true }
+                        .fillMaxWidth()
+                        .aspectRatio(item.poster?.aspectRatio ?: 1.5f)
+                        .interpolateSize(
+                            scope = this@HorizontalPager,
+                            page = index,
+                            shape = Theme.container.poster,
+                            shadowColor = animateColorAsState(
+                                item.poster?.spotColor ?: Color.Black
+                            ).value
+                        )
+                        .overlay(colorBottom = Color.Black),
+                    onClick = { onClick(item.id) },
+                    onLongPress = { showPopup = it }
+                )
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(24.dp)
+                ) {
+                    Text(item.name, style = Theme.textStyle.title, color = Color.White)
+                }
+            }
             MoviePopup(
                 isVisible = showPopup,
                 onVisibilityChanged = { showPopup = false },

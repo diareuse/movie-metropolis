@@ -26,9 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -47,6 +45,7 @@ import movie.metropolis.app.util.findActivity
 import movie.style.AppDialog
 import movie.style.AppImage
 import movie.style.layout.TicketShape
+import movie.style.modifier.overlay
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
@@ -122,17 +121,12 @@ private fun BookingTicketDialogContent(
             ) {
                 Box(contentAlignment = Alignment.BottomStart) {
                     val density = LocalDensity.current
-                    val colors = listOf(Color.Transparent, Theme.color.container.background)
-                    val brush = Brush.verticalGradient(colors)
                     var size by remember { mutableStateOf(IntSize.Zero) }
                     AppImage(
                         modifier = Modifier
                             .width(with(density) { size.width.toDp() })
                             .height(with(density) { size.height.toDp() })
-                            .drawWithContent {
-                                drawContent()
-                                drawRect(brush)
-                            },
+                            .overlay(),
                         url = poster,
                         alignment = Alignment.TopCenter
                     )

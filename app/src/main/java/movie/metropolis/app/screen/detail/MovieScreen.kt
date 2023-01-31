@@ -38,9 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
@@ -80,6 +78,7 @@ import movie.style.AppImage
 import movie.style.DatePickerRow
 import movie.style.EllipsisText
 import movie.style.imagePlaceholder
+import movie.style.modifier.overlay
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
 import movie.style.state.ImmutableList.Companion.immutable
@@ -202,16 +201,12 @@ private fun MovieScreen(
             )
         }
     ) { padding ->
-        val surface = Theme.color.container.background
         AppImage(
             modifier = Modifier
                 .fillMaxSize()
                 .blur(16.dp)
                 .alpha(.2f)
-                .drawWithContent {
-                    drawContent()
-                    drawRect(Brush.verticalGradient(listOf(Color.Transparent, surface)))
-                },
+                .overlay(),
             url = poster.getOrNull()?.url
         )
         LazyColumn(
