@@ -154,7 +154,7 @@ fun HomeScreenLayout(
         topBar = {
             AppToolbar(
                 title = title,
-                navigationIcon = profileIcon,
+                actions = { profileIcon() },
                 scrollBehavior = behavior
             )
         },
