@@ -11,19 +11,19 @@ import movie.metropolis.app.presentation.listing.ListingAltFacade
 import movie.metropolis.app.presentation.listing.ListingAltFacade.Companion.actionsFlow
 import movie.metropolis.app.presentation.listing.ListingAltFacade.Companion.groupFlow
 import movie.metropolis.app.presentation.listing.ListingAltFacade.Companion.promotionsFlow
-import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class ListingAltViewModel @Inject constructor(
-    factory: ListingAltFacade.Factory,
-    private val facade: ListingFacade
+    factory: ListingAltFacade.Factory
 ) : ViewModel() {
+
+    private val upcomingFacade = factory.upcoming()
 
     private val current = factory.current().actionsFlow
         .shareIn(viewModelScope, SharingStarted.Lazily, 1)
-    private val upcoming = factory.upcoming().actionsFlow
+    private val upcoming = upcomingFacade.actionsFlow
         .shareIn(viewModelScope, SharingStarted.Lazily, 1)
 
     val currentPromotions = promotionsFlow(current)
@@ -37,7 +37,7 @@ class ListingAltViewModel @Inject constructor(
         .retainStateIn(viewModelScope)
 
     fun toggleFavorite(movie: MovieView) = viewModelScope.launch {
-        facade.toggleFavorite(movie)
+        upcomingFacade.toggle(movie)
     }
 
 }

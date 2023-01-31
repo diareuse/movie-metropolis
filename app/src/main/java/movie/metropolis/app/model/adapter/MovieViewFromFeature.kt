@@ -54,4 +54,7 @@ data class MovieViewFromFeature(
             .filterIsInstance<Media.Video>()
             .firstOrNull()
             ?.let(::VideoViewFromFeature)
+
+    override fun getBase() = movie
+
 }

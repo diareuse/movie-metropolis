@@ -1,6 +1,8 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -8,6 +10,7 @@ import movie.core.ResultCallback
 import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.OnChangedListener
 import movie.metropolis.app.presentation.asLoadable
 import movie.metropolis.app.util.throttleWithTimeout
 import kotlin.time.Duration.Companion.seconds
@@ -15,6 +18,10 @@ import kotlin.time.Duration.Companion.seconds
 interface ListingAltFacade {
 
     suspend fun get(callback: ResultCallback<Action>)
+    suspend fun toggle(item: MovieView)
+
+    fun addListener(listener: OnChangedListener): OnChangedListener
+    fun removeListener(listener: OnChangedListener)
 
     interface Action {
 
@@ -32,10 +39,25 @@ interface ListingAltFacade {
 
     companion object {
 
+        private val ListingAltFacade.toggleFlow
+            get() = callbackFlow {
+                val listener = addListener {
+                    trySend(Unit)
+                }
+                awaitClose {
+                    removeListener(listener)
+                }
+            }
+
         val ListingAltFacade.actionsFlow
             get() = channelFlow {
                 get {
                     send(it.asLoadable())
+                }
+                toggleFlow.collect {
+                    get {
+                        send(it.asLoadable())
+                    }
                 }
             }
 

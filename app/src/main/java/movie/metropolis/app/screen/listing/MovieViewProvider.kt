@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.listing
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
+import movie.core.model.MoviePreview
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
@@ -29,7 +30,9 @@ class MovieViewProvider :
         override val favorite: Boolean = Random.nextBoolean(),
         override val rating: String? = "75%",
         override val posterLarge: ImageView? = PreviewImage()
-    ) : MovieView
+    ) : MovieView {
+        override fun getBase(): MoviePreview = TODO()
+    }
 
     private data class PreviewImage(
         override val aspectRatio: Float = DefaultPosterAspectRatio,
