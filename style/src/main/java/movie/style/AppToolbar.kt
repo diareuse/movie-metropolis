@@ -3,6 +3,7 @@
 package movie.style
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.unit.dp
 import kotlin.math.absoluteValue
 
 @Composable
@@ -28,7 +30,9 @@ fun AppToolbar(
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     TopAppBar(
-        modifier = modifier.applyScrollBehavior(scrollBehavior),
+        modifier = modifier
+            .applyScrollBehavior(scrollBehavior)
+            .padding(horizontal = 8.dp),
         title = title,
         navigationIcon = navigationIcon,
         actions = actions,
