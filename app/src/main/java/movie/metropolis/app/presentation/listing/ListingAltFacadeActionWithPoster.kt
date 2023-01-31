@@ -5,6 +5,7 @@ import movie.core.EventPromoFeature
 import movie.core.EventPromoFeature.Companion.get
 import movie.core.ResultCallback
 import movie.core.adapter.MovieFromId
+import movie.core.map
 import movie.core.thenMap
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithPoster
@@ -22,7 +23,7 @@ data class ListingAltFacadeActionWithPoster(
                     else -> MovieViewWithPoster(it, poster)
                 }
             }
-        })
+        }.map { it.map(::MovieViewWithPoster) })
     }
 
 }
