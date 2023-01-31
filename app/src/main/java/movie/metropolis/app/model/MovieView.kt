@@ -1,6 +1,7 @@
 package movie.metropolis.app.model
 
 import androidx.compose.runtime.Immutable
+import movie.core.model.MoviePreview
 
 @Immutable
 interface MovieView {
@@ -18,4 +19,6 @@ interface MovieView {
     val poster: ImageView?
     val posterLarge: ImageView?
     val video: VideoView?
+
+    fun getBase(): MoviePreview
 }

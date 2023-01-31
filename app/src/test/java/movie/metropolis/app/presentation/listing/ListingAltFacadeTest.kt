@@ -16,11 +16,13 @@ import org.junit.Test
 import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 abstract class ListingAltFacadeTest : FeatureTest() {
@@ -138,11 +140,43 @@ abstract class ListingAltFacadeTest : FeatureTest() {
                 )
     }
 
+    @Test
+    fun toggle_notifies() = runTest {
+        favorite_responds_success()
+        var notified = false
+        facade.addListener { notified = true }
+        facade.toggle(mock {
+            on { getBase() }.thenReturn(mock())
+        })
+        assertTrue(notified)
+    }
+
+    @Test
+    fun toggle_doesNotNotify_whenRemoved() = runTest {
+        favorite_responds_success()
+        var notified = false
+        val listener = facade.addListener { notified = true }
+        facade.removeListener(listener)
+        facade.toggle(mock {
+            on { getBase() }.thenReturn(mock())
+        })
+        assertFalse(notified)
+    }
+
+    @Test
+    fun toggle_calls_feature() = runTest {
+        facade.toggle(mock {
+            on { getBase() }.thenReturn(mock())
+        })
+        verify(favorite).toggle(any())
+    }
+
     // ---
 
     private fun favorite_responds_success(): Boolean {
         val value = nextBoolean()
         wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(Result.success(value))
+        wheneverBlocking { favorite.toggle(any()) }.thenReturn(Result.success(value))
         return value
     }
 
