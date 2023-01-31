@@ -56,7 +56,7 @@ fun ListingScreen(
     val scope = rememberCoroutineScope()
     HomeScreenLayout(
         profileIcon = profileIcon,
-        title = { Text(stringResource(R.string.movies)) }
+        title = { Text(stringResource(R.string.now_available)) }
     ) { innerPadding, behavior ->
         ListingScreenContent(
             currentPromotions = currentPromotions,
@@ -106,7 +106,7 @@ private fun ListingScreenContent(
         item { MoviePromo(items = currentPromotions, onClick = { onClick(it, false) }) }
         currentGroups.onSuccess {
             for ((genre, items) in it) {
-                item(key = "current-$genre-title") { SectionTitle(genre.getName(context)) }
+                item(key = "current-$genre-title") { SectionHeadline(genre.getName(context)) }
                 item(key = "current-$genre-content") {
                     MovieRowAlt(
                         items = Loadable.success(items.immutable()),
@@ -118,7 +118,7 @@ private fun ListingScreenContent(
             }
         }.onLoading {
             item(key = "current-title") {
-                SectionTitle(
+                SectionHeadline(
                     "#".repeat(10),
                     modifier = Modifier.textPlaceholder(true)
                 )
@@ -144,10 +144,11 @@ private fun ListingScreenContent(
 
         // ---
 
+        item { SectionTitle(stringResource(id = R.string.upcoming)) }
         item { MoviePromo(items = upcomingPromotions, onClick = { onClick(it, true) }) }
         upcomingGroups.onSuccess {
             for ((genre, items) in it) {
-                item(key = "upcoming-$genre-title") { SectionTitle(genre.getName(context)) }
+                item(key = "upcoming-$genre-title") { SectionHeadline(genre.getName(context)) }
                 item(key = "upcoming-$genre-content") {
                     MovieRowAlt(
                         items = Loadable.success(items.immutable()),
@@ -159,7 +160,7 @@ private fun ListingScreenContent(
             }
         }.onLoading {
             item(key = "upcoming-title") {
-                SectionTitle(
+                SectionHeadline(
                     "#".repeat(10),
                     modifier = Modifier.textPlaceholder(true)
                 )
@@ -192,8 +193,24 @@ fun SectionTitle(
     modifier: Modifier = Modifier
 ) {
     Text(
-        modifier = modifier.padding(horizontal = 24.dp),
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .then(modifier),
         text = name,
         style = Theme.textStyle.title
+    )
+}
+
+@Composable
+fun SectionHeadline(
+    name: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        modifier = Modifier
+            .padding(horizontal = 24.dp)
+            .then(modifier),
+        text = name,
+        style = Theme.textStyle.headline
     )
 }
