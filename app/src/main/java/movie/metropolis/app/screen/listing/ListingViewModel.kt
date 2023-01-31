@@ -1,35 +1,43 @@
 package movie.metropolis.app.screen.listing
 
-import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.listing.ListingFacade
-import movie.metropolis.app.presentation.listing.ListingFacade.Companion.currentFlow
-import movie.metropolis.app.presentation.listing.ListingFacade.Companion.upcomingFlow
-import movie.metropolis.app.presentation.mapLoadable
+import movie.metropolis.app.presentation.listing.ListingFacade.Companion.actionsFlow
+import movie.metropolis.app.presentation.listing.ListingFacade.Companion.groupFlow
+import movie.metropolis.app.presentation.listing.ListingFacade.Companion.promotionsFlow
 import movie.metropolis.app.util.retainStateIn
-import movie.style.state.ImmutableList.Companion.immutable
 import javax.inject.Inject
 
-@Stable
 @HiltViewModel
 class ListingViewModel @Inject constructor(
-    private val facade: ListingFacade
+    factory: ListingFacade.Factory
 ) : ViewModel() {
 
-    val current = facade.currentFlow
-        .mapLoadable { it.immutable() }
-        .retainStateIn(viewModelScope, Loadable.loading())
-    val upcoming = facade.upcomingFlow
-        .mapLoadable { it.immutable() }
-        .retainStateIn(viewModelScope, Loadable.loading())
+    private val upcomingFacade = factory.upcoming()
+
+    private val current = factory.current().actionsFlow
+        .shareIn(viewModelScope, SharingStarted.Lazily, 1)
+    private val upcoming = upcomingFacade.actionsFlow
+        .shareIn(viewModelScope, SharingStarted.Lazily, 1)
+
+    val currentPromotions = promotionsFlow(current)
+        .retainStateIn(viewModelScope)
+    val upcomingPromotions = promotionsFlow(upcoming)
+        .retainStateIn(viewModelScope)
+
+    val currentGroups = groupFlow(current)
+        .retainStateIn(viewModelScope)
+    val upcomingGroups = groupFlow(upcoming)
+        .retainStateIn(viewModelScope)
 
     fun toggleFavorite(movie: MovieView) = viewModelScope.launch {
-        facade.toggleFavorite(movie)
+        upcomingFacade.toggle(movie)
     }
 
 }

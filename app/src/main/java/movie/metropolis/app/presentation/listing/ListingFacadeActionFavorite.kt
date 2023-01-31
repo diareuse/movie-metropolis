@@ -8,10 +8,10 @@ import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithFavorite
 
-class ListingAltFacadeActionFavorite(
-    private val origin: ListingAltFacadeActionFromData,
+class ListingFacadeActionFavorite(
+    private val origin: ListingFacadeActionFromData,
     private val favorite: FavoriteFeature
-) : ListingAltFacade.Action {
+) : ListingFacade.Action {
 
     override suspend fun promotions(callback: ResultCallback<List<MovieView>>) {
         origin.promotions(callback.thenMap { items ->

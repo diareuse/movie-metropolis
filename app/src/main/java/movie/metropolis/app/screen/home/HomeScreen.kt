@@ -38,9 +38,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
@@ -60,7 +57,7 @@ import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
 import java.security.MessageDigest
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
     startWith: String? = null,
@@ -69,8 +66,6 @@ fun HomeScreen(
     cinemas: CinemasViewModel = hiltViewModel(),
     booking: BookingViewModel = hiltViewModel(),
     moviesState: LazyListState = rememberLazyListState(),
-    moviesAvailableState: PagerState = rememberPagerState(),
-    moviesUpcomingState: LazyListState = rememberLazyListState(),
     cinemasState: LazyListState = rememberLazyListState(),
     bookingState: LazyListState = rememberLazyListState(),
     onClickMovie: (String, Boolean) -> Unit,
@@ -102,6 +97,7 @@ fun HomeScreen(
                     padding = padding,
                     onClickMovie = onClickMovie,
                     state = moviesState,
+                    viewModel = listing,
                     profileIcon = {
                         if (email != null) ProfileIcon(
                             email = email,
@@ -191,7 +187,7 @@ fun rememberUserImage(email: String): State<String> {
     return url
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreen(
     isLoggedIn: Boolean,

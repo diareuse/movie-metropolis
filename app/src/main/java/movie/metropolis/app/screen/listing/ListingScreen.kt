@@ -35,7 +35,7 @@ import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
 import movie.metropolis.app.screen.listing.component.MoviePromo
-import movie.metropolis.app.screen.listing.component.MovieRowAlt
+import movie.metropolis.app.screen.listing.component.MovieRow
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -47,7 +47,7 @@ fun ListingScreen(
     onClickMovie: (String, upcoming: Boolean) -> Unit,
     state: LazyListState,
     profileIcon: @Composable () -> Unit,
-    viewModel: ListingAltViewModel = hiltViewModel(),
+    viewModel: ListingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
     val currentPromotions by viewModel.currentPromotions.collectAsState()
@@ -117,7 +117,7 @@ private fun ListingScreenContent(
                     )
                 }
                 item(key = "current-$genre-content") {
-                    MovieRowAlt(
+                    MovieRow(
                         modifier = Modifier.animateItemPlacement(),
                         items = Loadable.success(items.immutable()),
                         isShowing = true,
@@ -136,7 +136,7 @@ private fun ListingScreenContent(
                 )
             }
             item(key = "current-content") {
-                MovieRowAlt(
+                MovieRow(
                     modifier = Modifier.animateItemPlacement(),
                     items = Loadable.loading(),
                     isShowing = true,
@@ -146,7 +146,7 @@ private fun ListingScreenContent(
             }
         }.onFailure {
             item(key = "current-content") {
-                MovieRowAlt(
+                MovieRow(
                     modifier = Modifier.animateItemPlacement(),
                     items = Loadable.failure(it),
                     isShowing = true,
@@ -178,7 +178,7 @@ private fun ListingScreenContent(
                     )
                 }
                 item(key = "upcoming-$genre-content") {
-                    MovieRowAlt(
+                    MovieRow(
                         modifier = Modifier.animateItemPlacement(),
                         items = Loadable.success(items.immutable()),
                         isShowing = false,
@@ -197,7 +197,7 @@ private fun ListingScreenContent(
                 )
             }
             item(key = "upcoming-content") {
-                MovieRowAlt(
+                MovieRow(
                     modifier = Modifier.animateItemPlacement(),
                     items = Loadable.loading(),
                     isShowing = false,
@@ -207,7 +207,7 @@ private fun ListingScreenContent(
             }
         }.onFailure {
             item(key = "upcoming-content") {
-                MovieRowAlt(
+                MovieRow(
                     modifier = Modifier.animateItemPlacement(),
                     items = Loadable.failure(it),
                     isShowing = false,

@@ -10,52 +10,51 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ImageView
-import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.screen.detail.component.FavoriteButton
 import movie.style.layout.CutoutShape
 import movie.style.layout.PosterLayout
-import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import movie.style.theme.contentColorFor
 import movie.style.theme.extendBy
 
 @Composable
 fun MovieItem(
-    name: String,
     subtext: String,
     poster: ImageView?,
     isFavorite: Boolean,
     onClick: () -> Unit,
+    onClickFavorite: () -> Unit,
     onLongPress: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    onClickFavorite: (() -> Unit)? = null,
     height: Dp = 225.dp
 ) {
     MovieItemLayout(
@@ -63,9 +62,7 @@ fun MovieItem(
         height = height,
         shadowColor = poster?.spotColor ?: Color.Black,
         posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
-        shape =
-        if (onClickFavorite == null) Theme.container.poster
-        else CutoutShape.from(Theme.container.poster.extendBy(8.dp), 56.dp),
+        shape = CutoutShape.from(Theme.container.poster.extendBy(8.dp), 56.dp),
         poster = {
             MoviePoster(
                 url = poster?.url,
@@ -76,10 +73,16 @@ fun MovieItem(
         posterOverlay = {
             val spotColor = poster?.spotColor ?: Theme.color.container.background
             val color = Theme.color.contentColorFor(spotColor)
-            if (onClickFavorite != null) FavoriteButton(
+            FavoriteButton(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .shadow(16.dp, shape = Theme.container.button, clip = false)
+                    .shadow(
+                        16.dp,
+                        shape = Theme.container.button,
+                        clip = false,
+                        spotColor = spotColor,
+                        ambientColor = spotColor
+                    )
                     .background(spotColor, Theme.container.button)
                     .clip(Theme.container.button),
                 isChecked = isFavorite,
@@ -88,9 +91,73 @@ fun MovieItem(
                 tint = color
             )
         },
+        textPadding = PaddingValues(top = 8.dp),
         text = {
-            MovieSubText(text = subtext)
-            MovieTitleText(text = name)
+            MovieSubText(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                text = subtext
+            )
+        }
+    )
+}
+
+@Composable
+fun MovieItem(
+    rating: String?,
+    poster: ImageView?,
+    onClick: () -> Unit,
+    onLongPress: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    height: Dp = 225.dp
+) {
+    var ratingWidth by remember { mutableStateOf(0.dp) }
+    var ratingHeight by remember { mutableStateOf(0.dp) }
+    val density = LocalDensity.current
+    MovieItemLayout(
+        modifier = modifier,
+        height = height,
+        shadowColor = poster?.spotColor ?: Color.Black,
+        posterAspectRatio = poster?.aspectRatio ?: DefaultPosterAspectRatio,
+        shape =
+        if (rating == null) Theme.container.poster.extendBy(8.dp)
+        else CutoutShape.from(
+            shape = Theme.container.poster.extendBy(8.dp),
+            width = ratingWidth + 8.dp,
+            height = ratingHeight + 8.dp
+        ),
+        poster = {
+            MoviePoster(
+                url = poster?.url,
+                onClick = onClick,
+                onLongPress = onLongPress
+            )
+        },
+        posterOverlay = {
+            val spotColor = poster?.spotColor ?: Theme.color.container.background
+            val color = Theme.color.contentColorFor(spotColor)
+            if (rating != null) Text(
+                modifier = Modifier
+                    .onGloballyPositioned {
+                        with(density) {
+                            ratingWidth = it.size.width.toDp()
+                            ratingHeight = it.size.height.toDp()
+                        }
+                    }
+                    .align(Alignment.TopEnd)
+                    .shadow(
+                        16.dp,
+                        shape = Theme.container.button,
+                        clip = false,
+                        spotColor = spotColor,
+                        ambientColor = spotColor
+                    )
+                    .background(spotColor, Theme.container.button)
+                    .clip(Theme.container.button)
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                text = rating,
+                color = color,
+                style = Theme.textStyle.emphasis
+            )
         }
     )
 }
@@ -104,12 +171,7 @@ fun MovieItem(
         modifier = modifier,
         height = height,
         shadowColor = Color.Black,
-        poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize()) {} },
-        text = {
-            MovieSubText(text = "#".repeat(4), isLoading = true)
-            Spacer(Modifier.size(4.dp))
-            MovieTitleText(text = "#".repeat(9), isLoading = true)
-        }
+        poster = { MoviePoster(url = null, modifier = Modifier.fillMaxSize()) {} }
     )
 }
 
@@ -208,56 +270,6 @@ fun MovieItemLayout(
     }
 }
 
-@Composable
-fun MovieSubText(
-    text: String,
-    modifier: Modifier = Modifier,
-    isLoading: Boolean = false
-) {
-    Text(
-        modifier = modifier.textPlaceholder(isLoading),
-        text = text,
-        style = Theme.textStyle.caption
-    )
-}
-
-@Composable
-fun MovieTitleText(
-    text: String,
-    modifier: Modifier = Modifier,
-    isLoading: Boolean = false
-) {
-    Text(
-        modifier = modifier.textPlaceholder(visible = isLoading),
-        text = text,
-        style = Theme.textStyle.body,
-        fontWeight = FontWeight.Bold,
-        maxLines = 2,
-        minLines = 2,
-        overflow = TextOverflow.Ellipsis
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    Theme {
-        MovieItem(
-            name = "Black Adam",
-            subtext = "12. 11. 2022",
-            poster = ImageView(
-                DefaultPosterAspectRatio,
-                "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5145S2R-lg.jpg"
-            ),
-            isFavorite = true,
-            onClick = {},
-            onClickFavorite = {},
-            onLongPress = {},
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun PreviewEmpty() {
@@ -275,21 +287,3 @@ private fun PreviewError() {
 }
 
 const val DefaultPosterAspectRatio = 0.67375886f
-
-private fun VideoView(url: String) = object : VideoView {
-    override val url: String
-        get() = url
-
-}
-
-private fun ImageView(
-    aspectRatio: Float,
-    url: String
-) = object : ImageView {
-    override val aspectRatio: Float
-        get() = aspectRatio
-    override val url: String
-        get() = url
-    override val spotColor: Color
-        get() = Color.Black
-}

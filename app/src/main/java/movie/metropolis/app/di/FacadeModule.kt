@@ -34,9 +34,6 @@ import movie.metropolis.app.presentation.detail.MovieFacadeFromFeature
 import movie.metropolis.app.presentation.detail.MovieFacadeRecover
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.home.HomeFacadeFromFeature
-import movie.metropolis.app.presentation.listing.ListingAltFacade
-import movie.metropolis.app.presentation.listing.ListingAltFacadeFromFeature
-import movie.metropolis.app.presentation.listing.ListingAltFacadeRecover
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.listing.ListingFacadeFromFeature
 import movie.metropolis.app.presentation.listing.ListingFacadeRecover
@@ -113,28 +110,17 @@ class FacadeModule {
     @Provides
     fun listing(
         preview: EventPreviewFeature.Factory,
-        favorite: FavoriteFeature
-    ): ListingFacade {
-        var facade: ListingFacade
-        facade = ListingFacadeFromFeature(preview, favorite)
-        facade = ListingFacadeRecover(facade)
-        return facade
-    }
-
-    @Provides
-    fun listingAlt(
-        preview: EventPreviewFeature.Factory,
         favorite: FavoriteFeature,
         promo: EventPromoFeature
-    ): ListingAltFacade.Factory {
-        return object : ListingAltFacade.Factory {
-            override fun upcoming(): ListingAltFacade = create(preview.upcoming())
-            override fun current(): ListingAltFacade = create(preview.current())
+    ): ListingFacade.Factory {
+        return object : ListingFacade.Factory {
+            override fun upcoming(): ListingFacade = create(preview.upcoming())
+            override fun current(): ListingFacade = create(preview.current())
 
-            private fun create(preview: EventPreviewFeature): ListingAltFacade {
-                var out: ListingAltFacade
-                out = ListingAltFacadeFromFeature(preview, favorite, promo)
-                out = ListingAltFacadeRecover(out)
+            private fun create(preview: EventPreviewFeature): ListingFacade {
+                var out: ListingFacade
+                out = ListingFacadeFromFeature(preview, favorite, promo)
+                out = ListingFacadeRecover(out)
                 return out
             }
         }

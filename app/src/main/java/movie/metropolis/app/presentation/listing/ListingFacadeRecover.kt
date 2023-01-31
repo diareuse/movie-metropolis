@@ -9,24 +9,14 @@ class ListingFacadeRecover(
     private val origin: ListingFacade
 ) : ListingFacade by origin, Recoverable {
 
-    override suspend fun getCurrent(callback: ResultCallback<List<MovieView>>) {
+    override suspend fun get(callback: ResultCallback<ListingFacade.Action>) {
         runCatchingResult(callback) {
-            origin.getCurrent { result ->
-                it(result.logSevere())
-            }
+            origin.get(it)
         }
     }
 
-    override suspend fun getUpcoming(callback: ResultCallback<List<MovieView>>) {
-        runCatchingResult(callback) {
-            origin.getUpcoming { result ->
-                it(result.logSevere())
-            }
-        }
-    }
-
-    override suspend fun toggleFavorite(movie: MovieView) {
-        origin.runCatching { toggleFavorite(movie) }.logSevere()
+    override suspend fun toggle(item: MovieView) {
+        origin.runCatching { toggle(item) }.logSevere()
     }
 
 }
