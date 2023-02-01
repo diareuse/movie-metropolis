@@ -14,16 +14,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.shortcut.createShortcut
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
@@ -56,6 +59,7 @@ fun CinemaScreen(
     val items by viewModel.items.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
     val options by viewModel.options.collectAsState()
+    val context = LocalContext.current
     CinemaScreen(
         cinema = cinema,
         items = items,
@@ -66,6 +70,11 @@ fun CinemaScreen(
         onBackClick = onBackClick,
         onFilterClick = viewModel::toggleFilter
     )
+    LaunchedEffect(context, cinema) {
+        cinema.onSuccess {
+            context.createShortcut(it)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
