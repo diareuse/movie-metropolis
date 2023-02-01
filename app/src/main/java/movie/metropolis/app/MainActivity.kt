@@ -9,12 +9,16 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavHostController
+import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
@@ -33,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         actionShare = ::share
     )
 
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -43,7 +48,11 @@ class MainActivity : AppCompatActivity() {
                     CompositionLocalProvider(
                         LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
                     ) {
-                        Navigation()
+                        val controller = rememberAnimatedNavController()
+                        Navigation(controller = controller)
+                        LaunchedEffect(Unit) {
+                            navigateIfNecessary(controller)
+                        }
                     }
                 }
             }
@@ -81,6 +90,12 @@ class MainActivity : AppCompatActivity() {
             .setType(MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension))
             .let { Intent.createChooser(it, file.name) }
             .also(::startActivity)
+    }
+
+    private fun navigateIfNecessary(controller: NavHostController) {
+        val intent = intent.action ?: return
+        if (intent != Intent.ACTION_APPLICATION_PREFERENCES) return
+        controller.navigate("/user/settings")
     }
 
     companion object {

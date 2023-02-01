@@ -40,6 +40,9 @@
                     android:host="movie.metropolis"
                     android:scheme="app" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
+            </intent-filter>
         </activity>
 
         <activity
