@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,11 +13,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import movie.metropolis.app.screen.cinema.CinemaScreen
@@ -34,7 +33,7 @@ import movie.metropolis.app.util.encodeBase64
 
 private const val uri = "app://movie.metropolis"
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalPagerApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
     controller: NavHostController = rememberAnimatedNavController()
@@ -58,7 +57,11 @@ fun Navigation(
                 }
             )
         }
-        composable("/home?screen={screen}") {
+        composable(
+            route = "/home",
+            arguments = listOf(navArgument("screen") { defaultValue = "movies" }),
+            deepLinks = listOf(navDeepLink { uriPattern = "$uri/home?screen={screen}" })
+        ) {
             HomeScreen(
                 startWith = it.arguments?.getString("screen"),
                 onClickMovie = { id, upcoming ->
@@ -68,12 +71,6 @@ fun Navigation(
                 onClickUser = { controller.navigate("/user") },
                 onClickLogin = { controller.navigate("/user/login") }
             )
-        }
-        composable("/home") {
-            LaunchedEffect(Unit) {
-                controller.popBackStack("/home", true)
-                controller.navigate("/home?screen=movies")
-            }
         }
         composable("/user") {
             UserScreen(
