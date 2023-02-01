@@ -38,9 +38,9 @@ favorite and more.
 ## Screenshots
 
 <p align="center">
-    <img src="art/home-screen.png" width=33% height=33%>
-    <img src="art/tickets-screen.png" width=33% height=33%>
-    <img src="art/browse-screens.png" width=33% height=33%>
+    <img src="art/home-screen.png" width=32% height=32%>
+    <img src="art/tickets-screen.png" width=32% height=32%>
+    <img src="art/browse-screens.png" width=32% height=32%>
 </p>
 
 ## Q&A
