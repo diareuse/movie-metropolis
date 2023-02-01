@@ -16,7 +16,7 @@ fun Modifier.surface(
     color: Color,
     shape: Shape = RectangleShape,
     elevation: Dp = 0.dp,
-    shadowColor: Color = Color.Black
+    shadowColor: Color = color
 ) = shadow(elevation, shape, false, shadowColor, shadowColor)
     .background(color, shape)
     .clip(shape)
