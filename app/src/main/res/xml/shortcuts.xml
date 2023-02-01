@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/icon_tickets"
+        android:shortcutId="tickets"
+        android:shortcutLongLabel="@string/tickets"
+        android:shortcutShortLabel="@string/tickets">
+        <intent
+            android:action="movie.metropolis.app.ACTION_TICKETS"
+            android:targetClass="movie.metropolis.app.ShortcutActivity"
+            android:targetPackage="movie.metropolis.app" />
+    </shortcut>
+</shortcuts>
