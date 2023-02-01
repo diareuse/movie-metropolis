@@ -87,7 +87,10 @@ fun Navigation(
                 onBackClick = controller::navigateUp
             )
         }
-        composable("/cinemas/{cinema}") {
+        composable(
+            route = "/cinemas/{cinema}",
+            deepLinks = listOf(navDeepLink { uriPattern = "$uri/cinemas/{cinema}" })
+        ) {
             CinemaScreen(
                 onBackClick = controller::navigateUp,
                 onBookingClick = { url ->
