@@ -38,11 +38,9 @@ favorite and more.
 ## Screenshots
 
 <p align="center">
-    <img src="art/movies-light.png" width=19% height=19%>
-    <img src="art/movie-detail-light.png" width=19% height=19%>
-    <img src="art/cinemas-light.png" width=19% height=19%>
-    <img src="art/cinema-detail-light.png" width=19% height=19%>
-    <img src="art/tickets-light.png" width=19% height=19%>
+    <img src="art/home-screen.png" width=33% height=33%>
+    <img src="art/tickets-screen.png" width=33% height=33%>
+    <img src="art/browse-screens.png" width=33% height=33%>
 </p>
 
 ## Q&A
