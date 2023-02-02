@@ -1,23 +1,14 @@
 package movie.rating
 
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 
 internal class RatingProviderRottenTomatoes(
-    private val client: HttpClient,
-    private val link: LinkProvider
-) : RatingProvider {
+    override val client: HttpClient,
+    override val provider: LinkProvider
+) : AbstractRatingProvider() {
 
-    override suspend fun getRating(descriptor: MovieDescriptor): Byte {
-        val link = link.getLink(descriptor)
-        return getMaxScore(link)
-    }
-
-    private suspend fun getMaxScore(link: String): Byte {
-        val response = client.get(link)
-        val body = response.bodyAsText()
-        val scoreBoard = score.find(body)?.value ?: throw ResultNotFoundException()
+    override fun getRating(content: String): Byte {
+        val scoreBoard = score.find(content)?.value ?: throw ResultNotFoundException()
         return scores.findAll(scoreBoard)
             .flatMap { it.groupValues.drop(1) }
             .mapNotNull { it.toByteOrNull() }

@@ -14,7 +14,7 @@ import org.junit.Before
 abstract class AbstractRatingTest {
 
     protected lateinit var descriptor: MovieDescriptor
-    protected lateinit var provider: RatingProvider
+    protected lateinit var provider: RatingProvider.Composed
 
     @Before
     fun prepareInternal() {
@@ -29,7 +29,12 @@ abstract class AbstractRatingTest {
             }
         }
         val client = HttpClient(MockEngine(config)) {}
-        provider = RatingProviderModule().rating(client)
+        val module = RatingProviderModule()
+        provider = module.rating(
+            tomatoes = module.rtRating(client),
+            imdb = module.imdbRating(client),
+            csfd = module.csfdRating(client)
+        )
         descriptor = MovieDescriptor("Avatar: The Way of Water", 2022)
         prepare()
     }

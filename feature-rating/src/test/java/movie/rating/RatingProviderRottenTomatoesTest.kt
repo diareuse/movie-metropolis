@@ -20,7 +20,7 @@ class RatingProviderRottenTomatoesTest : AbstractRatingTest() {
 
     @Test
     fun returns_rottenTomatoes() = runTest {
-        val result = provider.getRating(descriptor)
+        val result = provider.get(descriptor).rottenTomatoes?.value
         assertEquals(94, result)
     }
 

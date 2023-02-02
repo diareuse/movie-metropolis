@@ -81,11 +81,7 @@ import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
 import movie.image.ImageAnalyzer
-import movie.rating.LinkProvider
 import movie.rating.RatingProvider
-import movie.rating.di.Csfd
-import movie.rating.di.Imdb
-import movie.rating.di.RottenTomatoes
 import kotlin.time.Duration.Companion.days
 
 @Module
@@ -183,16 +179,13 @@ internal class EventFeatureModule {
         detail: MovieDetailDao,
         media: MovieMediaDao,
         ratings: MovieRatingDao,
-        rating: RatingProvider,
-        @RottenTomatoes tomatoes: LinkProvider,
-        @Imdb imdb: LinkProvider,
-        @Csfd csfd: LinkProvider,
+        rating: RatingProvider.Composed,
         analyzer: ImageAnalyzer
     ): EventDetailFeature {
         var out: EventDetailFeature
         out = EventDetailFeatureNetwork(service)
         out = EventDetailFeatureStoring(out, movie, detail, media)
-        out = EventDetailFeatureNetworkRating(out, ratings, rating, tomatoes, imdb, csfd)
+        out = EventDetailFeatureNetworkRating(out, ratings, rating)
         out = EventDetailFeatureFold(
             EventDetailFeatureDatabase(detail, media),
             out
