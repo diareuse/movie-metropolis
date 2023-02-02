@@ -1,23 +1,15 @@
 package movie.rating
 
 import io.ktor.client.HttpClient
-import io.ktor.client.request.get
-import io.ktor.client.statement.bodyAsText
 
 internal class RatingProviderImdb(
-    private val client: HttpClient,
-    private val link: LinkProvider
-) : RatingProvider {
+    override val client: HttpClient,
+    override val provider: LinkProvider
+) : AbstractRatingProvider() {
 
-    override suspend fun getRating(descriptor: MovieDescriptor): Byte {
-        val link = link.getLink(descriptor)
-        return getRating(link)
-    }
-
-    private suspend fun getRating(link: String): Byte {
-        val response = client.get(link)
-        val body = response.bodyAsText()
-        val rating = rating.find(body) ?: throw ResultNotFoundException()
+    @Throws(ResultNotFoundException::class)
+    override fun getRating(content: String): Byte {
+        val rating = rating.find(content) ?: throw ResultNotFoundException()
         val ratingMultiplied = rating.groupValues[1].toFloat() * 10
         return ratingMultiplied.toInt().toByte()
     }

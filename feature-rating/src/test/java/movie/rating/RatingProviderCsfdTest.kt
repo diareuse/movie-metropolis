@@ -20,7 +20,7 @@ class RatingProviderCsfdTest : AbstractRatingTest() {
 
     @Test
     fun returns_csfd() = runTest {
-        val result = provider.getRating(descriptor)
+        val result = provider.get(descriptor).csfd?.value
         assertEquals(86, result)
     }
 

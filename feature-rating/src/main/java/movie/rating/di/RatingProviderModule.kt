@@ -9,13 +9,12 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import movie.rating.LinkProvider
-import movie.rating.LinkProviderCaching
 import movie.rating.LinkProviderCsfd
 import movie.rating.LinkProviderImdb
 import movie.rating.LinkProviderRottenTomatoes
 import movie.rating.RatingProvider
+import movie.rating.RatingProviderComposed
 import movie.rating.RatingProviderCsfd
-import movie.rating.RatingProviderFallback
 import movie.rating.RatingProviderImdb
 import movie.rating.RatingProviderRottenTomatoes
 
@@ -25,15 +24,18 @@ internal class RatingProviderModule {
 
     @Provides
     fun rating(
-        @Rating client: HttpClient,
-        @RottenTomatoes tomatoes: RatingProvider = rtRating(client),
-        @Imdb imdb: RatingProvider = imdbRating(client),
-        @Csfd csfd: RatingProvider = csfdRating(client),
-    ): RatingProvider = RatingProviderFallback(tomatoes, imdb, csfd)
+        @RottenTomatoes tomatoes: RatingProvider,
+        @Imdb imdb: RatingProvider,
+        @Csfd csfd: RatingProvider,
+    ): RatingProvider.Composed = RatingProviderComposed(
+        rtt = tomatoes,
+        imdb = imdb,
+        csfd = csfd
+    )
 
     @Provides
     @Csfd
-    fun csfdRating(
+    internal fun csfdRating(
         @Rating
         client: HttpClient,
         @Csfd
@@ -43,19 +45,16 @@ internal class RatingProviderModule {
 
     @Provides
     @Csfd
-    fun csfdLink(
+    internal fun csfdLink(
         @Rating
         client: HttpClient
     ): LinkProvider {
-        var link: LinkProvider
-        link = LinkProviderCsfd(client)
-        link = LinkProviderCaching(link)
-        return link
+        return LinkProviderCsfd(client)
     }
 
     @Provides
     @Imdb
-    fun imdbRating(
+    internal fun imdbRating(
         @Rating
         client: HttpClient,
         @Imdb
@@ -65,19 +64,16 @@ internal class RatingProviderModule {
 
     @Provides
     @Imdb
-    fun imdbLink(
+    internal fun imdbLink(
         @Rating
         client: HttpClient
     ): LinkProvider {
-        var link: LinkProvider
-        link = LinkProviderImdb(client)
-        link = LinkProviderCaching(link)
-        return link
+        return LinkProviderImdb(client)
     }
 
     @Provides
     @RottenTomatoes
-    fun rtRating(
+    internal fun rtRating(
         @Rating
         client: HttpClient,
         @RottenTomatoes
@@ -87,23 +83,20 @@ internal class RatingProviderModule {
 
     @Provides
     @RottenTomatoes
-    fun rtLink(
+    internal fun rtLink(
         @Rating
         client: HttpClient
     ): LinkProvider {
-        var link: LinkProvider
-        link = LinkProviderRottenTomatoes(client)
-        link = LinkProviderCaching(link)
-        return link
+        return LinkProviderRottenTomatoes(client)
     }
 
     @Provides
     @Rating
-    fun client(): HttpClient = HttpClient(CIO) {
+    internal fun client(): HttpClient = HttpClient(CIO) {
         defaultRequest {
             header(
                 "user-agent",
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:107.0) Gecko/20100101 Firefox/107.0"
+                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/109.0"
             )
         }
     }

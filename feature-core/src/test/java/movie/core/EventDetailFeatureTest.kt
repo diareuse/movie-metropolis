@@ -20,11 +20,13 @@ import movie.core.util.wheneverBlocking
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
 import movie.image.SwatchColor
-import movie.rating.LinkProvider
+import movie.rating.AvailableRating
+import movie.rating.ComposedRating
 import movie.rating.RatingProvider
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -36,10 +38,7 @@ class EventDetailFeatureTest {
     private lateinit var item: Movie
     private lateinit var feature: EventDetailFeature
     private lateinit var analyzer: ImageAnalyzer
-    private lateinit var csfd: LinkProvider
-    private lateinit var imdb: LinkProvider
-    private lateinit var tomatoes: LinkProvider
-    private lateinit var rating: RatingProvider
+    private lateinit var rating: RatingProvider.Composed
     private lateinit var ratings: MovieRatingDao
     private lateinit var media: MovieMediaDao
     private lateinit var detail: MovieDetailDao
@@ -52,11 +51,8 @@ class EventDetailFeatureTest {
             onBlocking { getColors(any()) }
                 .thenReturn(Swatch(SwatchColor(0), SwatchColor(0), SwatchColor(0)))
         }
-        csfd = mock {}
-        imdb = mock {}
-        tomatoes = mock {}
         rating = mock {
-            onBlocking { getRating(any()) }.thenReturn(0)
+            onBlocking { get(anyVararg()) }.thenReturn(ComposedRating.None)
         }
         ratings = mock {}
         media = mock {}
@@ -64,7 +60,7 @@ class EventDetailFeatureTest {
         movie = mock {}
         service = mock {}
         feature = EventFeatureModule()
-            .detail(service, movie, detail, media, ratings, rating, tomatoes, imdb, csfd, analyzer)
+            .detail(service, movie, detail, media, ratings, rating, analyzer)
         item = mock {
             on { id }.thenReturn("")
         }
@@ -133,10 +129,14 @@ class EventDetailFeatureTest {
 
     private fun rating_responds_success(): MovieRatingStored {
         val data = MovieRatingStored("", nextInt(0, 100).toByte(), "imdb", "rtt", "csfd")
-        wheneverBlocking { rating.getRating(any()) }.thenReturn(data.rating)
-        wheneverBlocking { imdb.getLink(any()) }.thenReturn(data.linkImdb)
-        wheneverBlocking { tomatoes.getLink(any()) }.thenReturn(data.linkRottenTomatoes)
-        wheneverBlocking { csfd.getLink(any()) }.thenReturn(data.linkCsfd)
+        val composed = mock<ComposedRating> {
+            on { imdb }.thenReturn(AvailableRating(data.rating, data.linkImdb!!))
+            on { csfd }.thenReturn(AvailableRating(data.rating, data.linkCsfd!!))
+            on { rottenTomatoes }
+                .thenReturn(AvailableRating(data.rating, data.linkRottenTomatoes!!))
+            on { max }.thenReturn(AvailableRating(data.rating, data.linkImdb!!))
+        }
+        wheneverBlocking { rating.get(anyVararg()) }.thenReturn(composed)
         return data
     }
 
