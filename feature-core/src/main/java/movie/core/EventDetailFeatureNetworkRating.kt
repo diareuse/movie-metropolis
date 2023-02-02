@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.MovieDetailWithRating
 import movie.core.db.dao.MovieRatingDao
 import movie.core.db.model.MovieRatingStored
@@ -15,8 +16,8 @@ class EventDetailFeatureNetworkRating(
     private val rating: RatingProvider.Composed
 ) : EventDetailFeature {
 
-    override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        origin.get(movie, result.thenMap { detail ->
+    override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) = coroutineScope {
+        origin.get(movie, result.thenMap(this) { detail ->
             val year = Calendar.getInstance().run {
                 time = detail.releasedAt
                 get(Calendar.YEAR)

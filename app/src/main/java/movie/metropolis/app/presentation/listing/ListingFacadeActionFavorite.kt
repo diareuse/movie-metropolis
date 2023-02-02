@@ -1,5 +1,6 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.FavoriteFeature
 import movie.core.ResultCallback
 import movie.core.adapter.MovieFromId
@@ -13,14 +14,16 @@ class ListingFacadeActionFavorite(
     private val favorite: FavoriteFeature
 ) : ListingFacade.Action {
 
-    override suspend fun promotions(callback: ResultCallback<List<MovieView>>) {
-        origin.promotions(callback.thenMap { items ->
+    override suspend fun promotions(callback: ResultCallback<List<MovieView>>) = coroutineScope {
+        origin.promotions(callback.thenMap(this) { items ->
             items.markFavorite()
         })
     }
 
-    override suspend fun groupUp(callback: ResultCallback<Map<Genre, List<MovieView>>>) {
-        origin.groupUp(callback.thenMap { groups ->
+    override suspend fun groupUp(
+        callback: ResultCallback<Map<Genre, List<MovieView>>>
+    ) = coroutineScope {
+        origin.groupUp(callback.thenMap(this) { groups ->
             groups.mapValues { (_, items) ->
                 items.markFavorite()
             }

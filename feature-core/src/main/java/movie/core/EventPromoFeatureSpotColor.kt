@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.MoviePromoPosterWithSpotColor
 import movie.core.model.Movie
 import movie.core.model.MoviePromoPoster
@@ -10,8 +11,11 @@ class EventPromoFeatureSpotColor(
     private val analyzer: ImageAnalyzer
 ) : EventPromoFeature {
 
-    override suspend fun get(movie: Movie, callback: ResultCallback<MoviePromoPoster>) {
-        origin.get(movie, callback.thenMap {
+    override suspend fun get(
+        movie: Movie,
+        callback: ResultCallback<MoviePromoPoster>
+    ) = coroutineScope {
+        origin.get(movie, callback.thenMap(this) {
             val color = analyzer.getColors(it.url).vibrant.rgb
             MoviePromoPosterWithSpotColor(it, color)
         })
