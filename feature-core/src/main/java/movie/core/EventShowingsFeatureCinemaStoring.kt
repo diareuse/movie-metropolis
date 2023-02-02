@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.asStored
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieReferenceDao
@@ -14,8 +15,11 @@ class EventShowingsFeatureCinemaStoring(
     private val showingDao: ShowingDao,
 ) : EventShowingsFeature.Cinema {
 
-    override suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>) {
-        origin.get(date, result.then {
+    override suspend fun get(
+        date: Date,
+        result: ResultCallback<MovieWithShowings>
+    ) = coroutineScope {
+        origin.get(date, result.then(this) {
             for ((movie, showings) in it) {
                 movieDao.insertOrUpdate((movie as Movie).asStored())
                 referenceDao.insertOrUpdate(movie.asStored())

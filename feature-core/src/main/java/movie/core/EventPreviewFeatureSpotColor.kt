@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.MoviePreviewWithSpotColor
 import movie.core.image.toSpotColor
 import movie.core.model.MoviePreview
@@ -10,8 +11,8 @@ class EventPreviewFeatureSpotColor(
     private val analyzer: ImageAnalyzer
 ) : EventPreviewFeature {
 
-    override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get(result.thenMap { movies ->
+    override suspend fun get(result: ResultCallback<List<MoviePreview>>) = coroutineScope {
+        origin.get(result.thenMap(this) { movies ->
             movies.map inner@{ movie ->
                 MoviePreviewWithSpotColor(
                     origin = movie,

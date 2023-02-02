@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.MoviePreviewWithRating
 import movie.core.db.dao.MovieRatingDao
 import movie.core.model.MoviePreview
@@ -9,8 +10,8 @@ class EventPreviewFeatureDatabaseRating(
     private val rating: MovieRatingDao
 ) : EventPreviewFeature {
 
-    override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get(result.thenMap { movies ->
+    override suspend fun get(result: ResultCallback<List<MoviePreview>>) = coroutineScope {
+        origin.get(result.thenMap(this) { movies ->
             movies.map { movie ->
                 val rating = movie.rating
                 if (rating != null && rating > 0) movie

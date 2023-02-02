@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.model.FieldUpdate
 import movie.core.model.User
 import movie.core.preference.UserPreference
@@ -23,8 +24,8 @@ class UserDataFeatureStoring(
         }
     }
 
-    override suspend fun get(callback: ResultCallback<User>) {
-        origin.get(callback.then {
+    override suspend fun get(callback: ResultCallback<User>) = coroutineScope {
+        origin.get(callback.then(this) {
             preference.set(it)
         })
     }
