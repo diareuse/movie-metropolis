@@ -14,9 +14,12 @@ class EventPreviewFeatureSpotColor(
     private val colors = mutableMapOf<String, Int>()
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) = coroutineScope {
-        origin.get(result.thenParallelize(this) { movie ->
+        val movies = MutableResult.getOrNull {
+            origin.get(result.collectInto(it))
+        }
+        result.parallelize(this, movies ?: return@coroutineScope) { movie ->
             MoviePreviewWithSpotColor(movie, getColor(movie))
-        })
+        }
     }
 
     private suspend fun getColor(movie: MoviePreview): Int {
