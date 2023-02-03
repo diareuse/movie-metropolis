@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.EventCinemaFeature.Companion.get
 import movie.core.EventDetailFeature.Companion.get
 import movie.core.adapter.BookingActiveFromResponse
@@ -18,17 +19,16 @@ class UserBookingFeatureNetwork(
     private val detail: EventDetailFeature
 ) : UserBookingFeature {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) {
+    override suspend fun get(callback: ResultCallback<List<Booking>>) = coroutineScope {
         val bookings = service.getBookings().getOrThrow()
         val cinemas = cinema.get(null).getOrThrow().toList()
-        var outputs = bookings.map { it.asBooking(MovieDetailFromId(it.movieId), cinemas) }
+        val outputs = bookings.map { it.asBooking(MovieDetailFromId(it.movieId), cinemas) }
         callback(Result.success(outputs))
-
-        outputs = bookings.mapNotNull {
-            val movie = detail.get(MovieFromId(it.movieId)).getOrNull() ?: return@mapNotNull null
-            it.asBooking(movie, cinemas)
+        callback.parallelize(this, outputs) {
+            val movie = detail.get(MovieFromId(it.movie.id)).getOrNull()
+            if (movie == null) it
+            else it.update(movie)
         }
-        callback(Result.success(outputs))
     }
 
     override fun invalidate() = Unit
@@ -41,6 +41,12 @@ class UserBookingFeatureNetwork(
     ) = when (isExpired(movie.duration)) {
         true -> BookingExpiredFromResponse(this, movie, cinemas)
         else -> BookingActiveFromResponse(this, getDetail(this), movie, cinemas)
+    }
+
+    private fun Booking.update(movie: MovieDetail) = when (this) {
+        is BookingActiveFromResponse -> copy(movie = movie)
+        is BookingExpiredFromResponse -> copy(movie = movie)
+        else -> this
     }
 
     private suspend fun getDetail(booking: BookingResponse) =
