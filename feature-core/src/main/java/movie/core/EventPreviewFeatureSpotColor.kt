@@ -11,15 +11,18 @@ class EventPreviewFeatureSpotColor(
     private val analyzer: ImageAnalyzer
 ) : EventPreviewFeature {
 
+    private val colors = mutableMapOf<String, Int>()
+
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) = coroutineScope {
-        origin.get(result.thenMap(this) { movies ->
-            movies.map inner@{ movie ->
-                MoviePreviewWithSpotColor(
-                    origin = movie,
-                    spotColor = analyzer.toSpotColor(movie.media) ?: return@inner movie
-                )
-            }
+        origin.get(result.thenParallelize(this) { movie ->
+            MoviePreviewWithSpotColor(movie, getColor(movie))
         })
+    }
+
+    private suspend fun getColor(movie: MoviePreview): Int {
+        return colors.getOrPut(movie.id) {
+            analyzer.toSpotColor(movie.media) ?: 0xff000000.toInt()
+        }
     }
 
 }
