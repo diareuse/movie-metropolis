@@ -2,7 +2,6 @@ package movie.metropolis.app.presentation.detail
 
 import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import movie.core.EventDetailFeature
 import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
@@ -131,16 +130,18 @@ class MovieFacadeFromFeature(
         val movie = movie
         if (movie != null)
             return callback(Result.success(movie))
-        mutex.withLock {
-            val movieLocked = this.movie
-            if (movieLocked != null)
-                return callback(Result.success(movieLocked))
-            detail.get(MovieFromId(id)) {
-                callback(it)
-                it.onSuccess {
-                    this.movie = it
-                }
-            }
+        mutex.lock()
+        val movieLocked = this.movie
+        if (movieLocked != null) {
+            mutex.unlock()
+            return callback(Result.success(movieLocked))
+        }
+        detail.get(MovieFromId(id)) {
+            if (mutex.isLocked)
+                mutex.unlock()
+            callback(it.onSuccess {
+                this.movie = it
+            })
         }
     }
 
