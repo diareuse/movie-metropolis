@@ -23,11 +23,19 @@ android {
 
         debug {
             applicationIdSuffix ".dev"
+            manifestPlaceholders += [
+                    debug  : "true",
+                    release: "false"
+            ]
         }
 
         release {
             shrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            manifestPlaceholders += [
+                    debug  : "false",
+                    release: "true"
+            ]
         }
 
     }
