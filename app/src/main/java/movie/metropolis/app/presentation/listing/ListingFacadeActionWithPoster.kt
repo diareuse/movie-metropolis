@@ -7,6 +7,7 @@ import movie.core.MutableResult
 import movie.core.ResultCallback
 import movie.core.adapter.MovieFromId
 import movie.core.collectInto
+import movie.core.map
 import movie.core.parallelize
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithPoster
@@ -18,7 +19,7 @@ data class ListingFacadeActionWithPoster(
 
     override suspend fun promotions(callback: ResultCallback<List<MovieView>>) = coroutineScope {
         val movies = MutableResult.getOrNull {
-            origin.promotions(callback.collectInto(it))
+            origin.promotions(callback.collectInto(it).map { it.map(::MovieViewWithPoster) })
         }
         callback.parallelize(this, movies ?: return@coroutineScope) {
             when (val poster = promo.get(MovieFromId(it.id)).getOrNull()) {

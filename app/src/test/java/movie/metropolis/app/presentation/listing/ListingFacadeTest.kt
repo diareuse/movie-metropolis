@@ -16,6 +16,7 @@ import org.junit.Test
 import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
@@ -23,6 +24,7 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 abstract class ListingFacadeTest : FeatureTest() {
@@ -171,6 +173,19 @@ abstract class ListingFacadeTest : FeatureTest() {
         verify(favorite).toggle(any())
     }
 
+    @Test
+    fun promotions_return_noRegularPosters() = runTest {
+        val testData = preview_responds_success()
+        val outputs = facade
+            .get().last().getOrThrow()
+            .promotions().last().getOrThrow()
+        for (output in outputs) {
+            assertNull(output.poster?.url)
+            for (data in testData)
+                verify(data, never()).media
+        }
+    }
+
     // ---
 
     private fun favorite_responds_success(): Boolean {
@@ -196,18 +211,20 @@ abstract class ListingFacadeTest : FeatureTest() {
     private fun preview_responds_success(
         count: Int = 10,
         modifier: KStubbing<MoviePreview>.(Int) -> Unit = {}
-    ) {
-        wheneverBlocking { previewFork.get(any()) }.thenBlocking {
-            callback(0) {
-                Result.success(List(count) { index ->
-                    @Suppress("RemoveExplicitTypeArguments")
-                    mock<MoviePreview> {
-                        on { id }.thenReturn("id")
-                        modifier(index)
-                    }
-                })
+    ): List<MoviePreview> {
+        val content = List(count) { index ->
+            @Suppress("RemoveExplicitTypeArguments")
+            mock<MoviePreview> {
+                on { id }.thenReturn("id")
+                modifier(index)
             }
         }
+        wheneverBlocking { previewFork.get(any()) }.thenBlocking {
+            callback(0) {
+                Result.success(content)
+            }
+        }
+        return content
     }
 
     private fun preview_responds_failure() {
