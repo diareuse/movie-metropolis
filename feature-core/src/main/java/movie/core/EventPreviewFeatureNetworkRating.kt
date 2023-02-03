@@ -1,7 +1,6 @@
 package movie.core
 
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import movie.core.EventDetailFeature.Companion.get
 import movie.core.adapter.MoviePreviewWithRating
 import movie.core.model.MoviePreview
@@ -11,26 +10,20 @@ class EventPreviewFeatureNetworkRating(
     private val detail: EventDetailFeature
 ) : EventPreviewFeature {
 
+    private val ratings = mutableMapOf<String, Byte?>()
+
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) = coroutineScope {
-        var last: Result<List<MoviePreview>> = Result.failure(IllegalStateException())
-        origin.get {
-            result(it)
-            last = it
-        }
-        val movies = last.getOrNull() ?: return@coroutineScope
-        val updated = movies.toMutableList()
-        for ((index, movie) in movies.withIndex()) {
+        origin.get(result.thenParallelize(this) { movie ->
             val rating = movie.rating
-            if (rating != null && rating > 0) continue
-            launch {
-                updated[index] = MoviePreviewWithRating(movie, getRating(movie))
-                result(Result.success(updated))
-            }
-        }
+            if (rating != null && rating > 0) movie
+            else MoviePreviewWithRating(movie, getRating(movie))
+        })
     }
 
     private suspend fun getRating(movie: MoviePreview): Byte? {
-        return detail.get(movie).getOrNull()?.rating
+        return ratings.getOrPut(movie.id) {
+            detail.get(movie).getOrNull()?.rating
+        }
     }
 
 }

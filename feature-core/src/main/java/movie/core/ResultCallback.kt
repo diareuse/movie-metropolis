@@ -45,3 +45,24 @@ inline fun <T> ResultCallback<T>.result(
         invoke(body(result))
     }
 }
+
+inline fun <T> ResultCallback<List<T>>.thenParallelize(
+    scope: CoroutineScope,
+    crossinline body: suspend (T) -> T
+): ResultCallback<List<T>> {
+    return then(scope) {
+        parallelize(scope, it, body)
+    }
+}
+
+inline fun <T> ResultCallback<List<T>>.parallelize(
+    scope: CoroutineScope,
+    list: List<T>,
+    crossinline body: suspend (T) -> T
+) {
+    val updated = list.toMutableList()
+    for ((index, item) in list.withIndex()) scope.launch {
+        updated[index] = body(item)
+        invoke(Result.success(updated))
+    }
+}
