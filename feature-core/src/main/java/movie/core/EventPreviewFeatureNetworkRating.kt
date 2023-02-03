@@ -13,11 +13,14 @@ class EventPreviewFeatureNetworkRating(
     private val ratings = mutableMapOf<String, Byte?>()
 
     override suspend fun get(result: ResultCallback<List<MoviePreview>>) = coroutineScope {
-        origin.get(result.thenParallelize(this) { movie ->
+        val movies = MutableResult.getOrNull {
+            origin.get(result.collectInto(it))
+        }
+        result.parallelize(this, movies ?: return@coroutineScope) { movie ->
             val rating = movie.rating
             if (rating != null && rating > 0) movie
             else MoviePreviewWithRating(movie, getRating(movie))
-        })
+        }
     }
 
     private suspend fun getRating(movie: MoviePreview): Byte? {

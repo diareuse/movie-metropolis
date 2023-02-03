@@ -3,6 +3,11 @@ package movie.core
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicInteger
+
+val count = AtomicInteger(0)
+fun incrementJob() = println("running jobs: ${count.incrementAndGet()}")
+fun decrementJob() = println("running jobs: ${count.decrementAndGet()}")
 
 inline fun <T> ResultCallback<T>.then(
     scope: CoroutineScope,
@@ -12,8 +17,11 @@ inline fun <T> ResultCallback<T>.then(
     return { result ->
         invoke(result)
         job?.cancel()
+        incrementJob()
         job = scope.launch {
             result.onSuccess { body(it) }
+        }.also {
+            it.invokeOnCompletion { decrementJob() }
         }
     }
 }
@@ -26,8 +34,11 @@ inline fun <T> ResultCallback<T>.thenMap(
     return { result ->
         invoke(result)
         job?.cancel()
+        incrementJob()
         job = scope.launch {
             invoke(result.mapCatching { body(it) })
+        }.also {
+            it.invokeOnCompletion { decrementJob() }
         }
     }
 }
@@ -46,23 +57,23 @@ inline fun <T> ResultCallback<T>.result(
     }
 }
 
-inline fun <T> ResultCallback<List<T>>.thenParallelize(
-    scope: CoroutineScope,
-    crossinline body: suspend (T) -> T
-): ResultCallback<List<T>> {
-    return then(scope) {
-        parallelize(scope, it, body)
-    }
-}
-
 inline fun <T> ResultCallback<List<T>>.parallelize(
     scope: CoroutineScope,
     list: List<T>,
     crossinline body: suspend (T) -> T
 ) {
     val updated = list.toMutableList()
-    for ((index, item) in list.withIndex()) scope.launch {
+    for ((index, item) in list.withIndex()) scope.also { incrementJob() }.launch {
         updated[index] = body(item)
         invoke(Result.success(updated))
+    }.also {
+        it.invokeOnCompletion { decrementJob() }
+    }
+}
+
+fun <T> ResultCallback<T>.collectInto(value: MutableResult<T>): ResultCallback<T> {
+    return {
+        value.value = it
+        invoke(it)
     }
 }
