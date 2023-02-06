@@ -25,15 +25,15 @@ fun MovieSubText(
 fun MovieTitleText(
     text: String,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false
+    isLoading: Boolean = false,
+    maxLines: Int = 2
 ) {
     Text(
         modifier = modifier.textPlaceholder(visible = isLoading),
         text = text,
         style = Theme.textStyle.body,
         fontWeight = FontWeight.Bold,
-        maxLines = 2,
-        minLines = 2,
+        maxLines = maxLines,
         overflow = TextOverflow.Ellipsis
     )
 }
