@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -49,7 +50,12 @@ fun RibbonOverlayLayout(
         }
     }
     Box(modifier.onGloballyPositioned { size = it.size }) {
-        content()
+        Box(modifier = Modifier.drawWithContent {
+            drawContent()
+            drawRect(Color.Black.copy(alpha = .3f))
+        }) {
+            content()
+        }
         Box(
             modifier = Modifier
                 .requiredWidth(maxWidth)

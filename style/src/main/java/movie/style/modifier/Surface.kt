@@ -1,6 +1,8 @@
 package movie.style.modifier
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
@@ -22,10 +24,11 @@ fun Modifier.surface(
     .clip(shape)
 
 fun Modifier.surfacePoster(tint: Color = Color.Black) = composed {
+    val tintAnimated by animateColorAsState(targetValue = tint)
     surface(
         color = Theme.color.container.background,
         shape = Theme.container.poster,
         elevation = 24.dp,
-        shadowColor = tint
+        shadowColor = tintAnimated
     )
 }

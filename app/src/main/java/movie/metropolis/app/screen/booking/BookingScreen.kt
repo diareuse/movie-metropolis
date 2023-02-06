@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
@@ -59,6 +60,7 @@ import movie.metropolis.app.screen.booking.component.BookingItemActive
 import movie.metropolis.app.screen.booking.component.BookingItemActiveEmpty
 import movie.metropolis.app.screen.booking.component.BookingItemExpired
 import movie.metropolis.app.screen.booking.component.BookingItemExpiredEmpty
+import movie.metropolis.app.screen.booking.component.BookingItemExpiredFailure
 import movie.metropolis.app.screen.booking.component.BookingTicketDialog
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenLayout
@@ -194,13 +196,14 @@ private fun BookingScreenContent(
         modifier = Modifier
             .nestedScroll(behavior.nestedScrollConnection)
             .fillMaxSize(),
-        contentPadding = padding + PaddingValues(24.dp),
+        contentPadding = padding + PaddingValues(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         userScrollEnabled = !active.isLoading || !expired.isLoading,
         state = state
     ) {
         if (!active.isLoading && !expired.isLoading) item("ticket-cta") {
             Row(
+                modifier = Modifier.padding(horizontal = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 AppButton(
@@ -223,7 +226,9 @@ private fun BookingScreenContent(
             items(view, BookingView::id) {
                 var isVisible by rememberSaveable { mutableStateOf(false) }
                 BookingItemActive(
-                    modifier = Modifier.animateItemPlacement(),
+                    modifier = Modifier
+                        .animateItemPlacement()
+                        .padding(horizontal = 24.dp),
                     name = it.name,
                     cinema = it.cinema.name,
                     date = it.date,
@@ -246,44 +251,65 @@ private fun BookingScreenContent(
             }
         }.onLoading {
             item {
-                BookingItemActive()
+                BookingItemActive(modifier = Modifier.padding(horizontal = 24.dp))
             }
         }.onEmpty {
             item {
-                BookingItemActiveEmpty()
+                BookingItemActiveEmpty(modifier = Modifier.padding(horizontal = 24.dp))
             }
         }.onFailure {
             item {
-                AppErrorItem(error = stringResource(R.string.error_booking))
+                AppErrorItem(
+                    modifier = Modifier.padding(horizontal = 24.dp),
+                    error = stringResource(R.string.error_booking)
+                )
             }
         }
 
-        item(key = "divider") { Divider(Modifier.padding(16.dp)) }
+        item(key = "divider") { Divider(
+            Modifier
+                .padding(horizontal = 24.dp)
+                .padding(16.dp)) }
 
-        expired.onSuccess { view ->
-            items(view, BookingView::id) {
-                BookingItemExpired(
-                    modifier = Modifier.animateItemPlacement(),
-                    name = it.name,
-                    date = it.date,
-                    time = it.time,
-                    poster = it.movie.poster,
-                    duration = it.movie.duration,
-                    onClick = { onMovieClick(it.movie.id) }
-                )
-            }
-        }.onLoading {
-            items(2) {
-                BookingItemExpired()
-            }
-        }.onEmpty {
-            item {
-                BookingItemExpiredEmpty()
-            }
-        }.onFailure {
-            item {
-                AppErrorItem(error = stringResource(R.string.error_booking))
-            }
+        item(key = "expired") {
+            MovieItemRow(items = expired, onMovieClick = onMovieClick)
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun MovieItemRow(
+    items: Loadable<ImmutableList<BookingView.Expired>>,
+    onMovieClick: (String) -> Unit
+) = LazyRow(
+    modifier = Modifier.fillMaxWidth(),
+    contentPadding = PaddingValues(horizontal = 24.dp),
+    horizontalArrangement = Arrangement.spacedBy(16.dp)
+) {
+    items.onSuccess { view ->
+        items(view, BookingView::id) {
+            BookingItemExpired(
+                modifier = Modifier.animateItemPlacement(),
+                poster = it.movie.poster,
+                date = it.date,
+                time = it.time,
+                name = it.name,
+                rating = it.movie.rating,
+                onClick = { onMovieClick(it.movie.id) }
+            )
+        }
+    }.onFailure {
+        item {
+            BookingItemExpiredFailure()
+        }
+    }.onLoading {
+        items(3) {
+            BookingItemExpired()
+        }
+    }.onEmpty {
+        item {
+            BookingItemExpiredEmpty()
         }
     }
 }
