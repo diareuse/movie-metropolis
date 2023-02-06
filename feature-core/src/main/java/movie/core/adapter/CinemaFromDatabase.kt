@@ -21,4 +21,6 @@ data class CinemaFromDatabase(
         get() = Location(cinema.latitude, cinema.longitude)
     override val distance: Double?
         get() = null
+    override val image: String?
+        get() = cinema.image
 }

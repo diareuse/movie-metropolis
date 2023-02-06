@@ -11,6 +11,7 @@ import movie.core.EventCinemaFeatureDistance
 import movie.core.EventCinemaFeatureDistanceClosest
 import movie.core.EventCinemaFeatureFold
 import movie.core.EventCinemaFeatureInvalidateAfter
+import movie.core.EventCinemaFeatureInvalidateWithData
 import movie.core.EventCinemaFeatureNetwork
 import movie.core.EventCinemaFeatureRequireNotEmpty
 import movie.core.EventCinemaFeatureSaveTimestamp
@@ -200,15 +201,17 @@ internal class EventFeatureModule {
         service: CinemaService,
         cinema: CinemaDao,
         preference: EventPreference,
-        sync: SyncPreference
+        sync: SyncPreference,
+        provider: EndpointProvider
     ): EventCinemaFeature {
         val fallback = EventCinemaFeatureDatabase(cinema)
         var db: EventCinemaFeature
         db = EventCinemaFeatureDatabase(cinema)
         db = EventCinemaFeatureRequireNotEmpty(db)
         db = EventCinemaFeatureInvalidateAfter(db, sync, 30.days)
+        db = EventCinemaFeatureInvalidateWithData(db)
         var out: EventCinemaFeature
-        out = EventCinemaFeatureNetwork(service)
+        out = EventCinemaFeatureNetwork(service, provider)
         out = EventCinemaFeatureStoring(out, cinema)
         out = EventCinemaFeatureSaveTimestamp(out, sync)
         out = EventCinemaFeatureFold(db, out, fallback)

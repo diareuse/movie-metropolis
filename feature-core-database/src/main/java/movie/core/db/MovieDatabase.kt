@@ -38,7 +38,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 9,
+    version = 10,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -65,7 +65,8 @@ import movie.core.db.model.ShowingStored
         AutoMigration(4, 5),
         AutoMigration(5, 6),
         AutoMigration(6, 7),
-        AutoMigration(8, 9)
+        AutoMigration(8, 9),
+        AutoMigration(9, 10),
     ]
 )
 @TypeConverters(

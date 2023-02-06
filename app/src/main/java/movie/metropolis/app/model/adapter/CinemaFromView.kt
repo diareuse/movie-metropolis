@@ -21,4 +21,6 @@ data class CinemaFromView(
         get() = Location(0.0, 0.0)
     override val distance: Double?
         get() = null
+    override val image: String?
+        get() = cinema.image
 }

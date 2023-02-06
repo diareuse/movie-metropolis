@@ -335,7 +335,8 @@ interface DataPool<T> {
                 longitude = -15.0,
                 description = "",
                 name = "",
-                city = "b"
+                city = "b",
+                image = ""
             )
             this += CinemaResponse(
                 postalCode = "",
@@ -346,7 +347,8 @@ interface DataPool<T> {
                 longitude = 0.6,
                 description = "",
                 name = "",
-                city = "a"
+                city = "a",
+                image = ""
             )
             this += CinemaResponse(
                 postalCode = "",
@@ -357,7 +359,8 @@ interface DataPool<T> {
                 longitude = 0.0,
                 description = "",
                 name = "",
-                city = "d"
+                city = "d",
+                image = ""
             )
             this += CinemaResponse(
                 postalCode = "",
@@ -368,7 +371,8 @@ interface DataPool<T> {
                 longitude = 0.3,
                 description = "",
                 name = "",
-                city = "c"
+                city = "c",
+                image = ""
             )
         }.map(modifier)
 
@@ -384,7 +388,8 @@ interface DataPool<T> {
                 city = "d",
                 address = emptyList(),
                 latitude = 15.0,
-                longitude = -15.0
+                longitude = -15.0,
+                image = ""
             )
             this += CinemaStored(
                 id = "3",
@@ -393,7 +398,8 @@ interface DataPool<T> {
                 city = "b",
                 address = emptyList(),
                 latitude = 0.6,
-                longitude = 0.6
+                longitude = 0.6,
+                image = ""
             )
             this += CinemaStored(
                 id = "1",
@@ -402,7 +408,8 @@ interface DataPool<T> {
                 city = "c",
                 address = emptyList(),
                 latitude = 0.0,
-                longitude = 0.0
+                longitude = 0.0,
+                image = ""
             )
             this += CinemaStored(
                 id = "2",
@@ -411,7 +418,8 @@ interface DataPool<T> {
                 city = "a",
                 address = emptyList(),
                 latitude = 0.3,
-                longitude = 0.3
+                longitude = 0.3,
+                image = ""
             )
         }.map(modifier)
 

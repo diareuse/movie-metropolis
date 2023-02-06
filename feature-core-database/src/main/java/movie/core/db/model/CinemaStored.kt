@@ -20,6 +20,8 @@ data class CinemaStored(
     @ColumnInfo("latitude")
     val latitude: Double,
     @ColumnInfo("longitude")
-    val longitude: Double
+    val longitude: Double,
+    @ColumnInfo("image")
+    val image: String?
 )
 
