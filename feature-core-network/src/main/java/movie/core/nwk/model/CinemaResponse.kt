@@ -2,6 +2,7 @@ package movie.core.nwk.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import movie.core.nwk.EndpointProvider
 import movie.core.nwk.serializer.StringAsDoubleSerializer
 
 @Serializable
@@ -16,5 +17,11 @@ data class CinemaResponse(
     @SerialName("longitude") val longitude: Double,
     @SerialName("description") val description: String,
     @SerialName("displayName") val name: String,
-    @SerialName("city") val city: String
-)
+    @SerialName("city") val city: String,
+    @SerialName("cinemaImage") val image: String
+) {
+
+    fun image(provider: EndpointProvider) =
+        "${provider.domain}/magnoliaPublic/dam/${image}"
+
+}

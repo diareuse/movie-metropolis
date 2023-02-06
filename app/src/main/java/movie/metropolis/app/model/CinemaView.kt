@@ -9,4 +9,5 @@ interface CinemaView {
     val address: List<String>
     val city: String
     val distance: String?
+    val image: String?
 }

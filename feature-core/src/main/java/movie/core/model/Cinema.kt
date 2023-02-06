@@ -8,4 +8,5 @@ interface Cinema {
     val address: Iterable<String>
     val location: Location
     val distance: Double?
+    val image: String?
 }

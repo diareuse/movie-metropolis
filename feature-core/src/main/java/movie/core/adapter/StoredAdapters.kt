@@ -26,7 +26,8 @@ fun Cinema.asStored() = CinemaStored(
     city = city,
     address = address,
     latitude = location.latitude,
-    longitude = location.longitude
+    longitude = location.longitude,
+    image = image
 )
 
 fun Movie.asStored() = MovieStored(

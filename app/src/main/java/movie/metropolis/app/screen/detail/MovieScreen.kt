@@ -466,7 +466,8 @@ class CinemaBookingViewProvider :
         override val name: String = "Some Cinema",
         override val address: List<String> = listOf("Foo bar 12/3"),
         override val city: String = "City",
-        override val distance: String? = null
+        override val distance: String? = null,
+        override val image: String? = null
     ) : CinemaView
 
     private data class AvailabilityPreview(

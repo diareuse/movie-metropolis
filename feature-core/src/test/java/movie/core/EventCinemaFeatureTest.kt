@@ -10,6 +10,7 @@ import movie.core.di.EventFeatureModule
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.nwk.CinemaService
+import movie.core.nwk.EndpointProvider
 import movie.core.nwk.model.CinemaResponse
 import movie.core.nwk.model.ResultsResponse
 import movie.core.preference.EventPreference
@@ -28,6 +29,7 @@ import kotlin.test.assertFails
 
 class EventCinemaFeatureTest {
 
+    private lateinit var provider: EndpointProvider
     private lateinit var sync: SyncPreference
     private lateinit var preference: EventPreference
     private lateinit var cinema: CinemaDao
@@ -45,7 +47,8 @@ class EventCinemaFeatureTest {
             on { previewCurrent }.thenReturn(Date())
             on { previewUpcoming }.thenReturn(Date())
         }
-        feature = EventFeatureModule().cinema(service, cinema, preference, sync)
+        provider = mock {}
+        feature = EventFeatureModule().cinema(service, cinema, preference, sync, provider)
     }
 
     @Test
@@ -152,6 +155,14 @@ class EventCinemaFeatureTest {
         service_responds_success()
         feature.get(null)
         verify(sync).cinema = any()
+    }
+
+    @Test
+    fun get_invalidates_if_imageMissing() = runTest {
+        database_responds_success { it.copy(image = null) }
+        service_responds_success()
+        feature.get(null)
+        verify(service).getCinemas()
     }
 
     // ---
