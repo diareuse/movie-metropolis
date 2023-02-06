@@ -15,7 +15,13 @@ data class CinemaViewFromFeature(
     override val city: String
         get() = cinema.city
     override val distance: String?
-        get() = cinema.distance?.let { "%.2fkm".format(it) }
+        get() = cinema.distance?.let {
+            when {
+                it < 1.0 -> "%.2f km".format(it)
+                it < 10.0 -> "%.1f km".format(it)
+                else -> "%.0f km".format(it)
+            }
+        }
     override val image: String?
         get() = cinema.image
 }

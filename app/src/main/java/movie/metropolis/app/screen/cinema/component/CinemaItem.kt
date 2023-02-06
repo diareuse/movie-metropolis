@@ -1,33 +1,34 @@
 package movie.metropolis.app.screen.cinema.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import movie.metropolis.app.R
-import movie.style.haptic.withHaptics
+import movie.style.AppImage
+import movie.style.layout.CutoutLayout
 import movie.style.layout.EmptyShapeLayout
+import movie.style.layout.PreviewLayout
+import movie.style.modifier.optional
+import movie.style.modifier.surface
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
@@ -39,15 +40,19 @@ fun CinemaItem(
     address: ImmutableList<String>,
     city: String,
     distance: String?,
+    image: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     CinemaItemLayout(
         modifier = modifier,
-        name = name,
-        address = address,
-        city = city,
-        distance = distance,
+        name = { Text(name) },
+        address = { Text(address.filter { it !in name }.joinToString("\n")) },
+        city = { if (city !in name) Text(city) },
+        distance = {
+            if (distance != null) Text(distance, modifier = Modifier.padding(16.dp, 8.dp))
+        },
+        image = { AppImage(modifier = Modifier.fillMaxSize(), url = image) },
         onClick = onClick
     )
 }
@@ -55,12 +60,12 @@ fun CinemaItem(
 @Composable
 fun CinemaItem(modifier: Modifier = Modifier) {
     CinemaItemLayout(
-        name = "#".repeat(17),
-        address = listOf("#".repeat(22)).immutable(),
-        city = "#".repeat(15),
-        distance = null,
+        name = { Text("#".repeat(17), modifier = Modifier.textPlaceholder(true)) },
+        address = { Text("#".repeat(22), modifier = Modifier.textPlaceholder(true)) },
+        city = { Text("#".repeat(15), modifier = Modifier.textPlaceholder(true)) },
+        distance = {},
         modifier = modifier,
-        textModifier = Modifier.textPlaceholder(true)
+        image = { AppImage(modifier = Modifier.fillMaxSize(), url = null) }
     )
 }
 
@@ -84,61 +89,51 @@ fun CinemaItemEmpty(
 
 @Composable
 private fun CinemaItemLayout(
-    name: String,
-    address: ImmutableList<String>,
-    city: String,
-    distance: String?,
+    image: @Composable () -> Unit,
+    city: @Composable () -> Unit,
+    name: @Composable () -> Unit,
+    address: @Composable () -> Unit,
+    distance: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    textModifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null
 ) {
-    Surface(
-        modifier = modifier,
-        color = Theme.color.container.background,
-        contentColor = Theme.color.content.background,
-        shape = Theme.container.card,
-        tonalElevation = 2.dp
+    CutoutLayout(
+        modifier = modifier.wrapContentHeight(unbounded = true),
+        color = Theme.color.container.primary,
+        shape = Theme.container.button,
+        overlay = distance
     ) {
-        Box(
-            modifier = Modifier.clickable(
-                enabled = onClick != null,
-                onClick = onClick?.withHaptics() ?: {}
-            )
+        Column(
+            modifier = Modifier
+                .optional(onClick) { clickable(onClick = it) }
+                .surface(tonalElevation = 8.dp)
         ) {
-            Image(
-                modifier = Modifier
-                    .size(100.dp)
-                    .align(Alignment.BottomEnd)
-                    .offset(24.dp, 24.dp)
-                    .alpha(.1f),
-                painter = painterResource(id = R.drawable.ic_cinema),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(LocalContentColor.current)
-            )
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp, 16.dp)
-            ) {
-                Text(
-                    modifier = textModifier,
-                    text = name,
-                    style = Theme.textStyle.title
-                )
-                if (city !in name) Text(
-                    modifier = textModifier,
-                    text = city
-                )
-                Text(
-                    modifier = textModifier,
-                    text = address.filter { it !in name }.joinToString("\n"),
-                    style = Theme.textStyle.body
-                )
-                if (distance != null)
-                    Text(
-                        modifier = textModifier,
-                        text = distance
+                    .height(150.dp)
+                    .surface(
+                        Theme.color.container.surface,
+                        Theme.container.card.copy(
+                            topStart = CornerSize(0f),
+                            topEnd = CornerSize(0f)
+                        )
                     )
+            ) {
+                image()
+            }
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(top = 16.dp, bottom = 24.dp)
+            ) {
+                ProvideTextStyle(Theme.textStyle.title) {
+                    name()
+                }
+                ProvideTextStyle(Theme.textStyle.caption) {
+                    city()
+                    address()
+                }
             }
         }
     }
@@ -146,36 +141,32 @@ private fun CinemaItemLayout(
 
 @Preview(showBackground = true)
 @Composable
-private fun Preview() {
-    Theme {
-        CinemaItem(
-            name = "Cinema Something Something",
-            address = listOf("Yes at 23/3", "4th floor").immutable(),
-            city = "Warsaw",
-            distance = "12.3km",
-            onClick = {}
-        )
-    }
+private fun Preview() = PreviewLayout {
+    CinemaItem(
+        name = "Cinema Something Something",
+        address = listOf("Yes at 23/3", "4th floor").immutable(),
+        city = "Warsaw",
+        distance = "12.3km",
+        image = "image.org",
+        onClick = {}
+    )
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-private fun PreviewNight() {
-    Theme {
-        CinemaItem(
-            name = "Cinema Something Something",
-            address = listOf("Yes at 23/3", "4th floor").immutable(),
-            city = "Warsaw",
-            distance = "12.3km",
-            onClick = {}
-        )
-    }
+private fun PreviewNight() = PreviewLayout {
+    CinemaItem(
+        name = "Cinema Something Something",
+        address = listOf("Yes at 23/3", "4th floor").immutable(),
+        city = "Warsaw",
+        distance = "12.3km",
+        image = "image.org",
+        onClick = {}
+    )
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun PreviewEmpty() {
-    Theme {
-        CinemaItemEmpty(modifier = Modifier.padding(16.dp))
-    }
+private fun PreviewEmpty() = PreviewLayout {
+    CinemaItemEmpty()
 }

@@ -98,6 +98,7 @@ private fun CinemasScreen(
                     address = it.address.immutable(),
                     city = it.city,
                     distance = it.distance,
+                    image = it.image,
                     onClick = { onClickCinema(it.id) }
                 )
             }
