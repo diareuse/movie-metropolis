@@ -1,18 +1,21 @@
 package movie.core
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
 inline fun <T> ResultCallback<T>.then(
     scope: CoroutineScope,
+    context: CoroutineContext = Dispatchers.Default,
     crossinline body: suspend (T) -> Unit
 ): ResultCallback<T> {
     var job: Job? = null
     return { result ->
         invoke(result)
         job?.cancel()
-        job = scope.launch {
+        job = scope.launch(context = context) {
             result.onSuccess { body(it) }
         }
     }
@@ -20,13 +23,14 @@ inline fun <T> ResultCallback<T>.then(
 
 inline fun <T> ResultCallback<T>.thenMap(
     scope: CoroutineScope,
+    context: CoroutineContext = Dispatchers.Default,
     crossinline body: suspend (T) -> T
 ): ResultCallback<T> {
     var job: Job? = null
     return { result ->
         invoke(result)
         job?.cancel()
-        job = scope.launch {
+        job = scope.launch(context = context) {
             invoke(result.mapCatching { body(it) })
         }
     }
@@ -49,10 +53,11 @@ inline fun <T> ResultCallback<T>.result(
 inline fun <T> ResultCallback<List<T>>.parallelize(
     scope: CoroutineScope,
     list: List<T>,
+    context: CoroutineContext = Dispatchers.Default,
     crossinline body: suspend (T) -> T
 ) {
     val updated = list.toMutableList()
-    for ((index, item) in list.withIndex()) scope.launch {
+    for ((index, item) in list.withIndex()) scope.launch(context = context) {
         updated[index] = body(item)
         invoke(Result.success(updated))
     }
