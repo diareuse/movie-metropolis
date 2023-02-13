@@ -27,6 +27,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
+import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -118,6 +119,14 @@ class EventDetailFeatureTest {
         assertEquals(color, output.spotColor)
     }
 
+    @Test
+    fun get_pollsNetwork_whenNotRecent() = runTest {
+        database_responds_success()
+        database_rating_responds_failure()
+        feature.get(item)
+        verify(rating, atLeastOnce()).get(anyVararg())
+    }
+
     // ---
 
     private fun analyzer_responds_success(): Int {
@@ -145,6 +154,11 @@ class EventDetailFeatureTest {
         val mediaViews = DataPool.MovieMediaViews.all()
         wheneverBlocking { detail.select(any()) }.thenReturn(detailView)
         wheneverBlocking { media.select(any()) }.thenReturn(mediaViews)
+        wheneverBlocking { ratings.isRecent(any()) }.thenReturn(true)
+    }
+
+    private fun database_rating_responds_failure() {
+        wheneverBlocking { ratings.isRecent(any()) }.thenReturn(false)
     }
 
     private fun service_responds_success(): MovieDetailResponse {

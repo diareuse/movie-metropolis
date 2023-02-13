@@ -38,7 +38,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 10,
+    version = 11,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -110,6 +110,16 @@ internal abstract class MovieDatabase : RoomDatabase() {
             // --- view
             database.execSQL("drop view `movie_preview_views`")
             database.execSQL("CREATE VIEW `movie_preview_views` AS select movies.id,movies.name,movies.url,movies.released_at,movies.duration,movie_previews.screening_from,movie_previews.description,movie_previews.directors,movie_previews.`cast`,movie_previews.country_of_origin,movie_previews.upcoming,movie_previews.genres from movies, movie_previews where movies.id=movie_previews.movie")
+        }
+    }
+
+    class Migration10to11 : Migration(10, 11) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS `movie_ratings_copy` (`movie` TEXT NOT NULL, `rating` INTEGER NOT NULL, `link_imdb` TEXT, `link_rt` TEXT, `link_csfd` TEXT, `created_at` INTEGER NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            database.execSQL("insert into `movie_ratings_copy` (`movie`,`rating`,`link_imdb`,`link_rt`,`link_csfd`,`created_at`) select `movie`,`rating`,`link_imdb`,`link_rt`,`link_csfd`,0 from movie_ratings")
+            database.execSQL("drop table `movie_ratings`")
+            database.execSQL("alter table `movie_ratings_copy` rename to `movie_ratings`")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_ratings_movie` ON `movie_ratings` (`movie`)")
         }
     }
 
