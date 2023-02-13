@@ -23,7 +23,6 @@ class ShowingFilterable {
 
     fun selectAll() {
         selected.addAll(languages)
-        selected.addAll(types)
     }
 
     fun toggle(filter: Filter) = when (val v = filter.value) {

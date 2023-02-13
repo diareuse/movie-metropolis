@@ -24,7 +24,7 @@ data class CinemaBookingViewFilter(
         get() = origin.cinema
     override val availability: Map<AvailabilityView.Type, List<AvailabilityView>>
         get() = origin.availability.filterKeys {
-            (it.language in languages) and (it.types intersect types).isNotEmpty()
+            (it.language in languages) and (types.isEmpty() || it.types.containsAll(types))
         }
 
 }
