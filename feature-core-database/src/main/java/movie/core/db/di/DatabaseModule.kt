@@ -25,6 +25,7 @@ class DatabaseModule {
             .databaseBuilder(context, MovieDatabase::class.java, name)
             .addMigrations(MovieDatabase.Migration2to3())
             .addMigrations(MovieDatabase.Migration7to8())
+            .addMigrations(MovieDatabase.Migration10to11())
             .build()
     }
 

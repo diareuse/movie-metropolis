@@ -23,6 +23,7 @@ import movie.core.EventDetailFeatureDatabase
 import movie.core.EventDetailFeatureFold
 import movie.core.EventDetailFeatureNetwork
 import movie.core.EventDetailFeatureNetworkRating
+import movie.core.EventDetailFeatureRatingFork
 import movie.core.EventDetailFeatureSpotColor
 import movie.core.EventDetailFeatureStoring
 import movie.core.EventPreviewFeature
@@ -183,14 +184,17 @@ internal class EventFeatureModule {
         rating: RatingProvider.Composed,
         analyzer: ImageAnalyzer
     ): EventDetailFeature {
+        var database: EventDetailFeature = EventDetailFeatureDatabase(detail, media)
+        database = EventDetailFeatureRatingFork(
+            success = database,
+            failure = EventDetailFeatureNetworkRating(database, ratings, rating),
+            rating = ratings
+        )
         var out: EventDetailFeature
         out = EventDetailFeatureNetwork(service)
         out = EventDetailFeatureStoring(out, movie, detail, media)
         out = EventDetailFeatureNetworkRating(out, ratings, rating)
-        out = EventDetailFeatureFold(
-            EventDetailFeatureDatabase(detail, media),
-            out
-        )
+        out = EventDetailFeatureFold(database, out)
         out = EventDetailFeatureSpotColor(out, analyzer)
         out = EventDetailFeatureCatch(out)
         return out

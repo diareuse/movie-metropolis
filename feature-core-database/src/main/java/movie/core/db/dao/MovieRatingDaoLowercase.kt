@@ -22,6 +22,10 @@ class MovieRatingDaoLowercase(
         return origin.select(id.lowercase())
     }
 
+    override suspend fun isRecent(id: String): Boolean {
+        return origin.isRecent(id.lowercase())
+    }
+
     // ---
 
     private fun MovieRatingStored.lowercase() = copy(movie = movie.lowercase())

@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.Date
 
 @Entity(
     tableName = "movie_ratings",
@@ -31,5 +32,7 @@ data class MovieRatingStored(
     @ColumnInfo("link_rt")
     val linkRottenTomatoes: String?,
     @ColumnInfo("link_csfd")
-    val linkCsfd: String?
+    val linkCsfd: String?,
+    @ColumnInfo("created_at")
+    val createdAt: Date = Date()
 )

@@ -25,6 +25,10 @@ class MovieRatingDaoPerformance(
         origin.select(id)
     }
 
+    override suspend fun isRecent(id: String) = tracer.trace("$Tag.is-recent") {
+        origin.isRecent(id)
+    }
+
     companion object {
         private const val Tag = "movie-rating"
     }
