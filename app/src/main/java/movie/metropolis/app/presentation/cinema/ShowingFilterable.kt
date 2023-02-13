@@ -32,11 +32,9 @@ class ShowingFilterable {
 
     fun getLanguages() = languages
         .map { Filter(it in selected, it) }
-        .sortedByDescending { it.isSelected }
 
     fun getTypes() = types
         .map { Filter(it in selected, it) }
-        .sortedByDescending { it.isSelected }
 
     fun getSelectedLanguages() = selected.filter { it in languages }.toSet()
     fun getSelectedTypes() = selected.filter { it in types }.toSet()
