@@ -2,6 +2,7 @@ package movie.metropolis.app.presentation.detail
 
 import movie.core.Recoverable
 import movie.core.ResultCallback
+import movie.core.result
 import movie.log.flatMapCatching
 import movie.log.log
 import movie.log.logSevere
@@ -17,34 +18,26 @@ class MovieFacadeRecover(
 ) : MovieFacade by origin, Recoverable {
 
     override suspend fun getAvailableFrom(callback: ResultCallback<Date>) {
-        runCatchingResult(callback) {
-            origin.getAvailableFrom { result ->
-                it(result.logSevere())
-            }
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getAvailableFrom(it)
         }
     }
 
     override suspend fun getMovie(callback: ResultCallback<MovieDetailView>) {
-        runCatchingResult(callback) {
-            origin.getMovie { result ->
-                it(result.logSevere())
-            }
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getMovie(it)
         }
     }
 
     override suspend fun getPoster(callback: ResultCallback<ImageView>) {
-        runCatchingResult(callback) {
-            origin.getPoster { result ->
-                it(result.logSevere())
-            }
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getPoster(it)
         }
     }
 
     override suspend fun getTrailer(callback: ResultCallback<VideoView>) {
-        runCatchingResult(callback) {
-            origin.getTrailer { result ->
-                it(result.logSevere())
-            }
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getTrailer(it)
         }
     }
 
@@ -53,10 +46,8 @@ class MovieFacadeRecover(
         latitude: Double,
         longitude: Double,
         callback: ResultCallback<List<CinemaBookingView>>
-    ) = runCatchingResult(callback) {
-        origin.getShowings(date, latitude, longitude) { result ->
-            it(result.logSevere())
-        }
+    ) = runCatchingResult(callback.result { it.logSevere() }) {
+        origin.getShowings(date, latitude, longitude, it)
     }
 
     override suspend fun getOptions() =

@@ -2,6 +2,7 @@ package movie.metropolis.app.presentation.cinema
 
 import movie.core.Recoverable
 import movie.core.ResultCallback
+import movie.core.result
 import movie.log.flatMapCatching
 import movie.log.log
 import movie.log.logSevere
@@ -15,18 +16,14 @@ class CinemaFacadeRecover(
 ) : CinemaFacade by origin, Recoverable {
 
     override suspend fun getCinema(callback: ResultCallback<CinemaView>) {
-        runCatchingResult(callback) {
-            origin.getCinema { result ->
-                it(result.logSevere())
-            }
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getCinema(it)
         }
     }
 
     override suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>) {
-        runCatchingResult(callback) {
-            origin.getShowings(date) { result ->
-                it(result.logSevere())
-            }
+        runCatchingResult(callback.result { it.logSevere() }) {
+            origin.getShowings(date, it)
         }
     }
 
