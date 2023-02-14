@@ -12,11 +12,9 @@ class UserBookingFeatureCalendar(
 ) : UserBookingFeature by origin {
 
     override suspend fun get(callback: ResultCallback<List<Booking>>) {
-        var value: Result<List<Booking>> = Result.failure(IllegalStateException())
-        origin.get {
-            value = it
-            callback(it)
-        }
+        val value = MutableResult {
+            origin.get(callback.collectInto(it))
+        }.value
         val bookings = value.getOrNull() ?: return
         val calendar = preference.calendarId ?: return
         val writer = writer.create(calendar)
