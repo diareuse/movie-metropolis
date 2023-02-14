@@ -63,6 +63,21 @@ inline fun <T> ResultCallback<List<T>>.parallelize(
     }
 }
 
+inline fun <T> ResultCallback<List<T>>.parallelizeContinuous(
+    scope: CoroutineScope,
+    list: List<T>,
+    context: CoroutineContext = Dispatchers.Default,
+    crossinline body: suspend (T, callback: (T) -> Unit) -> Unit
+) {
+    val updated = list.toMutableList()
+    for ((index, item) in list.withIndex()) scope.launch(context = context) {
+        body(item) {
+            updated[index] = it
+        }
+        invoke(Result.success(updated))
+    }
+}
+
 fun <T> ResultCallback<T>.collectInto(value: MutableResult<T>): ResultCallback<T> {
     return {
         value.value = it

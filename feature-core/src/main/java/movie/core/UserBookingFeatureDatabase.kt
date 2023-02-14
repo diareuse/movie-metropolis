@@ -1,10 +1,10 @@
 package movie.core
 
+import kotlinx.coroutines.coroutineScope
 import movie.core.EventCinemaFeature.Companion.get
-import movie.core.EventDetailFeature.Companion.get
 import movie.core.adapter.BookingActiveFromDatabase
 import movie.core.adapter.BookingExpiredFromDatabase
-import movie.core.adapter.MovieFromId
+import movie.core.adapter.MovieDetailFromId
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.model.BookingSeatsView
@@ -23,14 +23,22 @@ class UserBookingFeatureDatabase(
     private val cinema: EventCinemaFeature,
 ) : UserBookingFeature {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) {
-        val output = booking.selectAll().mapNotNull { booking ->
-            val movie = movie.get(MovieFromId(booking.movieId)).getOrNull()
-            val cinema = cinema.get(null).getOrNull()?.firstOrNull { it.id == booking.cinemaId }
-            if (movie == null || cinema == null) return@mapNotNull null
+    override suspend fun get(callback: ResultCallback<List<Booking>>) = coroutineScope {
+        val cinemas = cinema.get(null).getOrNull()
+        val bookings = booking.selectAll().mapNotNull { booking ->
+            val movie = MovieDetailFromId(booking.movieId)
+            val cinema = cinemas?.firstOrNull { it.id == booking.cinemaId }
+                ?: return@mapNotNull null
             booking.asBooking(movie, cinema)
         }
-        callback(Result.success(output))
+        callback(Result.success(bookings))
+        callback.parallelizeContinuous(this, bookings) { booking, callback ->
+            movie.get(booking.movie) { result ->
+                result.onSuccess { movie ->
+                    callback(booking.withDetail(movie))
+                }
+            }
+        }
     }
 
     override fun invalidate() = Unit
@@ -50,6 +58,13 @@ class UserBookingFeatureDatabase(
         else -> BookingActiveFromDatabase(this, movie, cinema, getSeats(this))
     }
 
+    private fun Booking.withDetail(
+        movie: MovieDetail
+    ) = when (this) {
+        is Booking.Active -> BookingActiveWithDetail(this, movie)
+        is Booking.Expired -> BookingExpiredWithDetail(this, movie)
+    }
+
     private suspend fun getSeats(booking: BookingStored): List<BookingSeatsView> {
         return seats.select(booking.id)
     }
@@ -59,3 +74,13 @@ class UserBookingFeatureDatabase(
     }
 
 }
+
+data class BookingActiveWithDetail(
+    private val origin: Booking.Active,
+    override val movie: MovieDetail
+) : Booking.Active by origin
+
+data class BookingExpiredWithDetail(
+    private val origin: Booking.Expired,
+    override val movie: MovieDetail
+) : Booking.Expired by origin
