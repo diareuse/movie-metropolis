@@ -1,16 +1,24 @@
 package movie.metropolis.app.screen.order
 
+import android.graphics.Bitmap
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
@@ -44,17 +53,25 @@ fun OrderScreen(
     onBackClick: () -> Unit
 ) {
     val request by viewModel.request.collectAsState()
+    val isCompleted by viewModel.isCompleted.collectAsState()
     OrderScreen(
         request = request,
-        onBackClick = onBackClick
+        onBackClick = onBackClick,
+        onUrlChanged = viewModel::updateUrl
     )
+    LaunchedEffect(isCompleted) {
+        if (!isCompleted) return@LaunchedEffect
+        // todo add navigation to support screen
+        // todo add invalidation
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderScreen(
     request: Loadable<RequestView>,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onUrlChanged: (String?) -> Unit
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -70,18 +87,39 @@ fun OrderScreen(
             )
         }
     ) { padding ->
-        request.onSuccess { request ->
-            WebView(request = request, modifier = Modifier.padding(padding))
-        }.onLoading {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+        Box {
+            var progress by remember { mutableStateOf(0) }
+            AnimatedVisibility(
+                modifier = Modifier.padding(padding),
+                visible = progress in 1 until 100,
+                enter = slideInVertically(),
+                exit = slideOutVertically()
             ) {
-                CircularProgressIndicator()
+                LinearProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(4.dp),
+                    progress = progress / 100f
+                )
             }
-        }.onFailure {
-            LaunchedEffect(Unit) {
-                onBackClick()
+            request.onSuccess { request ->
+                WebView(
+                    request = request,
+                    modifier = Modifier.padding(padding),
+                    onProgressChanged = { progress = it },
+                    onUrlChanged = onUrlChanged
+                )
+            }.onLoading {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }.onFailure {
+                LaunchedEffect(Unit) {
+                    onBackClick()
+                }
             }
         }
     }
@@ -91,6 +129,8 @@ fun OrderScreen(
 fun WebView(
     request: RequestView,
     modifier: Modifier = Modifier,
+    onProgressChanged: (Int) -> Unit,
+    onUrlChanged: (String?) -> Unit
 ) {
     val backPress = LocalOnBackPressedDispatcherOwner.current
     val backgroundColor = Theme.color.container.background.toArgb()
@@ -109,7 +149,16 @@ fun WebView(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
-                webViewClient = WebViewClient()
+                webViewClient = object : WebViewClient() {
+                    override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                        onUrlChanged(url)
+                    }
+                }
+                webChromeClient = object : WebChromeClient() {
+                    override fun onProgressChanged(view: WebView?, newProgress: Int) {
+                        onProgressChanged(newProgress)
+                    }
+                }
                 settings.apply {
                     javaScriptEnabled = true
                     allowFileAccess = false

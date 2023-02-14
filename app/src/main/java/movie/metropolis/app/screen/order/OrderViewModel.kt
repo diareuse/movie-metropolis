@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.order.OrderFacade
+import movie.metropolis.app.presentation.order.OrderFacade.Companion.isCompletedFlow
 import movie.metropolis.app.presentation.order.OrderFacade.Companion.requestFlow
 import movie.metropolis.app.util.decodeBase64
 import movie.metropolis.app.util.retainStateIn
@@ -15,7 +16,7 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 class OrderViewModel(
-    facade: OrderFacade
+    private val facade: OrderFacade
 ) : ViewModel() {
 
     @Inject
@@ -28,5 +29,12 @@ class OrderViewModel(
 
     val request = facade.requestFlow
         .retainStateIn(viewModelScope, Loadable.loading())
+
+    val isCompleted = facade.isCompletedFlow
+        .retainStateIn(viewModelScope, false)
+
+    fun updateUrl(url: String?) {
+        facade.setUrl(url.orEmpty())
+    }
 
 }
