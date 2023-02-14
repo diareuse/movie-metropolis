@@ -67,14 +67,14 @@ inline fun <T> ResultCallback<List<T>>.parallelizeContinuous(
     scope: CoroutineScope,
     list: List<T>,
     context: CoroutineContext = Dispatchers.Default,
-    crossinline body: suspend (T, callback: (T) -> Unit) -> Unit
+    crossinline body: suspend (T, callback: suspend (T) -> Unit) -> Unit
 ) {
     val updated = list.toMutableList()
     for ((index, item) in list.withIndex()) scope.launch(context = context) {
         body(item) {
             updated[index] = it
+            invoke(Result.success(updated))
         }
-        invoke(Result.success(updated))
     }
 }
 
