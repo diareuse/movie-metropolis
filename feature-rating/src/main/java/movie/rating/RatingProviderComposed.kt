@@ -14,10 +14,12 @@ internal class RatingProviderComposed(
 
     override suspend fun get(vararg descriptors: MovieDescriptor): ComposedRating {
         val output = mutableMapOf<RatingType, AvailableRating>()
+        val original = descriptors.filterIsInstance<MovieDescriptor.Original>().toTypedArray()
+        val local = descriptors.filterIsInstance<MovieDescriptor.Local>().toTypedArray()
         coroutineScope {
-            launch { output[Csfd] = csfd.get(descriptors = descriptors) ?: return@launch }
-            launch { output[Imdb] = imdb.get(descriptors = descriptors) ?: return@launch }
-            launch { output[RottenTomatoes] = rtt.get(descriptors = descriptors) ?: return@launch }
+            launch { output[Csfd] = csfd.get(descriptors = local) ?: return@launch }
+            launch { output[Imdb] = imdb.get(descriptors = original) ?: return@launch }
+            launch { output[RottenTomatoes] = rtt.get(descriptors = original) ?: return@launch }
         }
         return ComposedRatingMap(output)
     }

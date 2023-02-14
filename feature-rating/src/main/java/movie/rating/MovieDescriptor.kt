@@ -1,15 +1,16 @@
 package movie.rating
 
-class MovieDescriptor(
-    name: String,
-    val year: Int
-) {
+sealed class MovieDescriptor(name: String) {
 
+    abstract val year: Int
     val name = name
         .replace(Regex("\\d[Dd][Xx]?(\\s*-\\s*(sub|dub))?"), "")
         .replace("the", "", true)
         .replace("  ", " ")
         .trim()
+
+    class Original(name: String, override val year: Int) : MovieDescriptor(name)
+    class Local(name: String, override val year: Int) : MovieDescriptor(name)
 
     operator fun component1() = name
     operator fun component2() = year

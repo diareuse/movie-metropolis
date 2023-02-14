@@ -22,16 +22,12 @@ class EventDetailFeatureNetworkRating(
                 time = detail.releasedAt
                 get(Calendar.YEAR)
             }
-            val descriptor = MovieDescriptor(detail.originalName, year)
-            val descriptorLocal = MovieDescriptor(detail.name, year)
-            val descriptorLeanback = MovieDescriptor(detail.originalName, year - 1)
-            val descriptorLeanbackLocal = MovieDescriptor(detail.name, year - 1)
+            val descriptor = MovieDescriptor.Original(detail.originalName, year)
+            val descriptorLocal = MovieDescriptor.Local(detail.name, year)
             val rating = getRatingStored(
                 detail.id,
                 descriptor,
-                descriptorLocal,
-                descriptorLeanback,
-                descriptorLeanbackLocal
+                descriptorLocal
             )
             ratings.insertOrUpdate(rating)
             MovieDetailWithRating(detail, rating)
