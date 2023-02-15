@@ -7,7 +7,9 @@ import kotlin.test.assertEquals
 
 class RatingProviderCsfdTest : AbstractRatingTest() {
 
-    override fun prepare() {}
+    override fun prepare() {
+        descriptor = MovieDescriptor.Local("Avatar: The Way of Water", 2022)
+    }
 
     override fun respond(request: HttpRequestData): String {
         if (!request.url.host.contains("csfd"))

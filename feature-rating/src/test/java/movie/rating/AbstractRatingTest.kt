@@ -35,7 +35,7 @@ abstract class AbstractRatingTest {
             imdb = module.imdbRating(client),
             csfd = module.csfdRating(client)
         )
-        descriptor = MovieDescriptor("Avatar: The Way of Water", 2022)
+        descriptor = MovieDescriptor.Original("Avatar: The Way of Water", 2022)
         prepare()
     }
 
