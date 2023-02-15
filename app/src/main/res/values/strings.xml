@@ -70,7 +70,7 @@
     <string name="empty_movie_main">Movie will appear here once it becomes available. Available movies are refreshed on daily basis.</string>
     <string name="empty_movie_main_title">Nothing\'s here</string>
     <string name="error_movie_main_title">Oh no!</string>
-    <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, ok?</string>
+    <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, OK?</string>
     <string name="empty_cinema">No cinema appears to be nearby, if you\'d like to see all cinemas turn off your location or disable location permission for this app. Otherwise readjust maximum distance in settings.</string>
     <string name="error_cinema">Cinemas cannot be shown due to an internal issue</string>
     <string name="nearby_cinemas">Nearby Cinemas</string>
@@ -78,7 +78,7 @@
     <string name="downloading_update">Downloading update…</string>
     <string name="share_method">Your ticket is being imported…\nPlease wait</string>
     <string name="settings_only_movies_title">Show only movies</string>
-    <string name="settings_only_movies_description">If checked, app will show only movies and hides operas, concers or similar events.</string>
+    <string name="settings_only_movies_description">If checked, app will show only movies and hides operas, concerts or similar events.</string>
     <string name="action">Action</string>
     <string name="adventure">Adventure</string>
     <string name="animation">Animated</string>
@@ -106,4 +106,8 @@
     <string name="war">War</string>
     <string name="western">Western</string>
     <string name="other">Other</string>
+    <string name="order_complete_title">Enjoy your movie!</string>
+    <string name="order_complete_message">Your order is complete and tickets will be available in-app momentarily.</string>
+    <string name="support_title">Support the mission</string>
+    <string name="support_bottom_line_caption">Please note that the application is completely free of charge and not sponsored by Cinema City. Offers above are tips to the developers of this application.</string>
 </resources>

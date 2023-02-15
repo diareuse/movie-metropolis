@@ -1,14 +1,7 @@
 package movie.metropolis.app.screen
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.animation.*
+import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -24,6 +17,7 @@ import movie.metropolis.app.screen.cinema.CinemaScreen
 import movie.metropolis.app.screen.detail.MovieScreen
 import movie.metropolis.app.screen.home.HomeScreen
 import movie.metropolis.app.screen.order.OrderScreen
+import movie.metropolis.app.screen.order.complete.OrderCompleteScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
@@ -94,7 +88,7 @@ fun Navigation(
             CinemaScreen(
                 onBackClick = controller::navigateUp,
                 onBookingClick = { url ->
-                    controller.navigate("/order/${url.encodeBase64()}")
+                    controller.navigate("/order?url=${url.encodeBase64()}")
                 }
             )
         }
@@ -105,13 +99,25 @@ fun Navigation(
             MovieScreen(
                 onBackClick = controller::navigateUp,
                 onBookingClick = { url ->
-                    controller.navigate("/order/${url.encodeBase64()}")
+                    controller.navigate("/order?url=${url.encodeBase64()}")
                 }
             )
         }
-        composable("/order/{url}") {
+        composable("/order?url={url}") {
             OrderScreen(
-                onBackClick = controller::navigateUp
+                onBackClick = controller::navigateUp,
+                onCompleted = {
+                    controller.popBackStack("/order?url=${it.arguments?.getString("url")}", true)
+                    controller.navigate("/order/success")
+                }
+            )
+        }
+        composable("/order/success") {
+            OrderCompleteScreen(
+                onBackClick = {
+                    controller.popBackStack("/home", true)
+                    controller.navigate("/home?screen=tickets")
+                }
             )
         }
         composable("/user/settings") {
