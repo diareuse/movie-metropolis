@@ -22,7 +22,7 @@ android {
     buildTypes {
 
         debug {
-            applicationIdSuffix ".dev"
+            //applicationIdSuffix ".dev"
             manifestPlaceholders += [
                     debug  : "true",
                     release: "false"

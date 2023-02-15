@@ -17,6 +17,7 @@ import movie.core.UserBookingFeature
 import movie.core.UserCredentialFeature
 import movie.core.UserDataFeature
 import movie.core.preference.EventPreference
+import movie.metropolis.app.feature.billing.BillingFacade
 import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.booking.BookingFacadeFromFeature
 import movie.metropolis.app.presentation.booking.BookingFacadeRecover
@@ -39,6 +40,8 @@ import movie.metropolis.app.presentation.listing.ListingFacadeFromFeature
 import movie.metropolis.app.presentation.listing.ListingFacadeRecover
 import movie.metropolis.app.presentation.login.LoginFacade
 import movie.metropolis.app.presentation.login.LoginFacadeFromFeature
+import movie.metropolis.app.presentation.order.OrderCompleteFacade
+import movie.metropolis.app.presentation.order.OrderCompleteFacadeFromFeature
 import movie.metropolis.app.presentation.order.OrderFacade
 import movie.metropolis.app.presentation.order.OrderFacadeFromFeature
 import movie.metropolis.app.presentation.order.OrderFacadeRecover
@@ -194,6 +197,13 @@ class FacadeModule {
         val facade: SetupFacade
         facade = SetupFacadeFromFeature(feature)
         return facade
+    }
+
+    @Provides
+    fun orderComplete(
+        facade: BillingFacade
+    ): OrderCompleteFacade {
+        return OrderCompleteFacadeFromFeature(facade)
     }
 
 }

@@ -103,4 +103,8 @@
     <string name="western">Westernový</string>
     <string name="sci_fi">Vědecko Fantastický</string>
     <string name="other">Jiné</string>
+    <string name="order_complete_title">Užij si film!</string>
+    <string name="order_complete_message">Tvoje objednávka je dokončená a lístky budou k dispozici za pár chvil v appce.</string>
+    <string name="support_title">Podpoř misi</string>
+    <string name="support_bottom_line_caption">Pamatuj prosím na to, že aplikace je kompletně zdarma a Cinema City ji nesponzoruje. Nabídky nahoře jsou dýška pro vývojáře téhle appky.</string>
 </resources>
