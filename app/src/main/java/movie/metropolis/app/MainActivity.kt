@@ -9,11 +9,9 @@ import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.animation.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.*
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
@@ -22,6 +20,7 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
+import movie.metropolis.app.screen.Route
 import movie.style.haptic.PlatformHapticFeedback
 import movie.style.theme.Theme
 import java.io.File
@@ -95,14 +94,14 @@ class MainActivity : AppCompatActivity() {
     private fun navigateIfNecessary(controller: NavHostController) {
         val intent = intent.action ?: return
         if (intent != Intent.ACTION_APPLICATION_PREFERENCES) return
-        controller.navigate("/user/settings")
+        controller.navigate(Route.Settings.destination())
     }
 
     companion object {
 
         fun tickets(context: Context) = Intent(context, MainActivity::class.java)
             .setAction(Intent.ACTION_VIEW)
-            .setData("app://movie.metropolis/home?screen=tickets".toUri())
+            .setData(Route.Home.deepLink(Route.Tickets.destination()))
 
     }
 

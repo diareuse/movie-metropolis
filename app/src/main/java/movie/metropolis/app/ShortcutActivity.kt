@@ -3,14 +3,14 @@ package movie.metropolis.app
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.net.toUri
+import movie.metropolis.app.screen.Route
 
 class ShortcutActivity : Activity() {
 
     private val route
         get() = when (intent.action) {
-            "movie.metropolis.app.ACTION_TICKETS" -> "home?screen=tickets"
-            else -> "home"
+            "movie.metropolis.app.ACTION_TICKETS" -> Route.Home.deepLink(Route.Tickets.destination())
+            else -> Route.Home.deepLink()
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +18,7 @@ class ShortcutActivity : Activity() {
 
         val intent = Intent(this, MainActivity::class.java)
             .setAction(Intent.ACTION_VIEW)
-            .setData("app://movie.metropolis/$route".toUri())
+            .setData(route)
             .setPackage(packageName)
         overridePendingTransition(0, 0)
         startActivity(intent)

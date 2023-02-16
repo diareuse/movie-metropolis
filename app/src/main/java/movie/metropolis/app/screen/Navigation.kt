@@ -7,8 +7,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.navArgument
-import androidx.navigation.navDeepLink
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -24,9 +22,6 @@ import movie.metropolis.app.screen.profile.UserScreen
 import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.setup.SetupScreen
 import movie.metropolis.app.screen.setup.SetupViewModel
-import movie.metropolis.app.util.encodeBase64
-
-private const val uri = "app://movie.metropolis"
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -37,92 +32,109 @@ fun Navigation(
     val requiresSetup by setupViewModel.requiresSetup.collectAsState()
     AnimatedNavHost(
         navController = controller,
-        startDestination = if (requiresSetup) "setup" else "home?screen={screen}",
+        startDestination = if (requiresSetup) Route.Setup() else Route.Home(),
         enterTransition = { slideInHorizontally { it } },
         exitTransition = { fadeOut() + slideOutHorizontally() },
         popEnterTransition = { fadeIn() + slideInHorizontally() },
         popExitTransition = { slideOutHorizontally { it } }
     ) {
-        composable("setup") {
+        composable(
+            route = Route.Setup(),
+            deepLinks = Route.Setup.deepLinks
+        ) {
             SetupScreen(
                 viewModel = setupViewModel,
                 onNavigateHome = {
-                    controller.popBackStack("setup", true)
-                    controller.navigate("home")
+                    controller.popBackStack(Route.Setup(), true)
+                    controller.navigate(Route.Home.destination())
                 }
             )
         }
         composable(
-            route = "home?screen={screen}",
-            arguments = listOf(navArgument("screen") { defaultValue = "movies" }),
-            deepLinks = listOf(navDeepLink { uriPattern = "$uri/home?screen={screen}" })
+            route = Route.Home(),
+            arguments = Route.Home.arguments,
+            deepLinks = Route.Home.deepLinks
         ) {
+            val args = remember(it) { Route.Home.Arguments(it) }
             HomeScreen(
-                startWith = it.arguments?.getString("screen"),
+                startWith = args.screen,
                 onClickMovie = { id, upcoming ->
-                    controller.navigate("movies/${id}?upcoming=$upcoming")
+                    controller.navigate(Route.Movie.destination(id, upcoming))
                 },
-                onClickCinema = { id -> controller.navigate("cinemas/$id") },
-                onClickUser = { controller.navigate("user") },
-                onClickLogin = { controller.navigate("user/login") }
+                onClickCinema = { id -> controller.navigate(Route.Cinema.destination(id)) },
+                onClickUser = { controller.navigate(Route.User.destination()) },
+                onClickLogin = { controller.navigate(Route.Login.destination()) }
             )
         }
-        composable("user") {
+        composable(
+            route = Route.User(),
+            deepLinks = Route.User.deepLinks
+        ) {
             UserScreen(
-                onNavigateToSettings = { controller.navigate("user/settings") },
+                onNavigateToSettings = { controller.navigate(Route.Settings.destination()) },
                 onNavigateBack = controller::navigateUp
             )
         }
-        composable("user/login") {
+        composable(
+            route = Route.Login(),
+            deepLinks = Route.Login.deepLinks
+        ) {
             LoginScreen(
                 onNavigateHome = {
-                    controller.popBackStack("home", true)
-                    controller.navigate("home")
+                    controller.popBackStack(Route.Home(), true)
+                    controller.navigate(Route.Home.destination())
                 },
                 onBackClick = controller::navigateUp
             )
         }
         composable(
-            route = "cinemas/{cinema}",
-            deepLinks = listOf(navDeepLink { uriPattern = "$uri/cinemas/{cinema}" })
+            route = Route.Cinema(),
+            arguments = Route.Cinema.arguments,
+            deepLinks = Route.Cinema.deepLinks
         ) {
             CinemaScreen(
                 onBackClick = controller::navigateUp,
-                onBookingClick = { url ->
-                    controller.navigate("order/${url.encodeBase64()}")
+                onBookingClick = { url -> controller.navigate(Route.Order.destination(url)) }
+            )
+        }
+        composable(
+            route = Route.Movie(),
+            arguments = Route.Movie.arguments,
+            deepLinks = Route.Movie.deepLinks
+        ) {
+            MovieScreen(
+                onBackClick = controller::navigateUp,
+                onBookingClick = { url -> controller.navigate(Route.Order.destination(url)) }
+            )
+        }
+        composable(
+            route = Route.OrderComplete(),
+            deepLinks = Route.OrderComplete.deepLinks
+        ) {
+            OrderCompleteScreen(
+                onBackClick = {
+                    controller.popBackStack(Route.Home(), true)
+                    controller.navigate(Route.Home.destination(Route.Tickets.destination()))
                 }
             )
         }
         composable(
-            route = "movies/{movie}?upcoming={upcoming}",
-            deepLinks = listOf(navDeepLink { uriPattern = "$uri/movies/{movie}" })
+            route = Route.Order(),
+            arguments = Route.Order.arguments,
+            deepLinks = Route.Order.deepLinks
         ) {
-            MovieScreen(
-                onBackClick = controller::navigateUp,
-                onBookingClick = { url ->
-                    controller.navigate("order/${url.encodeBase64()}")
-                }
-            )
-        }
-        composable("order/success") {
-            OrderCompleteScreen(
-                onBackClick = {
-                    controller.popBackStack("home", true)
-                    controller.navigate("home?screen=tickets")
-                }
-            )
-        }
-        composable("order/{url}") {
             OrderScreen(
                 onBackClick = controller::navigateUp,
                 onCompleted = {
-                    val url = it.arguments?.getString("url")
-                    controller.popBackStack("order/${url}", true)
-                    controller.navigate("order/success")
+                    controller.popBackStack(Route.Order(), true)
+                    controller.navigate(Route.OrderComplete.destination())
                 }
             )
         }
-        composable("user/settings") {
+        composable(
+            route = Route.Settings(),
+            deepLinks = Route.Settings.deepLinks
+        ) {
             SettingsScreen(
                 onBackClick = controller::navigateUp
             )
