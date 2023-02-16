@@ -4,6 +4,7 @@ import kotlinx.coroutines.test.runTest
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.presentation.OnChangedListener
+import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
 import org.mockito.internal.verification.NoInteractions
@@ -16,9 +17,11 @@ import kotlin.test.assertTrue
 class OrderFacadeTest : FeatureTest() {
 
     private lateinit var facade: OrderFacade
+    private lateinit var bookingFacade: BookingFacade
 
     override fun prepare() {
-        facade = FacadeModule().order(credentials).create("url")
+        bookingFacade = mock()
+        facade = FacadeModule().order(credentials, bookingFacade).create("url")
     }
 
     @Test
@@ -73,6 +76,12 @@ class OrderFacadeTest : FeatureTest() {
         facade.removeOnChangedListener(listener)
         facade.setUrl("")
         verify(listener, NoInteractions()).onChanged()
+    }
+
+    @Test
+    fun setUrl_invalidatesCache() = runTest {
+        facade.setUrl("https://sr.cinemacity.cz/S_CZ_1052/OrderCompletePageRes.aspx?dtticks=123456789&ec=123456")
+        verify(bookingFacade).refresh()
     }
 
     // ---

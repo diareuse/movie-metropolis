@@ -44,6 +44,7 @@ import movie.metropolis.app.presentation.order.OrderCompleteFacade
 import movie.metropolis.app.presentation.order.OrderCompleteFacadeFromFeature
 import movie.metropolis.app.presentation.order.OrderFacade
 import movie.metropolis.app.presentation.order.OrderFacadeFromFeature
+import movie.metropolis.app.presentation.order.OrderFacadeInvalidateBooking
 import movie.metropolis.app.presentation.order.OrderFacadeRecover
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.presentation.profile.ProfileFacadeCaching
@@ -153,9 +154,13 @@ class FacadeModule {
     }
 
     @Provides
-    fun order(user: UserCredentialFeature): OrderFacade.Factory = OrderFacade.Factory {
+    fun order(
+        user: UserCredentialFeature,
+        booking: BookingFacade
+    ): OrderFacade.Factory = OrderFacade.Factory {
         var facade: OrderFacade
         facade = OrderFacadeFromFeature(it, user)
+        facade = OrderFacadeInvalidateBooking(facade, booking)
         facade = OrderFacadeRecover(facade)
         facade
     }

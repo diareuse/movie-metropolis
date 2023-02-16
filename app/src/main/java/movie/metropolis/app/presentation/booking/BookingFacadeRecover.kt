@@ -17,7 +17,7 @@ class BookingFacadeRecover(
         }
     }
 
-    override suspend fun refresh() {
+    override fun refresh() {
         origin.runCatching { refresh() }.logSevere()
     }
 
