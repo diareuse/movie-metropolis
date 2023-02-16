@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -36,97 +37,92 @@ fun Navigation(
     val requiresSetup by setupViewModel.requiresSetup.collectAsState()
     AnimatedNavHost(
         navController = controller,
-        startDestination = if (requiresSetup) "/setup" else "/home",
+        startDestination = if (requiresSetup) "setup" else "home?screen={screen}",
         enterTransition = { slideInHorizontally { it } },
         exitTransition = { fadeOut() + slideOutHorizontally() },
         popEnterTransition = { fadeIn() + slideInHorizontally() },
         popExitTransition = { slideOutHorizontally { it } }
     ) {
-        composable("/setup") {
+        composable("setup") {
             SetupScreen(
                 viewModel = setupViewModel,
                 onNavigateHome = {
-                    controller.popBackStack("/setup", true)
-                    controller.navigate("/home")
+                    controller.popBackStack("setup", true)
+                    controller.navigate("home")
                 }
             )
         }
         composable(
-            route = "/home",
+            route = "home?screen={screen}",
             arguments = listOf(navArgument("screen") { defaultValue = "movies" }),
             deepLinks = listOf(navDeepLink { uriPattern = "$uri/home?screen={screen}" })
         ) {
             HomeScreen(
                 startWith = it.arguments?.getString("screen"),
                 onClickMovie = { id, upcoming ->
-                    controller.navigate("/movies/${id}?upcoming=$upcoming")
+                    controller.navigate("movies/${id}?upcoming=$upcoming")
                 },
-                onClickCinema = { id -> controller.navigate("/cinemas/$id") },
-                onClickUser = { controller.navigate("/user") },
-                onClickLogin = { controller.navigate("/user/login") }
+                onClickCinema = { id -> controller.navigate("cinemas/$id") },
+                onClickUser = { controller.navigate("user") },
+                onClickLogin = { controller.navigate("user/login") }
             )
         }
-        composable("/user") {
+        composable("user") {
             UserScreen(
-                onNavigateToSettings = { controller.navigate("/user/settings") },
+                onNavigateToSettings = { controller.navigate("user/settings") },
                 onNavigateBack = controller::navigateUp
             )
         }
-        composable("/user/login") {
+        composable("user/login") {
             LoginScreen(
                 onNavigateHome = {
-                    controller.popBackStack("/home", true)
-                    controller.navigate("/home")
+                    controller.popBackStack("home", true)
+                    controller.navigate("home")
                 },
                 onBackClick = controller::navigateUp
             )
         }
         composable(
-            route = "/cinemas/{cinema}",
+            route = "cinemas/{cinema}",
             deepLinks = listOf(navDeepLink { uriPattern = "$uri/cinemas/{cinema}" })
         ) {
             CinemaScreen(
                 onBackClick = controller::navigateUp,
                 onBookingClick = { url ->
-                    controller.navigate("/order?url=${url.encodeBase64()}")
+                    controller.navigate("order/${url.encodeBase64()}")
                 }
             )
         }
         composable(
-            route = "/movies/{movie}?upcoming={upcoming}",
+            route = "movies/{movie}?upcoming={upcoming}",
             deepLinks = listOf(navDeepLink { uriPattern = "$uri/movies/{movie}" })
         ) {
             MovieScreen(
                 onBackClick = controller::navigateUp,
                 onBookingClick = { url ->
-                    controller.navigate("/order?url=${url.encodeBase64()}")
+                    controller.navigate("order/${url.encodeBase64()}")
                 }
             )
         }
-        composable("/order?url={url}") {
+        composable("order/success") {
+            OrderCompleteScreen(
+                onBackClick = {
+                    controller.popBackStack("home", true)
+                    controller.navigate("home?screen=tickets")
+                }
+            )
+        }
+        composable("order/{url}") {
             OrderScreen(
                 onBackClick = controller::navigateUp,
                 onCompleted = {
-                    controller.navigate("/order/success") {
-                        popUpTo("/order?url=${it.arguments?.getString("url")}") {
-                            inclusive = true
-                        }
-                    }
+                    val url = it.arguments?.getString("url")
+                    controller.popBackStack("order/${url}", true)
+                    controller.navigate("order/success")
                 }
             )
         }
-        composable("/order/success") {
-            OrderCompleteScreen(
-                onBackClick = {
-                    controller.navigate("/home?screen=tickets") {
-                        popUpTo("/home") {
-                            inclusive = true
-                        }
-                    }
-                }
-            )
-        }
-        composable("/user/settings") {
+        composable("user/settings") {
             SettingsScreen(
                 onBackClick = controller::navigateUp
             )
