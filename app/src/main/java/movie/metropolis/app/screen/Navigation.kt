@@ -107,16 +107,22 @@ fun Navigation(
             OrderScreen(
                 onBackClick = controller::navigateUp,
                 onCompleted = {
-                    controller.popBackStack("/order?url=${it.arguments?.getString("url")}", true)
-                    controller.navigate("/order/success")
+                    controller.navigate("/order/success") {
+                        popUpTo("/order?url=${it.arguments?.getString("url")}") {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
         composable("/order/success") {
             OrderCompleteScreen(
                 onBackClick = {
-                    controller.popBackStack("/home", true)
-                    controller.navigate("/home?screen=tickets")
+                    controller.navigate("/home?screen=tickets") {
+                        popUpTo("/home") {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
