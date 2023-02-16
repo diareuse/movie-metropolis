@@ -1,27 +1,14 @@
 package movie.metropolis.app.screen.setup.component
 
-import androidx.compose.animation.core.animateIntOffsetAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.Stable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Density
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.theme.Theme
 import kotlin.random.Random.Default.nextInt
@@ -96,8 +83,8 @@ private class AnimationState(
     fun updateOffset(density: Density) {
         val sizePx = with(density) { size.dp.roundToPx() }
         targetOffset = IntOffset(
-            nextInt(x.first, x.last - sizePx),
-            nextInt(y.first, y.last - sizePx)
+            nextInt(x.first - sizePx, x.last),
+            nextInt(y.first - sizePx, y.last)
         )
     }
 
