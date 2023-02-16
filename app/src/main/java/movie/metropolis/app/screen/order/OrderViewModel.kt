@@ -1,6 +1,6 @@
 package movie.metropolis.app.screen.order
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -9,7 +9,7 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.order.OrderFacade
 import movie.metropolis.app.presentation.order.OrderFacade.Companion.isCompletedFlow
 import movie.metropolis.app.presentation.order.OrderFacade.Companion.requestFlow
-import movie.metropolis.app.util.decodeBase64
+import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
@@ -24,7 +24,7 @@ class OrderViewModel(
         handle: SavedStateHandle,
         factory: OrderFacade.Factory
     ) : this(
-        factory.create(handle.get<String>("url").orEmpty().decodeBase64())
+        factory.create(Route.Order.Arguments(handle).url)
     )
 
     val request = facade.requestFlow

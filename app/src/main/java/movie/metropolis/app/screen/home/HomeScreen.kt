@@ -1,39 +1,16 @@
 package movie.metropolis.app.screen.home
 
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.shape.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -42,6 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.play.PlayUpdate
+import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
@@ -60,7 +38,7 @@ import java.security.MessageDigest
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreen(
-    startWith: String? = null,
+    startWith: String,
     viewModel: HomeViewModel = hiltViewModel(),
     listing: ListingViewModel = hiltViewModel(),
     cinemas: CinemasViewModel = hiltViewModel(),
@@ -78,7 +56,7 @@ fun HomeScreen(
     val destination by controller.currentDestinationAsState()
     HomeScreen(
         isLoggedIn = email != null,
-        route = destination?.route ?: "movies",
+        route = destination?.route ?: startWith,
         onRouteChanged = listener@{
             if (destination?.route == it) return@listener
             while (controller.popBackStack()) {
@@ -90,9 +68,12 @@ fun HomeScreen(
     ) { padding ->
         AnimatedNavHost(
             navController = controller,
-            startDestination = startWith ?: "movies"
+            startDestination = startWith
         ) {
-            composable("movies") {
+            composable(
+                route = Route.Movies(),
+                deepLinks = Route.Movies.deepLinks
+            ) {
                 ListingScreen(
                     padding = padding,
                     onClickMovie = onClickMovie,
@@ -106,7 +87,10 @@ fun HomeScreen(
                     }
                 )
             }
-            composable("cinemas") {
+            composable(
+                route = Route.Cinemas(),
+                deepLinks = Route.Cinemas.deepLinks
+            ) {
                 CinemasScreen(
                     padding = padding,
                     onClickCinema = onClickCinema,
@@ -120,7 +104,10 @@ fun HomeScreen(
                     }
                 )
             }
-            composable("tickets") {
+            composable(
+                route = Route.Tickets(),
+                deepLinks = Route.Tickets.deepLinks
+            ) {
                 BookingScreen(
                     padding = padding,
                     viewModel = booking,
@@ -225,21 +212,21 @@ private fun HomeScreen(
                     ) {
                         SelectableNavigationBarItem(
                             selected = route,
-                            index = "movies",
+                            index = Route.Movies.destination(),
                             icon = R.drawable.ic_movie,
                             label = stringResource(R.string.movies),
                             onSelected = onRouteChanged
                         )
                         SelectableNavigationBarItem(
                             selected = route,
-                            index = "cinemas",
+                            index = Route.Cinemas.destination(),
                             icon = R.drawable.ic_cinema,
                             label = stringResource(R.string.cinemas),
                             onSelected = onRouteChanged
                         )
                         SelectableNavigationBarItem(
                             selected = route,
-                            index = "tickets",
+                            index = Route.Tickets.destination(),
                             icon = R.drawable.ic_ticket,
                             label = stringResource(R.string.tickets),
                             onSelected = onRouteChanged

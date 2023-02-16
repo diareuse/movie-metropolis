@@ -2,10 +2,10 @@ package movie.metropolis.app.feature.shortcut
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import androidx.core.net.toUri
 import movie.metropolis.app.MainActivity
 
 interface ShortcutFactory {
@@ -13,7 +13,7 @@ interface ShortcutFactory {
     fun setId(id: String): ShortcutFactory
     fun setLabel(label: String): ShortcutFactory
     fun setIcon(icon: Int): ShortcutFactory
-    fun setRoute(route: String): ShortcutFactory
+    fun setRoute(deepLink: Uri): ShortcutFactory
     fun create()
 
     companion object {
@@ -46,8 +46,8 @@ private class ShortcutFactoryUnique(
         origin.setIcon(icon)
     }
 
-    override fun setRoute(route: String) = apply {
-        origin.setRoute(route)
+    override fun setRoute(deepLink: Uri) = apply {
+        origin.setRoute(deepLink)
     }
 
     override fun create() {
@@ -83,10 +83,10 @@ private class ShortcutFactoryDefault(
         this.icon = IconCompat.createWithResource(context, icon)
     }
 
-    override fun setRoute(route: String) = apply {
+    override fun setRoute(deepLink: Uri) = apply {
         this.intent = Intent(context, MainActivity::class.java)
             .setAction(Intent.ACTION_VIEW)
-            .setData("app://movie.metropolis/$route".toUri())
+            .setData(deepLink)
             .setPackage(context.packageName)
     }
 

@@ -1,6 +1,6 @@
 package movie.metropolis.app.screen.cinema
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +15,7 @@ import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.opti
 import movie.metropolis.app.presentation.cinema.CinemaFacade
 import movie.metropolis.app.presentation.cinema.CinemaFacade.Companion.cinemaFlow
 import movie.metropolis.app.presentation.cinema.CinemaFacade.Companion.showingsFlow
+import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import java.util.Date
 import javax.inject.Inject
@@ -30,7 +31,7 @@ class CinemaViewModel private constructor(
         handle: SavedStateHandle,
         facade: CinemaFacade.Factory
     ) : this(
-        facade.create(handle.get<String>("cinema").orEmpty())
+        facade.create(Route.Cinema.Arguments(handle).cinema)
     )
 
     val selectedDate = MutableStateFlow(Date())
