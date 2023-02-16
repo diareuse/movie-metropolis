@@ -13,8 +13,9 @@ import kotlin.time.Duration.Companion.seconds
 interface BookingFacade {
 
     suspend fun getBookings(callback: ResultCallback<List<BookingView>>)
-    suspend fun refresh()
     suspend fun getImage(view: BookingView): Image?
+
+    fun refresh()
 
     companion object {
 

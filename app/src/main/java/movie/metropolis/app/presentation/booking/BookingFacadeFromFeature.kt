@@ -23,7 +23,7 @@ class BookingFacadeFromFeature(
         callback(result.map { it.map(::BookingViewFromFeature) })
     }
 
-    override suspend fun refresh() {
+    override fun refresh() {
         booking.invalidate()
     }
 
