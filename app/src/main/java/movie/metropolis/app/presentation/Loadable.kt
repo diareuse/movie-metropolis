@@ -1,6 +1,6 @@
 package movie.metropolis.app.presentation
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -58,7 +58,7 @@ inline fun <T> Loadable<List<T>>.onEmpty(body: () -> Unit) = onSuccess {
 }
 
 inline fun <T> Loadable<T>.onSuccess(body: (T) -> Unit) = apply {
-    if (isSuccess) body(checkNotNull(getOrNull()))
+    if (isSuccess) body(getOrNull() as T)
 }
 
 inline fun <T> Loadable<T>.onLoading(body: () -> Unit) = apply {
