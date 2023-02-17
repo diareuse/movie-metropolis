@@ -18,7 +18,7 @@ class ShowingFilterable {
             this.languages.add(type.language)
         }
         val updatedElements = this.types + this.languages
-        return (elements intersect updatedElements).size != elements.size
+        return elements.size != updatedElements.size || !elements.containsAll(updatedElements)
     }
 
     fun selectAll() {

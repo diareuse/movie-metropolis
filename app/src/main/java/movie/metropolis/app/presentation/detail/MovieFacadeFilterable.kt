@@ -54,10 +54,10 @@ class MovieFacadeFilterable(
         val output = result.onSuccess {
             val availableTypes = it.asSequence().flatMap { it.availability.keys }
             if (filterable.addFrom(availableTypes.asIterable())) {
+                filterable.selectAll()
                 listenable.notify { onChanged() }
             }
             if (mutex.isLocked) {
-                filterable.selectAll()
                 mutex.unlock()
             }
         }.map { cinemas ->

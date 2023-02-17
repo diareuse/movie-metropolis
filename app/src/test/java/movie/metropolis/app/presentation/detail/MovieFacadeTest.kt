@@ -202,6 +202,21 @@ class MovieFacadeTest : FeatureTest() {
     }
 
     @Test
+    fun toggle_notifiesListeners_onUpdate() = runTest {
+        movie_responds_success()
+        val cinema = cinema_responds_cinema {
+            on { id }.thenReturn("id")
+        }
+        showings_responds_success(generateShowings(cinema, 4))
+        val listener = mock<OnChangedListener>()
+        facade.addOnChangedListener(listener)
+        facade.getShowings(Date(), 0.0, 0.0) { it.getOrThrow() }
+        facade.getShowings(Date(), 0.0, 0.0) { it.getOrThrow() }
+        // intentionally invoking twice, listener should be invoked just once
+        verify(listener).onChanged()
+    }
+
+    @Test
     fun toggle_notifiesNoRemovedListeners() = runTest {
         val listener = mock<OnChangedListener>()
         facade.addOnChangedListener(listener)
