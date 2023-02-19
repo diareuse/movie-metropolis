@@ -19,6 +19,7 @@ import movie.metropolis.app.presentation.cinema.BookingFilterable
 import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.optionsChangedFlow
 import movie.metropolis.app.util.throttleWithTimeout
 import java.util.Date
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 interface MovieFacade : BookingFilterable {
@@ -110,7 +111,7 @@ interface MovieFacade : BookingFilterable {
                         }
                     }
                 }
-            }
+            }.throttleWithTimeout(300.milliseconds)
 
     }
 
