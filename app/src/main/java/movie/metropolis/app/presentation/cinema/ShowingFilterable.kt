@@ -18,8 +18,7 @@ class ShowingFilterable {
             this.languages.add(type.language)
         }
         val updatedElements = this.types + this.languages
-        return elements.isNotEmpty() &&
-                (elements.size != updatedElements.size || !elements.containsAll(updatedElements))
+        return elements.size != updatedElements.size || !elements.containsAll(updatedElements)
     }
 
     fun selectAll() {
