@@ -8,23 +8,23 @@ class SyncPreferenceStored(
 ) : SyncPreference {
 
     override var previewUpcoming: Date
-        get() = store["preview-upcoming"]?.toLongOrNull()?.let(::Date) ?: Date(0)
+        get() = store["sync-preview-upcoming"]?.toLongOrNull()?.let(::Date) ?: Date(0)
         set(value) {
-            store["preview-upcoming"] = value.time.toString()
+            store["sync-preview-upcoming"] = value.time.toString()
         }
     override var previewCurrent: Date
-        get() = store["preview-current"]?.toLongOrNull()?.let(::Date) ?: Date(0)
+        get() = store["sync-preview-current"]?.toLongOrNull()?.let(::Date) ?: Date(0)
         set(value) {
-            store["preview-current"] = value.time.toString()
+            store["sync-preview-current"] = value.time.toString()
         }
     override var cinema: Date
-        get() = store["cinema"]?.toLongOrNull()?.let(::Date) ?: Date(0)
+        get() = store["sync-cinema"]?.toLongOrNull()?.let(::Date) ?: Date(0)
         set(value) {
-            store["cinema"] = value.time.toString()
+            store["sync-cinema"] = value.time.toString()
         }
     override var booking: Date
-        get() = store["booking"]?.toLongOrNull()?.let(::Date) ?: Date(0)
+        get() = store["sync-booking"]?.toLongOrNull()?.let(::Date) ?: Date(0)
         set(value) {
-            store["booking"] = value.time.toString()
+            store["sync-booking"] = value.time.toString()
         }
 }
