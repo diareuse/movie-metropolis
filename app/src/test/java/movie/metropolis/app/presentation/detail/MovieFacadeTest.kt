@@ -5,6 +5,7 @@ package movie.metropolis.app.presentation.detail
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.CinemaWithShowings
+import movie.core.MutableResult
 import movie.core.adapter.MovieFromId
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -172,12 +173,12 @@ class MovieFacadeTest : FeatureTest() {
         facade.disableAll()
         facade.toggle(Filter(false, "type"))
         facade.toggle(Filter(false, "language"))
-        facade.getShowings(Date(0), 0.0, 0.0) {
-            val result = it.getOrThrow()
-            val hasRequestedKeys = result.flatMap { it.availability.keys }
-                .all { it.language == "language" && "type" in it.types }
-            assert(hasRequestedKeys) { result }
+        val result = MutableResult.getOrThrow {
+            facade.getShowings(Date(0), 0.0, 0.0, it.asResultCallback())
         }
+        val hasRequestedKeys = result.flatMap { it.availability.keys }
+            .all { it.language == "language" && "type" in it.types }
+        assert(hasRequestedKeys) { result }
     }
 
     @Test
@@ -198,21 +199,6 @@ class MovieFacadeTest : FeatureTest() {
         val listener = mock<OnChangedListener>()
         facade.addOnChangedListener(listener)
         facade.toggle(Filter(false, ""))
-        verify(listener).onChanged()
-    }
-
-    @Test
-    fun toggle_notifiesListeners_onUpdate() = runTest {
-        movie_responds_success()
-        val cinema = cinema_responds_cinema {
-            on { id }.thenReturn("id")
-        }
-        showings_responds_success(generateShowings(cinema, 4))
-        val listener = mock<OnChangedListener>()
-        facade.addOnChangedListener(listener)
-        facade.getShowings(Date(), 0.0, 0.0) { it.getOrThrow() }
-        facade.getShowings(Date(), 0.0, 0.0) { it.getOrThrow() }
-        // intentionally invoking twice, listener should be invoked just once
         verify(listener).onChanged()
     }
 

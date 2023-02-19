@@ -5,6 +5,7 @@ package movie.metropolis.app.presentation.cinema
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.MovieWithShowings
+import movie.core.MutableResult
 import movie.core.model.Cinema
 import movie.core.model.MovieReference
 import movie.core.model.Showing
@@ -62,10 +63,10 @@ class CinemaFacadeTest : FeatureTest() {
     fun returns_showings_ifCinemaExists() = runTest {
         cinemas_returns_cinema()
         showings_returns_value(1)
-        facade.getShowings(Date(0)) {
-            val result = it.getOrThrow()
-            assertEquals(1, result.size)
+        val result = MutableResult.getOrThrow {
+            facade.getShowings(Date(0), it.asResultCallback())
         }
+        assertEquals(1, result.size)
     }
 
     @Test
