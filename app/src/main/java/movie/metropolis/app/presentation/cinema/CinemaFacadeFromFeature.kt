@@ -2,8 +2,8 @@ package movie.metropolis.app.presentation.cinema
 
 import movie.core.EventCinemaFeature
 import movie.core.EventShowingsFeature
+import movie.core.MutableResult
 import movie.core.ResultCallback
-import movie.core.model.Cinema
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
@@ -36,9 +36,9 @@ class CinemaFacadeFromFeature(
     }
 
     override suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>) {
-        var cinema: Result<Cinema> = Result.failure(IllegalStateException())
-        getCinema { cinema = it.map(::CinemaFromView) }
-        showings.cinema(cinema.getOrThrow()).get(date) { result ->
+        val cinema = MutableResult.getOrThrow { getCinema(it.asResultCallback()) }
+            .let(::CinemaFromView)
+        showings.cinema(cinema).get(date) { result ->
             val output = result.getOrThrow().entries
                 .map { (movie, events) -> MovieBookingViewFromFeature(movie, events) }
                 .sortedByDescending { it.availability.entries.sumOf { it.value.size } }
