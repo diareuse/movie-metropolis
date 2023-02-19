@@ -4,6 +4,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlin.coroutines.CoroutineContext
 
 inline fun <T> ResultCallback<T>.then(
@@ -59,7 +61,7 @@ inline fun <T> ResultCallback<List<T>>.parallelize(
     val updated = list.toMutableList()
     for ((index, item) in list.withIndex()) scope.launch(context = context) {
         updated[index] = body(item)
-        invoke(Result.success(updated))
+        invoke(Result.success(updated.toList()))
     }
 }
 
@@ -73,8 +75,25 @@ inline fun <T> ResultCallback<List<T>>.parallelizeContinuous(
     for ((index, item) in list.withIndex()) scope.launch(context = context) {
         body(item) {
             updated[index] = it
-            invoke(Result.success(updated))
+            invoke(Result.success(updated.toList()))
         }
+    }
+}
+
+inline fun <K, V> ResultCallback<Map<K, V>>.parallelize(
+    scope: CoroutineScope,
+    list: Iterable<K>,
+    context: CoroutineContext = Dispatchers.Default,
+    crossinline body: suspend (K) -> V
+) {
+    val output = mutableMapOf<K, V>()
+    val mutex = Mutex(false)
+    for (item in list) scope.launch(context = context) {
+        val snapshot = mutex.withLock {
+            output[item] = body(item)
+            output.toMap()
+        }
+        invoke(Result.success(snapshot))
     }
 }
 
