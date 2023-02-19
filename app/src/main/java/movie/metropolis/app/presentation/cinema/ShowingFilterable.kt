@@ -18,7 +18,8 @@ class ShowingFilterable {
             this.languages.add(type.language)
         }
         val updatedElements = this.types + this.languages
-        return elements.size != updatedElements.size || !elements.containsAll(updatedElements)
+        return elements.isNotEmpty() &&
+                (elements.size != updatedElements.size || !elements.containsAll(updatedElements))
     }
 
     fun selectAll() {
@@ -32,9 +33,11 @@ class ShowingFilterable {
 
     fun getLanguages() = languages
         .map { Filter(it in selected, it) }
+        .sortedBy { it.value }
 
     fun getTypes() = types
         .map { Filter(it in selected, it) }
+        .sortedBy { it.value }
 
     fun getSelectedLanguages() = selected.filter { it in languages }.toSet()
     fun getSelectedTypes() = selected.filter { it in types }.toSet()

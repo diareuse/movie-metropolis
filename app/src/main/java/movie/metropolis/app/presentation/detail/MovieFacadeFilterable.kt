@@ -1,7 +1,6 @@
 package movie.metropolis.app.presentation.detail
 
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.Filter
@@ -19,13 +18,14 @@ class MovieFacadeFilterable(
     private val listenable = Listenable<OnChangedListener>()
     private val mutex = Mutex(true)
 
-    override suspend fun getOptions() = mutex.withLock {
+    override suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>> {
+        if (mutex.isLocked) mutex.lock()
         val output = buildMap {
             put(Filter.Type.Language, filterable.getLanguages())
             put(Filter.Type.Projection, filterable.getTypes())
         }
         val count = output.toList().sumOf { (_, value) -> value.size }
-        when {
+        return when {
             count <= 0 -> Result.failure(IndexOutOfBoundsException())
             else -> Result.success(output)
         }
@@ -55,7 +55,6 @@ class MovieFacadeFilterable(
             val availableTypes = it.asSequence().flatMap { it.availability.keys }
             if (filterable.addFrom(availableTypes.asIterable())) {
                 filterable.selectAll()
-                listenable.notify { onChanged() }
             }
             if (mutex.isLocked) {
                 mutex.unlock()
