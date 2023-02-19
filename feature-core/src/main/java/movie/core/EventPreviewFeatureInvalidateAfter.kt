@@ -19,7 +19,7 @@ class EventPreviewFeatureInvalidateAfter(
             ShowingType.Upcoming -> preference.previewUpcoming
         }
         if (!lastRefresh.isInThreshold(duration)) {
-            return result(Result.failure(ExpiredException()))
+            return result(Result.failure(ExpiredException(lastRefresh, duration)))
         }
         origin.get(result)
     }

@@ -17,8 +17,12 @@ fun <T> Result<Iterable<T>>.requireNotEmpty() = mapCatching {
 
 @JvmName("requireIterableNotEmpty")
 fun <T> Iterable<T>.requireNotEmpty() = apply {
-    @Suppress("ReplaceSizeCheckWithIsNotEmpty")
-    require(count() > 0) { "List was empty" }
+    @Suppress("ReplaceSizeZeroCheckWithIsEmpty")
+    val isEmpty = when (this) {
+        is List<*> -> isEmpty()
+        else -> count() <= 0
+    }
+    require(!isEmpty) { "List was empty" }
 }
 
 @JvmName("requireMapNotEmpty")
