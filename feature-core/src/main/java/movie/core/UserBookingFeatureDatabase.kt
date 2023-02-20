@@ -46,6 +46,8 @@ class UserBookingFeatureDatabase(
     // ---
 
     private fun BookingStored.isExpired(movie: Movie): Boolean {
+        // STOPSHIP: REMOVE THIS BULLSHIT
+        return false
         val expiresAt = startsAt + movie.duration
         return Date().after(expiresAt)
     }

@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import movie.wear.WearService
 import movie.wear.WearServiceImpl
+import movie.wear.WearServiceUriSpec
 
 @InstallIn(SingletonComponent::class)
 @Module
@@ -20,7 +21,10 @@ class WearModule {
         context: Context
     ): WearService {
         val client = Wearable.getDataClient(context)
-        return WearServiceImpl(client)
+        var out: WearService
+        out = WearServiceImpl(client)
+        out = WearServiceUriSpec(out)
+        return out
     }
 
 }
