@@ -20,6 +20,7 @@ import movie.core.UserBookingFeatureNetwork
 import movie.core.UserBookingFeatureRequireNotEmpty
 import movie.core.UserBookingFeatureSaveTimestamp
 import movie.core.UserBookingFeatureStoring
+import movie.core.UserBookingFeatureWear
 import movie.core.UserCredentialFeature
 import movie.core.UserCredentialFeatureNetwork
 import movie.core.UserDataFeature
@@ -36,6 +37,7 @@ import movie.core.nwk.UserService
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
 import movie.core.preference.UserPreference
+import movie.wear.WearService
 import kotlin.time.Duration.Companion.days
 
 @Module
@@ -80,6 +82,7 @@ internal class UserFeatureModule {
         preference: EventPreference,
         store: TicketStore,
         sync: SyncPreference,
+        wear: WearService,
     ): UserBookingFeature {
         var db: UserBookingFeature
         db = UserBookingFeatureDatabase(booking, seats, detail, cinema)
@@ -93,6 +96,7 @@ internal class UserFeatureModule {
         out = UserBookingFeatureSaveTimestamp(out, sync)
         out = UserBookingFeatureCalendar(out, writer, preference)
         out = UserBookingFeatureFold(UserBookingFeatureInvalidateAfter(db, sync, 1.days), out, db)
+        out = UserBookingFeatureWear(out, wear)
         out = UserBookingFeatureCatch(out)
         return out
     }
