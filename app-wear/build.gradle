@@ -1,0 +1,23 @@
+plugins {
+    id 'application-conventions'
+    id 'compose-conventions'
+    id 'di-conventions'
+}
+
+android {
+
+    defaultConfig {
+        minSdk 25
+    }
+
+}
+
+dependencies {
+
+    implementation project(":style")
+    implementation project(":feature-wear")
+
+    implementation "androidx.wear.compose:compose-material:[1,2["
+    implementation "androidx.wear.compose:compose-foundation:[1,2["
+
+}
