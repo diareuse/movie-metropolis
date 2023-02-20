@@ -11,7 +11,7 @@ internal class UserAccountImpl(
 ) : UserAccount {
 
     private val account
-        get() = manager.getAccountsByType(Type).firstOrNull()
+        get() = manager.getAccountsByType(BuildConfig.AccountType).firstOrNull()
 
     override val isLoggedIn
         get() = account != null && password != null
@@ -21,7 +21,8 @@ internal class UserAccountImpl(
         set(value) { // todo migrate password when changing email
             account?.also(manager::removeAccountExplicitly)
             if (value != null) {
-                manager.addAccountExplicitly(Account(value, Type), null, Bundle.EMPTY)
+                val account = Account(value, BuildConfig.AccountType)
+                manager.addAccountExplicitly(account, null, Bundle.EMPTY)
             }
         }
 
@@ -59,11 +60,5 @@ internal class UserAccountImpl(
             val account = account ?: return
             manager.setUserData(account, "token-expiration", value?.time?.toString())
         }
-
-    companion object {
-
-        private const val Type = "movie.metropolis"
-
-    }
 
 }

@@ -6,6 +6,19 @@ plugins {
 
 android {
     namespace 'movie.core.auth'
+
+    buildTypes {
+
+        debug {
+            buildConfigField "String", "AccountType", "\"movie.metropolis.dev\""
+        }
+
+        release {
+            buildConfigField "String", "AccountType", "\"movie.metropolis\""
+        }
+
+    }
+
 }
 
 dependencies {
