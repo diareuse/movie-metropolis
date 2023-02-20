@@ -19,6 +19,7 @@ dependencies {
     implementation project(":feature-calendar")
     implementation project(":style")
     implementation project(":feature-log")
+    implementation project(":feature-wear")
 
     implementation "androidx.startup:startup-runtime:[1,2["
     implementation "androidx.work:work-runtime-ktx:[2,3["

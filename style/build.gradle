@@ -21,6 +21,9 @@ dependencies {
     api "androidx.compose.material3:material3:$vMaterial"
     api "androidx.compose.material:material:$vMaterial"
 
+    debugApi "androidx.compose.ui:ui-tooling:$vCompose"
+    debugApi "androidx.compose.ui:ui-test-manifest:$vCompose"
+
     implementation "io.coil-kt:coil-compose:$vCoil"
     implementation "io.coil-kt:coil-svg:$vCoil"
 

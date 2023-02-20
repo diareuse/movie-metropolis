@@ -18,6 +18,7 @@ dependencies {
     implementation project(":feature-image-analysis")
     implementation project(":feature-calendar")
     implementation project(":feature-log")
+    implementation project(":feature-wear")
 
     implementation "com.google.firebase:firebase-perf-ktx:20.3.0"
 

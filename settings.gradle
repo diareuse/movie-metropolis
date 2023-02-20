@@ -14,6 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "movie-metropolis"
 include ":app"
+include ":app-wear"
 include ":style"
 include ":feature-core",
         ":feature-core-auth",
@@ -25,3 +26,4 @@ include ":feature-rating"
 include ":feature-image-analysis"
 include ":feature-calendar"
 include ":feature-log"
+include ":feature-wear"

@@ -19,12 +19,14 @@ import movie.core.preference.SyncPreference
 import movie.core.util.callback
 import movie.core.util.thenBlocking
 import movie.core.util.wheneverBlocking
+import movie.wear.WearService
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -36,6 +38,7 @@ import kotlin.time.Duration.Companion.hours
 class UserBookingFeatureTest {
 
     private lateinit var feature: UserBookingFeature
+    private lateinit var wear: WearService
     private lateinit var sync: SyncPreference
     private lateinit var store: TicketStore
     private lateinit var preference: EventPreference
@@ -62,6 +65,7 @@ class UserBookingFeatureTest {
         service = mock {}
         seats = mock {}
         booking = mock {}
+        wear = mock {}
         feature = UserFeatureModule().booking(
             booking,
             seats,
@@ -71,7 +75,8 @@ class UserBookingFeatureTest {
             writer,
             preference,
             store,
-            sync
+            sync,
+            wear
         )
     }
 
@@ -176,6 +181,34 @@ class UserBookingFeatureTest {
         }
     }
 
+    @Test
+    fun get_adds_toWearNetwork_fromDatabase() = runTest {
+        database_responds_success()
+        cinema_responds_success()
+        detail_responds_success()
+        feature.get()
+        verify(wear, atLeastOnce()).send(eq("/bookings"), any())
+    }
+
+    @Test
+    fun get_adds_toWearNetwork_fromNetwork() = runTest {
+        service_responds_success()
+        cinema_responds_success()
+        detail_responds_success()
+        feature.get()
+        verify(wear, atLeastOnce()).send(eq("/bookings"), any())
+    }
+
+    @Test
+    fun get_removes_fromWearNetwork() = runTest {
+        database_responds_empty()
+        service_responds_empty()
+        cinema_responds_success()
+        detail_responds_success()
+        feature.get().last().getOrThrow()
+        verify(wear, atLeastOnce()).remove("/bookings")
+    }
+
     // ---
 
     private fun sync_responds_invalid() {
@@ -220,6 +253,15 @@ class UserBookingFeatureTest {
 
     private fun service_responds_security() {
         wheneverBlocking { service.getBookings() }.thenReturn(Result.failure(SecurityException()))
+    }
+
+    private fun service_responds_empty() {
+        wheneverBlocking { service.getBookings() }.thenReturn(Result.success(emptyList()))
+    }
+
+    private fun database_responds_empty() {
+        wheneverBlocking { booking.selectAll() }.thenReturn(emptyList())
+        wheneverBlocking { seats.select(any()) }.thenReturn(emptyList())
     }
 
     private suspend fun UserBookingFeature.get(): List<Result<List<Booking>>> {

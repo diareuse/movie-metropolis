@@ -1,0 +1,12 @@
+plugins {
+    id 'library-conventions'
+    id 'di-conventions'
+}
+
+android {
+    namespace 'movie.wear'
+}
+
+dependencies {
+    api "com.google.android.gms:play-services-wearable:[18,19["
+}
