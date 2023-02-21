@@ -10,7 +10,7 @@ data class TicketViewFromDataMap(
 ) : TicketView {
 
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-    private val timeFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+    private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
 
     override val id: String
         get() = map.getString("id", "")
