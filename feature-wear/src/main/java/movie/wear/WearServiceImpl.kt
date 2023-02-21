@@ -1,5 +1,6 @@
 package movie.wear
 
+import android.os.Bundle
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.DataEventBuffer
@@ -21,7 +22,9 @@ class WearServiceImpl(
     }
 
     override suspend fun get(path: String): DataMap {
-        return client.getDataItems(path.toUri()).await().first()
+        val items = client.getDataItems(path.toUri()).await()
+        val item = items.firstOrNull() ?: return DataMap.fromBundle(Bundle.EMPTY)
+        return item
             .let(DataMapItem::fromDataItem)
             .dataMap
     }
