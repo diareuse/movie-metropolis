@@ -8,6 +8,13 @@ def calendar = Calendar.getInstance()
 def year = calendar.get(Calendar.YEAR)
 def month = calendar.get(Calendar.MONTH) + 1
 def dateVersion = "$year.$month"
+def getType = { project ->
+    switch (project.name) {
+        case "app": return 0
+        case "app-wear": return 1
+        default: return 9
+    }
+}
 
 android {
 
@@ -15,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "movie.metropolis.app"
-        versionCode 1
+        versionCode 1 * 10 + getType(project)
         versionName dateVersion
     }
 
