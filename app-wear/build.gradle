@@ -19,5 +19,6 @@ dependencies {
 
     implementation "androidx.wear.compose:compose-material:[1,2["
     implementation "androidx.wear.compose:compose-foundation:[1,2["
+    implementation "androidx.wear.compose:compose-navigation:[1,2["
 
 }
