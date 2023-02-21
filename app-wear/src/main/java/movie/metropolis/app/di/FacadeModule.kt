@@ -1,6 +1,5 @@
 package movie.metropolis.app.di
 
-import com.google.android.gms.wearable.DataClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,11 +15,10 @@ class FacadeModule {
 
     @Provides
     fun booking(
-        service: WearService,
-        client: DataClient
+        service: WearService
     ): BookingFacade {
         var out: BookingFacade
-        out = BookingFacadeFromService(service, client)
+        out = BookingFacadeFromService(service)
         out = BookingFacadeRecover(out)
         return out
     }

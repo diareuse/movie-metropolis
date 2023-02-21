@@ -2,6 +2,7 @@ package movie.wear
 
 import androidx.core.net.toUri
 import com.google.android.gms.wearable.DataClient
+import com.google.android.gms.wearable.DataEventBuffer
 import com.google.android.gms.wearable.DataMap
 import com.google.android.gms.wearable.DataMapItem
 import com.google.android.gms.wearable.PutDataMapRequest
@@ -27,6 +28,26 @@ class WearServiceImpl(
 
     override suspend fun remove(path: String) {
         client.deleteDataItems(path.toUri()).await()
+    }
+
+    override fun addListener(
+        path: String,
+        listener: WearService.OnChangedListener
+    ): WearService.OnChangedListener {
+        val combined = CombinedListener(listener)
+        client.addListener(combined, path.toUri(), DataClient.FILTER_LITERAL)
+        return combined
+    }
+
+    override fun removeListener(listener: WearService.OnChangedListener) {
+        require(listener is CombinedListener)
+        client.removeListener(listener)
+    }
+
+    private class CombinedListener(
+        listener: WearService.OnChangedListener
+    ) : WearService.OnChangedListener by listener, DataClient.OnDataChangedListener {
+        override fun onDataChanged(p0: DataEventBuffer) = onChanged()
     }
 
 }
