@@ -4,20 +4,24 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.material.AutoCenteringParams
 import androidx.wear.compose.material.ScalingLazyColumn
 import androidx.wear.compose.material.ScalingLazyListState
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.items
 import androidx.wear.compose.material.rememberScalingLazyListState
 import androidx.wear.compose.material.scrollAway
+import movie.metropolis.app.R
 import movie.metropolis.app.model.TicketView
 import movie.metropolis.app.model.preview.TicketViewPreviews
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.booking.component.BookingItem
+import movie.style.layout.PreviewWearLayout
 import movie.style.theme.Theme
 import androidx.wear.compose.material.Scaffold as WearScaffold
 
@@ -50,9 +54,10 @@ private fun BookingsScreen(
         ScalingLazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = state,
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            autoCentering = AutoCenteringParams(itemOffset = 1)
         ) {
-            item { Text("Your tickets", style = Theme.textStyle.title) }
+            item { Text(stringResource(R.string.bookings_title), style = Theme.textStyle.title) }
             items.onSuccess { items ->
                 items(items, key = { it.id }) {
                     BookingItem(
@@ -72,6 +77,6 @@ private fun BookingsScreen(
 @Composable
 private fun Preview(
     @PreviewParameter(TicketViewPreviews::class, 1) previews: List<TicketView>
-) = Theme {
+) = PreviewWearLayout(padding = PaddingValues()) {
     BookingsScreen(Loadable.success(previews))
 }
