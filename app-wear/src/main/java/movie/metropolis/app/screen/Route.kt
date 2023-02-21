@@ -10,10 +10,6 @@ sealed class Route(
 
     operator fun invoke() = route
 
-    object Home : Route("home") {
-        fun destination() = route
-    }
-
     object Tickets : Route("bookings") {
         fun destination() = route
     }
@@ -27,7 +23,7 @@ sealed class Route(
         )
 
         class Arguments(private val entry: SavedStateHandle) {
-            val id get() = entry.get<String>("booking")
+            val id get() = entry.get<String>("booking").let(::requireNotNull)
         }
 
         fun destination(id: String) =
