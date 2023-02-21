@@ -27,6 +27,7 @@ import movie.image.SwatchColor
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -287,7 +288,7 @@ abstract class EventPreviewFeatureTest {
     private fun analyzer_responds_success(): Int {
         val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
         val swatch = Swatch(SwatchColor(color), SwatchColor(color), SwatchColor(color))
-        wheneverBlocking { analyzer.getColors(any()) }.thenReturn(swatch)
+        wheneverBlocking { analyzer.getColors(anyOrNull()) }.thenReturn(swatch)
         return color
     }
 
