@@ -5,9 +5,9 @@ import movie.metropolis.app.model.adapter.TicketViewFromDataMap
 import movie.metropolis.app.presentation.OnChangedListener
 import movie.wear.WearService
 
-class BookingFacadeFromService(
+class BookingsFacadeFromService(
     private val service: WearService
-) : BookingFacade {
+) : BookingsFacade {
 
     override suspend fun get(): Result<List<TicketView>> {
         return service.get("/bookings")

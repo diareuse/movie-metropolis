@@ -16,19 +16,19 @@ import movie.metropolis.app.screen.booking.component.BookingItem
 import movie.style.theme.Theme
 
 @Composable
-fun BookingScreen(
-    viewModel: BookingViewModel = hiltViewModel(),
+fun BookingsScreen(
+    viewModel: BookingsViewModel = hiltViewModel(),
     onTicketClick: (String) -> Unit
 ) {
     val items by viewModel.items.collectAsState()
-    BookingScreen(
+    BookingsScreen(
         items = items,
         onTicketClick = onTicketClick
     )
 }
 
 @Composable
-private fun BookingScreen(
+private fun BookingsScreen(
     items: Loadable<List<TicketView>> = Loadable.loading(),
     onTicketClick: (String) -> Unit = {}
 ) {
@@ -52,5 +52,5 @@ private fun BookingScreen(
 private fun Preview(
     @PreviewParameter(TicketViewPreviews::class, 1) previews: List<TicketView>
 ) = Theme {
-    BookingScreen(Loadable.success(previews))
+    BookingsScreen(Loadable.success(previews))
 }

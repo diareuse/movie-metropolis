@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
-import movie.metropolis.app.screen.booking.BookingScreen
+import movie.metropolis.app.screen.booking.BookingsScreen
 import movie.metropolis.app.screen.home.HomeScreen
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -23,7 +23,16 @@ fun Navigation(
         }
 
         composable(route = Route.Tickets()) {
-            BookingScreen(onTicketClick = {})
+            BookingsScreen(onTicketClick = {
+                navController.navigate(Route.Ticket.destination(it))
+            })
+        }
+
+        composable(
+            route = Route.Ticket(),
+            arguments = Route.Ticket.arguments
+        ) {
+
         }
     }
 }
