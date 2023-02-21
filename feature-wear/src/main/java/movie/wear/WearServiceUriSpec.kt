@@ -14,4 +14,11 @@ class WearServiceUriSpec(
         return origin.remove("wear://*$path")
     }
 
+    override fun addListener(
+        path: String,
+        listener: WearService.OnChangedListener
+    ): WearService.OnChangedListener {
+        return origin.addListener("wear://*$path", listener)
+    }
+
 }
