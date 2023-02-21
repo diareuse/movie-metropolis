@@ -3,9 +3,9 @@ package movie.metropolis.app.presentation.booking
 import movie.metropolis.app.model.TicketView
 import movie.metropolis.app.presentation.OnChangedListener
 
-class BookingFacadeRecover(
-    private val origin: BookingFacade
-) : BookingFacade {
+class BookingsFacadeRecover(
+    private val origin: BookingsFacade
+) : BookingsFacade {
 
     override suspend fun get(): Result<List<TicketView>> {
         return origin.runCatching { get().getOrThrow() }

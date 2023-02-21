@@ -9,7 +9,7 @@ import movie.metropolis.app.presentation.OnChangedListener
 import movie.metropolis.app.presentation.asLoadable
 import kotlin.time.Duration.Companion.seconds
 
-interface BookingFacade {
+interface BookingsFacade {
 
     suspend fun get(): Result<List<TicketView>>
     fun addOnChangedListener(listener: OnChangedListener): OnChangedListener
@@ -17,7 +17,7 @@ interface BookingFacade {
 
     companion object {
 
-        private val BookingFacade.onChangedFlow
+        private val BookingsFacade.onChangedFlow
             get() = callbackFlow {
                 val listener = addOnChangedListener {
                     trySend(Any())
@@ -27,7 +27,7 @@ interface BookingFacade {
                 }
             }
 
-        val BookingFacade.flow
+        val BookingsFacade.flow
             get() = channelFlow {
                 send(get().asLoadable())
                 onChangedFlow.debounce(1.seconds).collect {
