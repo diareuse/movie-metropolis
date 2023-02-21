@@ -30,7 +30,7 @@ class BookingFacadeTest : FeatureTest() {
 
     override fun prepare() {
         share = mock {
-            on { runBlocking { get(any()) } }.thenReturn(ByteArray(0))
+            on { runBlocking { get(any()) } }.thenReturn("foo".toByteArray())
         }
         facade = FacadeModule().booking(booking, share)
     }
