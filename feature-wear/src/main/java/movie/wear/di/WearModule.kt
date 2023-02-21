@@ -1,6 +1,7 @@
 package movie.wear.di
 
 import android.content.Context
+import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.Wearable
 import dagger.Module
 import dagger.Provides
@@ -17,14 +18,20 @@ class WearModule {
 
     @Provides
     fun service(
-        @ApplicationContext
-        context: Context
+        client: DataClient
     ): WearService {
-        val client = Wearable.getDataClient(context)
         var out: WearService
         out = WearServiceImpl(client)
         out = WearServiceUriSpec(out)
         return out
+    }
+
+    @Provides
+    internal fun client(
+        @ApplicationContext
+        context: Context
+    ): DataClient {
+        return Wearable.getDataClient(context)
     }
 
 }
