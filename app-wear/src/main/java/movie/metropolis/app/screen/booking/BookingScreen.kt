@@ -19,7 +19,7 @@ fun BookingScreen(
     ScalingLazyColumn(modifier = Modifier.fillMaxSize()) {
         items.onSuccess {
             items(it, key = { it.id }) {
-                AppImage(url = it.image)
+                AppImage(url = it.name)
             }
         }
     }

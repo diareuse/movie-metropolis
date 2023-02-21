@@ -25,8 +25,8 @@ data class TicketViewFromDataMap(
     override val seats: List<TicketView.Seat>
         get() = map.getDataMapArrayList("seats").orEmpty()
             .map(TicketViewFromDataMap::SeatFromDataMap)
-    override val image: String?
-        get() = map.getString("image")
+    override val name: String
+        get() = map.getString("name", "")
 
     data class SeatFromDataMap(
         private val map: DataMap

@@ -7,7 +7,7 @@ interface TicketView {
     val time: String
     val hall: String
     val seats: List<Seat>
-    val image: String?
+    val name: String
 
     interface Seat {
         val row: String

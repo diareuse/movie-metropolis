@@ -3,7 +3,6 @@ package movie.core
 import com.google.android.gms.wearable.DataMap
 import kotlinx.coroutines.coroutineScope
 import movie.core.model.Booking
-import movie.core.model.Media
 import movie.wear.WearService
 
 /**
@@ -23,7 +22,7 @@ import movie.wear.WearService
  *           "seat": "string"
  *         }
  *       ],
- *       "image": "string|null"
+ *       "name": "string"
  *     }
  *   ]
  * }
@@ -54,13 +53,7 @@ class UserBookingFeatureWear(
         map.putLong("starts_at", startsAt.time)
         map.putString("hall", hall)
         map.putDataMapArrayList("seats", seats.asDataMap())
-        val image = movie.media.asSequence()
-            .filterIsInstance<Media.Image>()
-            .sortedBy { it.width * it.height }
-            .firstOrNull()
-            ?.url
-        if (image != null)
-            map.putString("image", image)
+        map.putString("name", movie.name)
     }
 
     private fun List<Booking.Active.Seat>.asDataMap() = map { it.asDataMap() }
