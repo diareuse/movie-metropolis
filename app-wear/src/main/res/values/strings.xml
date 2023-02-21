@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Your tickets</string>
+    <string name="bookings_empty">Open %s on your mobile device, active tickets will be displayed here momentarily.</string>
 </resources>

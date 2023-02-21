@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -19,6 +20,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.TicketView
 import movie.metropolis.app.model.preview.TicketViewPreviews
 import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.booking.component.BookingItem
 import movie.style.layout.PreviewWearLayout
@@ -65,6 +67,16 @@ private fun BookingsScreen(
                         date = { Text(it.date) },
                         time = { Text(it.time) },
                         onClick = { onTicketClick(it.id) }
+                    )
+                }
+            }.onEmpty {
+                item {
+                    Text(
+                        text = stringResource(
+                            R.string.bookings_empty,
+                            stringResource(id = R.string.app_name)
+                        ),
+                        textAlign = TextAlign.Center
                     )
                 }
             }
