@@ -20,8 +20,7 @@ data class BookingResponse(
     @SerialName("eventId") val eventId: String
 ) {
 
-    // STOPSHIP: REMOVE THIS BULLSHIT
-    fun isExpired(duration: Duration) = false
-    //Date().after(Date(startsAt.time + duration.inWholeMilliseconds))
+    fun isExpired(duration: Duration) =
+        Date().after(Date(startsAt.time + duration.inWholeMilliseconds))
 
 }
