@@ -23,7 +23,7 @@ fun Navigation(
         }
 
         composable(route = Route.Tickets()) {
-            BookingScreen()
+            BookingScreen(onTicketClick = {})
         }
     }
 }
