@@ -1,7 +1,6 @@
 package movie.core
 
 import com.google.android.gms.wearable.DataMap
-import kotlinx.coroutines.coroutineScope
 import movie.core.model.Booking
 import movie.wear.WearService
 
@@ -33,8 +32,8 @@ class UserBookingFeatureWear(
     private val wear: WearService
 ) : UserBookingFeature by origin {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) = coroutineScope {
-        origin.get(callback.then(this) {
+    override suspend fun get(callback: ResultCallback<List<Booking>>) {
+        origin.get(callback.then {
             val active = it.filterIsInstance<Booking.Active>()
             when {
                 active.isEmpty() -> wear.remove("/bookings")

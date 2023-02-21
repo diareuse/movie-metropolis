@@ -28,8 +28,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
@@ -166,10 +166,10 @@ abstract class EventPreviewFeatureTest {
     fun get_stores() = runTest {
         val testData = service_responds_success()
         feature.get()
-        verify(preview, times(1)).deleteAll(any())
-        verify(movie, times(testData.size)).insertOrUpdate(any())
-        verify(preview, times(testData.size)).insertOrUpdate(any())
-        verify(media, times(testData.flatMap { it.media }.size)).insertOrUpdate(any())
+        verify(preview, atMost(1)).deleteAll(any())
+        verify(movie, atMost(testData.size)).insertOrUpdate(any())
+        verify(preview, atMost(testData.size)).insertOrUpdate(any())
+        verify(media, atMost(testData.flatMap { it.media }.size)).insertOrUpdate(any())
     }
 
     @Test

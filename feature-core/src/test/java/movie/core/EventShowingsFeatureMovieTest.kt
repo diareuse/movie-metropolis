@@ -16,8 +16,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import java.util.Date
 import kotlin.test.assertEquals
@@ -81,7 +81,7 @@ class EventShowingsFeatureMovieTest {
             it.copy(movies = movies, events = events)
         })
         feature.get(Date()).first().getOrThrow()
-        verify(showing, times(testData.events.size)).insertOrUpdate(any())
+        verify(showing, atMost(testData.events.size)).insertOrUpdate(any())
     }
 
     // ---

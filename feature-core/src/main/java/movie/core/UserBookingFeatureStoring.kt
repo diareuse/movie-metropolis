@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.asStored
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
@@ -12,8 +11,8 @@ class UserBookingFeatureStoring(
     private val bookingSeatsDao: BookingSeatsDao
 ) : UserBookingFeature by origin {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) = coroutineScope {
-        origin.get(callback.then(this) {
+    override suspend fun get(callback: ResultCallback<List<Booking>>) {
+        origin.get(callback.then {
             for (booking in it) {
                 bookingDao.insertOrUpdate(booking.asStored())
                 when (booking) {

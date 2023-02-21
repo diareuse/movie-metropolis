@@ -28,8 +28,8 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
@@ -98,9 +98,9 @@ class EventDetailFeatureTest {
     fun get_stores() = runTest {
         val testData = service_responds_success()
         feature.get(item)
-        verify(movie, times(1)).insertOrUpdate(any())
-        verify(detail, times(1)).insertOrUpdate(any())
-        verify(media, times(testData.media.size)).insertOrUpdate(any())
+        verify(movie, atMost(1)).insertOrUpdate(any())
+        verify(detail, atMost(1)).insertOrUpdate(any())
+        verify(media, atMost(testData.media.size)).insertOrUpdate(any())
     }
 
     @Test

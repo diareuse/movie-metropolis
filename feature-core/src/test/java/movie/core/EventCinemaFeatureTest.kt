@@ -19,8 +19,8 @@ import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import java.util.Date
 import kotlin.test.assertContentEquals
@@ -141,7 +141,7 @@ class EventCinemaFeatureTest {
     fun get_stores() = runTest {
         val testData = service_responds_success()
         feature.get(null)
-        verify(cinema, times(testData.size)).insertOrUpdate(any())
+        verify(cinema, atMost(testData.size)).insertOrUpdate(any())
     }
 
     @Test

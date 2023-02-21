@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.asStored
 import movie.core.db.dao.CinemaDao
 import movie.core.model.Cinema
@@ -14,8 +13,8 @@ class EventCinemaFeatureStoring(
     override suspend fun get(
         location: Location?,
         result: ResultCallback<Iterable<Cinema>>
-    ) = coroutineScope {
-        origin.get(location, result.then(this) { cinemas ->
+    ) {
+        origin.get(location, result.then { cinemas ->
             for (item in cinemas)
                 cinema.insertOrUpdate(item.asStored())
         })
