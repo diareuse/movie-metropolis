@@ -3,22 +3,27 @@ package movie.core
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import movie.log.LoggerContext
 import kotlin.coroutines.CoroutineContext
 
+val supervisorScope = CoroutineScope(SupervisorJob())
+
 inline fun <T> ResultCallback<T>.then(
-    scope: CoroutineScope,
     context: CoroutineContext = Dispatchers.Default,
     crossinline body: suspend (T) -> Unit
 ): ResultCallback<T> {
     var job: Job? = null
     return { result ->
         invoke(result)
-        job?.cancel()
-        job = scope.launch(context = context) {
-            result.onSuccess { body(it) }
+        result.onSuccess {
+            job?.cancel()
+            job = supervisorScope.launch(context = context + LoggerContext) {
+                body(it)
+            }
         }
     }
 }
@@ -31,9 +36,11 @@ inline fun <T> ResultCallback<T>.thenMap(
     var job: Job? = null
     return { result ->
         invoke(result)
-        job?.cancel()
-        job = scope.launch(context = context) {
-            invoke(result.mapCatching { body(it) })
+        result.onSuccess {
+            job?.cancel()
+            job = scope.launch(context = context) {
+                invoke(result.mapCatching { body(it) })
+            }
         }
     }
 }

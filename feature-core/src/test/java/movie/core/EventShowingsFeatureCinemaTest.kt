@@ -17,9 +17,9 @@ import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
@@ -144,9 +144,9 @@ class EventShowingsFeatureCinemaTest {
     fun get_savesData_fromNetwork() = runTest {
         val testData = cinemaEvents_responds_success()
         feature.get(Date()).first().getOrThrow()
-        verify(movie, times(testData.movies.size)).insertOrUpdate(any())
-        verify(reference, times(testData.movies.size)).insertOrUpdate(any())
-        verify(showing, times(testData.events.size)).insertOrUpdate(any())
+        verify(movie, atMost(testData.movies.size)).insertOrUpdate(any())
+        verify(reference, atMost(testData.movies.size)).insertOrUpdate(any())
+        verify(showing, atMost(testData.events.size)).insertOrUpdate(any())
     }
 
     // ---

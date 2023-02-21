@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.coroutineScope
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.preference.SyncPreference
@@ -14,8 +13,8 @@ class EventCinemaFeatureSaveTimestamp(
     override suspend fun get(
         location: Location?,
         result: ResultCallback<Iterable<Cinema>>
-    ) = coroutineScope {
-        origin.get(location, result.then(this) {
+    ) {
+        origin.get(location, result.then {
             preference.cinema = Date()
         })
     }
