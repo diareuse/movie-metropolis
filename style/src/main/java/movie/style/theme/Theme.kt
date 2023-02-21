@@ -1,20 +1,18 @@
 package movie.style.theme
 
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.luminance
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.foundation.*
+import androidx.compose.foundation.shape.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.*
 
 @Composable
-fun Theme(content: @Composable () -> Unit) = MaterialTheme(
-    colorScheme = themeColors(),
+fun Theme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) = MaterialTheme(
+    colorScheme = themeColors(useDarkTheme = darkTheme),
     typography = ThemeTypography,
     shapes = ThemeShapes
 ) {
