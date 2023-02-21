@@ -18,7 +18,7 @@ fun PreviewLayout(
 @Composable
 fun PreviewWearLayout(
     content: @Composable () -> Unit
-) = Theme {
+) = Theme(darkTheme = true) {
     Box(
         modifier = Modifier.padding(16.dp),
         contentAlignment = Alignment.Center
