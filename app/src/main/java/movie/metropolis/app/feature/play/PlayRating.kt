@@ -1,14 +1,12 @@
 package movie.metropolis.app.feature.play
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.*
 import com.google.android.play.core.ktx.launchReview
 import com.google.android.play.core.ktx.requestReview
 import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.coroutines.delay
-import movie.metropolis.app.util.findActivity
+import movie.style.util.findActivity
 import kotlin.time.Duration.Companion.minutes
 
 @Composable

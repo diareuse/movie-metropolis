@@ -25,10 +25,10 @@ import movie.metropolis.app.screen.order.complete.component.InAppPager
 import movie.metropolis.app.screen.order.complete.component.InAppPurchase
 import movie.metropolis.app.screen.order.complete.component.ProductDetailViewPreview
 import movie.metropolis.app.screen.setup.component.Background
-import movie.metropolis.app.util.findActivity
 import movie.style.AnticipateOvershootEasing
 import movie.style.AppToolbar
 import movie.style.theme.Theme
+import movie.style.util.findActivity
 
 @Composable
 fun OrderCompleteScreen(
