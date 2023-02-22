@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -42,12 +43,6 @@ import java.security.MessageDigest
 fun HomeScreen(
     startWith: String,
     viewModel: HomeViewModel = hiltViewModel(),
-    listing: ListingViewModel = hiltViewModel(),
-    cinemas: CinemasViewModel = hiltViewModel(),
-    booking: BookingViewModel = hiltViewModel(),
-    moviesState: LazyListState = rememberLazyListState(),
-    cinemasState: LazyListState = rememberLazyListState(),
-    bookingState: LazyListState = rememberLazyListState(),
     onClickMovie: (String, Boolean) -> Unit,
     onClickCinema: (String) -> Unit,
     onClickUser: () -> Unit,
@@ -68,65 +63,93 @@ fun HomeScreen(
         },
         onNavigateToLogin = onClickLogin
     ) { padding ->
-        val state = rememberHomeScreenState()
-        HomeScreenLayout(
-            state = state,
-            profileIcon = {
-                if (email != null) ProfileIcon(
-                    email = email,
-                    onClick = onClickUser
+        HomeScreenContent(
+            startWith = startWith,
+            email = email,
+            controller = controller,
+            padding = padding,
+            onClickCinema = onClickCinema,
+            onClickMovie = onClickMovie,
+            onClickUser = onClickUser
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@Composable
+private fun HomeScreenContent(
+    startWith: String,
+    email: String?,
+    controller: NavHostController,
+    padding: PaddingValues,
+    listing: ListingViewModel = hiltViewModel(),
+    cinemas: CinemasViewModel = hiltViewModel(),
+    booking: BookingViewModel = hiltViewModel(),
+    moviesState: LazyListState = rememberLazyListState(),
+    cinemasState: LazyListState = rememberLazyListState(),
+    bookingState: LazyListState = rememberLazyListState(),
+    onClickMovie: (String, Boolean) -> Unit,
+    onClickCinema: (String) -> Unit,
+    onClickUser: () -> Unit
+) {
+    val state = rememberHomeScreenState()
+    HomeScreenLayout(
+        state = state,
+        profileIcon = {
+            if (email != null) ProfileIcon(
+                email = email,
+                onClick = onClickUser
+            )
+        }
+    ) { paddingInner, behavior ->
+        AnimatedNavHost(
+            navController = controller,
+            startDestination = startWith
+        ) {
+            composable(
+                route = Route.Movies(),
+                deepLinks = Route.Movies.deepLinks
+            ) {
+                ListingScreen(
+                    padding = padding + paddingInner,
+                    onClickMovie = onClickMovie,
+                    state = moviesState,
+                    viewModel = listing,
+                    homeState = state,
+                    behavior = behavior
                 )
             }
-        ) { paddingInner, behavior ->
-            AnimatedNavHost(
-                navController = controller,
-                startDestination = startWith
+            composable(
+                route = Route.Cinemas(),
+                deepLinks = Route.Cinemas.deepLinks
             ) {
-                composable(
-                    route = Route.Movies(),
-                    deepLinks = Route.Movies.deepLinks
-                ) {
-                    ListingScreen(
-                        padding = padding + paddingInner,
-                        onClickMovie = onClickMovie,
-                        state = moviesState,
-                        viewModel = listing,
-                        homeState = state,
-                        behavior = behavior
-                    )
-                }
-                composable(
-                    route = Route.Cinemas(),
-                    deepLinks = Route.Cinemas.deepLinks
-                ) {
-                    CinemasScreen(
-                        padding = padding + paddingInner,
-                        onClickCinema = onClickCinema,
-                        viewModel = cinemas,
-                        state = cinemasState,
-                        homeState = state,
-                        behavior = behavior
-                    )
-                }
-                composable(
-                    route = Route.Tickets(),
-                    deepLinks = Route.Tickets.deepLinks
-                ) {
-                    BookingScreen(
-                        padding = padding + paddingInner,
-                        viewModel = booking,
-                        state = bookingState,
-                        onMovieClick = { onClickMovie(it, true) },
-                        homeState = state,
-                        behavior = behavior
-                    )
-                }
+                CinemasScreen(
+                    padding = padding + paddingInner,
+                    onClickCinema = onClickCinema,
+                    viewModel = cinemas,
+                    state = cinemasState,
+                    homeState = state,
+                    behavior = behavior
+                )
+            }
+            composable(
+                route = Route.Tickets(),
+                deepLinks = Route.Tickets.deepLinks
+            ) {
+                BookingScreen(
+                    padding = padding + paddingInner,
+                    viewModel = booking,
+                    state = bookingState,
+                    onMovieClick = { onClickMovie(it, true) },
+                    homeState = state,
+                    behavior = behavior
+                )
             }
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreenLayout(
     state: HomeScreenState = rememberHomeScreenState(),
@@ -142,7 +165,16 @@ fun HomeScreenLayout(
         topBar = {
             AppToolbar(
                 modifier = Modifier.background(Theme.color.container.background.copy(alpha = .9f)),
-                title = { if (state.title != 0) Text(stringResource(state.title)) },
+                title = {
+                    if (state.title != 0) AnimatedContent(
+                        targetState = stringResource(state.title),
+                        transitionSpec = {
+                            fadeIn() + slideInHorizontally { it } with fadeOut() + slideOutHorizontally { -it }
+                        }
+                    ) {
+                        Text(it)
+                    }
+                },
                 navigationIcon = profileIcon,
                 scrollBehavior = behavior
             )
