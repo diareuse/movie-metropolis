@@ -21,7 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.screen.Route
-import movie.style.haptic.PlatformHapticFeedback
 import movie.style.theme.Theme
 import java.io.File
 import kotlin.coroutines.resume
@@ -44,14 +43,10 @@ class MainActivity : AppCompatActivity() {
             PlayRating()
             Theme {
                 ProvideActivityActions(actions = actions) {
-                    CompositionLocalProvider(
-                        LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
-                    ) {
-                        val controller = rememberAnimatedNavController()
-                        Navigation(controller = controller)
-                        LaunchedEffect(Unit) {
-                            navigateIfNecessary(controller)
-                        }
+                    val controller = rememberAnimatedNavController()
+                    Navigation(controller = controller)
+                    LaunchedEffect(Unit) {
+                        navigateIfNecessary(controller)
                     }
                 }
             }

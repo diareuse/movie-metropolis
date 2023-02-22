@@ -5,7 +5,9 @@ import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.*
+import movie.style.haptic.PlatformHapticFeedback
 
 @Composable
 fun Theme(
@@ -19,7 +21,8 @@ fun Theme(
     CompositionLocalProvider(
         LocalText provides ThemeTextMaterial3(MaterialTheme.typography),
         LocalContainer provides ThemeContainerMaterial3(MaterialTheme.shapes),
-        LocalStyle provides ThemeStyleMaterial3(MaterialTheme.colorScheme)
+        LocalStyle provides ThemeStyleMaterial3(MaterialTheme.colorScheme),
+        LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
     ) {
         CompositionLocalProvider(
             LocalTextStyle provides Theme.textStyle.body
