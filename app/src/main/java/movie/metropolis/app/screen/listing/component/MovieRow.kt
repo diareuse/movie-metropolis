@@ -89,9 +89,6 @@ private fun MovieRow(
     ) {
         items(items, key = MovieView::id) { item ->
             var showPopup by remember { mutableStateOf(false) }
-            LaunchedEffect(key1 = item.id) {
-                item.markSeen()
-            }
             if (isShowing)
                 MovieItem(
                     rating = item.rating,

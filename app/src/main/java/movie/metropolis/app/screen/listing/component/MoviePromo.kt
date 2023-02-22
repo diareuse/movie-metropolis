@@ -66,9 +66,6 @@ fun MoviePromo(
         ) { index ->
             val item = it[index]
             var showPopup by remember { mutableStateOf(false) }
-            LaunchedEffect(item.id) {
-                item.markSeen()
-            }
             Box {
                 MoviePoster(
                     url = item.poster?.url,
