@@ -43,13 +43,14 @@ jobs:
           path: |
             app/**/*.aab
             app/**/mapping.txt
+          if-no-files-found: error
 
       - uses: actions/upload-artifact@v3
         with:
           name: release-wear-bundle
           path: |
             app-wear/**/*.aab
-            app-wear/**/mapping.txt
+          if-no-files-found: error
 
   publish-aab:
     runs-on: ubuntu-latest
@@ -74,7 +75,7 @@ jobs:
         with:
           serviceAccountJson: service-account.json
           packageName: movie.metropolis.app
-          releaseFiles: build/outputs/bundle/release/app-release.aab, build/outputs/bundle/release/app-wear-release.aab
+          releaseFiles: build/outputs/bundle/release/*.aab
           track: production
           status: completed
           inAppUpdatePriority: 3
