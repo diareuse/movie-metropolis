@@ -4,43 +4,18 @@ import android.Manifest
 import android.annotation.SuppressLint
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts.*
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.*
+import androidx.compose.ui.*
+import androidx.compose.ui.input.nestedscroll.*
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
@@ -63,7 +38,7 @@ import movie.metropolis.app.screen.booking.component.BookingItemExpiredEmpty
 import movie.metropolis.app.screen.booking.component.BookingItemExpiredFailure
 import movie.metropolis.app.screen.booking.component.BookingTicketDialog
 import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.screen.home.HomeScreenLayout
+import movie.metropolis.app.screen.home.HomeScreenState
 import movie.metropolis.app.screen.reader.BarcodeReader
 import movie.metropolis.app.util.register
 import movie.metropolis.app.util.toBitmap
@@ -78,36 +53,35 @@ import movie.style.theme.Theme
 @Composable
 fun BookingScreen(
     padding: PaddingValues,
+    homeState: HomeScreenState,
+    behavior: TopAppBarScrollBehavior,
     state: LazyListState,
-    profileIcon: @Composable () -> Unit,
     onMovieClick: (String) -> Unit,
     viewModel: BookingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
+    SideEffect {
+        homeState.title = R.string.tickets
+    }
     val active by viewModel.active.collectAsState()
     val expired by viewModel.expired.collectAsState()
     val scope = rememberCoroutineScope()
     var isReaderActive by rememberSaveable { mutableStateOf(false) }
-    HomeScreenLayout(
-        profileIcon = profileIcon,
-        title = { Text(stringResource(R.string.tickets)) }
-    ) { innerPadding, behavior ->
-        BookingScreenContent(
-            padding = innerPadding + padding,
-            behavior = behavior,
-            active = active,
-            expired = expired,
-            onRefreshClick = viewModel::refresh,
-            onMovieClick = onMovieClick,
-            onShareClick = {
-                scope.launch {
-                    actions.actionShare(viewModel.saveAsFile(it))
-                }
-            },
-            onCameraClick = { isReaderActive = true },
-            state = state
-        )
-    }
+    BookingScreenContent(
+        padding = padding,
+        behavior = behavior,
+        active = active,
+        expired = expired,
+        onRefreshClick = viewModel::refresh,
+        onMovieClick = onMovieClick,
+        onShareClick = {
+            scope.launch {
+                actions.actionShare(viewModel.saveAsFile(it))
+            }
+        },
+        onCameraClick = { isReaderActive = true },
+        state = state
+    )
     ReaderDialog(
         isVisible = isReaderActive,
         onVisibilityChanged = { isReaderActive = it },
@@ -266,10 +240,13 @@ private fun BookingScreenContent(
             }
         }
 
-        item(key = "divider") { Divider(
-            Modifier
-                .padding(horizontal = 24.dp)
-                .padding(16.dp)) }
+        item(key = "divider") {
+            Divider(
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(16.dp)
+            )
+        }
 
         item(key = "expired") {
             MovieItemRow(items = expired, onMovieClick = onMovieClick)
@@ -319,16 +296,11 @@ private fun MovieItemRow(
 @Composable
 private fun Preview() {
     Theme {
-        HomeScreenLayout(
-            profileIcon = {},
-            title = {}
-        ) { padding, behavior ->
-            BookingScreenContent(
-                padding = padding,
-                active = Loadable.loading(),
-                expired = Loadable.loading(),
-                behavior = behavior
-            )
-        }
+        BookingScreenContent(
+            padding = PaddingValues(),
+            active = Loadable.loading(),
+            expired = Loadable.loading(),
+            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+        )
     }
 }

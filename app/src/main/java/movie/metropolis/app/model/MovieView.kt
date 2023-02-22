@@ -1,6 +1,6 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 import movie.core.model.MoviePreview
 
 @Immutable
@@ -21,4 +21,5 @@ interface MovieView {
     val video: VideoView?
 
     fun getBase(): MoviePreview
+    fun markSeen()
 }

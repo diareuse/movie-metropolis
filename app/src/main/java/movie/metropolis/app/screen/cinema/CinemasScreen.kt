@@ -1,26 +1,15 @@
 package movie.metropolis.app.screen.cinema
 
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.input.nestedscroll.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
@@ -33,7 +22,7 @@ import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.CinemaItem
 import movie.metropolis.app.screen.cinema.component.CinemaItemEmpty
 import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.screen.home.HomeScreenLayout
+import movie.metropolis.app.screen.home.HomeScreenState
 import movie.style.AppErrorItem
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
@@ -44,26 +33,25 @@ fun CinemasScreen(
     padding: PaddingValues,
     onClickCinema: (String) -> Unit,
     state: LazyListState,
-    profileIcon: @Composable () -> Unit,
+    behavior: TopAppBarScrollBehavior,
+    homeState: HomeScreenState,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
+    SideEffect {
+        homeState.title = R.string.cinemas
+    }
     val items by viewModel.items.collectAsState()
     val location by rememberLocation()
     LaunchedEffect(location) {
         viewModel.location.value = location ?: return@LaunchedEffect
     }
-    HomeScreenLayout(
-        profileIcon = profileIcon,
-        title = { Text(stringResource(R.string.cinemas)) }
-    ) { innerPadding, behavior ->
-        CinemasScreen(
-            items = items,
-            behavior = behavior,
-            padding = innerPadding + padding,
-            onClickCinema = onClickCinema,
-            state = state
-        )
-    }
+    CinemasScreen(
+        items = items,
+        behavior = behavior,
+        padding = padding,
+        onClickCinema = onClickCinema,
+        state = state
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -122,13 +110,11 @@ private fun CinemasScreen(
 @Composable
 private fun Preview() {
     Theme {
-        HomeScreenLayout(profileIcon = { /*TODO*/ }, title = { /*TODO*/ }) { padding, behavior ->
-            CinemasScreen(
-                items = Loadable.loading(),
-                padding = padding,
-                behavior = behavior,
-                onClickCinema = {}
-            )
-        }
+        CinemasScreen(
+            items = Loadable.loading(),
+            padding = PaddingValues(),
+            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+            onClickCinema = {}
+        )
     }
 }
