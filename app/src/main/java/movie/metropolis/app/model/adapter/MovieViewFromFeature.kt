@@ -56,8 +56,4 @@ data class MovieViewFromFeature(
             ?.let(::VideoViewFromFeature)
 
     override fun getBase() = movie
-
-    override fun markSeen() {
-        println("Seen $name")
-    }
 }

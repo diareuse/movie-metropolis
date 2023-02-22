@@ -32,7 +32,6 @@ class MovieViewProvider :
         override val posterLarge: ImageView? = PreviewImage()
     ) : MovieView {
         override fun getBase(): MoviePreview = TODO()
-        override fun markSeen() {}
     }
 
     private data class PreviewImage(

@@ -21,5 +21,4 @@ interface MovieView {
     val video: VideoView?
 
     fun getBase(): MoviePreview
-    fun markSeen()
 }
