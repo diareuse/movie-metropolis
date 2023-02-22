@@ -1,40 +1,31 @@
 package movie.metropolis.app.screen.cinema.component
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Constraints
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.*
+import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.text.style.*
+import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.MovieBookingView
+import movie.metropolis.app.model.preview.MovieBookingViewPreview
 import movie.metropolis.app.screen.detail.component.ShowingItemSection
 import movie.metropolis.app.screen.detail.component.ShowingItemTime
 import movie.metropolis.app.screen.detail.component.ShowingLayout
 import movie.style.AppImage
 import movie.style.layout.EmptyShapeLayout
+import movie.style.layout.PreviewLayout
 import movie.style.state.ImmutableMap
 import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
@@ -93,7 +84,7 @@ fun MovieShowingItem(
         }
     ) {
         ShowingItemTime(
-            modifier = Modifier.textPlaceholder(true),
+            modifier = Modifier.textPlaceholder(true, shape = Theme.container.button),
             time = "#".repeat(5)
         )
     }
@@ -120,6 +111,26 @@ fun MovieShowingItemEmpty(
             )
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun Preview(
+    @PreviewParameter(MovieBookingViewPreview::class) item: MovieBookingView
+) = PreviewLayout {
+    MovieShowingItem(item.movie, item.availability.immutable(), {})
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEmpty() = PreviewLayout {
+    MovieShowingItemEmpty()
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewLoading() = PreviewLayout {
+    MovieShowingItem()
 }
 
 fun Modifier.parallax(distance: Dp = 64.dp) = composed {
