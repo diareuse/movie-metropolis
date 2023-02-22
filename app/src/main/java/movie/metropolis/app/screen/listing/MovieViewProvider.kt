@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.listing
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.datasource.CollectionPreviewParameterProvider
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.tooling.preview.datasource.*
 import movie.core.model.MoviePreview
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
@@ -32,6 +32,7 @@ class MovieViewProvider :
         override val posterLarge: ImageView? = PreviewImage()
     ) : MovieView {
         override fun getBase(): MoviePreview = TODO()
+        override fun markSeen() {}
     }
 
     private data class PreviewImage(

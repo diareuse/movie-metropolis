@@ -24,8 +24,7 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
-import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.screen.home.HomeScreenLayout
+import movie.metropolis.app.screen.home.HomeScreenState
 import movie.metropolis.app.screen.listing.component.MoviePromo
 import movie.metropolis.app.screen.listing.component.MovieRow
 import movie.style.state.ImmutableList.Companion.immutable
@@ -36,43 +35,42 @@ import movie.style.theme.Theme
 @Composable
 fun ListingScreen(
     padding: PaddingValues,
+    homeState: HomeScreenState,
+    behavior: TopAppBarScrollBehavior,
     onClickMovie: (String, upcoming: Boolean) -> Unit,
     state: LazyListState,
-    profileIcon: @Composable () -> Unit,
     viewModel: ListingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
+    SideEffect {
+        homeState.title = R.string.now_available
+    }
     val currentPromotions by viewModel.currentPromotions.collectAsState()
     val upcomingPromotions by viewModel.upcomingPromotions.collectAsState()
     val currentGroups by viewModel.currentGroups.collectAsState()
     val upcomingGroups by viewModel.upcomingGroups.collectAsState()
     val scope = rememberCoroutineScope()
-    HomeScreenLayout(
-        profileIcon = profileIcon,
-        title = { Text(stringResource(R.string.now_available)) }
-    ) { innerPadding, behavior ->
-        ListingScreenContent(
-            currentPromotions = currentPromotions,
-            upcomingPromotions = upcomingPromotions,
-            currentGroups = currentGroups,
-            upcomingGroups = upcomingGroups,
-            contentPadding = padding + innerPadding,
-            behavior = behavior,
-            state = state,
-            onClickFavorite = {
-                scope.launch {
-                    val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        actions.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-                    } else {
-                        true
-                    }
-                    if (!granted) return@launch
-                    viewModel.toggleFavorite(it)
+    ListingScreenContent(
+        currentPromotions = currentPromotions,
+        upcomingPromotions = upcomingPromotions,
+        currentGroups = currentGroups,
+        upcomingGroups = upcomingGroups,
+        contentPadding = padding,
+        behavior = behavior,
+        state = state,
+        onClickFavorite = {
+            scope.launch {
+                val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    actions.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                } else {
+                    true
                 }
-            },
-            onClick = onClickMovie,
-        )
-    }
+                if (!granted) return@launch
+                viewModel.toggleFavorite(it)
+            }
+        },
+        onClick = onClickMovie,
+    )
 }
 
 @OptIn(
