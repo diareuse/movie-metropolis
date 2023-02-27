@@ -39,6 +39,24 @@ fun Table(
     }
 }
 
+@Composable
+fun Table(
+    rows: Int,
+    columns: Int,
+    modifier: Modifier = Modifier,
+    content: @Composable (row: Int, column: Int) -> Unit
+) {
+    Column(modifier = modifier) {
+        for (row in 0 until rows) Row {
+            for (column in 0 until columns) Box(
+                modifier = Modifier.weight(1f)
+            ) {
+                content(row, column)
+            }
+        }
+    }
+}
+
 @Stable
 data class TableRow(
     val columns: ImmutableList<String>,

@@ -40,7 +40,7 @@ data class MovieDetailViewFromFeature(
         get() = dateFormat.format(movie.screeningFrom)
     override val poster: ImageView?
         get() = movie.media.asSequence().filterIsInstance<Media.Image>()
-            .sortedByDescending { it.width * it.height }.middleOrNull()
+            .sortedByDescending { it.width * it.height }.firstOrNull()
             ?.let { ImageViewFromFeature(it, Color(movie.spotColor)) }
     override val trailer: VideoView?
         get() = movie.media.filterIsInstance<Media.Video>().firstOrNull()
