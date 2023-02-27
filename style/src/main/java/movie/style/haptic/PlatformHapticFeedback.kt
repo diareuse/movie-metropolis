@@ -1,8 +1,7 @@
 package movie.style.haptic
 
 import android.view.View
-import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.hapticfeedback.*
 
 class PlatformHapticFeedback(
     private val view: View

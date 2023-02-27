@@ -1,10 +1,10 @@
 package movie.metropolis.app.screen.listing.component
 
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.style.*
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 

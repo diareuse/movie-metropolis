@@ -1,6 +1,6 @@
 package movie.metropolis.app.presentation.listing
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.test.runTest
 import movie.core.EventPreviewFeature
 import movie.core.model.MoviePreview

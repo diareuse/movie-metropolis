@@ -1,7 +1,7 @@
 package movie.style.theme
 
-import androidx.compose.material3.ColorScheme
-import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.*
+import androidx.compose.ui.graphics.*
 
 internal class ThemeStyleMaterial3(
     private val scheme: ColorScheme

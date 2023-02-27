@@ -1,6 +1,6 @@
 package movie.metropolis.app.screen.listing
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -1,7 +1,7 @@
 package movie.style.theme
 
-import androidx.compose.foundation.shape.CornerBasedShape
-import androidx.compose.material3.Shapes
+import androidx.compose.foundation.shape.*
+import androidx.compose.material3.*
 
 internal class ThemeContainerMaterial3(
     private val shapes: Shapes

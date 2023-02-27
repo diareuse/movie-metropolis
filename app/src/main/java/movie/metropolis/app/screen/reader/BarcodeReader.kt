@@ -3,11 +3,9 @@ package movie.metropolis.app.screen.reader
 import android.Manifest
 import android.view.ViewGroup
 import androidx.annotation.RequiresPermission
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.viewinterop.*
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
