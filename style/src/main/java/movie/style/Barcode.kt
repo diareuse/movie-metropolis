@@ -6,12 +6,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import movie.style.theme.Theme
+import movie.style.util.findActivity
 
 @Composable
 fun Barcode(
@@ -35,6 +37,21 @@ fun Barcode(
                 bitmap.setPixel(x, y, pixel)
             }
             bitmap.asImageBitmap()
+        }
+    }
+    val context = LocalContext.current
+    DisposableEffect(context) {
+        val window = context.findActivity().window
+        val initialBrightness = window.attributes.screenBrightness
+        window.attributes = window.attributes.apply {
+            screenBrightness = 1f
+        }
+        println(">in")
+        onDispose {
+            println(">gone")
+            window.attributes = window.attributes.apply {
+                screenBrightness = initialBrightness
+            }
         }
     }
     Canvas(modifier.onSizeChanged(onSizeChanged)) {

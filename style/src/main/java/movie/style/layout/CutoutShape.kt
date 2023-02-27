@@ -9,7 +9,7 @@ class CutoutShape(
     private val cornerSize: CornerSize,
     private val width: Dp,
     private val height: Dp
-) : Shape {
+) : Shape { // convert to cornerbasedshape
 
     override fun createOutline(
         size: Size,
