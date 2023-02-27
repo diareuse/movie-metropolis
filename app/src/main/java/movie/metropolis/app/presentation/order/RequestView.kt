@@ -1,6 +1,6 @@
 package movie.metropolis.app.presentation.order
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 
 @Stable
 data class RequestView(

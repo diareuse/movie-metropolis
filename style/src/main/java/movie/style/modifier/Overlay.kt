@@ -1,10 +1,8 @@
 package movie.style.modifier
 
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
 import movie.style.theme.Theme
 
 fun Modifier.overlay() = composed {

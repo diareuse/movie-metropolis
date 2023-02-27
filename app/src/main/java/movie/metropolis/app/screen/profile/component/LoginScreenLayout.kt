@@ -1,10 +1,9 @@
 package movie.metropolis.app.screen.profile.component
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.res.*
 import movie.metropolis.app.R
 import movie.style.AppIconButton
 import movie.style.AppToolbar

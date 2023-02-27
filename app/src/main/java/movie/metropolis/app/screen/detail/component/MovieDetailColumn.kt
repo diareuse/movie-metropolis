@@ -1,12 +1,10 @@
 package movie.metropolis.app.screen.detail.component
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.presentation.Loadable
 import movie.style.EllipsisText

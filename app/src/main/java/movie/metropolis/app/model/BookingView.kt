@@ -1,6 +1,6 @@
 package movie.metropolis.app.model
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.*
 
 @Immutable
 sealed interface BookingView {

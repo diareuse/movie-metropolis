@@ -1,10 +1,8 @@
 package movie.style.image
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.unit.*
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Precision

@@ -1,14 +1,11 @@
 package movie.metropolis.app.screen.booking.component
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Stable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.style.*
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 

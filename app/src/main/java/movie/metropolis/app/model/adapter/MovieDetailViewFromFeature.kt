@@ -1,6 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import movie.core.model.Media
 import movie.core.model.MovieDetail
 import movie.metropolis.app.model.ImageView

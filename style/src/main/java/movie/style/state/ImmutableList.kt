@@ -1,7 +1,6 @@
 package movie.style.state
 
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 import java.util.Collections
 
 @Immutable

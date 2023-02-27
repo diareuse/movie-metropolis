@@ -2,8 +2,7 @@ package movie.metropolis.app.model
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.*
 
 @Immutable
 @JvmInline

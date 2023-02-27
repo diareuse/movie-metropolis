@@ -1,11 +1,10 @@
 package movie.style.layout
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.unit.*
 import movie.style.theme.Theme
 import movie.style.theme.extendBy
 

@@ -1,6 +1,6 @@
 package movie.metropolis.app.presentation.detail
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.sync.Mutex
 import movie.core.EventDetailFeature
 import movie.core.EventShowingsFeature
