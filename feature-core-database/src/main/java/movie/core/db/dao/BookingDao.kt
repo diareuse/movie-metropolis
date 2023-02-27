@@ -10,7 +10,7 @@ interface BookingDao : DaoBase<BookingStored> {
     @Query("select * from bookings order by starts_at desc")
     suspend fun selectAll(): List<BookingStored>
 
-    @Query("select distinct id from bookings")
+    @Query("select distinct movie from bookings")
     suspend fun selectIds(): List<String>
 
 }
