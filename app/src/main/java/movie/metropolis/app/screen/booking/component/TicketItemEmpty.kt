@@ -21,7 +21,7 @@ fun TicketItemEmpty(
 ) {
     var height by remember { mutableStateOf(0) }
     EmptyShapeLayout(
-        modifier = modifier.onPlaced { height = it.size.height / 4 },
+        modifier = modifier.onGloballyPositioned { height = it.size.height / 4 },
         contentPadding = PaddingValues(24.dp) + PaddingValues(bottom = with(LocalDensity.current) { height.toDp() }),
         shape = TicketShape(
             cornerSize = Theme.container.card.topStart,

@@ -70,7 +70,7 @@ fun InAppPurchase(
         }
         if (isPopular) Row(
             modifier = Modifier
-                .onPlaced { height = it.size.height }
+                .onGloballyPositioned { height = it.size.height }
                 .align(Alignment.BottomCenter)
                 .surface(
                     Theme.color.container.tertiary,

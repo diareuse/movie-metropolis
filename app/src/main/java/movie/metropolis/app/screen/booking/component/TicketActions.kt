@@ -32,7 +32,7 @@ fun TicketActions(
         contentAlignment = Alignment.TopCenter
     ) {
         Row(
-            modifier = Modifier.onPlaced { anchorSize = it.size.width.toFloat() },
+            modifier = Modifier.onGloballyPositioned { anchorSize = it.size.width.toFloat() },
             verticalAlignment = Alignment.CenterVertically,
             content = actions
         )

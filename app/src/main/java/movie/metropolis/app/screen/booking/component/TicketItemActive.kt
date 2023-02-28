@@ -39,7 +39,7 @@ fun TicketItemActive(
         label = "cutout-offset-override"
     )
     TicketActions(
-        modifier = modifier.onPlaced { width = it.size.width },
+        modifier = modifier.onGloballyPositioned { width = it.size.width },
         actions = {
             AppIconButton(
                 onClick = onShare,

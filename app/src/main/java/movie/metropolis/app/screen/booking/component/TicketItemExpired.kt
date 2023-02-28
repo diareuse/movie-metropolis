@@ -34,7 +34,7 @@ fun TicketItemExpired(
         label = "cutout-offset-override"
     )
     TicketOverlay(
-        modifier = modifier.onPlaced { width = it.size.width },
+        modifier = modifier.onGloballyPositioned { width = it.size.width },
         cutoutOffset = cutoutOffsetOverride,
         color = item.movie.poster?.spotColor ?: LocalContentColor.current,
         overlay = {
