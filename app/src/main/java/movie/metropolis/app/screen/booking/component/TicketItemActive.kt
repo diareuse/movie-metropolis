@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.booking.component
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
@@ -30,9 +32,14 @@ fun TicketItemActive(
     onClick: OnClickListener? = null
 ) {
     var cutoutOffset by remember { mutableStateOf(0) }
+    var width by remember { mutableStateOf(0) }
     var isVisible by remember { mutableStateOf(false) }
+    val cutoutOffsetOverride by animateIntAsState(
+        targetValue = if (isVisible) width else cutoutOffset,
+        label = "cutout-offset-override"
+    )
     TicketActions(
-        modifier = modifier,
+        modifier = modifier.onPlaced { width = it.size.width },
         actions = {
             AppIconButton(
                 onClick = onShare,
@@ -41,7 +48,7 @@ fun TicketItemActive(
         }
     ) {
         TicketOverlay(
-            cutoutOffset = cutoutOffset,
+            cutoutOffset = cutoutOffsetOverride,
             color = item.movie.poster?.spotColor ?: LocalContentColor.current,
             overlay = {
                 AppIconButton(

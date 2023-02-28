@@ -1,11 +1,13 @@
 package movie.metropolis.app.screen.booking.component
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import com.google.zxing.BarcodeFormat
@@ -25,10 +27,15 @@ fun TicketItemExpired(
     onClick: OnClickListener? = null
 ) {
     var cutoutOffset by remember { mutableStateOf(0) }
+    var width by remember { mutableStateOf(0) }
     var isVisible by remember { mutableStateOf(false) }
+    val cutoutOffsetOverride by animateIntAsState(
+        targetValue = if (isVisible) width else cutoutOffset,
+        label = "cutout-offset-override"
+    )
     TicketOverlay(
-        modifier = modifier,
-        cutoutOffset = cutoutOffset,
+        modifier = modifier.onPlaced { width = it.size.width },
+        cutoutOffset = cutoutOffsetOverride,
         color = item.movie.poster?.spotColor ?: LocalContentColor.current,
         overlay = {
             AppIconButton(
