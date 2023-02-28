@@ -27,6 +27,7 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.fold
 import movie.metropolis.app.screen.booking.component.ReaderDialog
 import movie.metropolis.app.screen.booking.component.TicketItemActive
+import movie.metropolis.app.screen.booking.component.TicketItemEmpty
 import movie.metropolis.app.screen.booking.component.TicketItemError
 import movie.metropolis.app.screen.booking.component.TicketItemExpired
 import movie.metropolis.app.screen.booking.component.TicketItemLoading
@@ -118,7 +119,7 @@ private fun BookingScreenContent(
         }
         val items = remember(active, expired) {
             val itemsActive = active.fold(
-                onSuccess = { it },
+                onSuccess = { it.ifEmpty { listOf(BookingView.Empty) } },
                 onLoading = { listOf(BookingView.Loading) },
                 onFailure = { listOf(BookingView.Error) }
             )
@@ -154,6 +155,10 @@ private fun BookingScreenContent(
                 )
 
                 BookingView.Loading -> TicketItemLoading(
+                    modifier = Modifier.fillMaxHeight()
+                )
+
+                BookingView.Empty -> TicketItemEmpty(
                     modifier = Modifier.fillMaxHeight()
                 )
             }
