@@ -20,16 +20,16 @@ fun TicketActions(
     state: SwipeableState<Int> = rememberSwipeableState(initialValue = 0),
     content: @Composable () -> Unit
 ) {
-    var anchorSize by remember { mutableStateOf(0f) }
-    val anchors = remember(anchorSize) { mapOf(0f to 0, -anchorSize to 1) }
+    var anchorSize by remember { mutableStateOf(1f) }
+    val anchors = remember(anchorSize) { mapOf(0f to 0, anchorSize to 1) }
     Box(
         modifier = modifier.swipeable(
             state = state,
             anchors = anchors,
             thresholds = { _, _ -> FractionalThreshold(1f) },
-            orientation = Orientation.Horizontal
+            orientation = Orientation.Vertical
         ),
-        contentAlignment = Alignment.CenterEnd
+        contentAlignment = Alignment.TopCenter
     ) {
         Row(
             modifier = Modifier.onPlaced { anchorSize = it.size.width.toFloat() },
@@ -39,7 +39,7 @@ fun TicketActions(
         Box(
             modifier = Modifier.offset {
                 val offset = state.offset.value.takeUnless { it.isNaN() } ?: 0f
-                IntOffset(offset.roundToInt(), 0)
+                IntOffset(0, offset.roundToInt())
             }
         ) {
             content()
