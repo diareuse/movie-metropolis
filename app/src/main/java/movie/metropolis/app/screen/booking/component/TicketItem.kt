@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import movie.style.AppImage
 import movie.style.layout.PreviewLayout
+import movie.style.modifier.surface
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
@@ -29,13 +30,14 @@ fun TicketItem(
 ) {
     Column(
         modifier = modifier
-            .fillMaxHeight()
+            .fillMaxSize()
     ) {
         Box(modifier = Modifier.weight(1f)) {
             poster()
         }
         Column(
             modifier = Modifier
+                .fillMaxWidth()
                 .onPlaced { onBottomOffsetChanged(it.size.height) }
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -43,7 +45,7 @@ fun TicketItem(
             ProvideTextStyle(Theme.textStyle.title.copy(textAlign = TextAlign.Center)) {
                 name()
             }
-            ProvideTextStyle(Theme.textStyle.caption) {
+            ProvideTextStyle(Theme.textStyle.caption.copy(textAlign = TextAlign.Center)) {
                 cinema()
                 date()
                 metadata()
@@ -58,12 +60,14 @@ private fun TicketItemPreviewLight(
     @PreviewParameter(TicketItemParameter::class, 1) parameter: TicketItemParameter.Data
 ) = PreviewLayout {
     TicketItem(
+        modifier = Modifier.surface(4.dp),
         cinema = { Text(parameter.cinema) },
         poster = { AppImage(parameter.poster) },
         name = { Text(parameter.name) },
         date = { Text(parameter.date) },
         metadata = {
             TicketMetadata(
+                modifier = Modifier.padding(top = 16.dp),
                 seats = parameter.seats.size,
                 hall = { Text(parameter.hall) },
                 time = { Text(parameter.time) },
@@ -80,12 +84,14 @@ private fun TicketItemPreviewDark(
     @PreviewParameter(TicketItemParameter::class, 1) parameter: TicketItemParameter.Data
 ) = PreviewLayout {
     TicketItem(
+        modifier = Modifier.surface(4.dp),
         cinema = { Text(parameter.cinema) },
         poster = { AppImage(parameter.poster) },
         name = { Text(parameter.name) },
         date = { Text(parameter.date) },
         metadata = {
             TicketMetadata(
+                modifier = Modifier.padding(top = 16.dp),
                 seats = parameter.seats.size,
                 hall = { Text(parameter.hall) },
                 time = { Text(parameter.time) },
