@@ -13,8 +13,6 @@ import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
-import movie.style.state.ImmutableList
-import movie.style.state.ImmutableList.Companion.immutable
 
 @Composable
 fun TicketMetadata(
@@ -29,8 +27,7 @@ fun TicketMetadata(
     verticalArrangement = Arrangement.spacedBy(16.dp)
 ) {
     val headlineTextStyle = LocalTextStyle.current.copy(
-        fontWeight = FontWeight.Bold,
-        color = LocalContentColor.current.copy(alpha = .75f)
+        fontWeight = FontWeight.Bold
     )
     Table(
         rows = 2,
@@ -98,7 +95,7 @@ private class TicketMetadataParameter :
     CollectionPreviewParameterProvider<TicketMetadataParameter.Data>(listOf(Data())) {
     data class Data(
         val hall: String = "IMAX",
-        val seats: ImmutableList<Pair<String, String>> = listOf("13" to "10").immutable(),
+        val seats: List<Pair<String, String>> = listOf("13" to "10", "13" to "11"),
         val time: String = "12:34"
     )
 }
