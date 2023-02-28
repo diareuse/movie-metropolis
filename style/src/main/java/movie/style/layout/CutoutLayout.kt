@@ -21,6 +21,26 @@ fun CutoutLayout(
     cutoutPadding: Dp = 8.dp,
     overlay: @Composable () -> Unit,
     content: @Composable () -> Unit
+) = CutoutLayout(
+    color = color,
+    cutoutShape = shape,
+    contentShape = shape,
+    modifier = modifier,
+    cutoutPadding = cutoutPadding,
+    overlay = overlay,
+    content = content
+)
+
+@Composable
+fun CutoutLayout(
+    color: Color,
+    cutoutShape: CornerBasedShape,
+    contentShape: CornerBasedShape,
+    modifier: Modifier = Modifier,
+    cutoutPadding: Dp = 8.dp,
+    elevation: Dp = 16.dp,
+    overlay: @Composable () -> Unit,
+    content: @Composable () -> Unit
 ) {
     Box(
         modifier = modifier
@@ -28,19 +48,23 @@ fun CutoutLayout(
         var width by remember { mutableStateOf(0.dp) }
         var height by remember { mutableStateOf(0.dp) }
         val density = LocalDensity.current
-        val elevation = 16.dp
         val color = animateColorAsState(color).value
         val containerShape =
-            if (width <= 0.dp || height <= 0.dp) shape.extendBy(cutoutPadding)
+            if (width <= 0.dp || height <= 0.dp) contentShape
             else CutoutShape.from(
-                shape.extendBy(cutoutPadding),
+                contentShape.extendBy(cutoutPadding),
                 width + cutoutPadding,
                 height + cutoutPadding
             )
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .surface(Theme.color.container.background, containerShape, elevation, color)
+                .surface(
+                    color = Theme.color.container.background,
+                    shape = IntersectShape(contentShape, containerShape),
+                    elevation = elevation,
+                    shadowColor = color
+                )
         ) {
             content()
         }
@@ -53,7 +77,7 @@ fun CutoutLayout(
                     }
                 }
                 .align(Alignment.TopEnd)
-                .surface(color, shape, elevation, color)
+                .surface(color, cutoutShape, elevation, color)
         ) {
             overlay()
         }

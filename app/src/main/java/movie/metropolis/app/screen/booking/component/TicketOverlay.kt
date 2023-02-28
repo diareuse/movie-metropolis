@@ -23,12 +23,14 @@ fun TicketOverlay(
 ) {
     val density = LocalDensity.current
     val shape = remember(cutoutOffset, density) {
-        TicketShape(CornerSize(24.dp), 16.dp, cutoutOffset, density)
+        TicketShape(CornerSize(16.dp), 16.dp, cutoutOffset, density)
     }
     CutoutLayout(
         modifier = modifier,
         color = color,
-        shape = shape,
+        cutoutShape = Theme.container.button,
+        contentShape = shape,
+        cutoutPadding = 12.dp,
         overlay = {
             CompositionLocalProvider(
                 LocalContentColor provides Theme.color.contentColorFor(color)
