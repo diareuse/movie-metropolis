@@ -38,7 +38,7 @@ fun TicketItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .onPlaced { onBottomOffsetChanged(it.size.height) }
+                .onGloballyPositioned { onBottomOffsetChanged(it.size.height) }
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
