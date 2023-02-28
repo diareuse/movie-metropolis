@@ -46,9 +46,7 @@ fun Barcode(
         window.attributes = window.attributes.apply {
             screenBrightness = 1f
         }
-        println(">in")
         onDispose {
-            println(">gone")
             window.attributes = window.attributes.apply {
                 screenBrightness = initialBrightness
             }
