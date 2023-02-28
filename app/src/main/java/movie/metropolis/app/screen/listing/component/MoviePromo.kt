@@ -27,6 +27,7 @@ import movie.style.haptic.TickOnChange
 import movie.style.layout.EmptyShapeLayout
 import movie.style.modifier.overlay
 import movie.style.theme.Theme
+import movie.style.util.lerp
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalPagerApi::class)
@@ -196,10 +197,6 @@ private fun Modifier.interpolateSize(
         this.ambientShadowColor = shadowColor
         this.spotShadowColor = shadowColor
     }
-}
-
-private fun lerp(start: Float, stop: Float, fraction: Float): Float {
-    return (1 - fraction) * start + fraction * stop
 }
 
 @OptIn(ExperimentalPagerApi::class)

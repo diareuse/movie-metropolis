@@ -8,6 +8,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
@@ -28,7 +30,6 @@ import movie.metropolis.app.screen.booking.component.TicketItemActive
 import movie.metropolis.app.screen.booking.component.TicketItemError
 import movie.metropolis.app.screen.booking.component.TicketItemExpired
 import movie.metropolis.app.screen.booking.component.TicketItemLoading
-import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenState
 import movie.style.AppButton
 import movie.style.state.ImmutableList
@@ -130,21 +131,21 @@ private fun BookingScreenContent(
         }
         HorizontalPager(
             count = items.size,
-            contentPadding = PaddingValues(horizontal = 64.dp) + PaddingValues(bottom = 16.dp),
+            contentPadding = PaddingValues(horizontal = 64.dp, vertical = 16.dp),
             itemSpacing = 32.dp,
             modifier = Modifier.weight(1f)
         ) {
             when (val item = items[it]) {
                 is BookingView.Active -> TicketItemActive(
+                    modifier = Modifier.fillMaxHeight(),
                     item = item,
                     onShare = { onShareClick(item) },
-                    modifier = Modifier.fillMaxHeight(),
                     onClick = { onMovieClick(item.movie.id) }
                 )
 
                 is BookingView.Expired -> TicketItemExpired(
-                    item = item,
                     modifier = Modifier.fillMaxHeight(),
+                    item = item,
                     onClick = { onMovieClick(item.movie.id) }
                 )
 
