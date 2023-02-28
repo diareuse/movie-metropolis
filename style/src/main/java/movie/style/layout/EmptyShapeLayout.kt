@@ -17,13 +17,14 @@ fun EmptyShapeLayout(
     contentPadding: PaddingValues = PaddingValues(),
     shape: CornerBasedShape = Theme.container.card,
     color: Color = Theme.color.container.surface,
+    contentAlignment: Alignment = Alignment.Center,
     content: @Composable () -> Unit
 ) {
     Box(
         modifier = modifier
             .stroke(color, shape)
             .padding(contentPadding),
-        contentAlignment = Alignment.Center
+        contentAlignment = contentAlignment
     ) {
         content()
     }
