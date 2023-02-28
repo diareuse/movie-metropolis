@@ -84,6 +84,8 @@ class TicketShape(
         val cutoutRight = getCutout(x = size.width, y = size.height - bottomOffset, radius = radius)
         shape.op(shape, cutoutLeft, PathOperation.Difference)
         shape.op(shape, cutoutRight, PathOperation.Difference)
+        for (line in getDashedLine(size, size.height - bottomOffset))
+            shape.op(shape, line, PathOperation.Difference)
         return Outline.Generic(shape)
     }
 
@@ -119,4 +121,23 @@ class TicketShape(
         cutout.addOval(boundary)
         return cutout
     }
+
+    private fun getDashedLine(size: Size, y: Float, count: Int = 12): Iterable<Path> {
+        fun getLine(x: Float): Path {
+            val path = Path()
+            val height = size.width / count / 5
+            val rect = Rect(Offset(x, y - (height / 2)), Size(size.width / count, height))
+            val roundRect = RoundRect(rect, CornerRadius(height / 2))
+            path.addRoundRect(roundRect)
+            return path
+        }
+
+        val preferredSize = size.width / count
+        return (0 until count)
+            .asSequence()
+            .filterIndexed { index, _ -> index % 2 == 0 }
+            .map { getLine((it * preferredSize) + preferredSize / 2) }
+            .asIterable()
+    }
+
 }
