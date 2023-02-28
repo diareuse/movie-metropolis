@@ -138,11 +138,10 @@ private fun HomeScreenContent(
             ) {
                 BookingScreen(
                     padding = padding + paddingInner,
-                    viewModel = booking,
-                    state = bookingState,
-                    onMovieClick = { onClickMovie(it, true) },
                     homeState = state,
-                    behavior = behavior
+                    behavior = behavior,
+                    onMovieClick = { onClickMovie(it, true) },
+                    viewModel = booking
                 )
             }
         }

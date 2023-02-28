@@ -1,8 +1,5 @@
 package movie.metropolis.app.screen.booking
 
-import android.Manifest
-import android.annotation.SuppressLint
-import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.result.contract.ActivityResultContracts.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -17,36 +14,24 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.zxing.BarcodeFormat
-import kotlinx.coroutines.Dispatchers
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.onEmpty
-import movie.metropolis.app.presentation.onFailure
-import movie.metropolis.app.presentation.onLoading
-import movie.metropolis.app.presentation.onSuccess
-import movie.metropolis.app.presentation.share.TicketRepresentation
-import movie.metropolis.app.screen.booking.component.BookingItemActive
-import movie.metropolis.app.screen.booking.component.BookingItemActiveEmpty
-import movie.metropolis.app.screen.booking.component.BookingItemExpired
-import movie.metropolis.app.screen.booking.component.BookingItemExpiredEmpty
-import movie.metropolis.app.screen.booking.component.BookingItemExpiredFailure
-import movie.metropolis.app.screen.booking.component.BookingTicketDialog
+import movie.metropolis.app.presentation.fold
+import movie.metropolis.app.screen.booking.component.ReaderDialog
+import movie.metropolis.app.screen.booking.component.TicketItemActive
+import movie.metropolis.app.screen.booking.component.TicketItemError
+import movie.metropolis.app.screen.booking.component.TicketItemExpired
+import movie.metropolis.app.screen.booking.component.TicketItemLoading
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenState
-import movie.metropolis.app.screen.reader.BarcodeReader
-import movie.metropolis.app.util.register
-import movie.metropolis.app.util.toBitmap
 import movie.style.AppButton
-import movie.style.AppDialog
-import movie.style.AppErrorItem
 import movie.style.state.ImmutableList
-import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,7 +40,6 @@ fun BookingScreen(
     padding: PaddingValues,
     homeState: HomeScreenState,
     behavior: TopAppBarScrollBehavior,
-    state: LazyListState,
     onMovieClick: (String) -> Unit,
     viewModel: BookingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
@@ -79,8 +63,7 @@ fun BookingScreen(
                 actions.actionShare(viewModel.saveAsFile(it))
             }
         },
-        onCameraClick = { isReaderActive = true },
-        state = state
+        onCameraClick = { isReaderActive = true }
     )
     ReaderDialog(
         isVisible = isReaderActive,
@@ -89,71 +72,10 @@ fun BookingScreen(
     )
 }
 
-@SuppressLint("MissingPermission")
-@Composable
-private fun ReaderDialog(
-    isVisible: Boolean,
-    onVisibilityChanged: (Boolean) -> Unit,
-    onTicketRead: (TicketRepresentation) -> Unit,
-    actions: ActivityActions = LocalActivityActions.current
-) {
-    var hasPermission by remember { mutableStateOf(false) }
-    LaunchedEffect(isVisible) {
-        if (!isVisible) return@LaunchedEffect
-        hasPermission = actions.requestPermissions(arrayOf(Manifest.permission.CAMERA))
-    }
-    AppDialog(
-        isVisible = isVisible && hasPermission,
-        onVisibilityChanged = onVisibilityChanged
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(1f),
-                shape = Theme.container.card,
-                color = Theme.color.container.background,
-                shadowElevation = 32.dp
-            ) {
-                BarcodeReader(
-                    modifier = Modifier.fillMaxSize(),
-                    format = BarcodeFormat.PDF_417,
-                    onBarcodeRead = {
-                        onVisibilityChanged(false)
-                        onTicketRead(TicketRepresentation.Text(it))
-                    }
-                )
-            }
-            val owner = LocalActivityResultRegistryOwner.current?.activityResultRegistry
-            val context = LocalContext.current
-            val scope = rememberCoroutineScope()
-            if (owner != null) AppButton(
-                onClick = {
-                    scope.launch(Dispatchers.Default) {
-                        val image = owner.register("image", GetContent(), "image/*")
-                            ?.toBitmap(context)
-                            ?.let(TicketRepresentation::Image) ?: return@launch
-                        withContext(Dispatchers.Main.immediate) {
-                            onTicketRead(image)
-                            onVisibilityChanged(false)
-                        }
-                    }
-                },
-                elevation = 16.dp
-            ) {
-                Text(stringResource(R.string.from_file))
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalPagerApi::class
+)
 @Composable
 private fun BookingScreenContent(
     padding: PaddingValues,
@@ -163,19 +85,16 @@ private fun BookingScreenContent(
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
     onShareClick: (BookingView.Active) -> Unit = {},
-    onCameraClick: () -> Unit = {},
-    state: LazyListState = rememberLazyListState()
+    onCameraClick: () -> Unit = {}
 ) {
-    LazyColumn(
+    Column(
         modifier = Modifier
             .nestedScroll(behavior.nestedScrollConnection)
+            .padding(padding)
             .fillMaxSize(),
-        contentPadding = padding + PaddingValues(vertical = 24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        userScrollEnabled = !active.isLoading || !expired.isLoading,
-        state = state
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (!active.isLoading && !expired.isLoading) item("ticket-cta") {
+        if (!active.isLoading && !expired.isLoading) {
             Row(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -196,97 +115,47 @@ private fun BookingScreenContent(
                 }
             }
         }
-        active.onSuccess { view ->
-            items(view, BookingView::id) {
-                var isVisible by rememberSaveable { mutableStateOf(false) }
-                BookingItemActive(
-                    modifier = Modifier
-                        .animateItemPlacement()
-                        .padding(horizontal = 24.dp),
-                    name = it.name,
-                    cinema = it.cinema.name,
-                    date = it.date,
-                    time = it.time,
-                    poster = it.movie.poster,
-                    duration = it.movie.duration,
-                    onClick = { isVisible = true },
-                    onShare = { onShareClick(it) }
-                )
-                BookingTicketDialog(
-                    code = it.id,
-                    poster = it.movie.poster?.url.orEmpty(),
-                    hall = it.hall,
-                    seats = it.seats.map { it.row to it.seat }.immutable(),
-                    time = it.time,
-                    name = it.name,
-                    isVisible = isVisible,
-                    onVisibilityChanged = { isVisible = it }
-                )
-            }
-        }.onLoading {
-            item {
-                BookingItemActive(modifier = Modifier.padding(horizontal = 24.dp))
-            }
-        }.onEmpty {
-            item {
-                BookingItemActiveEmpty(modifier = Modifier.padding(horizontal = 24.dp))
-            }
-        }.onFailure {
-            item {
-                AppErrorItem(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    error = stringResource(R.string.error_booking)
-                )
-            }
-        }
-
-        item(key = "divider") {
-            Divider(
-                Modifier
-                    .padding(horizontal = 24.dp)
-                    .padding(16.dp)
+        val items = remember(active, expired) {
+            val itemsActive = active.fold(
+                onSuccess = { it },
+                onLoading = { listOf(BookingView.Loading) },
+                onFailure = { listOf(BookingView.Error) }
             )
-        }
-
-        item(key = "expired") {
-            MovieItemRow(items = expired, onMovieClick = onMovieClick)
-        }
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-private fun MovieItemRow(
-    items: Loadable<ImmutableList<BookingView.Expired>>,
-    onMovieClick: (String) -> Unit
-) = LazyRow(
-    modifier = Modifier.fillMaxWidth(),
-    contentPadding = PaddingValues(horizontal = 24.dp),
-    horizontalArrangement = Arrangement.spacedBy(16.dp)
-) {
-    items.onSuccess { view ->
-        items(view, BookingView::id) {
-            BookingItemExpired(
-                modifier = Modifier.animateItemPlacement(),
-                poster = it.movie.poster,
-                date = it.date,
-                time = it.time,
-                name = it.name,
-                rating = it.movie.rating,
-                onClick = { onMovieClick(it.movie.id) }
+            val itemsExpired = expired.fold(
+                onSuccess = { it },
+                onLoading = { listOf(BookingView.Loading) },
+                onFailure = { listOf(BookingView.Error) }
             )
+            itemsActive + itemsExpired
         }
-    }.onFailure {
-        item {
-            BookingItemExpiredFailure()
-        }
-    }.onLoading {
-        items(3) {
-            BookingItemExpired()
-        }
-    }.onEmpty {
-        item {
-            BookingItemExpiredEmpty()
+        HorizontalPager(
+            count = items.size,
+            contentPadding = PaddingValues(horizontal = 64.dp) + PaddingValues(bottom = 16.dp),
+            itemSpacing = 32.dp,
+            modifier = Modifier.weight(1f)
+        ) {
+            when (val item = items[it]) {
+                is BookingView.Active -> TicketItemActive(
+                    item = item,
+                    onShare = { onShareClick(item) },
+                    modifier = Modifier.fillMaxHeight(),
+                    onClick = { onMovieClick(item.movie.id) }
+                )
+
+                is BookingView.Expired -> TicketItemExpired(
+                    item = item,
+                    modifier = Modifier.fillMaxHeight(),
+                    onClick = { onMovieClick(item.movie.id) }
+                )
+
+                BookingView.Error -> TicketItemError(
+                    modifier = Modifier.fillMaxHeight()
+                )
+
+                BookingView.Loading -> TicketItemLoading(
+                    modifier = Modifier.fillMaxHeight()
+                )
+            }
         }
     }
 }

@@ -83,5 +83,16 @@ inline fun <T, R : Any> Loadable<T>.mapNotNull(mapper: (T) -> R?) = when {
     else -> this as Loadable<R>
 }
 
+inline fun <T, R> Loadable<T>.fold(
+    onSuccess: (T) -> R,
+    onLoading: () -> R,
+    onFailure: (Throwable) -> R
+): R = when {
+    isSuccess -> onSuccess(getOrThrow())
+    isLoading -> onLoading()
+    isFailure -> onFailure(exceptionOrNull() ?: IllegalStateException())
+    else -> throw IllegalStateException()
+}
+
 fun <T, R> Flow<Loadable<T>>.mapLoadable(body: (T) -> R) =
     map { it.map(body) }
