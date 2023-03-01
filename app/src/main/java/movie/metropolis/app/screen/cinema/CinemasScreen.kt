@@ -93,9 +93,10 @@ private fun CinemasScreen(
         }.onFailure {
             item {
                 AppErrorItem(
-                    modifier = Modifier.padding(horizontal = 24.dp),
-                    error = stringResource(R.string.error_cinemas)
-                )
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                ) {
+                    Text(stringResource(R.string.error_cinemas))
+                }
             }
         }.onEmpty {
             item {

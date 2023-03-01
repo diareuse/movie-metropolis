@@ -12,7 +12,7 @@ import movie.style.theme.Theme
 @Composable
 fun AppErrorItem(
     modifier: Modifier = Modifier,
-    error: String
+    content: @Composable () -> Unit
 ) {
     EmptyShapeLayout(
         modifier = modifier,
@@ -27,7 +27,7 @@ fun AppErrorItem(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             Text("🥺", style = Theme.textStyle.title.copy(fontSize = 48.sp))
-            Text(error)
+            content()
         }
     }
 }
@@ -36,6 +36,6 @@ fun AppErrorItem(
 @Composable
 private fun Preview() {
     Theme {
-        AppErrorItem(error = "Something went wrong")
+        AppErrorItem { Text("Something went wrong") }
     }
 }
