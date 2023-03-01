@@ -28,7 +28,7 @@ fun DatePickerRow(
     selected: Date,
     onClickDate: (Date) -> Unit,
     modifier: Modifier = Modifier,
-    end: Date = Date(start.time + 30.days.inWholeMilliseconds),
+    end: Date = Date(start.time + 7.days.inWholeMilliseconds),
     disabledValues: List<Date> = emptyList(),
     formatter: DateFormat = SimpleDateFormat("EE'\n'MMM'\n'd", Locale.getDefault()),
 ) {
