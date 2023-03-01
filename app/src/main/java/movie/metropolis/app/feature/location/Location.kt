@@ -14,6 +14,7 @@ import androidx.compose.ui.platform.*
 import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.os.bundleOf
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.flow.collectLatest
 import movie.metropolis.app.LocalActivityActions
 
 @Composable
@@ -24,16 +25,19 @@ fun rememberLocation(): State<Location?> {
         mutableStateOf(null as Location?)
     }
     val actions = LocalActivityActions.current
-    LaunchedEffect(actions) {
+
+    suspend fun hasPermissions(): Boolean {
         if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
             if (!actions.requestPermissions(arrayOf(ACCESS_COARSE_LOCATION))) {
-                return@LaunchedEffect
+                return false
             }
         }
-        snapshotState.value = kotlin
-            .runCatching { provider.getLastLocation(context).let(::requireNotNull) }
-            .recoverCatching { provider.getCurrentLocation(context).let(::requireNotNull) }
-            .getOrNull()
+        return true
+    }
+
+    LaunchedEffect(actions) {
+        if (!hasPermissions()) return@LaunchedEffect
+        provider.requestLocationUpdates().collectLatest { snapshotState.value = it }
     }
     return snapshotState
 }
