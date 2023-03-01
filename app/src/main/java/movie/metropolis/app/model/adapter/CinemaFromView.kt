@@ -16,7 +16,7 @@ data class CinemaFromView(
     override val city: String
         get() = cinema.city
     override val address: Iterable<String>
-        get() = cinema.address
+        get() = cinema.address.split("\n")
     override val location: Location
         get() = Location(0.0, 0.0)
     override val distance: Double?

@@ -8,9 +8,10 @@ import movie.style.theme.Theme
 
 @Composable
 fun PreviewLayout(
+    padding: PaddingValues = PaddingValues(24.dp),
     content: @Composable () -> Unit
 ) = Theme {
-    Box(modifier = Modifier.padding(24.dp)) {
+    Box(modifier = Modifier.padding(padding)) {
         content()
     }
 }

@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.cinema
 
+import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -9,6 +10,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import movie.metropolis.app.R
@@ -21,11 +23,12 @@ import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.CinemaItem
 import movie.metropolis.app.screen.cinema.component.CinemaItemEmpty
+import movie.metropolis.app.screen.cinema.component.CinemaItemError
+import movie.metropolis.app.screen.cinema.component.CinemaItemLoading
+import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.HomeScreenState
-import movie.style.AppErrorItem
-import movie.style.state.ImmutableList.Companion.immutable
-import movie.style.theme.Theme
+import movie.style.layout.PreviewLayout
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,7 +77,7 @@ private fun CinemasScreen(
     ) {
         items.onLoading {
             items(7) {
-                CinemaItem(modifier = Modifier.padding(horizontal = 24.dp))
+                CinemaItemLoading(modifier = Modifier.padding(horizontal = 24.dp))
             }
         }.onSuccess { items ->
             items(items, key = CinemaView::id) {
@@ -82,40 +85,39 @@ private fun CinemasScreen(
                     modifier = Modifier
                         .animateItemPlacement()
                         .padding(horizontal = 24.dp),
-                    name = it.name,
-                    address = it.address.immutable(),
-                    city = it.city,
-                    distance = it.distance,
-                    image = it.image,
+                    view = it,
                     onClick = { onClickCinema(it.id) }
                 )
             }
         }.onFailure {
-            item {
-                AppErrorItem(
-                    modifier = Modifier.padding(horizontal = 24.dp)
-                ) {
-                    Text(stringResource(R.string.error_cinemas))
-                }
-            }
+            item { CinemaItemError(Modifier.padding(horizontal = 24.dp)) }
         }.onEmpty {
-            item {
-                CinemaItemEmpty(modifier = Modifier.padding(horizontal = 24.dp))
-            }
+            item { CinemaItemEmpty(Modifier.padding(horizontal = 24.dp)) }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-private fun Preview() {
-    Theme {
-        CinemasScreen(
-            items = Loadable.loading(),
-            padding = PaddingValues(),
-            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
-            onClickCinema = {}
-        )
-    }
+private fun CinemaItemPreview(
+    @PreviewParameter(CinemaScreenParameter::class, 4)
+    items: Loadable<List<CinemaView>>
+) = PreviewLayout(padding = PaddingValues()) {
+    CinemasScreen(
+        items = items,
+        padding = PaddingValues(),
+        behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+        onClickCinema = {}
+    )
 }
+
+class CinemaScreenParameter : CollectionPreviewParameterProvider<Loadable<List<CinemaView>>>(
+    listOf(
+        Loadable.success(CinemaViewParameter().values.toList()),
+        Loadable.success(emptyList()),
+        Loadable.loading(),
+        Loadable.failure(IllegalStateException())
+    )
+)
