@@ -37,9 +37,10 @@ fun ShowingItem(
         section = { ShowingItemSection(type = it.type, language = it.language) }
     ) {
         ShowingItemTime(
-            time = it.startsAt,
             onClick = { onClick(it.url) }
-        )
+        ) {
+            Text(it.startsAt)
+        }
     }
 }
 
@@ -65,9 +66,10 @@ fun ShowingItem(
         }
     ) {
         ShowingItemTime(
-            modifier = Modifier.textPlaceholder(true),
-            time = "#".repeat(5)
-        )
+            modifier = Modifier.textPlaceholder(true)
+        ) {
+            Text("#".repeat(5), Modifier.textPlaceholder(true))
+        }
     }
 }
 
@@ -112,9 +114,9 @@ fun ShowingItemSection(type: String, language: String, isLoading: Boolean = fals
 
 @Composable
 fun ShowingItemTime(
-    time: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    time: @Composable () -> Unit
 ) {
     AppButton(
         modifier = modifier,
@@ -124,11 +126,9 @@ fun ShowingItemTime(
         contentColor = Theme.color.content.secondary,
         contentPadding = PaddingValues(16.dp, 8.dp)
     ) {
-        Text(
-            text = time,
-            style = Theme.textStyle.body,
-            fontWeight = FontWeight.Bold
-        )
+        ProvideTextStyle(Theme.textStyle.body.copy(fontWeight = FontWeight.Bold)) {
+            time()
+        }
     }
 }
 
@@ -219,7 +219,7 @@ private fun Preview() {
             title = { Text("My Cinema") },
             section = { ShowingItemSection(type = it.first, language = it.second) }
         ) {
-            ShowingItemTime(time = it, onClick = {})
+            ShowingItemTime(time = { Text(it) }, onClick = {})
         }
     }
 }

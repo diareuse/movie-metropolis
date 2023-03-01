@@ -32,7 +32,7 @@ fun CinemaLayout(
     CutoutLayout(
         modifier = modifier.wrapContentHeight(unbounded = true),
         color = Theme.color.container.primary,
-        shape = Theme.container.button,
+        shape = Theme.container.card,
         overlay = distance
     ) {
         Column(

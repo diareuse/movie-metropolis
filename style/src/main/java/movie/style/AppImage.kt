@@ -31,7 +31,7 @@ fun AppImage(
     url: String,
     modifier: Modifier = Modifier,
     placeholder: Painter? = null,
-    placeholderError: Painter? = null,
+    placeholderError: Painter? = painterResource(id = R.drawable.ic_image_error),
     alignment: Alignment = Alignment.Center
 ) {
     var size by remember { mutableStateOf(IntSize.Zero) }
