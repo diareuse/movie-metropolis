@@ -10,8 +10,8 @@ data class CinemaViewFromFeature(
         get() = cinema.id
     override val name: String
         get() = cinema.name.substringAfterLast(',').trim()
-    override val address: List<String>
-        get() = cinema.address.toList()
+    override val address: String
+        get() = cinema.address.filter { it !in name }.joinToString("\n")
     override val city: String
         get() = cinema.city
     override val distance: String?

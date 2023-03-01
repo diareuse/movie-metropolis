@@ -6,7 +6,7 @@ import androidx.compose.runtime.*
 interface CinemaView {
     val id: String
     val name: String
-    val address: List<String>
+    val address: String
     val city: String
     val distance: String?
     val image: String?
