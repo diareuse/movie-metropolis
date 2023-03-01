@@ -4,11 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.platform.*
@@ -26,6 +22,7 @@ import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.MovieShowingItem
 import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
+import movie.metropolis.app.screen.cinema.component.MovieShowingItemLoading
 import movie.metropolis.app.screen.detail.component.FilterRow
 import movie.metropolis.app.screen.detail.plus
 import movie.style.AppIconButton
@@ -34,7 +31,6 @@ import movie.style.DatePickerRow
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
 import movie.style.state.ImmutableList.Companion.immutable
-import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Date
@@ -101,16 +97,18 @@ private fun CinemaScreen(
             )
         }
     ) { padding ->
+        var selectedItem by remember { mutableStateOf(null as MovieBookingView?) }
+        val columnState = rememberLazyListState()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(behavior.nestedScrollConnection),
             contentPadding = padding + PaddingValues(vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            state = columnState
         ) {
             item("picker") {
                 DatePickerRow(
-                    start = remember { Date() },
                     selected = selectedDate,
                     onClickDate = onSelectedDateChanged
                 )
@@ -142,9 +140,6 @@ private fun CinemaScreen(
                         )
                     }
                 }
-                item("filters-divider") {
-                    Divider(Modifier.padding(horizontal = 32.dp))
-                }
             }
             items.onSuccess { items ->
                 items(items, key = { it.movie.id }) {
@@ -152,14 +147,13 @@ private fun CinemaScreen(
                         modifier = Modifier
                             .animateItemPlacement()
                             .padding(horizontal = 24.dp),
-                        movie = it.movie,
-                        availability = it.availability.immutable(),
+                        view = it,
                         onClick = onBookingClick
                     )
                 }
             }.onLoading {
                 items(2) {
-                    MovieShowingItem(
+                    MovieShowingItemLoading(
                         Modifier
                             .animateItemPlacement()
                             .padding(horizontal = 24.dp)

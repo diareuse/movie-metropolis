@@ -24,10 +24,10 @@ import kotlin.time.Duration.Companion.days
 @Suppress("NAME_SHADOWING")
 @Composable
 fun DatePickerRow(
-    start: Date,
     selected: Date,
     onClickDate: (Date) -> Unit,
     modifier: Modifier = Modifier,
+    start: Date = remember { Date() },
     end: Date = Date(start.time + 7.days.inWholeMilliseconds),
     disabledValues: List<Date> = emptyList(),
     formatter: DateFormat = SimpleDateFormat("EE'\n'MMM'\n'd", Locale.getDefault()),
