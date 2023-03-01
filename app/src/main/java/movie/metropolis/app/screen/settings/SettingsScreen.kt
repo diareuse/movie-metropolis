@@ -142,7 +142,7 @@ fun LazyItemScope.ClipRadius(
         InputField(
             value = value.toString(),
             onValueChange = { onChanged(it.toIntOrNull() ?: 0) },
-            label = stringResource(R.string.nearby_cinemas),
+            label = { Text(stringResource(R.string.nearby_cinemas)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
         )
         Text(

@@ -105,11 +105,14 @@ private fun LoginSignInScreen(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 isError = error,
                 readOnly = loading,
-                placeholder = "john.doe@cinema.com",
-                label = stringResource(R.string.email),
-                supportingText = when (error) {
-                    true -> stringResource(R.string.login_error)
-                    else -> stringResource(R.string.login_credentials)
+                placeholder = { Text("john.doe@cinema.com") },
+                label = { Text(stringResource(R.string.email)) },
+                supportingText = {
+                    val text = when (error) {
+                        true -> stringResource(R.string.login_error)
+                        else -> stringResource(R.string.login_credentials)
+                    }
+                    Text(text)
                 }
             )
             var isHidden by remember { mutableStateOf(true) }
@@ -122,11 +125,10 @@ private fun LoginSignInScreen(
                 ),
                 isError = error,
                 readOnly = loading,
-                placeholder = "p4$\$w0rd",
-                label = stringResource(R.string.password),
-                supportingText = when (error) {
-                    true -> stringResource(R.string.password_failure)
-                    else -> null
+                placeholder = { Text("p4$\$w0rd") },
+                label = { Text(stringResource(R.string.password)) },
+                supportingText = {
+                    if (error) Text(stringResource(R.string.password_failure))
                 },
                 trailingIcon = {
                     AppIconButton(

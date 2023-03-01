@@ -143,31 +143,31 @@ private fun UserScreen(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = firstName,
                 onValueChange = onFirstNameChanged,
-                label = stringResource(R.string.first_name)
+                label = { Text(stringResource(R.string.first_name)) }
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = lastName,
                 onValueChange = onLastNameChanged,
-                label = stringResource(R.string.last_name)
+                label = { Text(stringResource(R.string.last_name)) }
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = email, onValueChange = onEmailChanged,
-                label = stringResource(R.string.email)
+                label = { Text(stringResource(R.string.email)) }
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = phone,
                 onValueChange = onPhoneChanged,
-                label = stringResource(R.string.phone)
+                label = { Text(stringResource(R.string.phone)) }
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 selected = favorite,
                 items = cinemas.getOrNull().orEmpty(),
                 converter = { it?.name.orEmpty() },
-                label = stringResource(R.string.favorite_cinema)
+                label = { Text(stringResource(R.string.favorite_cinema)) }
             ) {
                 Text(
                     text = it?.name ?: return@InputField,
@@ -206,13 +206,13 @@ private fun UserScreen(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordCurrent,
                 onValueChange = onPasswordCurrentChanged,
-                label = stringResource(R.string.old_password)
+                label = { Text(stringResource(R.string.old_password)) }
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordNew,
                 onValueChange = onPasswordNewChanged,
-                label = stringResource(R.string.new_password)
+                label = { Text(stringResource(R.string.new_password)) }
             )
             if (!isLoading) AppButton(
                 modifier = Modifier.align(Alignment.End),

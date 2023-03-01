@@ -21,9 +21,9 @@ fun InputField(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
     readOnly: Boolean = false,
-    placeholder: String? = null,
-    label: String? = null,
-    supportingText: String? = null,
+    placeholder: @Composable () -> Unit = {},
+    label: (@Composable () -> Unit)? = null,
+    supportingText: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
@@ -39,11 +39,12 @@ fun InputField(
                 .fillMaxWidth()
                 .padding(bottom = if (supportingText != null) 4.dp else 0.dp)
         ) {
-            if (label != null) Text(
-                text = label,
+            if (label != null) Box(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 4.dp)
-            )
+            ) {
+                label()
+            }
             TextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = value,
@@ -66,12 +67,8 @@ fun InputField(
                     unfocusedPlaceholderColor = Theme.color.content.surface.copy(alpha = .5f),
                     disabledPlaceholderColor = Theme.color.content.surface.copy(alpha = .25f)
                 ),
-                placeholder = if (placeholder == null) null else (@Composable { Text(placeholder) }),
-                supportingText = if (supportingText == null) null else (@Composable {
-                    Text(
-                        supportingText
-                    )
-                }),
+                placeholder = placeholder,
+                supportingText = supportingText,
                 visualTransformation = when (keyboardOptions.keyboardType) {
                     KeyboardType.Password,
                     KeyboardType.NumberPassword -> PasswordVisualTransformation()
@@ -91,7 +88,7 @@ fun <T> InputField(
     items: List<T>,
     converter: (T) -> String,
     modifier: Modifier = Modifier,
-    label: String? = null,
+    label: (@Composable () -> Unit)? = null,
     content: @Composable (T) -> Unit,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -124,8 +121,8 @@ private fun Preview() {
             value = "",
             onValueChange = {},
             modifier = Modifier.padding(24.dp),
-            label = "Email",
-            placeholder = "john.doe@email.com"
+            label = { Text("Email") },
+            placeholder = { Text("john.doe@email.com") }
         )
     }
 }
@@ -139,7 +136,7 @@ private fun Preview2() {
             items = listOf("foo", "bar"),
             converter = { it },
             modifier = Modifier.padding(24.dp),
-            label = "items"
+            label = { Text("items") }
         ) {}
     }
 }
@@ -152,9 +149,9 @@ private fun Preview3() {
             value = "",
             onValueChange = {},
             modifier = Modifier.padding(24.dp),
-            label = "Email",
-            placeholder = "john.doe@email.com",
-            supportingText = "Foo bar"
+            label = { Text("Email") },
+            placeholder = { Text("john.doe@email.com") },
+            supportingText = { Text("Foo bar") }
         )
     }
 }
