@@ -1,49 +1,64 @@
 package movie.metropolis.app.feature.location
 
 import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.content.Context
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.location.Location
-import androidx.core.app.ActivityCompat.checkSelfPermission
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationAvailability
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.Priority
-import kotlinx.coroutines.suspendCancellableCoroutine
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.tasks.await
 
-sealed class LocationException : RuntimeException() {
-    class PermissionMissing : LocationException()
-    class NotAvailable(override val cause: Throwable?) : LocationException()
+@Throws
+@RequiresPermission(ACCESS_COARSE_LOCATION)
+suspend fun FusedLocationProviderClient.awaitLastLocation(): Location? {
+    return lastLocation.await()
 }
 
-@Throws(LocationException::class)
-suspend fun FusedLocationProviderClient.getLastLocation(
-    context: Context
-): Location? = suspendCancellableCoroutine { cont ->
-    if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-        cont.resumeWithException(LocationException.PermissionMissing())
-        return@suspendCancellableCoroutine
-    }
-    lastLocation.addOnCompleteListener {
-        when (it.isSuccessful) {
-            true -> cont.resume(it.result)
-            else -> cont.resumeWithException(LocationException.NotAvailable(it.exception))
+@Throws
+@RequiresPermission(ACCESS_COARSE_LOCATION)
+suspend fun FusedLocationProviderClient.awaitCurrentLocation(): Location? {
+    return getCurrentLocation(Priority.PRIORITY_PASSIVE, null).await()
+}
+
+@RequiresPermission(ACCESS_COARSE_LOCATION)
+fun FusedLocationProviderClient.requestLocationUpdates(
+    request: LocationRequest
+): Flow<LocationResult?> = callbackFlow {
+    val listener = object : LocationCallback() {
+        override fun onLocationAvailability(availability: LocationAvailability) {
+            if (!availability.isLocationAvailable)
+                trySend(null)
+        }
+
+        override fun onLocationResult(result: LocationResult) {
+            trySend(result)
         }
     }
+    requestLocationUpdates(request, listener, null)
+    awaitClose {
+        removeLocationUpdates(listener)
+    }
 }
 
-@Throws(LocationException::class)
-suspend fun FusedLocationProviderClient.getCurrentLocation(
-    context: Context
-): Location? = suspendCancellableCoroutine { cont ->
-    if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-        cont.resumeWithException(LocationException.PermissionMissing())
-        return@suspendCancellableCoroutine
-    }
-    getCurrentLocation(Priority.PRIORITY_LOW_POWER, null).addOnCompleteListener {
-        when (it.isSuccessful) {
-            true -> cont.resume(it.result)
-            else -> cont.resumeWithException(LocationException.NotAvailable(it.exception))
+@RequiresPermission(ACCESS_COARSE_LOCATION)
+fun FusedLocationProviderClient.requestLocationUpdates(): Flow<Location?> =
+    LocationRequest.Builder(Priority.PRIORITY_PASSIVE, 5000)
+        .setWaitForAccurateLocation(false)
+        .build()
+        .let { requestLocationUpdates(it) }
+        .map { it?.lastLocation }
+        .onStart {
+            kotlin.runCatching { awaitLastLocation() }
+                .recoverCatching { awaitCurrentLocation() }
+                .onSuccess { emit(it) }
         }
-    }
-}
+        .distinctUntilChanged()
