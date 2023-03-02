@@ -23,6 +23,7 @@ import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.MovieShowingItem
 import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
 import movie.metropolis.app.screen.cinema.component.MovieShowingItemLoading
+import movie.metropolis.app.screen.detail.component.FilterItem
 import movie.metropolis.app.screen.detail.component.FilterRow
 import movie.metropolis.app.screen.detail.plus
 import movie.style.AppIconButton
@@ -30,7 +31,6 @@ import movie.style.AppToolbar
 import movie.style.DatePickerRow
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
-import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Date
@@ -126,15 +126,19 @@ private fun CinemaScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         FilterRow(
-                            filters = filters[Filter.Type.Language].orEmpty().immutable(),
-                            onFilterToggle = onFilterClick,
                             contentPadding = PaddingValues(horizontal = 24.dp)
-                        )
+                        ) {
+                            items(filters[Filter.Type.Language].orEmpty()) {
+                                FilterItem(filter = it, onClick = { onFilterClick(it) })
+                            }
+                        }
                         FilterRow(
-                            filters = filters[Filter.Type.Projection].orEmpty().immutable(),
-                            onFilterToggle = onFilterClick,
                             contentPadding = PaddingValues(horizontal = 24.dp)
-                        )
+                        ) {
+                            items(filters[Filter.Type.Projection].orEmpty()) {
+                                FilterItem(filter = it, onClick = { onFilterClick(it) })
+                            }
+                        }
                     }
                 }
             }
