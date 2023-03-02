@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.profile.component
 
+import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -9,39 +10,31 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.R
+import movie.metropolis.app.model.MembershipView
+import movie.metropolis.app.screen.profile.component.MembershipCardParameter.Data
 import movie.style.Barcode
-import movie.style.imagePlaceholder
-import movie.style.layout.StackedCardLayout
-import movie.style.textPlaceholder
-import movie.style.theme.Theme
-import movie.style.theme.extendBy
+import movie.style.layout.PreviewLayout
 
 @Composable
 fun MembershipCard(
     firstName: String,
     lastName: String,
-    cardNumber: String,
-    until: String,
-    points: String,
+    view: MembershipView,
     modifier: Modifier = Modifier,
 ) {
     MembershipCardLayout(
         modifier = modifier,
         name = { Text("%s %s".format(firstName, lastName)) },
-        expiration = { Text(stringResource(R.string.expires_at, until)) },
-        points = { Text(stringResource(R.string.points_count, points)) },
+        expiration = { Text(stringResource(R.string.expires_at, view.memberUntil)) },
+        points = { Text(stringResource(R.string.points_count, view.points)) },
         barcode = {
             Barcode(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(Theme.container.poster.extendBy(padding = 8.dp))
-                    .background(Color.White)
-                    .height(64.dp)
-                    .padding(vertical = 8.dp),
-                code = cardNumber,
+                modifier = Modifier.fillMaxSize(),
+                code = view.cardNumber,
                 format = BarcodeFormat.CODE_128,
                 color = Color.Black
             )
@@ -49,64 +42,40 @@ fun MembershipCard(
     )
 }
 
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun MembershipCard(modifier: Modifier = Modifier) {
-    MembershipCardLayout(
-        modifier = modifier,
-        name = { Text("#".repeat(22), modifier = Modifier.textPlaceholder(true)) },
-        expiration = { Text("#".repeat(11), modifier = Modifier.textPlaceholder(true)) },
-        points = { Text("#".repeat(10), modifier = Modifier.textPlaceholder(true)) },
-        barcode = {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .clip(Theme.container.poster.extendBy(padding = 8.dp))
-                    .height(64.dp)
-                    .imagePlaceholder(true)
-            )
-        }
+private fun MembershipCardLayoutPreview(
+    @PreviewParameter(MembershipCardParameter::class)
+    parameter: Data
+) = PreviewLayout {
+    MembershipCard(
+        firstName = parameter.firstName,
+        lastName = parameter.lastName,
+        view = parameter.view
     )
 }
 
-@Composable
-private fun MembershipCardLayout(
-    name: @Composable () -> Unit,
-    expiration: @Composable () -> Unit,
-    points: @Composable () -> Unit,
-    barcode: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    StackedCardLayout(
-        modifier = modifier,
-        headline = { Text(stringResource(R.string.club_membership)) },
-        color = Theme.color.container.primary,
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Column(Modifier.padding(horizontal = 16.dp)) {
-                CompositionLocalProvider(LocalTextStyle provides Theme.textStyle.title) {
-                    name()
-                }
-                expiration()
-                points()
-            }
-            Spacer(Modifier.height(16.dp))
-            barcode()
-        }
-    }
+private class MembershipCardParameter : CollectionPreviewParameterProvider<Data>(listOf(Data())) {
+    data class Data(
+        val firstName: String = "Name",
+        val lastName: String = "Surname",
+        val view: MembershipView = MembershipViewParameter().values.first()
+    )
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun Preview() {
-    Theme {
-        MembershipCard(
-            firstName = "Jonathan",
-            lastName = "SuperLongNamer",
-            cardNumber = "1234612377231",
-            until = "21.5.2053",
-            points = "513.2"
-        )
-    }
+class MembershipViewParameter : CollectionPreviewParameterProvider<MembershipView>(
+    listOf(
+        Data(),
+        Data(isExpired = true)
+    )
+) {
+    data class Data(
+        override val isExpired: Boolean = false,
+        override val cardNumber: String = "123456789",
+        override val memberFrom: String = "Jan 1 2005",
+        override val memberUntil: String = "Jan 1 2024",
+        override val daysRemaining: String = "30 days",
+        override val points: String = "100"
+    ) : MembershipView
 }
