@@ -31,7 +31,6 @@ import movie.metropolis.app.screen.booking.component.TicketItemEmpty
 import movie.metropolis.app.screen.booking.component.TicketItemError
 import movie.metropolis.app.screen.booking.component.TicketItemExpired
 import movie.metropolis.app.screen.booking.component.TicketItemLoading
-import movie.metropolis.app.screen.home.HomeScreenState
 import movie.style.AppButton
 import movie.style.state.ImmutableList
 import movie.style.theme.Theme
@@ -40,15 +39,11 @@ import movie.style.theme.Theme
 @Composable
 fun BookingScreen(
     padding: PaddingValues,
-    homeState: HomeScreenState,
     behavior: TopAppBarScrollBehavior,
     onMovieClick: (String) -> Unit,
     viewModel: BookingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
-    SideEffect {
-        homeState.title = R.string.tickets
-    }
     val active by viewModel.active.collectAsState()
     val expired by viewModel.expired.collectAsState()
     val scope = rememberCoroutineScope()

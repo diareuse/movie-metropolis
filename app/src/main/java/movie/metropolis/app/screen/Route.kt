@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen
 
+import androidx.compose.runtime.*
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavBackStackEntry
@@ -9,6 +10,7 @@ import androidx.navigation.navDeepLink
 import movie.metropolis.app.util.decodeBase64
 import movie.metropolis.app.util.encodeBase64
 
+@Immutable
 sealed class Route(
     val route: String
 ) {
@@ -16,6 +18,21 @@ sealed class Route(
     companion object {
 
         private const val InternalUri = "app://movie.metropolis"
+        fun by(name: String) = when (name) {
+            Cinema() -> Cinema
+            Cinemas() -> Cinemas
+            Home() -> Home
+            Login() -> Login
+            Movie() -> Movie
+            Movies() -> Movies
+            Order() -> Order
+            OrderComplete() -> OrderComplete
+            Settings() -> Settings
+            Setup() -> Setup
+            Tickets() -> Tickets
+            User() -> User
+            else -> throw IllegalArgumentException("Unknown route name $name")
+        }
 
     }
 
