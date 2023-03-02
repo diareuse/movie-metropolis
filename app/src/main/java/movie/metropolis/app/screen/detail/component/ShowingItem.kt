@@ -1,12 +1,10 @@
 package movie.metropolis.app.screen.detail.component
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
@@ -16,188 +14,47 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.metropolis.app.model.AvailabilityView
-import movie.style.AppButton
-import movie.style.state.ImmutableMap
-import movie.style.state.ImmutableMap.Companion.immutableMapOf
-import movie.style.textPlaceholder
-import movie.style.theme.Theme
+import movie.metropolis.app.model.CinemaBookingView
+import movie.metropolis.app.screen.cinema.component.ShowingTypeLayout
+import movie.metropolis.app.screen.cinema.component.ShowingsLayout
+import movie.metropolis.app.screen.detail.CinemaBookingViewProvider
+import movie.style.layout.PreviewLayout
 
 @Composable
 fun ShowingItem(
-    title: String,
-    showings: ImmutableMap<AvailabilityView.Type, List<AvailabilityView>>,
+    view: CinemaBookingView,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    ShowingLayout(
+    ShowingsLayout(
         modifier = modifier,
-        items = showings,
-        key = { it.id },
-        title = { Text(title) },
-        section = { ShowingItemSection(type = it.type, language = it.language) }
+        title = { Text(view.cinema.name) }
     ) {
-        ShowingItemTime(
-            onClick = { onClick(it.url) }
-        ) {
-            Text(it.startsAt)
-        }
-    }
-}
-
-@Composable
-fun ShowingItem(
-    modifier: Modifier = Modifier
-) {
-    ShowingLayout(
-        modifier = modifier,
-        items = immutableMapOf(
-            "#" to List(3) { it },
-            "##" to List(1) { it },
-            "###" to List(2) { it },
-        ),
-        key = { it },
-        title = { Text("#".repeat(23), Modifier.textPlaceholder(true)) },
-        section = {
-            ShowingItemSection(
-                type = "#".repeat(4),
-                language = "#".repeat(7),
-                isLoading = true
-            )
-        }
-    ) {
-        ShowingItemTime(
-            modifier = Modifier.textPlaceholder(true)
-        ) {
-            Text("#".repeat(5), Modifier.textPlaceholder(true))
-        }
-    }
-}
-
-@Composable
-fun ShowingItemSection(type: String, language: String, isLoading: Boolean = false) {
-    Column {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                modifier = Modifier
-                    .textPlaceholder(isLoading)
-                    .size(16.dp),
-                painter = painterResource(id = R.drawable.ic_screening_type),
-                contentDescription = null
-            )
-            Text(
-                modifier = Modifier.textPlaceholder(isLoading),
-                text = type
-            )
-        }
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                modifier = Modifier
-                    .textPlaceholder(isLoading)
-                    .size(16.dp),
-                painter = painterResource(id = R.drawable.ic_language),
-                contentDescription = null
-            )
-            Text(
-                modifier = Modifier.textPlaceholder(isLoading),
-                text = language,
-                style = Theme.textStyle.caption
-            )
-        }
-    }
-}
-
-@Composable
-fun ShowingItemTime(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
-    time: @Composable () -> Unit
-) {
-    AppButton(
-        modifier = modifier,
-        onClick = onClick,
-        elevation = 0.dp,
-        containerColor = Theme.color.container.secondary,
-        contentColor = Theme.color.content.secondary,
-        contentPadding = PaddingValues(16.dp, 8.dp)
-    ) {
-        ProvideTextStyle(Theme.textStyle.body.copy(fontWeight = FontWeight.Bold)) {
-            time()
-        }
-    }
-}
-
-@Composable
-fun <T, T2> ShowingLayout(
-    items: ImmutableMap<T2, List<T>>,
-    key: (T) -> Any,
-    title: @Composable () -> Unit,
-    section: @Composable (T2) -> Unit,
-    modifier: Modifier = Modifier,
-    background: (@Composable () -> Unit)? = null,
-    item: @Composable (T) -> Unit,
-) {
-    Column(modifier = modifier) {
-        Box(
+        Column(
             modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .padding(bottom = 8.dp)
+                .fillMaxWidth()
+                .padding(vertical = 24.dp)
         ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides Theme.textStyle.headline.copy(
-                    fontWeight = FontWeight.Bold
-                )
-            ) {
-                title()
-            }
-        }
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = Theme.color.container.background,
-            contentColor = Theme.color.content.background,
-            shape = Theme.container.card,
-            tonalElevation = if (background == null) 4.dp else 0.dp
-        ) {
-            Box {
-                val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
-                val density = LocalDensity.current
-                Box(
-                    modifier = Modifier.size(
-                        width = with(density) { size.width.toDp() },
-                        height = with(density) { size.height.toDp() }
-                    )
+            for ((type, availability) in view.availability) {
+                ShowingTypeLayout(
+                    type = {
+                        Icon(
+                            painterResource(R.drawable.ic_screening_type),
+                            null,
+                            Modifier.size(16.dp)
+                        )
+                        Text(type.type)
+                    },
+                    language = {
+                        Icon(painterResource(R.drawable.ic_language), null, Modifier.size(16.dp))
+                        Text(type.language)
+                    }
                 ) {
-                    background?.invoke()
-                }
-                Column(
-                    modifier = Modifier
-                        .onSizeChanged(onSizeChanged)
-                        .padding(vertical = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    for ((label, collection) in items) Column(
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Box(Modifier.padding(horizontal = 24.dp)) {
-                            CompositionLocalProvider(
-                                LocalTextStyle provides Theme.textStyle.headline
-                            ) {
-                                section(label)
-                            }
-                        }
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            contentPadding = PaddingValues(horizontal = 24.dp)
+                    items(availability, AvailabilityView::id) {
+                        ShowingItemTime(
+                            onClick = { onClick(it.url) }
                         ) {
-                            items(collection, key) {
-                                item(it)
-                            }
+                            Text(it.startsAt)
                         }
                     }
                 }
@@ -206,20 +63,12 @@ fun <T, T2> ShowingLayout(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-private fun Preview() {
-    Theme {
-        ShowingLayout(
-            items = immutableMapOf(
-                ("2D" to "English (Czech)") to listOf("11:11", "12:34", "22:22"),
-                ("3D" to "English") to listOf("11:11", "12:34", "22:22"),
-            ),
-            key = { it },
-            title = { Text("My Cinema") },
-            section = { ShowingItemSection(type = it.first, language = it.second) }
-        ) {
-            ShowingItemTime(time = { Text(it) }, onClick = {})
-        }
-    }
+private fun ShowingItemPreview(
+    @PreviewParameter(CinemaBookingViewProvider::class)
+    item: CinemaBookingView
+) = PreviewLayout {
+    ShowingItem(item, {})
 }
