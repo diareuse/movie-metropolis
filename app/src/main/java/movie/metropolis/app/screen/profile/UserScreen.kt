@@ -21,6 +21,7 @@ import movie.metropolis.app.screen.profile.component.ActionsWithProgress
 import movie.metropolis.app.screen.profile.component.EmailField
 import movie.metropolis.app.screen.profile.component.MembershipCard
 import movie.metropolis.app.screen.profile.component.MembershipCardLoading
+import movie.metropolis.app.screen.profile.component.PasswordField
 import movie.style.AppButton
 import movie.style.AppIconButton
 import movie.style.AppToolbar
@@ -208,13 +209,13 @@ private fun UserScreen(
                 }
             }
             Text(text = stringResource(R.string.security), style = Theme.textStyle.title)
-            InputField(
+            PasswordField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordCurrent,
                 onValueChange = onPasswordCurrentChanged,
                 label = { Text(stringResource(R.string.old_password)) }
             )
-            InputField(
+            PasswordField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = passwordNew,
                 onValueChange = onPasswordNewChanged,

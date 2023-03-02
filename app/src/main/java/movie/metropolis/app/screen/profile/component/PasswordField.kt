@@ -20,6 +20,7 @@ fun PasswordField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
+    label: @Composable () -> Unit = { Text(stringResource(R.string.password)) },
     supportingText: (@Composable () -> Unit)? = null,
     readOnly: Boolean = false,
     error: Boolean = false
@@ -35,7 +36,7 @@ fun PasswordField(
         isError = error,
         readOnly = readOnly,
         placeholder = { Text("p4$\$w0rd") },
-        label = { Text(stringResource(R.string.password)) },
+        label = label,
         supportingText = supportingText,
         trailingIcon = {
             AppIconButton(
