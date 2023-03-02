@@ -2,24 +2,19 @@ package movie.style.image
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.*
-import androidx.compose.ui.unit.*
 import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Precision
 import coil.size.Scale
-import coil.size.Size
 import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun rememberImageRequest(
-    model: Any?,
-    size: IntSize = IntSize.Zero
-): ImageRequest {
+fun rememberImageRequest(url: String): ImageRequest {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
-    return remember(model, size) {
+    return remember(url) {
         ImageRequest.Builder(context)
-            .data(model)
+            .data(url)
             .diskCachePolicy(CachePolicy.ENABLED)
             .decoderDispatcher(Dispatchers.Default)
             .fetcherDispatcher(Dispatchers.IO.limitedParallelism(5))
@@ -27,14 +22,8 @@ fun rememberImageRequest(
             .transformationDispatcher(Dispatchers.Default)
             .lifecycle(owner)
             .precision(Precision.INEXACT)
-            .size(size)
             .scale(Scale.FILL)
             .crossfade(true)
             .build()
     }
-}
-
-private fun ImageRequest.Builder.size(size: IntSize) = when {
-    size.width <= 0 || size.height <= 0 -> this
-    else -> size(Size(size.width, size.height))
 }
