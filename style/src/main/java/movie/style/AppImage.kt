@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.painter.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.res.*
-import androidx.compose.ui.unit.*
 import coil.compose.AsyncImage
 import movie.style.image.rememberImageRequest
 
@@ -34,17 +33,14 @@ fun AppImage(
     placeholderError: Painter? = painterResource(id = R.drawable.ic_image_error),
     alignment: Alignment = Alignment.Center
 ) {
-    var size by remember { mutableStateOf(IntSize.Zero) }
     var isSuccess by rememberSaveable { mutableStateOf(false) }
     var isLoading by rememberSaveable { mutableStateOf(true) }
     val colorFilter =
         if (isSuccess || placeholder == null) null
         else ColorFilter.tint(LocalContentColor.current)
     AsyncImage(
-        modifier = modifier
-            .imagePlaceholder(isLoading)
-            .onGloballyPositioned { size = it.size },
-        model = rememberImageRequest(url, size),
+        modifier = modifier.imagePlaceholder(isLoading),
+        model = rememberImageRequest(url),
         contentDescription = null,
         placeholder = placeholder,
         error = placeholderError,
