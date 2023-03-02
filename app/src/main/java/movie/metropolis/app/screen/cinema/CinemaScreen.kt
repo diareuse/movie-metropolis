@@ -97,15 +97,12 @@ private fun CinemaScreen(
             )
         }
     ) { padding ->
-        var selectedItem by remember { mutableStateOf(null as MovieBookingView?) }
-        val columnState = rememberLazyListState()
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(behavior.nestedScrollConnection),
             contentPadding = padding + PaddingValues(vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            state = columnState
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item("picker") {
                 DatePickerRow(
