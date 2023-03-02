@@ -39,6 +39,7 @@ import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
 import movie.metropolis.app.screen.detail.component.FavoriteButton
+import movie.metropolis.app.screen.detail.component.FilterItem
 import movie.metropolis.app.screen.detail.component.FilterRow
 import movie.metropolis.app.screen.detail.component.MovieMetadata
 import movie.metropolis.app.screen.detail.component.MovieScreenAppBar
@@ -52,7 +53,6 @@ import movie.style.EllipsisText
 import movie.style.modifier.overlay
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
-import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -276,15 +276,19 @@ fun LazyListScope.MovieDetailShowings(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 FilterRow(
-                    filters = filters[Filter.Type.Language].orEmpty().immutable(),
-                    onFilterToggle = onFilterClick,
                     contentPadding = PaddingValues(horizontal = 24.dp)
-                )
+                ) {
+                    items(filters[Filter.Type.Language].orEmpty(), Filter::value) {
+                        FilterItem(filter = it, onClick = { onFilterClick(it) })
+                    }
+                }
                 FilterRow(
-                    filters = filters[Filter.Type.Projection].orEmpty().immutable(),
-                    onFilterToggle = onFilterClick,
                     contentPadding = PaddingValues(horizontal = 24.dp)
-                )
+                ) {
+                    items(filters[Filter.Type.Projection].orEmpty(), Filter::value) {
+                        FilterItem(filter = it, onClick = { onFilterClick(it) })
+                    }
+                }
             }
         }
         item("filters-divider") {
