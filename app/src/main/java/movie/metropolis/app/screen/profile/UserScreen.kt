@@ -17,7 +17,10 @@ import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.metropolis.app.screen.profile.component.ActionsWithProgress
+import movie.metropolis.app.screen.profile.component.EmailField
 import movie.metropolis.app.screen.profile.component.MembershipCard
+import movie.metropolis.app.screen.profile.component.MembershipCardLoading
 import movie.style.AppButton
 import movie.style.AppIconButton
 import movie.style.AppToolbar
@@ -131,12 +134,10 @@ private fun UserScreen(
                 if (it != null) MembershipCard(
                     firstName = firstName,
                     lastName = lastName,
-                    cardNumber = it.cardNumber,
-                    until = it.memberUntil,
-                    points = it.points
+                    view = it
                 )
             }.onLoading {
-                MembershipCard()
+                MembershipCardLoading()
             }
             Text(stringResource(R.string.user_detail), style = Theme.textStyle.title)
             InputField(
@@ -151,10 +152,10 @@ private fun UserScreen(
                 onValueChange = onLastNameChanged,
                 label = { Text(stringResource(R.string.last_name)) }
             )
-            InputField(
+            EmailField(
                 modifier = Modifier.textPlaceholder(isLoading),
-                value = email, onValueChange = onEmailChanged,
-                label = { Text(stringResource(R.string.email)) }
+                value = email,
+                onValueChange = onEmailChanged
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
@@ -195,11 +196,16 @@ private fun UserScreen(
                     text = stringResource(R.string.accept_marketing)
                 )
             }
-            if (!isLoading) AppButton(
+            ActionsWithProgress(
                 modifier = Modifier.align(Alignment.End),
-                onClick = onSaveClick
+                loading = isLoading
             ) {
-                Text(stringResource(R.string.save))
+                AppButton(
+                    onClick = onSaveClick,
+                    enabled = !isLoading
+                ) {
+                    Text(stringResource(R.string.save))
+                }
             }
             Text(text = stringResource(R.string.security), style = Theme.textStyle.title)
             InputField(
@@ -214,11 +220,16 @@ private fun UserScreen(
                 onValueChange = onPasswordNewChanged,
                 label = { Text(stringResource(R.string.new_password)) }
             )
-            if (!isLoading) AppButton(
+            ActionsWithProgress(
                 modifier = Modifier.align(Alignment.End),
-                onClick = onSaveClick
+                loading = isLoading
             ) {
-                Text(stringResource(R.string.save))
+                AppButton(
+                    onClick = onSaveClick,
+                    enabled = !isLoading
+                ) {
+                    Text(stringResource(R.string.save))
+                }
             }
         }
     }
