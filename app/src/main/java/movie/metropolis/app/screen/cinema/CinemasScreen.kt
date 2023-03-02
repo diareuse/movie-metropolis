@@ -13,7 +13,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.presentation.Loadable
@@ -27,7 +26,6 @@ import movie.metropolis.app.screen.cinema.component.CinemaItemError
 import movie.metropolis.app.screen.cinema.component.CinemaItemLoading
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.detail.plus
-import movie.metropolis.app.screen.home.HomeScreenState
 import movie.style.layout.PreviewLayout
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,12 +35,8 @@ fun CinemasScreen(
     onClickCinema: (String) -> Unit,
     state: LazyListState,
     behavior: TopAppBarScrollBehavior,
-    homeState: HomeScreenState,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
-    SideEffect {
-        homeState.title = R.string.cinemas
-    }
     val items by viewModel.items.collectAsState()
     val location by rememberLocation()
     LaunchedEffect(location) {

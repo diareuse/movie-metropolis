@@ -24,7 +24,6 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
-import movie.metropolis.app.screen.home.HomeScreenState
 import movie.metropolis.app.screen.listing.component.MoviePromo
 import movie.metropolis.app.screen.listing.component.MovieRow
 import movie.style.state.ImmutableList.Companion.immutable
@@ -35,16 +34,12 @@ import movie.style.theme.Theme
 @Composable
 fun ListingScreen(
     padding: PaddingValues,
-    homeState: HomeScreenState,
     behavior: TopAppBarScrollBehavior,
     onClickMovie: (String, upcoming: Boolean) -> Unit,
     state: LazyListState,
     viewModel: ListingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
-    SideEffect {
-        homeState.title = R.string.now_available
-    }
     val currentPromotions by viewModel.currentPromotions.collectAsState()
     val upcomingPromotions by viewModel.upcomingPromotions.collectAsState()
     val currentGroups by viewModel.currentGroups.collectAsState()
