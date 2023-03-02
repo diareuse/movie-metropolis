@@ -3,6 +3,7 @@ package movie.style.layout
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
@@ -79,7 +80,12 @@ fun CutoutLayout(
                 .align(Alignment.TopEnd)
                 .surface(color, cutoutShape, elevation, color)
         ) {
-            overlay()
+            CompositionLocalProvider(
+                LocalContentColor provides contentColorFor(color),
+                LocalTextStyle provides Theme.textStyle.emphasis
+            ) {
+                overlay()
+            }
         }
     }
 }

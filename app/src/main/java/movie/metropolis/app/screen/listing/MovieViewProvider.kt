@@ -42,7 +42,12 @@ class MovieViewProvider :
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5228D2R-lg.jpg",
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5392S2R-lg.jpg"
         ).random(),
-        override val spotColor: Color = Color.LightGray
+        override val spotColor: Color = listOf(
+            Color.Magenta,
+            Color.Red,
+            Color.Green,
+            Color.Blue
+        ).random()
     ) : ImageView
 
     private data class PreviewVideo(

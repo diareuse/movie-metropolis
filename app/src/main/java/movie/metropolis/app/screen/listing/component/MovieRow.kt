@@ -43,9 +43,9 @@ fun MovieRow(
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
-            MovieItem()
-            MovieItem()
-            MovieItem()
+            repeat(3) {
+                MovieItemLoading()
+            }
         }
     }.onEmpty {
         Row(
@@ -54,9 +54,9 @@ fun MovieRow(
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
-            MovieItemEmpty()
-            MovieItemEmpty()
-            MovieItemEmpty()
+            repeat(3) {
+                MovieItemEmpty()
+            }
         }
     }.onFailure {
         Row(
@@ -65,9 +65,9 @@ fun MovieRow(
                 .horizontalScroll(rememberScrollState(), enabled = false)
                 .padding(24.dp)
         ) {
-            MovieItemError()
-            MovieItemError()
-            MovieItemError()
+            repeat(3) {
+                MovieItemError()
+            }
         }
     }
 }
@@ -90,17 +90,14 @@ private fun MovieRow(
         items(items, key = MovieView::id) { item ->
             var showPopup by remember { mutableStateOf(false) }
             if (isShowing)
-                MovieItem(
-                    rating = item.rating,
-                    poster = item.poster,
+                MovieItemActive(
+                    view = item,
                     onClick = { onClick(item.id) },
                     onLongPress = { showPopup = it }
                 )
             else
-                MovieItem(
-                    subtext = item.availableFrom,
-                    poster = item.poster,
-                    isFavorite = item.favorite,
+                MovieItemUpcoming(
+                    view = item,
                     onClick = { onClick(item.id) },
                     onClickFavorite = { onClickFavorite(item) },
                     onLongPress = { showPopup = it }
