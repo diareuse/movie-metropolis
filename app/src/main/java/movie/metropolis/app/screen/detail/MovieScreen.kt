@@ -347,12 +347,7 @@ private fun Preview(
     Theme {
         MovieScreen(
             detail = Loadable.success(detail),
-            poster = Loadable.success(
-                ImageViewPreview(
-                    url = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
-                    aspectRatio = DefaultPosterAspectRatio
-                )
-            ),
+            poster = Loadable.success(ImageViewPreview()),
             trailer = Loadable.loading(),
             options = Loadable.loading(),
             selectedDate = Date().immutable(),
@@ -371,8 +366,8 @@ private fun Preview(
 }
 
 data class ImageViewPreview(
-    override val aspectRatio: Float,
-    override val url: String,
+    override val url: String = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
+    override val aspectRatio: Float = DefaultPosterAspectRatio,
     override val spotColor: Color = Color.Yellow
 ) : ImageView
 
