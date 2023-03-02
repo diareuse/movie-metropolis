@@ -11,7 +11,6 @@ import androidx.compose.ui.unit.*
 import movie.style.layout.CutoutLayout
 import movie.style.layout.TicketShape
 import movie.style.theme.Theme
-import movie.style.theme.contentColorFor
 
 @Composable
 fun TicketOverlay(
@@ -31,13 +30,7 @@ fun TicketOverlay(
         cutoutShape = Theme.container.button,
         contentShape = shape,
         cutoutPadding = 12.dp,
-        overlay = {
-            CompositionLocalProvider(
-                LocalContentColor provides Theme.color.contentColorFor(color)
-            ) {
-                overlay()
-            }
-        }
+        overlay = overlay
     ) {
         Box {
             content()

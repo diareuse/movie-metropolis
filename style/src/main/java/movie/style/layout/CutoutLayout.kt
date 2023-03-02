@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import movie.style.modifier.surface
 import movie.style.theme.Theme
+import movie.style.theme.contentColorFor
 import movie.style.theme.extendBy
 
 @Composable
@@ -81,7 +82,7 @@ fun CutoutLayout(
                 .surface(color, cutoutShape, elevation, color)
         ) {
             CompositionLocalProvider(
-                LocalContentColor provides contentColorFor(color),
+                LocalContentColor provides Theme.color.contentColorFor(color),
                 LocalTextStyle provides Theme.textStyle.emphasis
             ) {
                 overlay()
