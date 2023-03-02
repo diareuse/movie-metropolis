@@ -22,6 +22,7 @@ import movie.metropolis.app.screen.profile.component.EmailField
 import movie.metropolis.app.screen.profile.component.MembershipCard
 import movie.metropolis.app.screen.profile.component.MembershipCardLoading
 import movie.metropolis.app.screen.profile.component.PasswordField
+import movie.metropolis.app.screen.profile.component.PhoneField
 import movie.style.AppButton
 import movie.style.AppIconButton
 import movie.style.AppToolbar
@@ -158,11 +159,10 @@ private fun UserScreen(
                 value = email,
                 onValueChange = onEmailChanged
             )
-            InputField(
+            PhoneField(
                 modifier = Modifier.textPlaceholder(isLoading),
                 value = phone,
-                onValueChange = onPhoneChanged,
-                label = { Text(stringResource(R.string.phone)) }
+                onValueChange = onPhoneChanged
             )
             InputField(
                 modifier = Modifier.textPlaceholder(isLoading),
