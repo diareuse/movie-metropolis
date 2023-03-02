@@ -27,7 +27,10 @@ fun HomeScreenLayout(
     }
     Scaffold(
         topBar = {
-            HomeScreenToolbar(profileIcon = profileIcon) {
+            HomeScreenToolbar(
+                profileIcon = profileIcon,
+                behavior = behavior
+            ) {
                 AnimatedTitleText(target = state.titleResource()) {
                     if (it != null) Text(it)
                 }

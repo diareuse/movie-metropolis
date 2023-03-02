@@ -14,7 +14,6 @@ import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.style.layout.CutoutLayout
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
-import movie.style.theme.contentColorFor
 
 @Composable
 fun MovieMetadataLayout(
@@ -35,14 +34,7 @@ fun MovieMetadataLayout(
                 .aspectRatio(aspectRatio),
             color = color,
             shape = Theme.container.poster,
-            overlay = {
-                CompositionLocalProvider(
-                    LocalContentColor provides Theme.color.contentColorFor(color),
-                    LocalTextStyle provides Theme.textStyle.body
-                ) {
-                    rating()
-                }
-            }
+            overlay = rating
         ) {
             image()
         }
