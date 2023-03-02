@@ -38,6 +38,7 @@ import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.cinema.component.MovieShowingItemEmpty
+import movie.metropolis.app.screen.cinema.component.MovieShowingItemLoading
 import movie.metropolis.app.screen.detail.component.FavoriteButton
 import movie.metropolis.app.screen.detail.component.FilterItem
 import movie.metropolis.app.screen.detail.component.FilterRow
@@ -53,7 +54,6 @@ import movie.style.EllipsisText
 import movie.style.modifier.overlay
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
-import movie.style.state.ImmutableMap.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Date
@@ -301,14 +301,13 @@ fun LazyListScope.MovieDetailShowings(
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(horizontal = 24.dp),
-                title = it.cinema.name,
-                showings = it.availability.immutable(),
+                view = it,
                 onClick = onBookingClick
             )
         }
     }.onLoading {
         items(2) {
-            ShowingItem(
+            MovieShowingItemLoading(
                 modifier = Modifier
                     .animateItemPlacement()
                     .padding(horizontal = 24.dp)
