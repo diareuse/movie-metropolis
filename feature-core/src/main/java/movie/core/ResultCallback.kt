@@ -66,8 +66,11 @@ inline fun <T> ResultCallback<List<T>>.parallelize(
     crossinline body: suspend (T) -> T
 ) {
     val updated = list.toMutableList()
+    val mutex = Mutex()
     for ((index, item) in list.withIndex()) scope.launch(context = context) {
-        updated[index] = body(item)
+        mutex.withLock {
+            updated[index] = body(item)
+        }
         invoke(Result.success(updated.toList()))
     }
 }
@@ -79,9 +82,12 @@ inline fun <T> ResultCallback<List<T>>.parallelizeContinuous(
     crossinline body: suspend (T, callback: suspend (T) -> Unit) -> Unit
 ) {
     val updated = list.toMutableList()
+    val mutex = Mutex()
     for ((index, item) in list.withIndex()) scope.launch(context = context) {
         body(item) {
-            updated[index] = it
+            mutex.withLock {
+                updated[index] = it
+            }
             invoke(Result.success(updated.toList()))
         }
     }
@@ -94,7 +100,7 @@ inline fun <K, V> ResultCallback<Map<K, V>>.parallelize(
     crossinline body: suspend (K) -> V
 ) {
     val output = mutableMapOf<K, V>()
-    val mutex = Mutex(false)
+    val mutex = Mutex()
     for (item in list) scope.launch(context = context) {
         val snapshot = mutex.withLock {
             output[item] = body(item)
