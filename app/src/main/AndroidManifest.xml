@@ -77,6 +77,7 @@
         <activity
             android:name="movie.metropolis.app.ShareActivity"
             android:exported="true"
+            android:label="@string/share_add_ticket"
             android:theme="@style/Theme.MovieMetropolis">
             <intent-filter>
                 <category android:name="android.intent.category.DEFAULT" />

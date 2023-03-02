@@ -110,4 +110,5 @@
     <string name="order_complete_message">Your order is complete and tickets will be available in-app momentarily.</string>
     <string name="support_title">Support the mission</string>
     <string name="support_bottom_line_caption">Please note that the application is completely free of charge and not sponsored by Cinema City. Offers above are tips to the developers of this application.</string>
+    <string name="share_add_ticket">Add a ticket</string>
 </resources>
