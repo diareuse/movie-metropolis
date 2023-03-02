@@ -1,26 +1,24 @@
 package movie.metropolis.app.screen.profile
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
-import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
+import movie.metropolis.app.screen.profile.component.ActionsWithProgress
+import movie.metropolis.app.screen.profile.component.EmailField
 import movie.metropolis.app.screen.profile.component.LoginScreenLayout
+import movie.metropolis.app.screen.profile.component.PasswordField
 import movie.metropolis.app.screen.setup.component.Background
 import movie.style.AppButton
-import movie.style.AppIconButton
-import movie.style.InputField
 import movie.style.theme.Theme
 
 @Composable
@@ -98,15 +96,11 @@ private fun LoginSignInScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
             horizontalAlignment = Alignment.End
         ) {
-            InputField(
-                modifier = Modifier.fillMaxWidth(),
+            EmailField(
                 value = email,
                 onValueChange = onEmailChanged,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                isError = error,
+                error = error,
                 readOnly = loading,
-                placeholder = { Text("john.doe@cinema.com") },
-                label = { Text(stringResource(R.string.email)) },
                 supportingText = {
                     val text = when (error) {
                         true -> stringResource(R.string.login_error)
@@ -115,36 +109,20 @@ private fun LoginSignInScreen(
                     Text(text)
                 }
             )
-            var isHidden by remember { mutableStateOf(true) }
-            InputField(
+            PasswordField(
                 modifier = Modifier.fillMaxWidth(),
                 value = password,
                 onValueChange = onPasswordChanged,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = if (isHidden) KeyboardType.Password else KeyboardType.Text
-                ),
-                isError = error,
+                error = error,
                 readOnly = loading,
-                placeholder = { Text("p4$\$w0rd") },
-                label = { Text(stringResource(R.string.password)) },
                 supportingText = {
                     if (error) Text(stringResource(R.string.password_failure))
-                },
-                trailingIcon = {
-                    AppIconButton(
-                        painter = painterResource(R.drawable.ic_eye),
-                        onClick = { isHidden = !isHidden }
-                    )
                 }
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                AnimatedVisibility(loading) {
-                    CircularProgressIndicator(Modifier.scale(.5f))
-                }
-                AnimatedVisibility(error) {
+            ActionsWithProgress(
+                loading = loading,
+                error = error,
+                errorAction = {
                     AppButton(
                         onClick = {
                             actions.actionView("$domain/account#/password-reset")
@@ -156,6 +134,7 @@ private fun LoginSignInScreen(
                         Text(stringResource(R.string.reset_password))
                     }
                 }
+            ) {
                 AppButton(
                     onClick = onSendClick,
                     enabled = !loading
