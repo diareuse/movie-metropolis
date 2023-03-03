@@ -3,6 +3,7 @@ package movie.metropolis.app.presentation.setup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext
@@ -27,10 +28,10 @@ interface SetupFacade {
             }
 
         val SetupFacade.requiresSetupFlow
-            get() = flow {
+            get() = channelFlow {
                 while (currentCoroutineContext().isActive) {
                     withContext(Dispatchers.IO) {
-                        emit(requiresSetup)
+                        send(requiresSetup)
                     }
                     delay(1.seconds)
                 }
