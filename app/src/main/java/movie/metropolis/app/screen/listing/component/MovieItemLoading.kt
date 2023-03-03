@@ -21,7 +21,7 @@ fun MovieItemLoading(
         Box(
             Modifier
                 .fillMaxSize()
-                .imagePlaceholder(true)
+                .imagePlaceholder()
         )
     }
 }

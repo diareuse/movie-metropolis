@@ -18,17 +18,17 @@ fun TicketItemLoading(
         overlay = {}
     ) {
         TicketItem(
-            cinema = { Text("#".repeat(24), Modifier.textPlaceholder(true)) },
+            cinema = { Text("#".repeat(24), Modifier.textPlaceholder()) },
             poster = { AppImage(url = null, Modifier.fillMaxSize()) },
-            name = { Text("#".repeat(30), Modifier.textPlaceholder(true)) },
-            date = { Text("#".repeat(12), Modifier.textPlaceholder(true)) },
+            name = { Text("#".repeat(30), Modifier.textPlaceholder()) },
+            date = { Text("#".repeat(12), Modifier.textPlaceholder()) },
             metadata = {
                 TicketMetadata(
                     seats = 1,
-                    hall = { Text("#".repeat(6), Modifier.textPlaceholder(true)) },
-                    time = { Text("#".repeat(5), Modifier.textPlaceholder(true)) },
-                    row = { Text("#".repeat(2), Modifier.textPlaceholder(true)) },
-                    seat = { Text("#".repeat(2), Modifier.textPlaceholder(true)) }
+                    hall = { Text("#".repeat(6), Modifier.textPlaceholder()) },
+                    time = { Text("#".repeat(5), Modifier.textPlaceholder()) },
+                    row = { Text("#".repeat(2), Modifier.textPlaceholder()) },
+                    seat = { Text("#".repeat(2), Modifier.textPlaceholder()) }
                 )
             },
             onBottomOffsetChanged = { cutoutOffset = it }

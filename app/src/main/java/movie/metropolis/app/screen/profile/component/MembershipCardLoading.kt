@@ -21,16 +21,16 @@ fun MembershipCardLoading(
 ) {
     MembershipCardLayout(
         modifier = modifier,
-        name = { Text("#".repeat(22), modifier = Modifier.textPlaceholder(true)) },
-        expiration = { Text("#".repeat(11), modifier = Modifier.textPlaceholder(true)) },
-        points = { Text("#".repeat(10), modifier = Modifier.textPlaceholder(true)) },
+        name = { Text("#".repeat(22), modifier = Modifier.textPlaceholder()) },
+        expiration = { Text("#".repeat(11), modifier = Modifier.textPlaceholder()) },
+        points = { Text("#".repeat(10), modifier = Modifier.textPlaceholder()) },
         barcode = {
             Box(
                 Modifier
                     .fillMaxWidth()
                     .clip(Theme.container.poster.extendBy(padding = 8.dp))
                     .height(64.dp)
-                    .imagePlaceholder(true)
+                    .imagePlaceholder()
             )
         }
     )

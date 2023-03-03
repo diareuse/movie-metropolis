@@ -5,63 +5,48 @@ import androidx.compose.material3.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
-import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.placeholder
-import com.google.accompanist.placeholder.shimmer
 import movie.style.theme.Theme
 
 fun Modifier.imagePlaceholder(
-    visible: Boolean
+    visible: Boolean = true
 ) = composed {
-    imagePlaceholder(visible, Theme.container.button)
+    imagePlaceholder(
+        shape = Theme.container.button,
+        visible = visible
+    )
 }
 
 fun Modifier.imagePlaceholder(
-    visible: Boolean,
-    shape: Shape
+    shape: Shape,
+    visible: Boolean = true
 ) = composed {
     placeholder(
         visible = visible,
         color = Theme.color.container.background,
-        shape = shape,
-        highlight = PlaceholderHighlight.shimmer(Theme.color.container.surface)
+        shape = shape
     )
 }
 
 fun Modifier.textPlaceholder(
-    visible: Boolean,
-    color: Color = Color.Unspecified
+    visible: Boolean = true
 ) = composed {
-    textPlaceholder(visible, Theme.container.buttonSmall, color)
+    textPlaceholder(
+        shape = Theme.container.buttonSmall,
+        visible = visible
+    )
 }
 
 fun Modifier.textPlaceholder(
-    visible: Boolean,
     shape: Shape,
-    color: Color = Color.Unspecified
+    visible: Boolean = true
 ) = composed {
     val background = LocalContentColor.current
-    padding(if (visible) 2.dp else 0.dp).placeholder(
+    padding(
+        vertical = if (visible) 1.dp else 0.dp
+    ).placeholder(
         visible = visible,
         color = background.copy(alpha = .1f),
-        shape = shape,
-        highlight = PlaceholderHighlight.shimmer(color.takeUnless { it == Color.Unspecified }
-            ?: MaterialTheme.colorScheme.containerColorFor(background))
+        shape = shape
     )
-}
-
-private fun ColorScheme.containerColorFor(color: Color) = when (color) {
-    onPrimary -> primary
-    onSecondary -> secondary
-    onTertiary -> tertiary
-    onBackground -> background
-    onError -> error
-    onSurface -> surface
-    onSurfaceVariant -> surfaceVariant
-    onPrimaryContainer -> primaryContainer
-    onSecondaryContainer -> secondaryContainer
-    onTertiaryContainer -> tertiaryContainer
-    onErrorContainer -> errorContainer
-    inverseOnSurface -> inverseSurface
-    else -> Color.Unspecified
 }

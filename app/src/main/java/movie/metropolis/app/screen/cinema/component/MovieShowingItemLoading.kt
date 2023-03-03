@@ -17,7 +17,7 @@ fun MovieShowingItemLoading(
     modifier: Modifier = Modifier
 ) {
     ShowingsLayout(
-        title = { Text("#".repeat(23), Modifier.textPlaceholder(true)) },
+        title = { Text("#".repeat(23), Modifier.textPlaceholder()) },
         modifier = modifier
     ) {
         ShowingTypeLayout(
@@ -25,23 +25,23 @@ fun MovieShowingItemLoading(
             type = {
                 Box(
                     Modifier
-                        .textPlaceholder(true)
+                        .textPlaceholder()
                         .size(16.dp)
                 )
-                Text("#".repeat(4), Modifier.textPlaceholder(true))
+                Text("#".repeat(4), Modifier.textPlaceholder())
             },
             language = {
                 Box(
                     Modifier
-                        .textPlaceholder(true)
+                        .textPlaceholder()
                         .size(16.dp)
                 )
-                Text("#".repeat(7), Modifier.textPlaceholder(true))
+                Text("#".repeat(7), Modifier.textPlaceholder())
             }
         ) {
             items(3) {
                 ShowingItemTime {
-                    Text("#".repeat(5), Modifier.textPlaceholder(true))
+                    Text("#".repeat(5), Modifier.textPlaceholder())
                 }
             }
         }
