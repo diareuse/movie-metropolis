@@ -116,7 +116,7 @@ private fun ListingScreenContent(
                 SectionHeadline(
                     name = "#".repeat(10),
                     modifier = Modifier
-                        .textPlaceholder(true)
+                        .textPlaceholder()
                         .animateItemPlacement()
                 )
             }
@@ -176,7 +176,7 @@ private fun ListingScreenContent(
             item(key = "upcoming-title") {
                 SectionHeadline(
                     modifier = Modifier
-                        .textPlaceholder(true)
+                        .textPlaceholder()
                         .animateItemPlacement(),
                     name = "#".repeat(10)
                 )

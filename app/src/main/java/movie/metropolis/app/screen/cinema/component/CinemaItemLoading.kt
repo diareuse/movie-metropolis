@@ -21,13 +21,13 @@ fun CinemaItemLoading(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .imagePlaceholder(true)
+                    .imagePlaceholder()
             )
         },
-        name = { Text("#".repeat(17), modifier = Modifier.textPlaceholder(true)) },
-        address = { Text("#".repeat(22), modifier = Modifier.textPlaceholder(true)) },
-        city = { Text("#".repeat(15), modifier = Modifier.textPlaceholder(true)) },
-        distance = { Text("#".repeat(5), modifier = Modifier.textPlaceholder(true)) }
+        name = { Text("#".repeat(17), modifier = Modifier.textPlaceholder()) },
+        address = { Text("#".repeat(22), modifier = Modifier.textPlaceholder()) },
+        city = { Text("#".repeat(15), modifier = Modifier.textPlaceholder()) },
+        distance = { Text("#".repeat(5), modifier = Modifier.textPlaceholder()) }
     )
 }
 

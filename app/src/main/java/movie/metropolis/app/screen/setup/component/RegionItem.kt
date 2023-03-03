@@ -19,7 +19,7 @@ fun RegionItem(
     modifier: Modifier = Modifier,
 ) {
     RegionItemLayout(modifier = modifier) {
-        Text("#".repeat(nextInt(5, 20)), modifier = Modifier.textPlaceholder(true))
+        Text("#".repeat(nextInt(5, 20)), modifier = Modifier.textPlaceholder())
     }
 }
 

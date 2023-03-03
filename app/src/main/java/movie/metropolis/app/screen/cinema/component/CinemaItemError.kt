@@ -26,5 +26,5 @@ fun CinemaItemError(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun CinemaItemErrorPreview() = PreviewLayout {
-
+    CinemaItemError()
 }

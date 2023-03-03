@@ -25,22 +25,22 @@ fun MovieDetailColumn(
         modifier = modifier,
         title = {
             detail.map { it.name }
-                .onLoading { Text("#".repeat(10), Modifier.textPlaceholder(true)) }
+                .onLoading { Text("#".repeat(10), Modifier.textPlaceholder()) }
                 .onSuccess { Text(it) }
         },
         details = {
             detail.map { "%s • %s • %s".format(it.duration, it.countryOfOrigin, it.releasedAt) }
-                .onLoading { Text("#".repeat(22), Modifier.textPlaceholder(true)) }
+                .onLoading { Text("#".repeat(22), Modifier.textPlaceholder()) }
                 .onSuccess { Text(it) }
         },
         directors = {
             detail.map { it.directors.joinToString() }
-                .onLoading { Text("#".repeat(13), Modifier.textPlaceholder(true)) }
+                .onLoading { Text("#".repeat(13), Modifier.textPlaceholder()) }
                 .onSuccess { Text(it) }
         },
         cast = {
             detail.map { it.cast.joinToString() }
-                .onLoading { Text("#".repeat(28), Modifier.textPlaceholder(true)) }
+                .onLoading { Text("#".repeat(28), Modifier.textPlaceholder()) }
                 .onSuccess { EllipsisText(it, 3) }
         }
     )

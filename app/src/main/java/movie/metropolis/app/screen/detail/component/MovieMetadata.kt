@@ -42,8 +42,8 @@ fun MovieMetadata(
                     Text(
                         "#".repeat(3),
                         Modifier
-                            .padding(10.dp, 6.dp)
-                            .textPlaceholder(true)
+                            .padding(12.dp, 8.dp)
+                            .textPlaceholder()
                     )
                 }
                 .onSuccess { Text(it, Modifier.padding(12.dp, 8.dp)) }
@@ -55,7 +55,7 @@ fun MovieMetadata(
                     Box(
                         Modifier
                             .fillMaxSize()
-                            .imagePlaceholder(true)
+                            .imagePlaceholder()
                     )
                 }
                 .onSuccess { AppImage(it, Modifier.fillMaxSize()) }
