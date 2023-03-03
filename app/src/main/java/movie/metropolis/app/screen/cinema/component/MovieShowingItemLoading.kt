@@ -25,16 +25,16 @@ fun MovieShowingItemLoading(
             type = {
                 Box(
                     Modifier
-                        .size(16.dp)
                         .textPlaceholder(true)
+                        .size(16.dp)
                 )
                 Text("#".repeat(4), Modifier.textPlaceholder(true))
             },
             language = {
                 Box(
                     Modifier
-                        .size(16.dp)
                         .textPlaceholder(true)
+                        .size(16.dp)
                 )
                 Text("#".repeat(7), Modifier.textPlaceholder(true))
             }

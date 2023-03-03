@@ -33,7 +33,8 @@ fun ShowingItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 24.dp)
+                .padding(vertical = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             for ((type, availability) in view.availability) {
                 ShowingTypeLayout(

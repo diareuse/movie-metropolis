@@ -36,7 +36,7 @@ fun MovieShowingItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             for ((type, availability) in view.availability) {
                 ShowingTypeLayout(
