@@ -7,9 +7,9 @@ class SharedPreferencesFactory private constructor(
     private val name: String
 ) {
 
-    fun create(context: Context): SharedPreferences {
+    fun create(context: Context): SharedPreferences = LazySharedPreferences {
         val name = context.packageName + ".$name"
-        return context.getSharedPreferences(name, Context.MODE_PRIVATE)
+        context.getSharedPreferences(name, Context.MODE_PRIVATE)
     }
 
     companion object {

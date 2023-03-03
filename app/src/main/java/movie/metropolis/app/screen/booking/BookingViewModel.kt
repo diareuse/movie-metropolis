@@ -1,16 +1,19 @@
 package movie.metropolis.app.screen.booking
 
 import android.content.Context
+import androidx.annotation.WorkerThread
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.booking.BookingFacade
@@ -33,7 +36,8 @@ class BookingViewModel @Inject constructor(
     context: Context
 ) : ViewModel() {
 
-    private val cacheDir = context.cacheDir
+    private val cacheDir by lazy { context.cacheDir }
+        @WorkerThread get
 
     private val refreshToken = Channel<suspend () -> Unit>()
     private val refreshTokenFlow = refreshToken.consumeAsFlow()
@@ -61,7 +65,8 @@ class BookingViewModel @Inject constructor(
 
     suspend fun saveAsFile(booking: BookingView.Active): File {
         val image = facade.getImage(booking)
-        return File(cacheDir, "tickets/ticket.png").apply {
+        val dir = withContext(Dispatchers.IO) { cacheDir }
+        return File(dir, "tickets/ticket.png").apply {
             parentFile?.mkdirs()
             image?.writeTo(this)
         }

@@ -31,6 +31,7 @@ import movie.core.nwk.UserServiceLogout
 import movie.core.nwk.UserServiceReauthorize
 import movie.core.nwk.UserServiceSaving
 import movie.core.nwk.trace
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -42,6 +43,7 @@ class NetworkModule {
         explicitNulls = false
     }
 
+    @Singleton
     @ClientRoot
     @Provides
     fun clientRoot(
