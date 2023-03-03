@@ -37,6 +37,7 @@ class DatabaseModule {
         var dao: BookingDao = database.booking()
         dao = BookingDaoLowercase(dao)
         dao = BookingDaoPerformance(dao, tracer)
+        dao = BookingDaoThreading(dao)
         return dao
     }
 
@@ -48,6 +49,7 @@ class DatabaseModule {
         var dao: BookingSeatsDao = database.bookingSeats()
         dao = BookingSeatsDaoLowercase(dao)
         dao = BookingSeatsDaoPerformance(dao, tracer)
+        dao = BookingSeatsDaoThreading(dao)
         return dao
     }
 
@@ -59,6 +61,7 @@ class DatabaseModule {
         var dao: CinemaDao = database.cinema()
         dao = CinemaDaoLowercase(dao)
         dao = CinemaDaoPerformance(dao, tracer)
+        dao = CinemaDaoThreading(dao)
         return dao
     }
 
@@ -70,6 +73,7 @@ class DatabaseModule {
         var dao: MovieDao = database.movie()
         dao = MovieDaoLowercase(dao)
         dao = MovieDaoPerformance(dao, tracer)
+        dao = MovieDaoThreading(dao)
         return dao
     }
 
@@ -81,6 +85,7 @@ class DatabaseModule {
         var dao: MovieDetailDao = database.movieDetail()
         dao = MovieDetailDaoLowercase(dao)
         dao = MovieDetailDaoPerformance(dao, tracer)
+        dao = MovieDetailDaoThreading(dao)
         return dao
     }
 
@@ -92,6 +97,7 @@ class DatabaseModule {
         var dao: MovieMediaDao = database.movieMedia()
         dao = MovieMediaDaoLowercase(dao)
         dao = MovieMediaDaoPerformance(dao, tracer)
+        dao = MovieMediaDaoThreading(dao)
         return dao
     }
 
@@ -103,6 +109,7 @@ class DatabaseModule {
         var dao: ShowingDao = database.showing()
         dao = ShowingDaoLowercase(dao)
         dao = ShowingDaoPerformance(dao, tracer)
+        dao = ShowingDaoThreading(dao)
         return dao
     }
 
@@ -114,6 +121,7 @@ class DatabaseModule {
         var dao: MovieReferenceDao = database.movieReference()
         dao = MovieReferenceDaoLowercase(dao)
         dao = MovieReferenceDaoPerformance(dao, tracer)
+        dao = MovieReferenceDaoThreading(dao)
         return dao
     }
 
@@ -125,6 +133,7 @@ class DatabaseModule {
         var dao: MoviePreviewDao = database.moviePreview()
         dao = MoviePreviewDaoLowercase(dao)
         dao = MoviePreviewDaoPerformance(dao, tracer)
+        dao = MoviePreviewDaoThreading(dao)
         return dao
     }
 
@@ -136,6 +145,7 @@ class DatabaseModule {
         var dao: MovieFavoriteDao = database.movieFavorite()
         dao = MovieFavoriteDaoLowercase(dao)
         dao = MovieFavoriteDaoPerformance(dao, tracer)
+        dao = MovieFavoriteDaoThreading(dao)
         return dao
     }
 
@@ -147,6 +157,7 @@ class DatabaseModule {
         var dao: MovieRatingDao = database.movieRating()
         dao = MovieRatingDaoLowercase(dao)
         dao = MovieRatingDaoPerformance(dao, tracer)
+        dao = MovieRatingDaoThreading(dao)
         return dao
     }
 
@@ -158,6 +169,7 @@ class DatabaseModule {
         var dao: MoviePromoDao = database.moviePromo()
         dao = MoviePromoDaoLowercase(dao)
         dao = MoviePromoDaoPerformance(dao, tracer)
+        dao = MoviePromoDaoThreading(dao)
         return dao
     }
 
