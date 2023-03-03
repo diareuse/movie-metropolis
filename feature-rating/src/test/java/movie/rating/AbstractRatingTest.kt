@@ -28,7 +28,7 @@ abstract class AbstractRatingTest {
                 }
             }
         }
-        val client = HttpClient(MockEngine(config)) {}
+        val client = LazyHttpClient { HttpClient(MockEngine(config)) {} }
         val module = RatingProviderModule()
         provider = module.rating(
             tomatoes = module.rtRating(client),
