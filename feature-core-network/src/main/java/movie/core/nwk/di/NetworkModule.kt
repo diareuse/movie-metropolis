@@ -24,6 +24,8 @@ import movie.core.nwk.CinemaServiceImpl
 import movie.core.nwk.EndpointProvider
 import movie.core.nwk.EventService
 import movie.core.nwk.EventServiceImpl
+import movie.core.nwk.LazyHttpClient
+import movie.core.nwk.LazyHttpClientEngine
 import movie.core.nwk.PerformanceTracer
 import movie.core.nwk.UserService
 import movie.core.nwk.UserServiceImpl
@@ -43,7 +45,6 @@ class NetworkModule {
         explicitNulls = false
     }
 
-    @Singleton
     @ClientRoot
     @Provides
     fun clientRoot(
@@ -51,23 +52,25 @@ class NetworkModule {
         provider: EndpointProvider,
         tracer: PerformanceTracer,
         serializer: Json = serializer()
-    ): HttpClient = HttpClient(engine) {
-        install(ContentNegotiation) {
-            json(serializer)
-        }
-        install(HttpCache)
-        defaultRequest {
-            url("${provider.domain}/mrest/")
-            contentType(ContentType.Application.Json)
-        }
-    }.apply {
-        plugin(HttpSend).intercept { request ->
-            tracer.trace(request.url.buildString(), request.method.value) { trace ->
-                trace.setRequestLength(request.contentLength() ?: 0)
-                execute(request).also { call ->
-                    trace.setResponseCode(call.response.status.value)
-                    trace.setResponseLength(call.response.contentLength() ?: 0)
-                    trace.setAttribute("version", call.response.version.toString())
+    ): LazyHttpClient = LazyHttpClient {
+        HttpClient(engine) {
+            install(ContentNegotiation) {
+                json(serializer)
+            }
+            install(HttpCache)
+            defaultRequest {
+                url("${provider.domain}/mrest/")
+                contentType(ContentType.Application.Json)
+            }
+        }.apply {
+            plugin(HttpSend).intercept { request ->
+                tracer.trace(request.url.buildString(), request.method.value) { trace ->
+                    trace.setRequestLength(request.contentLength() ?: 0)
+                    execute(request).also { call ->
+                        trace.setResponseCode(call.response.status.value)
+                        trace.setResponseLength(call.response.contentLength() ?: 0)
+                        trace.setAttribute("version", call.response.version.toString())
+                    }
                 }
             }
         }
@@ -77,11 +80,13 @@ class NetworkModule {
     @Provides
     fun clientData(
         @ClientRoot
-        client: HttpClient,
+        client: LazyHttpClient,
         provider: EndpointProvider
-    ): HttpClient = client.config {
-        defaultRequest {
-            url("${provider.domain}/${provider.tld}/data-api-service/v1/${provider.id}/")
+    ): LazyHttpClient = client.modify {
+        config {
+            defaultRequest {
+                url("${provider.domain}/${provider.tld}/data-api-service/v1/${provider.id}/")
+            }
         }
     }
 
@@ -89,11 +94,13 @@ class NetworkModule {
     @Provides
     fun clientQuickbook(
         @ClientRoot
-        client: HttpClient,
+        client: LazyHttpClient,
         provider: EndpointProvider
-    ): HttpClient = client.config {
-        defaultRequest {
-            url("${provider.domain}/${provider.tld}/data-api-service/v1/quickbook/${provider.id}/")
+    ): LazyHttpClient = client.modify {
+        config {
+            defaultRequest {
+                url("${provider.domain}/${provider.tld}/data-api-service/v1/quickbook/${provider.id}/")
+            }
         }
     }
 
@@ -101,23 +108,26 @@ class NetworkModule {
     @Provides
     fun clientCustomer(
         @ClientRoot
-        client: HttpClient,
+        client: LazyHttpClient,
         provider: EndpointProvider
-    ): HttpClient = client.config {
-        defaultRequest {
-            url("${provider.domain}/${provider.tld}/group-customer-service/")
+    ): LazyHttpClient = client.modify {
+        config {
+            defaultRequest {
+                url("${provider.domain}/${provider.tld}/group-customer-service/")
+            }
         }
     }
 
+    @Singleton
     @Provides
-    fun engine(): HttpClientEngine = CIO.create()
+    fun engine(): HttpClientEngine = LazyHttpClientEngine { CIO.create() }
 
     @Provides
     fun event(
         @ClientData
-        client: HttpClient,
+        client: LazyHttpClient,
         @ClientQuickbook
-        clientQuickbook: HttpClient
+        clientQuickbook: LazyHttpClient
     ): EventService {
         val service: EventService
         service = EventServiceImpl(client, clientQuickbook)
@@ -127,7 +137,7 @@ class NetworkModule {
     @Provides
     fun cinema(
         @ClientRoot
-        client: HttpClient
+        client: LazyHttpClient
     ): CinemaService {
         val service: CinemaService
         service = CinemaServiceImpl(client)
@@ -137,7 +147,7 @@ class NetworkModule {
     @Provides
     fun user(
         @ClientCustomer
-        client: HttpClient,
+        client: LazyHttpClient,
         account: UserAccount,
         auth: AuthMetadata
     ): UserService {

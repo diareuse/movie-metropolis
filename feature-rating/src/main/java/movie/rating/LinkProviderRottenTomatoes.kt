@@ -1,19 +1,19 @@
 package movie.rating
 
-import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
 import movie.rating.Correlation.Companion.correlate
 
 internal class LinkProviderRottenTomatoes(
-    private val client: HttpClient
+    private val client: LazyHttpClient
 ) : LinkProvider {
 
     override suspend fun getLink(descriptor: MovieDescriptor): String {
         val (name, year) = descriptor
         val query = name.encodeURLParameter()
-        val response = client.get("https://www.rottentomatoes.com/search?search=$query")
+        val response = client.getOrCreate()
+            .get("https://www.rottentomatoes.com/search?search=$query")
         val body = response.bodyAsText()
         for (result in results.findAll(body)) {
             for (row in row.findAll(result.value)) {

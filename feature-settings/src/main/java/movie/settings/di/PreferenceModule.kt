@@ -9,11 +9,13 @@ import dagger.hilt.components.SingletonComponent
 import movie.settings.PreferenceStore
 import movie.settings.PreferenceStoreShared
 import movie.settings.SharedPreferencesFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class PreferenceModule {
 
+    @Singleton
     @User
     @Provides
     fun user(
@@ -24,6 +26,7 @@ class PreferenceModule {
         return PreferenceStoreShared(prefs)
     }
 
+    @Singleton
     @Functionality
     @Provides
     fun functionality(

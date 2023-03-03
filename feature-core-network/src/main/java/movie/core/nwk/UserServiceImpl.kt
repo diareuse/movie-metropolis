@@ -1,6 +1,5 @@
 package movie.core.nwk
 
-import io.ktor.client.HttpClient
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.forms.submitForm
@@ -24,14 +23,14 @@ import movie.core.nwk.model.TokenResponse
 import java.util.Locale
 
 internal class UserServiceImpl(
-    private val client: HttpClient,
+    private val client: LazyHttpClient,
     private val account: UserAccount,
     private val authUser: String,
     private val authPass: String,
     private val authCaptcha: String
 ) : UserService {
 
-    override suspend fun register(request: RegistrationRequest) = client.runCatching {
+    override suspend fun register(request: RegistrationRequest) = client.getOrCreate().runCatching {
         post {
             url("v1/customers")
             parameter("reCaptcha", authCaptcha)
@@ -40,7 +39,7 @@ internal class UserServiceImpl(
         }.requireBody<CustomerResponse>()
     }
 
-    override suspend fun getToken(request: TokenRequest) = client.runCatching {
+    override suspend fun getToken(request: TokenRequest) = client.getOrCreate().runCatching {
         val params = Parameters.build {
             appendAll(request.toParameters())
             append("reCaptcha", authCaptcha)
@@ -51,42 +50,43 @@ internal class UserServiceImpl(
         }.requireBody<TokenResponse>()
     }
 
-    override suspend fun getCurrentToken() = client.runCatching {
+    override suspend fun getCurrentToken() = client.getOrCreate().runCatching {
         requireNotNull(account.token)
     }
 
-    override suspend fun updatePassword(request: PasswordRequest) = client.runCatching {
-        put {
-            url("v1/password")
-            parameter("reCaptcha", authCaptcha)
-            setBody(request)
-            bearerAuth(checkNotNull(account.token))
-        }.requireBody<Unit>()
-    }
+    override suspend fun updatePassword(request: PasswordRequest) =
+        client.getOrCreate().runCatching {
+            put {
+                url("v1/password")
+                parameter("reCaptcha", authCaptcha)
+                setBody(request)
+                bearerAuth(checkNotNull(account.token))
+            }.requireBody<Unit>()
+        }
 
     override suspend fun updateUser(request: CustomerDataRequest) =
-        client.runCatching {
+        client.getOrCreate().runCatching {
             put {
                 url("v1/customers/current")
                 bearerAuth(checkNotNull(account.token))
             }.requireBody<CustomerResponse>()
         }
 
-    override suspend fun getPoints() = client.runCatching {
+    override suspend fun getPoints() = client.getOrCreate().runCatching {
         get {
             url("v1/customer/points")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerPointsResponse>()
     }
 
-    override suspend fun getUser() = client.runCatching {
+    override suspend fun getUser() = client.getOrCreate().runCatching {
         get {
             url("v1/customers/current")
             bearerAuth(checkNotNull(account.token))
         }.requireBody<CustomerResponse.Customer>()
     }
 
-    override suspend fun getBookings() = client.runCatching {
+    override suspend fun getBookings() = client.getOrCreate().runCatching {
         get {
             url("v1/bookings")
             bearerAuth(checkNotNull(account.token))
@@ -96,7 +96,7 @@ internal class UserServiceImpl(
         }.requireBody<List<BookingResponse>>()
     }
 
-    override suspend fun getBooking(id: String) = client.runCatching {
+    override suspend fun getBooking(id: String) = client.getOrCreate().runCatching {
         get {
             url("v1/bookings/$id")
             bearerAuth(checkNotNull(account.token))
