@@ -8,6 +8,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
+import movie.rating.LazyHttpClient
 import movie.rating.LinkProvider
 import movie.rating.LinkProviderCsfd
 import movie.rating.LinkProviderImdb
@@ -17,6 +18,7 @@ import movie.rating.RatingProviderComposed
 import movie.rating.RatingProviderCsfd
 import movie.rating.RatingProviderImdb
 import movie.rating.RatingProviderRottenTomatoes
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -37,7 +39,7 @@ internal class RatingProviderModule {
     @Csfd
     internal fun csfdRating(
         @Rating
-        client: HttpClient,
+        client: LazyHttpClient,
         @Csfd
         link: LinkProvider = csfdLink(client)
     ): RatingProvider =
@@ -47,7 +49,7 @@ internal class RatingProviderModule {
     @Csfd
     internal fun csfdLink(
         @Rating
-        client: HttpClient
+        client: LazyHttpClient
     ): LinkProvider {
         return LinkProviderCsfd(client)
     }
@@ -56,7 +58,7 @@ internal class RatingProviderModule {
     @Imdb
     internal fun imdbRating(
         @Rating
-        client: HttpClient,
+        client: LazyHttpClient,
         @Imdb
         link: LinkProvider = imdbLink(client)
     ): RatingProvider =
@@ -66,7 +68,7 @@ internal class RatingProviderModule {
     @Imdb
     internal fun imdbLink(
         @Rating
-        client: HttpClient
+        client: LazyHttpClient
     ): LinkProvider {
         return LinkProviderImdb(client)
     }
@@ -75,7 +77,7 @@ internal class RatingProviderModule {
     @RottenTomatoes
     internal fun rtRating(
         @Rating
-        client: HttpClient,
+        client: LazyHttpClient,
         @RottenTomatoes
         link: LinkProvider = rtLink(client)
     ): RatingProvider =
@@ -85,19 +87,22 @@ internal class RatingProviderModule {
     @RottenTomatoes
     internal fun rtLink(
         @Rating
-        client: HttpClient
+        client: LazyHttpClient
     ): LinkProvider {
         return LinkProviderRottenTomatoes(client)
     }
 
+    @Singleton
     @Provides
     @Rating
-    internal fun client(): HttpClient = HttpClient(CIO) {
-        defaultRequest {
-            header(
-                "user-agent",
-                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/109.0"
-            )
+    internal fun client(): LazyHttpClient = LazyHttpClient {
+        HttpClient(CIO) {
+            defaultRequest {
+                header(
+                    "user-agent",
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/109.0"
+                )
+            }
         }
     }
 

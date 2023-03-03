@@ -1,19 +1,18 @@
 package movie.rating
 
-import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
 import movie.rating.Correlation.Companion.correlate
 
 internal class LinkProviderImdb(
-    private val client: HttpClient
+    private val client: LazyHttpClient
 ) : LinkProvider {
 
     override suspend fun getLink(descriptor: MovieDescriptor): String {
         val (name, year) = descriptor
         val query = name.encodeURLParameter(true)
-        val response = client.get("https://www.imdb.com/find?q=$query")
+        val response = client.getOrCreate().get("https://www.imdb.com/find?q=$query")
         val body = response.bodyAsText()
         for (row in rows.findAll(body)) {
             if (!row.value.contains(year.toString())) continue

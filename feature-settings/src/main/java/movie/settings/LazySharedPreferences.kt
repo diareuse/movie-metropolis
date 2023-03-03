@@ -2,12 +2,21 @@ package movie.settings
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
+@OptIn(DelicateCoroutinesApi::class)
 class LazySharedPreferences(
     factory: () -> SharedPreferences
 ) : SharedPreferences {
 
-    private val origin by lazy(factory)
+    private val origin by lazy(LazyThreadSafetyMode.SYNCHRONIZED, factory)
+
+    init {
+        GlobalScope.launch(Dispatchers.IO) { origin.contains("") }
+    }
 
     override fun getAll() =
         origin.all

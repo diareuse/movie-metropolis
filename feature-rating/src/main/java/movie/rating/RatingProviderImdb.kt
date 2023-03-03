@@ -1,9 +1,7 @@
 package movie.rating
 
-import io.ktor.client.HttpClient
-
 internal class RatingProviderImdb(
-    override val client: HttpClient,
+    override val client: LazyHttpClient,
     override val provider: LinkProvider
 ) : AbstractRatingProvider() {
 

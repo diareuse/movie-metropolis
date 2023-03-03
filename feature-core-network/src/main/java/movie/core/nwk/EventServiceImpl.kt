@@ -1,6 +1,5 @@
 package movie.core.nwk
 
-import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.url
@@ -15,8 +14,8 @@ import java.util.Date
 import java.util.Locale
 
 internal class EventServiceImpl(
-    private val client: HttpClient,
-    private val clientQuickbook: HttpClient
+    private val client: LazyHttpClient,
+    private val clientQuickbook: LazyHttpClient
 ) : EventService {
 
     private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
@@ -24,7 +23,7 @@ internal class EventServiceImpl(
     override suspend fun getEventsInCinema(
         cinema: String,
         date: Date
-    ) = clientQuickbook.runCatching {
+    ) = clientQuickbook.getOrCreate().runCatching {
         get {
             url("film-events/in-cinema/$cinema/at-date/${formatter.format(date)}")
         }.requireBody<BodyResponse<MovieEventResponse>>()
@@ -33,7 +32,7 @@ internal class EventServiceImpl(
     override suspend fun getNearbyCinemas(
         lat: Double,
         lng: Double
-    ) = client.runCatching {
+    ) = client.getOrCreate().runCatching {
         get {
             url("cinema/bylocation")
             parameter("lat", lat)
@@ -42,7 +41,7 @@ internal class EventServiceImpl(
         }.requireBody<BodyResponse<List<NearbyCinemaResponse>>>()
     }
 
-    override suspend fun getDetail(id: String) = client.runCatching {
+    override suspend fun getDetail(id: String) = client.getOrCreate().runCatching {
         get {
             url("films/byDistributorCode/$id")
             parameter("lang", Locale.getDefault().language)
@@ -50,7 +49,7 @@ internal class EventServiceImpl(
     }
 
     override suspend fun getMoviesByType(type: ShowingType) =
-        client.runCatching {
+        client.getOrCreate().runCatching {
             get {
                 url("films/by-showing-type/${type.value}")
                 parameter("ordering", "asc")
