@@ -37,7 +37,7 @@ fun UserScreen(
     viewModel: ProfileViewModel = hiltViewModel(),
     state: ScrollState = rememberScrollState()
 ) {
-    val isLoading by viewModel.user.collectAsState()
+    val user by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
     val cinemas by viewModel.cinemas.collectAsState()
     val firstName by viewModel.firstName.collectAsState()
@@ -51,7 +51,7 @@ fun UserScreen(
     UserScreen(
         membership = membership,
         cinemas = cinemas,
-        isLoading = isLoading.isLoading,
+        isLoading = user.isLoading,
         favorite = favorite,
         firstName = firstName,
         lastName = lastName,
