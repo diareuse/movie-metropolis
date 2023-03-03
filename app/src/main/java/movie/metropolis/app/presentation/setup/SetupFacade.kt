@@ -1,9 +1,11 @@
 package movie.metropolis.app.presentation.setup
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
@@ -27,7 +29,9 @@ interface SetupFacade {
         val SetupFacade.requiresSetupFlow
             get() = flow {
                 while (currentCoroutineContext().isActive) {
-                    emit(requiresSetup)
+                    withContext(Dispatchers.IO) {
+                        emit(requiresSetup)
+                    }
                     delay(1.seconds)
                 }
             }
