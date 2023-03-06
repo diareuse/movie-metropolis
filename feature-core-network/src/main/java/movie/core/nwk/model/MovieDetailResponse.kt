@@ -22,7 +22,7 @@ data class MovieDetailResponse(
     @SerialName("releaseYear") val releasedAt: Date,
     @SerialName("releaseCountry") val countryOfOrigin: String?,
     @SerialName("cast") val cast: String?,
-    @SerialName("directors") val directors: String,
+    @SerialName("directors") val directors: String?,
     @SerialName("synopsis") val synopsis: String?,
     @Serializable(LocalTimestampSerializer::class)
     @SerialName("dateStarted") val screeningFrom: Date,

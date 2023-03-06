@@ -27,7 +27,7 @@ internal data class MovieDetailFromResponse(
     override val cast: Iterable<String>
         get() = response.cast?.split(", ", ",").orEmpty()
     override val directors: Iterable<String>
-        get() = response.directors.split(", ", ",")
+        get() = response.directors.orEmpty().split(", ", ",")
     override val description: String
         get() = response.synopsis.orEmpty()
     override val screeningFrom: Date
