@@ -21,7 +21,9 @@ fun MovieShowingItemLoading(
         modifier = modifier
     ) {
         ShowingTypeLayout(
-            modifier = Modifier.padding(vertical = 24.dp),
+            modifier = Modifier
+                .padding(vertical = 24.dp)
+                .fillMaxWidth(),
             type = {
                 Box(
                     Modifier
