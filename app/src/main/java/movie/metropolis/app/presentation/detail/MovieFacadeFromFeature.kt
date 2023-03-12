@@ -38,7 +38,7 @@ class MovieFacadeFromFeature(
     override suspend fun isFavorite(): Result<Boolean> {
         var movie = movie
         getDetail { movie = it.getOrNull() }
-        return favorite.isFavorite(movie ?: return Result.failure(IllegalStateException()))
+        return favorite.isFavorite(movie ?: return Result.success(false))
     }
 
     override suspend fun getAvailableFrom(callback: ResultCallback<Date>) {
@@ -133,7 +133,7 @@ class MovieFacadeFromFeature(
         mutex.lock()
         val movieLocked = this.movie
         if (movieLocked != null) {
-            mutex.unlock()
+            if (mutex.isLocked) mutex.unlock()
             return callback(Result.success(movieLocked))
         }
         detail.get(MovieFromId(id)) {
