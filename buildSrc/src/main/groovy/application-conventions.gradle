@@ -47,4 +47,8 @@ android {
 
     }
 
+    packagingOptions {
+        exclude 'META-INF/versions/**'
+    }
+
 }
