@@ -4,6 +4,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import androidx.work.Data
+import movie.pulse.ExactPulseReceiver.Companion.ExtraData
+import movie.pulse.ExactPulseReceiver.Companion.ExtraType
+import movie.pulse.util.getSerializableExtraCompat
 import java.util.Date
 
 class ExactPulseRequest private constructor(
@@ -16,8 +19,8 @@ class ExactPulseRequest private constructor(
         val intent = Intent(context, ExactPulseReceiver::class.java)
             .setAction(ExactPulseReceiver.ActionPulse)
             .setPackage("movie.pulse")
-            .putExtra(ExactPulseReceiver.ExtraType, type)
-            .putExtra(ExactPulseReceiver.ExtraData, data.toByteArray())
+            .putExtra(ExtraType, type)
+            .putExtra(ExtraData, data.toByteArray())
         val requestCode = data.hashCode()
         return PendingIntent.getBroadcast(context, requestCode, intent, Flags)
     }
@@ -42,6 +45,13 @@ class ExactPulseRequest private constructor(
         companion object {
 
             inline operator fun <reified T : ExactPulse> invoke() = Builder(T::class.java)
+            operator fun invoke(intent: Intent): Builder {
+                val type = intent.getSerializableExtraCompat<Class<out ExactPulse>>(ExtraType)
+                val data = intent.getByteArrayExtra(ExtraData)?.let(Data::fromByteArray)
+                    ?: Data.EMPTY
+                requireNotNull(type)
+                return Builder(type).setData(data)
+            }
 
         }
 
