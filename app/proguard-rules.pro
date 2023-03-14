@@ -31,6 +31,7 @@
     int value;
 }
 
+-keep class kotlin.Metadata
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
 -dontwarn org.bouncycastle.jsse.BCSSLParameters
 -dontwarn org.bouncycastle.jsse.BCSSLSocket
