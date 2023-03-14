@@ -19,7 +19,7 @@ jobs:
       - name: Set Java
         uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
           distribution: temurin
 
       - name: Build with Gradle

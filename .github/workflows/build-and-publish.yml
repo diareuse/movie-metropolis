@@ -26,10 +26,10 @@ jobs:
       - run: |
           sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/" buildSrc/src/main/groovy/application-conventions.gradle 
 
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: Build with Gradle
