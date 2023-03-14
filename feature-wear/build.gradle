@@ -8,5 +8,5 @@ android {
 }
 
 dependencies {
-    api "com.google.android.gms:play-services-wearable:[18,19["
+    api "com.google.android.gms:play-services-wearable:18.0.0"
 }

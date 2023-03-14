@@ -21,10 +21,10 @@ dependencies {
     implementation project(":feature-log")
     implementation project(":feature-wear")
 
-    implementation "androidx.startup:startup-runtime:[1,2["
-    implementation "androidx.lifecycle:lifecycle-livedata-core:[2,3["
-    implementation "androidx.work:work-runtime-ktx:[2,3["
-    implementation "androidx.profileinstaller:profileinstaller:[1,2["
+    implementation "androidx.startup:startup-runtime:1.1.1"
+    implementation "androidx.lifecycle:lifecycle-livedata-core:2.6.0"
+    implementation "androidx.work:work-runtime-ktx:2.8.0"
+    implementation "androidx.profileinstaller:profileinstaller:1.2.2"
 
     implementation platform("com.google.firebase:firebase-bom:31.0.3")
     implementation "com.google.firebase:firebase-analytics-ktx"
@@ -33,11 +33,11 @@ dependencies {
 
     implementation "com.google.android.gms:play-services-location:21.0.1"
 
-    implementation 'com.journeyapps:zxing-android-embedded:[4,5['
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
 
-    implementation "com.google.android.play:review-ktx:[2,3["
-    implementation "com.google.android.play:app-update-ktx:[2,3["
+    implementation "com.google.android.play:review-ktx:2.0.1"
+    implementation "com.google.android.play:app-update-ktx:2.0.1"
 
-    implementation "com.android.billingclient:billing-ktx:[5,6["
+    implementation "com.android.billingclient:billing-ktx:5.1.0"
 
 }

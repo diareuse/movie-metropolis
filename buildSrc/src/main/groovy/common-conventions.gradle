@@ -29,8 +29,8 @@ android {
             enableUnitTestCoverage true
         }
         release {
-            minifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            debuggable true
+            minifyEnabled true
         }
     }
 }

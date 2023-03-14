@@ -37,7 +37,7 @@ android {
         }
 
         release {
-            shrinkResources = true
+            shrinkResources true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             manifestPlaceholders += [
                     debug  : "false",

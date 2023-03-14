@@ -11,30 +11,25 @@ android {
 
 dependencies {
 
-    def vCompose = "[1,2["
-    def vMaterial = "[1,2["
-    def vCoil = "[2,3["
+    api "androidx.compose.ui:ui:1.4.0-rc01"
+    api "androidx.compose.ui:ui-tooling:1.4.0-rc01"
+    api "androidx.compose.foundation:foundation:1.4.0-rc01"
+    api "androidx.compose.material3:material3:1.1.0-alpha08"
+    api "androidx.compose.material:material:1.4.0-rc01"
 
-    api "androidx.compose.ui:ui:$vCompose"
-    api "androidx.compose.ui:ui-tooling:$vCompose"
-    api "androidx.compose.foundation:foundation:$vCompose"
-    api "androidx.compose.material3:material3:$vMaterial"
-    api "androidx.compose.material:material:$vMaterial"
+    debugApi "androidx.compose.ui:ui-test-manifest:1.4.0-rc01"
 
-    debugApi "androidx.compose.ui:ui-tooling:$vCompose"
-    debugApi "androidx.compose.ui:ui-test-manifest:$vCompose"
+    implementation "io.coil-kt:coil-compose:2.2.2"
+    implementation "io.coil-kt:coil-svg:2.2.2"
 
-    implementation "io.coil-kt:coil-compose:$vCoil"
-    implementation "io.coil-kt:coil-svg:$vCoil"
+    api "androidx.activity:activity-compose:1.8.0-alpha02"
+    api "androidx.appcompat:appcompat:1.6.1"
+    api "androidx.navigation:navigation-compose:2.6.0-alpha07"
+    api "com.google.android.material:material:1.8.0"
 
-    api "androidx.activity:activity-compose:[1,2["
-    api "androidx.appcompat:appcompat:[1,2["
-    api "androidx.navigation:navigation-compose:[2,3["
-    api "com.google.android.material:material:[1,2["
-
-    api "com.google.accompanist:accompanist-navigation-animation:0.29.1-alpha"
-    api "com.google.accompanist:accompanist-pager:0.29.1-alpha"
-    api "com.google.accompanist:accompanist-placeholder-material:0.29.1-alpha"
+    api "com.google.accompanist:accompanist-navigation-animation:0.29.2-rc"
+    api "com.google.accompanist:accompanist-pager:0.29.2-rc"
+    api "com.google.accompanist:accompanist-placeholder-material:0.29.2-rc"
 
     api "com.google.zxing:core:3.5.1"
 

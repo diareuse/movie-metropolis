@@ -20,8 +20,8 @@ dependencies {
     implementation project(":feature-log")
     implementation project(":feature-wear")
 
-    implementation "com.google.firebase:firebase-perf-ktx:20.3.0"
+    implementation "com.google.firebase:firebase-perf-ktx:20.3.1"
 
-    testImplementation "io.ktor:ktor-client-mock:[2,3["
+    testImplementation "io.ktor:ktor-client-mock:2.2.4"
 
 }

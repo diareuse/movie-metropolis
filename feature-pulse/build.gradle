@@ -9,7 +9,7 @@ android {
 
 dependencies {
 
-    implementation "androidx.work:work-runtime-ktx:[2,3["
-    implementation "androidx.startup:startup-runtime:[1,2["
+    implementation "androidx.work:work-runtime-ktx:2.8.0"
+    implementation "androidx.startup:startup-runtime:1.1.1"
 
 }
