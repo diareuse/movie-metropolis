@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.ShowingDao
 import movie.core.db.model.ShowingStored
@@ -10,6 +11,7 @@ import movie.core.model.Movie
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
+import movie.core.util.awaitChildJobCompletion
 import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
@@ -27,7 +29,7 @@ class EventShowingsFeatureMovieTest {
     private lateinit var cinema: EventCinemaFeature
     private lateinit var showing: ShowingDao
     private lateinit var service: EventService
-    private lateinit var feature: EventShowingsFeature.Movie
+    private lateinit var feature: (CoroutineScope) -> EventShowingsFeature.Movie
     private lateinit var movie: Movie
 
     @Before
@@ -38,9 +40,11 @@ class EventShowingsFeatureMovieTest {
         cinema = mock {}
         service = mock {}
         showing = mock {}
-        feature = EventFeatureModule()
-            .showings(showing, mock(), service, mock(), mock(), mock(), cinema)
-            .movie(movie, Location(0.0, 0.0))
+        feature = { scope ->
+            EventFeatureModule()
+                .showings(showing, mock(), service, mock(), mock(), mock(), cinema, scope)
+                .movie(movie, Location(0.0, 0.0))
+        }
     }
 
     @Test
@@ -51,7 +55,7 @@ class EventShowingsFeatureMovieTest {
             val events = it.events.map { it.copy(movieId = "1") }
             it.copy(movies = movies, events = events)
         })
-        val result = feature.get(Date()).last().getOrThrow()
+        val result = feature(this).get(Date()).getOrThrow()
         assertEquals(testData.events.size, result.flatMap { it.value }.size)
         assertEquals(cinemas.size, result.size)
     }
@@ -60,14 +64,14 @@ class EventShowingsFeatureMovieTest {
     fun get_returns_fromDatabase() = runTest {
         cinema_responds_success()
         val testEvents = showings_responds_success()
-        val result = feature.get(Date()).last().getOrThrow()
+        val result = feature(this).get(Date()).getOrThrow()
         assertEquals(testEvents.size, result.flatMap { it.value }.size)
     }
 
     @Test
     fun get_throws() = runTest {
         assertFails {
-            feature.get(Date()).last().getOrThrow()
+            feature(this).get(Date()).getOrThrow()
         }
     }
 
@@ -79,7 +83,8 @@ class EventShowingsFeatureMovieTest {
             val events = it.events.map { it.copy(movieId = "1") }
             it.copy(movies = movies, events = events)
         })
-        feature.get(Date()).first().getOrThrow()
+        feature(this).get(Date()).getOrThrow()
+        awaitChildJobCompletion()
         verify(showing, atMost(testData.events.size)).insertOrUpdate(any())
     }
 
@@ -104,14 +109,6 @@ class EventShowingsFeatureMovieTest {
         wheneverBlocking { service.getEventsInCinema(any(), any()) }
             .thenReturn(Result.success(result))
         return result.body
-    }
-
-    private suspend fun EventShowingsFeature.Movie.get(date: Date): List<Result<CinemaWithShowings>> {
-        val milestones = mutableListOf<Result<CinemaWithShowings>>()
-        get(date) {
-            milestones += it
-        }
-        return milestones
     }
 
 }

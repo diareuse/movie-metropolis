@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.ShowingFromDatabase
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Location
@@ -16,19 +15,16 @@ class EventShowingsFeatureMovieDatabase(
     private val cinema: EventCinemaFeature
 ) : EventShowingsFeature.Movie {
 
-    override suspend fun get(
-        date: Date,
-        result: ResultCallback<CinemaWithShowings>
-    ) = coroutineScope {
-        val cinemas = cinema.get(location).getOrThrow().asIterable()
-        result.parallelize(this, cinemas) { cinema ->
-            showing.selectByCinema(
-                rangeStart = date.dayStart.coerceAtLeast(Date()).time,
-                rangeEnd = date.dayEnd.time,
-                cinema = cinema.id,
-                movie = movie.id
-            ).map { ShowingFromDatabase(it, cinema) }
+    override suspend fun get(date: Date): Result<CinemaWithShowings> =
+        cinema.get(location).mapCatching {
+            it.asIterable().associateWith { cinema ->
+                showing.selectByCinema(
+                    rangeStart = date.dayStart.coerceAtLeast(Date()).time,
+                    rangeEnd = date.dayEnd.time,
+                    cinema = cinema.id,
+                    movie = movie.id
+                ).map { ShowingFromDatabase(it, cinema) }
+            }
         }
-    }
 
 }

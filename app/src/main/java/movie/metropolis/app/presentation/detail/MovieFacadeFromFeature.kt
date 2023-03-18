@@ -80,13 +80,12 @@ class MovieFacadeFromFeature(
         callback: ResultCallback<List<CinemaBookingView>>
     ) {
         val detail = getDetail()
-        showings.movie(detail, Location(latitude, longitude)).get(date) {
-            val result = it.getOrThrow().asSequence()
-                .map { (cinema, showings) -> CinemaBookingViewFromFeature(cinema, showings) }
-                .filter { it.availability.isNotEmpty() }
-                .toList()
-            callback(Result.success(result))
-        }
+        val result = showings.movie(detail, Location(latitude, longitude)).get(date)
+        val output = result.getOrThrow().asSequence()
+            .map { (cinema, showings) -> CinemaBookingViewFromFeature(cinema, showings) }
+            .filter { it.availability.isNotEmpty() }
+            .toList()
+        callback(Result.success(output))
     }
 
     override suspend fun toggleFavorite() {

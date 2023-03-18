@@ -88,12 +88,13 @@ internal class EventFeatureModule {
         preferences: EventPreference,
         booking: BookingDao,
         movie: MovieDao,
-        cinema: EventCinemaFeature
+        cinema: EventCinemaFeature,
+        scope: CoroutineScope
     ): EventShowingsFeature.Factory = object : EventShowingsFeature.Factory {
         override fun cinema(cinema: Cinema): EventShowingsFeature.Cinema {
             var out: EventShowingsFeature.Cinema
             out = EventShowingsFeatureCinemaNetwork(service, cinema)
-            out = EventShowingsFeatureCinemaStoring(out, movie, reference, showing)
+            out = EventShowingsFeatureCinemaStoring(out, movie, reference, showing, scope)
             out = EventShowingsFeatureCinemaFold(
                 EventShowingsFeatureCinemaRequireNotEmpty(
                     EventShowingsFeatureCinemaDatabase(showing, reference, cinema)
@@ -109,7 +110,7 @@ internal class EventFeatureModule {
         override fun movie(movie: Movie, location: Location): EventShowingsFeature.Movie {
             var out: EventShowingsFeature.Movie
             out = EventShowingsFeatureMovieNetwork(movie, location, service, cinema)
-            out = EventShowingsFeatureMovieStoring(out, movie, showing)
+            out = EventShowingsFeatureMovieStoring(out, movie, showing, scope)
             out = EventShowingsFeatureMovieFold(
                 EventShowingsFeatureMovieRequireNotEmpty(
                     EventShowingsFeatureMovieDatabase(movie, location, showing, cinema)

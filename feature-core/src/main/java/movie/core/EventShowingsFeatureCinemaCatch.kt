@@ -6,10 +6,6 @@ class EventShowingsFeatureCinemaCatch(
     private val origin: EventShowingsFeature.Cinema
 ) : EventShowingsFeature.Cinema, Recoverable {
 
-    override suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>) {
-        runCatchingResult(result) {
-            origin.get(date, it)
-        }
-    }
+    override suspend fun get(date: Date) = wrap { origin.get(date) }
 
 }

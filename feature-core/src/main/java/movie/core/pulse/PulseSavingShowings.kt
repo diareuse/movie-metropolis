@@ -2,7 +2,6 @@ package movie.core.pulse
 
 import movie.core.EventCinemaFeature
 import movie.core.EventShowingsFeature
-import movie.core.EventShowingsFeature.Cinema.Companion.get
 import movie.pulse.Pulse
 import java.util.Date
 

@@ -13,9 +13,7 @@ import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.presentation.OnChangedListener
-import movie.metropolis.app.util.callback
 import movie.metropolis.app.util.disableAll
-import movie.metropolis.app.util.thenBlocking
 import org.junit.Test
 import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.any
@@ -160,11 +158,8 @@ class CinemaFacadeTest : FeatureTest() {
     }
 
     private suspend fun showings_returns_value(count: Int = 1) {
-        whenever(showings.cinema(model).get(any(), any())).thenBlocking {
-            callback(1) {
-                Result.success(generateShowings(count))
-            }
-        }
+        val data = generateShowings(count)
+        whenever(showings.cinema(model).get(any())).thenReturn(Result.success(data))
     }
 
     private fun generateShowings(count: Int): MovieWithShowings = buildMap {
