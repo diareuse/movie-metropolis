@@ -24,7 +24,6 @@ import movie.core.EventDetailFeatureFold
 import movie.core.EventDetailFeatureNetwork
 import movie.core.EventDetailFeatureNetworkRating
 import movie.core.EventDetailFeatureRatingFork
-import movie.core.EventDetailFeatureSpotColor
 import movie.core.EventDetailFeatureStoring
 import movie.core.EventPreviewFeature
 import movie.core.EventPreviewFeatureCatch
@@ -39,7 +38,6 @@ import movie.core.EventPreviewFeatureNetworkRating
 import movie.core.EventPreviewFeatureRequireNotEmpty
 import movie.core.EventPreviewFeatureSaveTimestamp
 import movie.core.EventPreviewFeatureSort
-import movie.core.EventPreviewFeatureSpotColor
 import movie.core.EventPreviewFeatureStoring
 import movie.core.EventPromoFeature
 import movie.core.EventPromoFeatureCatch
@@ -167,7 +165,6 @@ internal class EventFeatureModule {
             out = EventPreviewFeatureFold(db, out, fallback)
             out = EventPreviewFeatureFilterMovie(out, preference)
             out = EventPreviewFeatureSort(out)
-            out = EventPreviewFeatureSpotColor(out, analyzer)
             out = EventPreviewFeatureFilter(out, preference, booking)
             out = EventPreviewFeatureCatch(out)
             return out
@@ -181,8 +178,7 @@ internal class EventFeatureModule {
         detail: MovieDetailDao,
         media: MovieMediaDao,
         ratings: MovieRatingDao,
-        rating: RatingProvider.Composed,
-        analyzer: ImageAnalyzer
+        rating: RatingProvider.Composed
     ): EventDetailFeature {
         var database: EventDetailFeature = EventDetailFeatureDatabase(detail, media)
         database = EventDetailFeatureRatingFork(
@@ -195,7 +191,6 @@ internal class EventFeatureModule {
         out = EventDetailFeatureStoring(out, movie, detail, media)
         out = EventDetailFeatureNetworkRating(out, ratings, rating)
         out = EventDetailFeatureFold(database, out)
-        out = EventDetailFeatureSpotColor(out, analyzer)
         out = EventDetailFeatureCatch(out)
         return out
     }

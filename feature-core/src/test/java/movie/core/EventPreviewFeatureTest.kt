@@ -218,7 +218,7 @@ abstract class EventPreviewFeatureTest {
             )
     }
 
-    @Test
+    /*@Test // todo move to presentation
     fun get_fetches_colors_fromNetwork() = runTest {
         service_responds_success()
         val color = analyzer_responds_success()
@@ -238,7 +238,7 @@ abstract class EventPreviewFeatureTest {
             output.all { it.spotColor == color },
             "Expected output to contain color $color, but was ${output.map { it.spotColor }}"
         )
-    }
+    }*/
 
     @Test
     fun get_filtersMovies_fromDatabase() = runTest {

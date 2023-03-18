@@ -45,9 +45,9 @@ data class MovieViewFromFeature(
             "%d%%".format(it)
         }
     override val poster: ImageView?
-        get() = images.middleOrNull()?.let { ImageViewFromFeature(it, Color(movie.spotColor)) }
+        get() = images.middleOrNull()?.let { ImageViewFromFeature(it, Color.Black) }
     override val posterLarge: ImageView?
-        get() = images.firstOrNull()?.let { ImageViewFromFeature(it, Color(movie.spotColor)) }
+        get() = images.firstOrNull()?.let { ImageViewFromFeature(it, Color.Black) }
     override val video: VideoView?
         get() = movie.media
             .asSequence()

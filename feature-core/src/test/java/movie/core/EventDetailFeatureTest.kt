@@ -17,9 +17,6 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieDetailsResponse
 import movie.core.util.wheneverBlocking
-import movie.image.ImageAnalyzer
-import movie.image.Swatch
-import movie.image.SwatchColor
 import movie.rating.AvailableRating
 import movie.rating.ComposedRating
 import movie.rating.RatingProvider
@@ -38,7 +35,6 @@ class EventDetailFeatureTest {
 
     private lateinit var item: Movie
     private lateinit var feature: EventDetailFeature
-    private lateinit var analyzer: ImageAnalyzer
     private lateinit var rating: RatingProvider.Composed
     private lateinit var ratings: MovieRatingDao
     private lateinit var media: MovieMediaDao
@@ -48,10 +44,6 @@ class EventDetailFeatureTest {
 
     @Before
     fun prepare() {
-        analyzer = mock {
-            onBlocking { getColors(any()) }
-                .thenReturn(Swatch(SwatchColor(0), SwatchColor(0), SwatchColor(0)))
-        }
         rating = mock {
             onBlocking { get(anyVararg()) }.thenReturn(ComposedRating.None)
         }
@@ -61,7 +53,7 @@ class EventDetailFeatureTest {
         movie = mock {}
         service = mock {}
         feature = EventFeatureModule()
-            .detail(service, movie, detail, media, ratings, rating, analyzer)
+            .detail(service, movie, detail, media, ratings, rating)
         item = mock {
             on { id }.thenReturn("")
         }
@@ -103,7 +95,7 @@ class EventDetailFeatureTest {
         verify(media, atMost(testData.media.size)).insertOrUpdate(any())
     }
 
-    @Test
+    /*@Test // fixme move to presentation test
     fun get_returns_spotColor_fromNetwork() = runTest {
         service_responds_success()
         val color = analyzer_responds_success()
@@ -117,7 +109,7 @@ class EventDetailFeatureTest {
         val color = analyzer_responds_success()
         val output = feature.get(item).last().getOrThrow()
         assertEquals(color, output.spotColor)
-    }
+    }*/
 
     @Test
     fun get_pollsNetwork_whenNotRecent() = runTest {
@@ -129,12 +121,12 @@ class EventDetailFeatureTest {
 
     // ---
 
-    private fun analyzer_responds_success(): Int {
+    /*private fun analyzer_responds_success(): Int { // fixme move to presentation tests
         val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
         val swatch = Swatch(SwatchColor(color), SwatchColor(color), SwatchColor(color))
         wheneverBlocking { analyzer.getColors(any()) }.thenReturn(swatch)
         return color
-    }
+    }*/
 
     private fun rating_responds_success(): MovieRatingStored {
         val data = MovieRatingStored("", nextInt(0, 100).toByte(), "imdb", "rtt", "csfd")
