@@ -58,7 +58,7 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun getImage_returns_null() = runTest {
-        assertNull(facade.getImage(mock()))
+        assertNull(facade.getImage(BookingView.Empty))
     }
 
     @Test
