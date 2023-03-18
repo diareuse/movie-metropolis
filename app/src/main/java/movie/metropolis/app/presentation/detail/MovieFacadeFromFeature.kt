@@ -62,7 +62,7 @@ class MovieFacadeFromFeature(
                     .asSequence()
                     .filterIsInstance<Media.Image>()
                     .sortedByDescending { it.height * it.width }
-                    .map { ImageViewFromFeature(it, Color(detail.spotColor)) }
+                    .map { ImageViewFromFeature(it, Color.Black) }
                     .first()
             }
             callback(output)

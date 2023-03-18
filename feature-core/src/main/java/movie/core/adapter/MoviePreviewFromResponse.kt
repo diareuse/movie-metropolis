@@ -38,8 +38,6 @@ internal data class MoviePreviewFromResponse(
         get() = metadata.cast?.split(", ", ",").orEmpty()
     override val countryOfOrigin: String
         get() = metadata.countryOfOrigin.orEmpty()
-    override val spotColor: Int
-        get() = 0xff000000.toInt()
     override val rating: Byte?
         get() = null
     override val genres: Iterable<String>
