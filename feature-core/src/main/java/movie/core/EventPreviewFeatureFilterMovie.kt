@@ -1,6 +1,5 @@
 package movie.core
 
-import movie.core.model.MoviePreview
 import movie.core.preference.EventPreference
 
 class EventPreviewFeatureFilterMovie(
@@ -9,13 +8,11 @@ class EventPreviewFeatureFilterMovie(
 ) : EventPreviewFeature {
 
     @Suppress("ReplaceSizeCheckWithIsNotEmpty")
-    override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        origin.get(result.map { movies ->
-            when (preference.onlyMovies) {
-                true -> movies.filter { it.genres.count() > 0 }
-                else -> movies
-            }
-        })
+    override suspend fun get() = origin.get().map { movies ->
+        when (preference.onlyMovies) {
+            true -> movies.filter { it.genres.count() > 0 && "musical" !in it.genres }
+            else -> movies
+        }
     }
 
 }

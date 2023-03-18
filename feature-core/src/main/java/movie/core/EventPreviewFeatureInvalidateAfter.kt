@@ -13,15 +13,15 @@ class EventPreviewFeatureInvalidateAfter(
     private val duration: Duration
 ) : EventPreviewFeature {
 
-    override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
+    override suspend fun get(): Result<Sequence<MoviePreview>> {
         val lastRefresh = when (type) {
             ShowingType.Current -> preference.previewCurrent
             ShowingType.Upcoming -> preference.previewUpcoming
         }
         if (!lastRefresh.isInThreshold(duration)) {
-            return result(Result.failure(ExpiredException(lastRefresh, duration)))
+            return Result.failure(ExpiredException(lastRefresh, duration))
         }
-        origin.get(result)
+        return origin.get()
     }
 
 }

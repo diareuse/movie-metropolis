@@ -17,16 +17,14 @@ class ListingFacadeFromFeature(
     private val listenable = Listenable<OnChangedListener>()
 
     override suspend fun get(callback: ResultCallback<ListingFacade.Action>) {
-        preview.get { result ->
-            val output = result.map {
-                var out: ListingFacade.Action
-                out = ListingFacadeActionFromData(it)
-                out = ListingFacadeActionFavorite(out, favorite)
-                out = ListingFacadeActionWithPoster(out, promo)
-                out
-            }
-            callback(output)
+        val result = preview.get().map {
+            var out: ListingFacade.Action
+            out = ListingFacadeActionFromData(it.asIterable())
+            out = ListingFacadeActionFavorite(out, favorite)
+            out = ListingFacadeActionWithPoster(out, promo)
+            out
         }
+        callback(result)
     }
 
     override suspend fun toggle(item: MovieView) {

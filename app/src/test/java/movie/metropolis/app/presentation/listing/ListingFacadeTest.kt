@@ -219,20 +219,12 @@ abstract class ListingFacadeTest : FeatureTest() {
                 modifier(index)
             }
         }
-        wheneverBlocking { previewFork.get(any()) }.thenBlocking {
-            callback(0) {
-                Result.success(content)
-            }
-        }
+        wheneverBlocking { previewFork.get() }.thenReturn(Result.success(content.asSequence()))
         return content
     }
 
     private fun preview_responds_failure() {
-        wheneverBlocking { previewFork.get(any()) }.thenBlocking {
-            callback<List<MoviePreview>>(0) {
-                Result.failure(RuntimeException())
-            }
-        }
+        wheneverBlocking { previewFork.get() }.thenReturn(Result.failure(RuntimeException()))
     }
 
     private suspend fun ListingFacade.get(): List<Result<ListingFacade.Action>> {

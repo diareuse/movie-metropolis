@@ -131,7 +131,8 @@ internal class EventFeatureModule {
         media: MovieMediaDao,
         preference: EventPreference,
         booking: BookingDao,
-        sync: SyncPreference
+        sync: SyncPreference,
+        scope: CoroutineScope
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
         override fun current(): EventPreviewFeature = common(ShowingType.Current)
@@ -146,7 +147,7 @@ internal class EventFeatureModule {
             db = EventPreviewFeatureInvalidateAfter(db, sync, type, 1.days)
             var out: EventPreviewFeature
             out = EventPreviewFeatureNetwork(service, type)
-            out = EventPreviewFeatureStoring(out, type, movie, preview, media)
+            out = EventPreviewFeatureStoring(out, type, movie, preview, media, scope)
             out = EventPreviewFeatureSaveTimestamp(out, sync, type)
             out = EventPreviewFeatureFold(db, out, fallback)
             out = EventPreviewFeatureFilterMovie(out, preference)
