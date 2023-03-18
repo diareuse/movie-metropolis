@@ -1,7 +1,6 @@
 package movie.core.pulse
 
 import movie.core.EventPreviewFeature
-import movie.core.EventPreviewFeature.Companion.get
 import movie.pulse.Pulse
 
 class PulseSavingCurrent(

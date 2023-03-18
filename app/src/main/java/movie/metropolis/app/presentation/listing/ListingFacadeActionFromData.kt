@@ -7,7 +7,7 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewFromFeature
 
 data class ListingFacadeActionFromData(
-    val data: List<MoviePreview>
+    val data: Iterable<MoviePreview>
 ) : ListingFacade.Action {
 
     override suspend fun promotions(callback: ResultCallback<List<MovieView>>) {

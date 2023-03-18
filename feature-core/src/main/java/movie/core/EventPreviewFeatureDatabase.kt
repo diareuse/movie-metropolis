@@ -3,7 +3,6 @@ package movie.core
 import movie.core.adapter.MoviePreviewFromDatabase
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
-import movie.core.model.MoviePreview
 import movie.core.nwk.model.ShowingType
 
 class EventPreviewFeatureDatabase(
@@ -12,12 +11,13 @@ class EventPreviewFeatureDatabase(
     private val type: ShowingType
 ) : EventPreviewFeature {
 
-    override suspend fun get(result: ResultCallback<List<MoviePreview>>) {
-        val output = when (type) {
+    override suspend fun get() = kotlin.runCatching {
+        when (type) {
             ShowingType.Current -> preview.selectCurrent()
             ShowingType.Upcoming -> preview.selectUpcoming()
-        }.map { MoviePreviewFromDatabase(it, media.select(it.id)) }
-        result(Result.success(output))
+        }.map {
+            MoviePreviewFromDatabase(it, media.select(it.id))
+        }.asSequence()
     }
 
 }
