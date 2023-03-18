@@ -17,8 +17,6 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.ExtendedMovieResponse
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
-import movie.core.util.callback
-import movie.core.util.thenBlocking
 import movie.core.util.wheneverBlocking
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
@@ -268,12 +266,8 @@ abstract class EventPreviewFeatureTest {
 
     protected fun detail_responds_success(): Byte {
         val value = nextInt(1, 100).toByte()
-        wheneverBlocking { detail.get(any(), any()) }.thenBlocking {
-            val movie = mock<MovieDetail>()
-            callback(1) {
-                Result.success(movie)
-            }
-        }
+        val movie = mock<MovieDetail>()
+        wheneverBlocking { detail.get(any()) }.thenReturn(Result.success(movie))
         return value
     }
 

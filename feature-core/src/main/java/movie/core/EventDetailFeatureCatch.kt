@@ -7,10 +7,8 @@ class EventDetailFeatureCatch(
     private val origin: EventDetailFeature
 ) : EventDetailFeature, Recoverable {
 
-    override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        runCatchingResult(result) {
-            origin.get(movie, it)
-        }
+    override suspend fun get(movie: Movie): Result<MovieDetail> {
+        return wrap { origin.get(movie) }
     }
 
 }

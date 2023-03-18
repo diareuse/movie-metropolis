@@ -1,7 +1,6 @@
 package movie.core
 
 import kotlinx.coroutines.coroutineScope
-import movie.core.EventDetailFeature.Companion.get
 import movie.core.adapter.BookingActiveFromTicket
 import movie.core.adapter.MovieFromId
 import movie.core.model.Booking

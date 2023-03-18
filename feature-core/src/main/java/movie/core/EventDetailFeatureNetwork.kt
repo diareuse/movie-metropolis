@@ -9,11 +9,10 @@ class EventDetailFeatureNetwork(
     private val service: EventService
 ) : EventDetailFeature {
 
-    override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        val output = service.getDetail(movie.id).getOrThrow()
-            .body.details
-            .let(::MovieDetailFromResponse)
-        result(Result.success(output))
+    override suspend fun get(movie: Movie): Result<MovieDetail> {
+        return service.getDetail(movie.id)
+            .map { it.body.details }
+            .map(::MovieDetailFromResponse)
     }
 
 }
