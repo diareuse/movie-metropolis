@@ -26,7 +26,6 @@ internal class ImageDatabaseModule {
     ): ImageDatabase {
         val name = context.packageName + ".image.analysis"
         return Room.databaseBuilder(context, ImageDatabase::class.java, name)
-            //.setAutoCloseTimeout(1, TimeUnit.SECONDS)
             .fallbackToDestructiveMigration()
             .build()
     }

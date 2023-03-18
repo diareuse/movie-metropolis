@@ -1,4 +1,4 @@
-package movie.rating
+package movie.rating.internal
 
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers

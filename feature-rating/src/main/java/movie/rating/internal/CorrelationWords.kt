@@ -1,4 +1,4 @@
-package movie.rating
+package movie.rating.internal
 
 class CorrelationWords : Correlation {
 

@@ -135,7 +135,6 @@ internal class EventFeatureModule {
         movie: MovieDao,
         preview: MoviePreviewDao,
         media: MovieMediaDao,
-        analyzer: ImageAnalyzer,
         preference: EventPreference,
         booking: BookingDao,
         sync: SyncPreference,
@@ -202,7 +201,6 @@ internal class EventFeatureModule {
         preference: EventPreference,
         sync: SyncPreference,
         provider: EndpointProvider,
-        @EffectScope
         scope: CoroutineScope
     ): EventCinemaFeature {
         val fallback = EventCinemaFeatureDatabase(cinema)

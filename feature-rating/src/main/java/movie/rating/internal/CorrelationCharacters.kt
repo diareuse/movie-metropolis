@@ -1,4 +1,4 @@
-package movie.rating
+package movie.rating.internal
 
 import kotlin.math.max
 import kotlin.math.min

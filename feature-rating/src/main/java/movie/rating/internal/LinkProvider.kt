@@ -1,6 +1,8 @@
-package movie.rating
+package movie.rating.internal
 
 import movie.log.log
+import movie.rating.MovieDescriptor
+import movie.rating.ResultNotFoundException
 
 internal interface LinkProvider {
 

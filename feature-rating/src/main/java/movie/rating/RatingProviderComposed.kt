@@ -2,9 +2,12 @@ package movie.rating
 
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import movie.rating.RatingType.Csfd
-import movie.rating.RatingType.Imdb
-import movie.rating.RatingType.RottenTomatoes
+import movie.rating.internal.AvailableRating
+import movie.rating.internal.ComposedRating
+import movie.rating.internal.RatingType
+import movie.rating.internal.RatingType.Csfd
+import movie.rating.internal.RatingType.Imdb
+import movie.rating.internal.RatingType.RottenTomatoes
 
 internal class RatingProviderComposed(
     private val rtt: RatingProvider,

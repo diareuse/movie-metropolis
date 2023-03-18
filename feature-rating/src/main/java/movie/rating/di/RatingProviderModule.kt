@@ -8,16 +8,21 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
-import movie.rating.LazyHttpClient
-import movie.rating.LinkProvider
-import movie.rating.LinkProviderCsfd
-import movie.rating.LinkProviderImdb
-import movie.rating.LinkProviderRottenTomatoes
+import kotlinx.coroutines.CoroutineScope
 import movie.rating.RatingProvider
 import movie.rating.RatingProviderComposed
 import movie.rating.RatingProviderCsfd
+import movie.rating.RatingProviderDatabase
+import movie.rating.RatingProviderFold
 import movie.rating.RatingProviderImdb
 import movie.rating.RatingProviderRottenTomatoes
+import movie.rating.RatingProviderStoring
+import movie.rating.database.RatingDao
+import movie.rating.internal.LazyHttpClient
+import movie.rating.internal.LinkProvider
+import movie.rating.internal.LinkProviderCsfd
+import movie.rating.internal.LinkProviderImdb
+import movie.rating.internal.LinkProviderRottenTomatoes
 import javax.inject.Singleton
 
 @Module
@@ -40,10 +45,17 @@ internal class RatingProviderModule {
     internal fun csfdRating(
         @Rating
         client: LazyHttpClient,
+        dao: RatingDao,
+        scope: CoroutineScope,
         @Csfd
         link: LinkProvider = csfdLink(client)
-    ): RatingProvider =
-        RatingProviderCsfd(client, link)
+    ): RatingProvider {
+        var out: RatingProvider
+        out = RatingProviderCsfd(client, link)
+        out = RatingProviderStoring(out, dao, scope)
+        out = RatingProviderFold(RatingProviderDatabase(dao, "csfd.cz"), out)
+        return out
+    }
 
     @Provides
     @Csfd
@@ -59,10 +71,17 @@ internal class RatingProviderModule {
     internal fun imdbRating(
         @Rating
         client: LazyHttpClient,
+        dao: RatingDao,
+        scope: CoroutineScope,
         @Imdb
         link: LinkProvider = imdbLink(client)
-    ): RatingProvider =
-        RatingProviderImdb(client, link)
+    ): RatingProvider {
+        var out: RatingProvider
+        out = RatingProviderImdb(client, link)
+        out = RatingProviderStoring(out, dao, scope)
+        out = RatingProviderFold(RatingProviderDatabase(dao, "imdb.com"), out)
+        return out
+    }
 
     @Provides
     @Imdb
@@ -78,10 +97,17 @@ internal class RatingProviderModule {
     internal fun rtRating(
         @Rating
         client: LazyHttpClient,
+        dao: RatingDao,
+        scope: CoroutineScope,
         @RottenTomatoes
         link: LinkProvider = rtLink(client)
-    ): RatingProvider =
-        RatingProviderRottenTomatoes(client, link)
+    ): RatingProvider {
+        var out: RatingProvider
+        out = RatingProviderRottenTomatoes(client, link)
+        out = RatingProviderStoring(out, dao, scope)
+        out = RatingProviderFold(RatingProviderDatabase(dao, "rottentomatoes.com"), out)
+        return out
+    }
 
     @Provides
     @RottenTomatoes
@@ -100,7 +126,7 @@ internal class RatingProviderModule {
             defaultRequest {
                 header(
                     "user-agent",
-                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/109.0"
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:109.0) Gecko/20100101 Firefox/111.0"
                 )
             }
         }

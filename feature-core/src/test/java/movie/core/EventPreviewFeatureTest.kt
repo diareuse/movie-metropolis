@@ -75,7 +75,6 @@ abstract class EventPreviewFeatureTest {
             movie = movie,
             preview = preview,
             media = media,
-            analyzer = analyzer,
             preference = preference,
             booking = booking,
             sync = sync,
