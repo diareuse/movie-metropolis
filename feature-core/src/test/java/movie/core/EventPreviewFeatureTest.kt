@@ -8,7 +8,6 @@ import movie.core.db.dao.BookingDao
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
-import movie.core.db.dao.MovieRatingDao
 import movie.core.db.model.MoviePreviewView
 import movie.core.di.EventFeatureModule
 import movie.core.model.MovieDetail
@@ -40,7 +39,6 @@ import kotlin.test.assertTrue
 
 abstract class EventPreviewFeatureTest {
 
-    protected lateinit var rating: MovieRatingDao
     protected lateinit var detail: EventDetailFeature
     protected lateinit var sync: SyncPreference
     protected lateinit var booking: BookingDao
@@ -69,7 +67,6 @@ abstract class EventPreviewFeatureTest {
             on { previewUpcoming }.thenReturn(Date())
         }
         detail = mock {}
-        rating = mock {}
         feature = EventFeatureModule().preview(
             service = service,
             movie = movie,
@@ -77,9 +74,7 @@ abstract class EventPreviewFeatureTest {
             media = media,
             preference = preference,
             booking = booking,
-            sync = sync,
-            detail = detail,
-            rating = rating
+            sync = sync
         ).run(::create)
     }
 
@@ -95,7 +90,7 @@ abstract class EventPreviewFeatureTest {
             verify(sync).previewCurrent = any()
         }
 
-        @Test
+        /*@Test // fixme move to presentation
         fun get_fetches_ratings_fromNetwork() = runTest {
             service_responds_success()
             val rating = detail_responds_success()
@@ -111,9 +106,9 @@ abstract class EventPreviewFeatureTest {
             val outputs = feature.get().last()
             for (output in outputs.getOrThrow())
                 assertEquals(rating, output.rating)
-        }
+        }*/
 
-        @Test
+        /*@Test // fixme move to presentation
         fun get_fetches_preExistingRatings_fromNetwork() = runTest {
             service_responds_success()
             val rating = databaseRating_responds_success()
@@ -129,7 +124,7 @@ abstract class EventPreviewFeatureTest {
             val outputs = feature.get().last()
             for (output in outputs.getOrThrow())
                 assertEquals(rating, output.rating)
-        }
+        }*/
 
     }
 
@@ -265,18 +260,16 @@ abstract class EventPreviewFeatureTest {
         whenever(preference.onlyMovies).thenReturn(true)
     }
 
-    protected fun databaseRating_responds_success(): Byte {
+    /*protected fun databaseRating_responds_success(): Byte { // fixme move to presentation
         val value = nextInt(1, 100).toByte()
         wheneverBlocking { rating.select(any()) }.thenReturn(value)
         return value
-    }
+    }*/
 
     protected fun detail_responds_success(): Byte {
         val value = nextInt(1, 100).toByte()
         wheneverBlocking { detail.get(any(), any()) }.thenBlocking {
-            val movie = mock<MovieDetail> {
-                on { rating }.thenReturn(value)
-            }
+            val movie = mock<MovieDetail>()
             callback(1) {
                 Result.success(movie)
             }

@@ -11,8 +11,4 @@ interface MovieDetail : Movie {
     val screeningFrom: Date
     val ageRestrictionUrl: String
     val media: Iterable<Media>
-    val rating: Byte
-    val linkImdb: String?
-    val linkRottenTomatoes: String?
-    val linkCsfd: String?
 }

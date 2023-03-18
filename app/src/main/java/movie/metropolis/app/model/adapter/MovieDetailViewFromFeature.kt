@@ -46,17 +46,17 @@ data class MovieDetailViewFromFeature(
         get() = movie.media.filterIsInstance<Media.Video>().firstOrNull()
             ?.let(::VideoViewFromFeature)
     override val rating: String?
-        get() = if (movie.rating == 0.toByte()) null else "%d%%".format(movie.rating)
+        get() = null//if (movie.rating == 0.toByte()) null else "%d%%".format(movie.rating)
     override val links: MovieDetailView.Links?
         get() = Links().takeIf { it.isValid }
 
     inner class Links : MovieDetailView.Links {
         override val imdb: String?
-            get() = movie.linkImdb
+            get() = null//movie.linkImdb
         override val csfd: String?
-            get() = movie.linkCsfd
+            get() = null//movie.linkCsfd
         override val rottenTomatoes: String?
-            get() = movie.linkRottenTomatoes
+            get() = null//movie.linkRottenTomatoes
         val isValid get() = imdb != null || csfd != null || rottenTomatoes != null
     }
 }

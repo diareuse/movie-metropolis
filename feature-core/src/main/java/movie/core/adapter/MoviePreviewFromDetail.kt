@@ -32,8 +32,6 @@ data class MoviePreviewFromDetail(
         get() = detail.cast
     override val countryOfOrigin: String
         get() = detail.countryOfOrigin.orEmpty()
-    override val rating: Byte
-        get() = detail.rating
     override val genres: Iterable<String>
         get() = emptyList()
 

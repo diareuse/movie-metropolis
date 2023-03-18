@@ -7,8 +7,6 @@ import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
-import movie.core.db.dao.MovieRatingDao
-import movie.core.db.model.MovieRatingStored
 import movie.core.di.EventFeatureModule
 import movie.core.model.Movie
 import movie.core.model.MovieDetail
@@ -17,26 +15,17 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieDetailsResponse
 import movie.core.util.wheneverBlocking
-import movie.rating.RatingProvider
-import movie.rating.internal.AvailableRating
-import movie.rating.internal.ComposedRating
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyVararg
-import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import kotlin.random.Random.Default.nextInt
-import kotlin.test.assertEquals
 
 class EventDetailFeatureTest {
 
     private lateinit var item: Movie
     private lateinit var feature: EventDetailFeature
-    private lateinit var rating: RatingProvider.Composed
-    private lateinit var ratings: MovieRatingDao
     private lateinit var media: MovieMediaDao
     private lateinit var detail: MovieDetailDao
     private lateinit var movie: MovieDao
@@ -44,16 +33,12 @@ class EventDetailFeatureTest {
 
     @Before
     fun prepare() {
-        rating = mock {
-            onBlocking { get(anyVararg()) }.thenReturn(ComposedRating.None)
-        }
-        ratings = mock {}
         media = mock {}
         detail = mock {}
         movie = mock {}
         service = mock {}
         feature = EventFeatureModule()
-            .detail(service, movie, detail, media, ratings, rating)
+            .detail(service, movie, detail, media)
         item = mock {
             on { id }.thenReturn("")
         }
@@ -75,7 +60,7 @@ class EventDetailFeatureTest {
             output.getOrThrow()
     }
 
-    @Test
+    /*@Test // fixme move to presentation
     fun get_returns_ratingFromNetwork() = runTest {
         service_responds_success()
         val rating = rating_responds_success()
@@ -84,7 +69,7 @@ class EventDetailFeatureTest {
         assertEquals(rating.linkCsfd, output.linkCsfd)
         assertEquals(rating.linkImdb, output.linkImdb)
         assertEquals(rating.linkRottenTomatoes, output.linkRottenTomatoes)
-    }
+    }*/
 
     @Test
     fun get_stores() = runTest {
@@ -111,13 +96,13 @@ class EventDetailFeatureTest {
         assertEquals(color, output.spotColor)
     }*/
 
-    @Test
+    /*@Test // fixme move to presentation
     fun get_pollsNetwork_whenNotRecent() = runTest {
         database_responds_success()
         database_rating_responds_failure()
         feature.get(item)
         verify(rating, atLeastOnce()).get(anyVararg())
-    }
+    }*/
 
     // ---
 
@@ -128,7 +113,7 @@ class EventDetailFeatureTest {
         return color
     }*/
 
-    private fun rating_responds_success(): MovieRatingStored {
+    /*private fun rating_responds_success(): MovieRatingStored {// fixme move to presentation
         val data = MovieRatingStored("", nextInt(0, 100).toByte(), "imdb", "rtt", "csfd")
         val composed = mock<ComposedRating> {
             on { imdb }.thenReturn(AvailableRating(data.rating, data.linkImdb!!))
@@ -139,19 +124,19 @@ class EventDetailFeatureTest {
         }
         wheneverBlocking { rating.get(anyVararg()) }.thenReturn(composed)
         return data
-    }
+    }*/
 
     private fun database_responds_success() {
         val detailView = DataPool.MovieDetailViews.first()
         val mediaViews = DataPool.MovieMediaViews.all()
         wheneverBlocking { detail.select(any()) }.thenReturn(detailView)
         wheneverBlocking { media.select(any()) }.thenReturn(mediaViews)
-        wheneverBlocking { ratings.isRecent(any()) }.thenReturn(true)
+        //wheneverBlocking { ratings.isRecent(any()) }.thenReturn(true)
     }
 
-    private fun database_rating_responds_failure() {
+    /*private fun database_rating_responds_failure() {// fixme move to presentation
         wheneverBlocking { ratings.isRecent(any()) }.thenReturn(false)
-    }
+    }*/
 
     private fun service_responds_success(): MovieDetailResponse {
         val data = DataPool.MovieDetailResponses.first()
