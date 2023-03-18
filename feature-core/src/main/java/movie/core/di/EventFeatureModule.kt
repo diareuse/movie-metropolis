@@ -22,19 +22,15 @@ import movie.core.EventDetailFeatureCatch
 import movie.core.EventDetailFeatureDatabase
 import movie.core.EventDetailFeatureFold
 import movie.core.EventDetailFeatureNetwork
-import movie.core.EventDetailFeatureNetworkRating
-import movie.core.EventDetailFeatureRatingFork
 import movie.core.EventDetailFeatureStoring
 import movie.core.EventPreviewFeature
 import movie.core.EventPreviewFeatureCatch
 import movie.core.EventPreviewFeatureDatabase
-import movie.core.EventPreviewFeatureDatabaseRating
 import movie.core.EventPreviewFeatureFilter
 import movie.core.EventPreviewFeatureFilterMovie
 import movie.core.EventPreviewFeatureFold
 import movie.core.EventPreviewFeatureInvalidateAfter
 import movie.core.EventPreviewFeatureNetwork
-import movie.core.EventPreviewFeatureNetworkRating
 import movie.core.EventPreviewFeatureRequireNotEmpty
 import movie.core.EventPreviewFeatureSaveTimestamp
 import movie.core.EventPreviewFeatureSort
@@ -68,7 +64,6 @@ import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.dao.MoviePromoDao
-import movie.core.db.dao.MovieRatingDao
 import movie.core.db.dao.MovieReferenceDao
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Cinema
@@ -81,7 +76,6 @@ import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
 import movie.image.ImageAnalyzer
-import movie.rating.RatingProvider
 import kotlin.time.Duration.Companion.days
 
 @Module
@@ -137,17 +131,10 @@ internal class EventFeatureModule {
         media: MovieMediaDao,
         preference: EventPreference,
         booking: BookingDao,
-        sync: SyncPreference,
-        detail: EventDetailFeature,
-        rating: MovieRatingDao
+        sync: SyncPreference
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
-        override fun current(): EventPreviewFeature {
-            var out = common(ShowingType.Current)
-            out = EventPreviewFeatureDatabaseRating(out, rating)
-            out = EventPreviewFeatureNetworkRating(out, detail)
-            return out
-        }
+        override fun current(): EventPreviewFeature = common(ShowingType.Current)
 
         override fun upcoming(): EventPreviewFeature = common(ShowingType.Upcoming)
 
@@ -175,21 +162,12 @@ internal class EventFeatureModule {
         service: EventService,
         movie: MovieDao,
         detail: MovieDetailDao,
-        media: MovieMediaDao,
-        ratings: MovieRatingDao,
-        rating: RatingProvider.Composed
+        media: MovieMediaDao
     ): EventDetailFeature {
-        var database: EventDetailFeature = EventDetailFeatureDatabase(detail, media)
-        database = EventDetailFeatureRatingFork(
-            success = database,
-            failure = EventDetailFeatureNetworkRating(database, ratings, rating),
-            rating = ratings
-        )
         var out: EventDetailFeature
         out = EventDetailFeatureNetwork(service)
         out = EventDetailFeatureStoring(out, movie, detail, media)
-        out = EventDetailFeatureNetworkRating(out, ratings, rating)
-        out = EventDetailFeatureFold(database, out)
+        out = EventDetailFeatureFold(EventDetailFeatureDatabase(detail, media), out)
         out = EventDetailFeatureCatch(out)
         return out
     }

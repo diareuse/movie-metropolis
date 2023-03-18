@@ -36,14 +36,6 @@ internal data class MovieDetailFromResponse(
         get() = response.restrictionUrl
     override val media: Iterable<Media>
         get() = response.media.mapNotNull(::MediaFromResponse)
-    override val rating: Byte
-        get() = 0
-    override val linkImdb: String?
-        get() = null
-    override val linkRottenTomatoes: String?
-        get() = null
-    override val linkCsfd: String?
-        get() = null
 
     private fun MediaFromResponse(media: MovieDetailResponse.Media) =
         when (media) {

@@ -33,8 +33,6 @@ data class MoviePreviewFromDatabase(
         get() = movie.cast
     override val countryOfOrigin: String
         get() = movie.countryOfOrigin
-    override val rating: Byte?
-        get() = null
     override val genres: Iterable<String>
         get() = movie.genres
 }
