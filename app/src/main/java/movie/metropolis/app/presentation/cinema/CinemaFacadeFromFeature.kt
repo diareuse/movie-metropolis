@@ -27,12 +27,11 @@ class CinemaFacadeFromFeature(
     override fun removeOnChangedListener(listener: OnChangedListener) = Unit
 
     override suspend fun getCinema(callback: ResultCallback<CinemaView>) {
-        cinemas.get(null) { result ->
-            val output = result
-                .mapCatching { it.first { it.id == id } }
-                .map(::CinemaViewFromFeature)
-            callback(output)
+        val output = cinemas.get(null).mapCatching { result ->
+            result.first { it.id == id }
+                .let(::CinemaViewFromFeature)
         }
+        callback(output)
     }
 
     override suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>) {

@@ -225,11 +225,7 @@ class MovieFacadeTest : FeatureTest() {
 
     private suspend fun cinema_responds_cinema(modifier: KStubbing<Cinema>.(Cinema) -> Unit = {}): Cinema {
         val model = mock(stubbing = modifier)
-        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
-            callback(1) {
-                Result.success(listOf(model))
-            }
-        }
+        whenever(cinema.get(anyOrNull())).thenReturn(Result.success(sequenceOf(model)))
         return model
     }
 

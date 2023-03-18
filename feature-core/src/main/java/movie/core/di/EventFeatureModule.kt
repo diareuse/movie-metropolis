@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
 import movie.core.EventCinemaFeature
 import movie.core.EventCinemaFeatureCatch
 import movie.core.EventCinemaFeatureDatabase
@@ -11,7 +12,6 @@ import movie.core.EventCinemaFeatureDistance
 import movie.core.EventCinemaFeatureDistanceClosest
 import movie.core.EventCinemaFeatureFold
 import movie.core.EventCinemaFeatureInvalidateAfter
-import movie.core.EventCinemaFeatureInvalidateWithData
 import movie.core.EventCinemaFeatureNetwork
 import movie.core.EventCinemaFeatureRequireNotEmpty
 import movie.core.EventCinemaFeatureSaveTimestamp
@@ -206,17 +206,18 @@ internal class EventFeatureModule {
         cinema: CinemaDao,
         preference: EventPreference,
         sync: SyncPreference,
-        provider: EndpointProvider
+        provider: EndpointProvider,
+        @EffectScope
+        scope: CoroutineScope
     ): EventCinemaFeature {
         val fallback = EventCinemaFeatureDatabase(cinema)
         var db: EventCinemaFeature
         db = EventCinemaFeatureDatabase(cinema)
         db = EventCinemaFeatureRequireNotEmpty(db)
         db = EventCinemaFeatureInvalidateAfter(db, sync, 30.days)
-        db = EventCinemaFeatureInvalidateWithData(db)
         var out: EventCinemaFeature
         out = EventCinemaFeatureNetwork(service, provider)
-        out = EventCinemaFeatureStoring(out, cinema)
+        out = EventCinemaFeatureStoring(out, cinema, scope)
         out = EventCinemaFeatureSaveTimestamp(out, sync)
         out = EventCinemaFeatureFold(db, out, fallback)
         out = EventCinemaFeatureDistance(out)

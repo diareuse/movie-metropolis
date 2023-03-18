@@ -152,19 +152,11 @@ class CinemaFacadeTest : FeatureTest() {
     // ---
 
     private suspend fun cinemas_returns_cinema() {
-        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
-            callback<Iterable<Cinema>>(1) {
-                Result.success(listOf(model))
-            }
-        }
+        whenever(cinema.get(anyOrNull())).thenReturn(Result.success(sequenceOf(model)))
     }
 
     private suspend fun cinemas_returns_empty() {
-        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
-            callback<Iterable<Cinema>>(1) {
-                Result.success(emptyList())
-            }
-        }
+        whenever(cinema.get(anyOrNull())).thenReturn(Result.success(emptySequence()))
     }
 
     private suspend fun showings_returns_value(count: Int = 1) {

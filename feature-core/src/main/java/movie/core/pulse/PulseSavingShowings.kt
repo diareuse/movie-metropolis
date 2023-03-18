@@ -1,7 +1,6 @@
 package movie.core.pulse
 
 import movie.core.EventCinemaFeature
-import movie.core.EventCinemaFeature.Companion.get
 import movie.core.EventShowingsFeature
 import movie.core.EventShowingsFeature.Cinema.Companion.get
 import movie.pulse.Pulse

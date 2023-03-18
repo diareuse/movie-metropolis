@@ -10,7 +10,6 @@ import movie.core.model.Movie
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
-import movie.core.util.thenBlocking
 import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
@@ -88,10 +87,7 @@ class EventShowingsFeatureMovieTest {
 
     private fun cinema_responds_success(): List<Cinema> {
         val data = DataPool.Cinemas.all()
-        wheneverBlocking { cinema.get(anyOrNull(), any()) }.thenBlocking {
-            val callback = getArgument<ResultCallback<Iterable<Cinema>>>(1)
-            callback.invoke(Result.success(data))
-        }
+        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.success(data.asSequence()))
         return data
     }
 

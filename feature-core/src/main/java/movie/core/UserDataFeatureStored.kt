@@ -1,6 +1,5 @@
 package movie.core
 
-import movie.core.EventCinemaFeature.Companion.get
 import movie.core.adapter.UserFromStored
 import movie.core.model.FieldUpdate
 import movie.core.model.User
@@ -16,8 +15,8 @@ class UserDataFeatureStored(
     }
 
     override suspend fun get(callback: ResultCallback<User>) {
-        val cinemas = cinema.get(null).getOrThrow()
-        callback(Result.success(UserFromStored(preference, cinemas)))
+        val user = cinema.get(null).map { UserFromStored(preference, it.asIterable()) }
+        callback(user)
     }
 
 }

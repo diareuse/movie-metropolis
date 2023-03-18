@@ -19,10 +19,10 @@ class ProfileFacadeFromFeature(
 ) : ProfileFacade {
 
     override suspend fun getCinemas(callback: ResultCallback<List<CinemaSimpleView>>) {
-        cinemas.get(null) { result ->
-            val output = result.map { it.map(::CinemaSimpleViewFromFeature) }
-            callback(output)
+        val output = cinemas.get(null).map { result ->
+            result.map(::CinemaSimpleViewFromFeature).toList()
         }
+        callback(output)
     }
 
     override suspend fun getMembership(callback: ResultCallback<MembershipView?>) {

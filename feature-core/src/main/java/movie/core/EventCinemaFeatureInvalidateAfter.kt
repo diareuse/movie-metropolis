@@ -12,12 +12,12 @@ class EventCinemaFeatureInvalidateAfter(
     private val duration: Duration
 ) : EventCinemaFeature {
 
-    override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
+    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
         val lastRefresh = preference.cinema
         if (!lastRefresh.isInThreshold(duration)) {
-            return result(Result.failure(ExpiredException(lastRefresh, duration)))
+            return Result.failure(ExpiredException(lastRefresh, duration))
         }
-        origin.get(location, result)
+        return origin.get(location)
     }
 
 }

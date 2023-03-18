@@ -10,13 +10,8 @@ class EventCinemaFeatureSaveTimestamp(
     private val preference: SyncPreference
 ) : EventCinemaFeature {
 
-    override suspend fun get(
-        location: Location?,
-        result: ResultCallback<Iterable<Cinema>>
-    ) {
-        origin.get(location, result.then {
-            preference.cinema = Date()
-        })
+    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
+        return origin.get(location).onSuccess { preference.cinema = Date() }
     }
 
 }

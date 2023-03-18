@@ -19,10 +19,10 @@ class CinemasFacadeFromFeature(
             true -> null
             else -> Location(latitude, longitude)
         }
-        cinemas.get(location) { result ->
-            val output = result.map { it.map(::CinemaViewFromFeature) }
-            callback(output)
+        val output = cinemas.get(location).map { result ->
+            result.map(::CinemaViewFromFeature).toList()
         }
+        callback(output)
     }
 
 }

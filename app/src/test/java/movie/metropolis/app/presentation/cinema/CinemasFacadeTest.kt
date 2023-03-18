@@ -1,13 +1,9 @@
 package movie.metropolis.app.presentation.cinema
 
 import kotlinx.coroutines.test.runTest
-import movie.core.model.Cinema
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.presentation.FeatureTest
-import movie.metropolis.app.util.callback
-import movie.metropolis.app.util.thenBlocking
 import org.junit.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -51,11 +47,8 @@ class CinemasFacadeTest : FeatureTest() {
     // ---
 
     private suspend fun cinema_responds_success(count: Int) {
-        whenever(cinema.get(anyOrNull(), any())).thenBlocking {
-            callback<Iterable<Cinema>>(1) {
-                Result.success(List(count) { mock() })
-            }
-        }
+        whenever(cinema.get(anyOrNull()))
+            .thenReturn(Result.success(sequence { repeat(count) { yield(mock()) } }))
     }
 
 }

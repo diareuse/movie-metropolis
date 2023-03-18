@@ -9,9 +9,8 @@ class EventCinemaFeatureDatabase(
     private val cinema: CinemaDao
 ) : EventCinemaFeature {
 
-    override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        val data = cinema.selectAll().map(::CinemaFromDatabase)
-        result(Result.success(data))
+    override suspend fun get(location: Location?): Result<Sequence<Cinema>> = cinema.runCatching {
+        selectAll().asSequence().map(::CinemaFromDatabase)
     }
 
 }
