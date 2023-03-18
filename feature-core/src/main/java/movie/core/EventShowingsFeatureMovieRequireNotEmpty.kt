@@ -7,13 +7,11 @@ class EventShowingsFeatureMovieRequireNotEmpty(
     private val origin: EventShowingsFeature.Movie
 ) : EventShowingsFeature.Movie {
 
-    override suspend fun get(date: Date, result: ResultCallback<CinemaWithShowings>) {
-        origin.get(date, result.map {
-            it.requireNotEmpty()
-            for ((_, values) in it)
-                values.requireNotEmpty()
-            it
-        })
+    override suspend fun get(date: Date) = origin.get(date).map {
+        it.requireNotEmpty()
+        for ((_, values) in it)
+            values.requireNotEmpty()
+        it
     }
 
 }

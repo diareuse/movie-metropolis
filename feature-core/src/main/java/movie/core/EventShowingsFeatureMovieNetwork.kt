@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.ShowingFromResponse
 import movie.core.model.Location
 import movie.core.model.Movie
@@ -14,17 +13,15 @@ class EventShowingsFeatureMovieNetwork(
     private val cinema: EventCinemaFeature
 ) : EventShowingsFeature.Movie {
 
-    override suspend fun get(
-        date: Date,
-        result: ResultCallback<CinemaWithShowings>
-    ) = coroutineScope {
-        val cinemas = cinema.get(location).getOrThrow().asIterable()
-        result.parallelize(this, cinemas) { cinema ->
-            service.getEventsInCinema(cinema.id, date)
-                .getOrThrow().body.events
-                .filter { it.movieId == movie.id }
-                .map { ShowingFromResponse(it, cinema) }
+    override suspend fun get(date: Date): Result<CinemaWithShowings> = cinema.get(location)
+        .map { cinemas ->
+            cinemas.associateWith { cinema ->
+                service.getEventsInCinema(cinema.id, date)
+                    .map { it.body.events }
+                    .getOrDefault(emptyList())
+                    .filter { it.movieId == movie.id }
+                    .map { ShowingFromResponse(it, cinema) }
+            }
         }
-    }
 
 }

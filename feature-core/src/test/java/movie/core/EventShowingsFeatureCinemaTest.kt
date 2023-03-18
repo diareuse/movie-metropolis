@@ -1,5 +1,6 @@
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.MovieDao
@@ -13,13 +14,14 @@ import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieEventResponse
 import movie.core.preference.EventPreference
+import movie.core.util.awaitChildJobCompletion
 import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.atMost
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
@@ -35,7 +37,7 @@ class EventShowingsFeatureCinemaTest {
     private lateinit var reference: MovieReferenceDao
     private lateinit var showing: ShowingDao
     private lateinit var service: EventService
-    private lateinit var feature: EventShowingsFeature.Cinema
+    private lateinit var feature: (CoroutineScope) -> EventShowingsFeature.Cinema
     private lateinit var cinema: Cinema
 
     @Before
@@ -51,15 +53,17 @@ class EventShowingsFeatureCinemaTest {
         preference = mock {
             on { filterSeen }.thenReturn(false)
         }
-        feature = EventFeatureModule()
-            .showings(showing, reference, service, preference, booking, movie, mock())
-            .cinema(cinema)
+        feature = { scope ->
+            EventFeatureModule()
+                .showings(showing, reference, service, preference, booking, movie, mock(), scope)
+                .cinema(cinema)
+        }
     }
 
     @Test
     fun get_returns_fromNetwork() = runTest {
         val testData = cinemaEvents_responds_success()
-        val result = feature.get(Date()).last().getOrThrow()
+        val result = feature(this).get(Date()).getOrThrow()
         assertEquals(testData.events.size, result.flatMap { it.value }.size)
         assertEquals(testData.movies.size, result.size)
     }
@@ -68,7 +72,7 @@ class EventShowingsFeatureCinemaTest {
     fun get_returns_fromDatabase() = runTest {
         val testMovies = references_responds_success()
         val testEvents = showings_responds_success()
-        val result = feature.get(Date()).last().getOrThrow()
+        val result = feature(this).get(Date()).getOrThrow()
         assertEquals(testEvents.size, result.flatMap { it.value }.size)
         for (movie in result.keys)
             assertEquals(testMovies.id, movie.id)
@@ -77,7 +81,7 @@ class EventShowingsFeatureCinemaTest {
     @Test
     fun get_throws() = runTest {
         assertFails {
-            feature.get(Date()).last().getOrThrow()
+            feature(this).get(Date()).getOrThrow()
         }
     }
 
@@ -89,11 +93,10 @@ class EventShowingsFeatureCinemaTest {
             val movies = it.movies.mapIndexed { index, it -> it.copy(id = "$index") }
             it.copy(movies = movies)
         })
-        val results = feature.get(Date()).map { it.getOrThrow() }
-        for (result in results)
-            assertTrue("Expected to not contain booked values") {
-                result.keys.none { it.id in booked }
-            }
+        val result = feature(this).get(Date()).getOrThrow()
+        assertTrue("Expected to not contain booked values") {
+            result.keys.none { it.id in booked }
+        }
     }
 
     @Test
@@ -104,17 +107,16 @@ class EventShowingsFeatureCinemaTest {
             it.copy(id = "1")
         })
         showings_responds_success()
-        val results = feature.get(Date()).map { it.getOrThrow() }
-        for (result in results)
-            assertTrue("Expected to not contain booked values") {
-                result.keys.none { it.id in booked }
-            }
+        val result = feature(this).get(Date()).getOrThrow()
+        assertTrue("Expected to not contain booked values") {
+            result.keys.none { it.id in booked }
+        }
     }
 
     @Test
     fun get_returns_sorted_values_fromNetwork() = runTest {
         cinemaEvents_responds_success()
-        val result = feature.get(Date()).first().getOrThrow()
+        val result = feature(this).get(Date()).getOrThrow()
         var last = Int.MAX_VALUE
         for ((_, value) in result) {
             assertTrue(
@@ -129,7 +131,7 @@ class EventShowingsFeatureCinemaTest {
     fun get_returns_sorted_values_fromDatabase() = runTest {
         references_responds_success()
         showings_responds_success()
-        val result = feature.get(Date()).first().getOrThrow()
+        val result = feature(this).get(Date()).getOrThrow()
         var last = Int.MAX_VALUE
         for ((_, value) in result) {
             assertTrue(
@@ -143,10 +145,11 @@ class EventShowingsFeatureCinemaTest {
     @Test
     fun get_savesData_fromNetwork() = runTest {
         val testData = cinemaEvents_responds_success()
-        feature.get(Date()).first().getOrThrow()
-        verify(movie, atMost(testData.movies.size)).insertOrUpdate(any())
-        verify(reference, atMost(testData.movies.size)).insertOrUpdate(any())
-        verify(showing, atMost(testData.events.size)).insertOrUpdate(any())
+        feature(this).get(Date()).getOrThrow()
+        awaitChildJobCompletion()
+        verify(movie, times(testData.movies.size)).insertOrUpdate(any())
+        verify(reference, times(testData.movies.size)).insertOrUpdate(any())
+        verify(showing, times(testData.events.size)).insertOrUpdate(any())
     }
 
     // ---
@@ -183,14 +186,6 @@ class EventShowingsFeatureCinemaTest {
         wheneverBlocking { service.getEventsInCinema(eq(id), any()) }
             .thenReturn(Result.success(result))
         return result.body
-    }
-
-    private suspend fun EventShowingsFeature.Cinema.get(date: Date): List<Result<MovieWithShowings>> {
-        val milestones = mutableListOf<Result<MovieWithShowings>>()
-        get(date) {
-            milestones += it
-        }
-        return milestones
     }
 
 }

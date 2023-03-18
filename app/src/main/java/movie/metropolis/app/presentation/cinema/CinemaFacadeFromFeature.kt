@@ -37,13 +37,12 @@ class CinemaFacadeFromFeature(
     override suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>) {
         val cinema = MutableResult.getOrThrow { getCinema(it.asResultCallback()) }
             .let(::CinemaFromView)
-        showings.cinema(cinema).get(date) { result ->
-            val output = result.getOrThrow().entries
-                .map { (movie, events) -> MovieBookingViewFromFeature(movie, events) }
-                .sortedByDescending { it.availability.entries.sumOf { it.value.size } }
-                .let(Result.Companion::success)
-            callback(output)
-        }
+        val result = showings.cinema(cinema).get(date)
+        val output = result.getOrThrow().entries
+            .map { (movie, events) -> MovieBookingViewFromFeature(movie, events) }
+            .sortedByDescending { it.availability.entries.sumOf { it.value.size } }
+            .let(Result.Companion::success)
+        callback(output)
     }
 
 }

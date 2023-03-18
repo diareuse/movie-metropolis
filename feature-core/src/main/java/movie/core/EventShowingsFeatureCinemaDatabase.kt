@@ -17,14 +17,14 @@ class EventShowingsFeatureCinemaDatabase(
     private val cinema: Cinema
 ) : EventShowingsFeature.Cinema {
 
-    override suspend fun get(date: Date, result: ResultCallback<MovieWithShowings>) {
+    override suspend fun get(date: Date): Result<MovieWithShowings> = kotlin.runCatching {
         val showings = showing.selectByCinema(
             rangeStart = date.dayStart.coerceAtLeast(Date()).time,
             rangeEnd = date.dayEnd.time,
             cinema = cinema.id
         )
         val movies = mutableMapOf<String, MovieReference>()
-        val output = buildMap<MovieReference, MutableList<Showing>> {
+        buildMap<MovieReference, MutableList<Showing>> {
             for (showing in showings) {
                 val movieId = showing.movie.lowercase()
                 val movie = movies.getOrPut(movieId) {
@@ -34,7 +34,6 @@ class EventShowingsFeatureCinemaDatabase(
                 list.add(ShowingFromDatabase(showing, cinema))
             }
         }
-        result(Result.success(output))
     }
 
 }
