@@ -13,16 +13,15 @@ class EventCinemaFeatureDistance(
     private val origin: EventCinemaFeature
 ) : EventCinemaFeature {
 
-    override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        origin.get(location, result.map { cinemas ->
+    override suspend fun get(location: Location?): Result<Sequence<Cinema>> =
+        origin.get(location).map { cinemas ->
             when (location) {
                 null -> cinemas
                 else -> cinemas.map { cinema ->
                     CinemaWithDistance(cinema, distance(location, cinema.location))
                 }
             }
-        })
-    }
+        }
 
     private fun distance(start: Location, end: Location): Double {
         var latitudeStart = start.latitude

@@ -228,11 +228,8 @@ class UserBookingFeatureTest {
     }
 
     private fun cinema_responds_success() {
-        wheneverBlocking { cinema.get(anyOrNull(), any()) }.thenBlocking {
-            callback(1) {
-                Result.success(DataPool.Cinemas.all())
-            }
-        }
+        val data = DataPool.Cinemas.all().asSequence()
+        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.success(data))
     }
 
     private fun database_responds_success(): List<BookingStored> {

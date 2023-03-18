@@ -7,10 +7,8 @@ class EventCinemaFeatureCatch(
     private val origin: EventCinemaFeature
 ) : EventCinemaFeature, Recoverable {
 
-    override suspend fun get(location: Location?, result: ResultCallback<Iterable<Cinema>>) {
-        runCatchingResult(result) {
-            origin.get(location, it)
-        }
+    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
+        return wrap { origin.get(location) }
     }
 
 }

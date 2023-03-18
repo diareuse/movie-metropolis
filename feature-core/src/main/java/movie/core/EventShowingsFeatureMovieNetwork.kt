@@ -18,9 +18,7 @@ class EventShowingsFeatureMovieNetwork(
         date: Date,
         result: ResultCallback<CinemaWithShowings>
     ) = coroutineScope {
-        val cinemas = MutableResult.getOrThrow {
-            cinema.get(location, it.asResultCallback())
-        }
+        val cinemas = cinema.get(location).getOrThrow().asIterable()
         result.parallelize(this, cinemas) { cinema ->
             service.getEventsInCinema(cinema.id, date)
                 .getOrThrow().body.events

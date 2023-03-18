@@ -20,9 +20,7 @@ class EventShowingsFeatureMovieDatabase(
         date: Date,
         result: ResultCallback<CinemaWithShowings>
     ) = coroutineScope {
-        val cinemas = MutableResult.getOrThrow {
-            cinema.get(location, it.asResultCallback())
-        }
+        val cinemas = cinema.get(location).getOrThrow().asIterable()
         result.parallelize(this, cinemas) { cinema ->
             showing.selectByCinema(
                 rangeStart = date.dayStart.coerceAtLeast(Date()).time,

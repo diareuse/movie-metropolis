@@ -7,8 +7,6 @@ import movie.core.model.User
 import movie.core.nwk.UserService
 import movie.core.nwk.model.CustomerResponse
 import movie.core.preference.UserPreference
-import movie.core.util.callback
-import movie.core.util.thenBlocking
 import movie.core.util.wheneverBlocking
 import movie.log.Logger
 import movie.log.PlatformLogger
@@ -148,11 +146,8 @@ class UserDataFeatureTest {
     }
 
     private fun cinema_responds_success() {
-        wheneverBlocking { cinema.get(anyOrNull(), any()) }.thenBlocking {
-            callback(1) {
-                Result.success(DataPool.Cinemas.all())
-            }
-        }
+        val data = DataPool.Cinemas.all().asSequence()
+        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.success(data))
     }
 
     private suspend fun UserDataFeature.get(): List<Result<User>> {

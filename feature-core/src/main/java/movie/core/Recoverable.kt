@@ -31,3 +31,20 @@ interface Recoverable {
     }
 
 }
+
+inline fun <T> wrap(body: () -> Result<T>): Result<T> {
+    return runCatching { body().getOrThrow() }
+}
+
+inline fun <T, R> Array<T>.fold(body: T.() -> Result<R>): Result<R> {
+    val error = IllegalStateException("All options were exhausted")
+    for (option in this) {
+        val result = body(option)
+        if (result.isSuccess)
+            return result
+        result.onFailure {
+            error.addSuppressed(it)
+        }
+    }
+    return Result.failure(error)
+}

@@ -1,6 +1,5 @@
 package movie.core
 
-import movie.core.EventCinemaFeature.Companion.get
 import movie.core.adapter.UserFromRemote
 import movie.core.model.FieldUpdate
 import movie.core.model.User

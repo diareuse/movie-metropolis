@@ -164,19 +164,12 @@ class ProfileFacadeTest : FeatureTest() {
     }
 
     private fun cinema_responds_success() {
-        wheneverBlocking { cinema.get(anyOrNull(), any()) }.thenBlocking {
-            callback<Iterable<Cinema>>(1) {
-                Result.success(listOf(mock()))
-            }
-        }
+        val data = sequenceOf(mock<Cinema>())
+        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.success(data))
     }
 
     private fun cinema_responds_failure() {
-        wheneverBlocking { cinema.get(anyOrNull(), any()) }.thenBlocking {
-            callback<Iterable<Cinema>>(1) {
-                Result.failure(RuntimeException())
-            }
-        }
+        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.failure(RuntimeException()))
     }
 
     // ---
