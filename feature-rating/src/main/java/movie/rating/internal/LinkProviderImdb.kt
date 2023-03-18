@@ -1,9 +1,11 @@
-package movie.rating
+package movie.rating.internal
 
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
-import movie.rating.Correlation.Companion.correlate
+import movie.rating.MovieDescriptor
+import movie.rating.ResultNotFoundException
+import movie.rating.internal.Correlation.Companion.correlate
 
 internal class LinkProviderImdb(
     private val client: LazyHttpClient

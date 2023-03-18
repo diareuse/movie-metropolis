@@ -17,9 +17,9 @@ import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieDetailsResponse
 import movie.core.util.wheneverBlocking
-import movie.rating.AvailableRating
-import movie.rating.ComposedRating
 import movie.rating.RatingProvider
+import movie.rating.internal.AvailableRating
+import movie.rating.internal.ComposedRating
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any

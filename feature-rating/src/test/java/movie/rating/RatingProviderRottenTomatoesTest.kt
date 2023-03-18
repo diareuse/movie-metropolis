@@ -7,6 +7,9 @@ import kotlin.test.assertEquals
 
 class RatingProviderRottenTomatoesTest : AbstractRatingTest() {
 
+    override val domain: String
+        get() = "rottentomatoes.com"
+
     override fun prepare() {}
 
     override fun respond(request: HttpRequestData): String {
@@ -19,9 +22,16 @@ class RatingProviderRottenTomatoesTest : AbstractRatingTest() {
     }
 
     @Test
-    fun returns_rottenTomatoes() = runTest {
-        val result = provider.get(descriptor).rottenTomatoes?.value
+    fun returns_fromNetwork() = runTest {
+        val result = provider(this).get(descriptor).rottenTomatoes?.value
         assertEquals(94, result)
+    }
+
+    @Test
+    fun returns_fromDatabase() = runTest {
+        val rating = database_returns_success()
+        val result = provider(this).get(descriptor).rottenTomatoes?.value
+        assertEquals(rating, result)
     }
 
 }

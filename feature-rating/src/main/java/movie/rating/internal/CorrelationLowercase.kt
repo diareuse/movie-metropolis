@@ -1,8 +1,8 @@
-package movie.rating
+package movie.rating.internal
 
 import java.text.Normalizer
 
-class CorrelationNormalize(
+class CorrelationLowercase(
     private val origin: Correlation
 ) : Correlation {
 

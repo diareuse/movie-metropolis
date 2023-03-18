@@ -1,7 +1,10 @@
-package movie.rating
+package movie.rating.internal
 
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import movie.rating.MovieDescriptor
+import movie.rating.RatingProvider
+import movie.rating.ResultNotFoundException
 
 internal abstract class AbstractRatingProvider : RatingProvider {
 

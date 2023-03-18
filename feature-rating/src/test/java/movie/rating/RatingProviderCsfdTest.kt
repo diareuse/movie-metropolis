@@ -7,6 +7,9 @@ import kotlin.test.assertEquals
 
 class RatingProviderCsfdTest : AbstractRatingTest() {
 
+    override val domain: String
+        get() = "csfd.cz"
+
     override fun prepare() {
         descriptor = MovieDescriptor.Local("Avatar: The Way of Water", 2022)
     }
@@ -21,9 +24,16 @@ class RatingProviderCsfdTest : AbstractRatingTest() {
     }
 
     @Test
-    fun returns_csfd() = runTest {
-        val result = provider.get(descriptor).csfd?.value
+    fun returns_fromNetwork() = runTest {
+        val result = provider(this).get(descriptor).csfd?.value
         assertEquals(86, result)
+    }
+
+    @Test
+    fun returns_fromDatabase() = runTest {
+        val rating = database_returns_success()
+        val result = provider(this).get(descriptor).csfd?.value
+        assertEquals(rating, result)
     }
 
 }

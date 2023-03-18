@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 @Module
 class KotlinModule {
 
-    @EffectScope
     @Provides
     fun scope(): CoroutineScope = ProcessLifecycleOwner.get().lifecycleScope
 

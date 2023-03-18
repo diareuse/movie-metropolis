@@ -1,5 +1,9 @@
 package movie.rating
 
+import movie.rating.internal.AbstractRatingProvider
+import movie.rating.internal.LazyHttpClient
+import movie.rating.internal.LinkProvider
+
 internal class RatingProviderCsfd(
     override val client: LazyHttpClient,
     override val provider: LinkProvider

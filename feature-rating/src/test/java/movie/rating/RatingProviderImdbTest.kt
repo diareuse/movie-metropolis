@@ -7,6 +7,9 @@ import kotlin.test.assertEquals
 
 class RatingProviderImdbTest : AbstractRatingTest() {
 
+    override val domain: String
+        get() = "imdb.com"
+
     override fun prepare() {}
 
     override fun respond(request: HttpRequestData): String {
@@ -19,9 +22,16 @@ class RatingProviderImdbTest : AbstractRatingTest() {
     }
 
     @Test
-    fun returns_imdb() = runTest {
-        val result = provider.get(descriptor).imdb?.value
+    fun returns_fromNetwork() = runTest {
+        val result = provider(this).get(descriptor).imdb?.value
         assertEquals(81, result)
+    }
+
+    @Test
+    fun returns_fromDatabase() = runTest {
+        val rating = database_returns_success()
+        val result = provider(this).get(descriptor).imdb?.value
+        assertEquals(rating, result)
     }
 
 }
