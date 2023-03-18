@@ -40,7 +40,6 @@ import movie.core.EventPromoFeatureCatch
 import movie.core.EventPromoFeatureDatabase
 import movie.core.EventPromoFeatureFold
 import movie.core.EventPromoFeatureNetworkAndUpdate
-import movie.core.EventPromoFeatureSpotColor
 import movie.core.EventPromoFeatureUrlWrap
 import movie.core.EventShowingsFeature
 import movie.core.EventShowingsFeatureCinemaCatch
@@ -75,7 +74,6 @@ import movie.core.nwk.EventService
 import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
-import movie.image.ImageAnalyzer
 import kotlin.time.Duration.Companion.days
 
 @Module
@@ -205,15 +203,14 @@ internal class EventFeatureModule {
         dao: MoviePromoDao,
         service: CinemaService,
         provider: EndpointProvider,
-        analyzer: ImageAnalyzer
+        scope: CoroutineScope
     ): EventPromoFeature {
         var out: EventPromoFeature
         out = EventPromoFeatureFold(
             EventPromoFeatureDatabase(dao),
-            EventPromoFeatureNetworkAndUpdate(service, dao)
+            EventPromoFeatureNetworkAndUpdate(service, dao, scope)
         )
         out = EventPromoFeatureUrlWrap(out, provider)
-        out = EventPromoFeatureSpotColor(out, analyzer)
         out = EventPromoFeatureCatch(out)
         return out
     }

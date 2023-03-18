@@ -2,7 +2,6 @@ package movie.metropolis.app.presentation.listing
 
 import kotlinx.coroutines.coroutineScope
 import movie.core.EventPromoFeature
-import movie.core.EventPromoFeature.Companion.get
 import movie.core.MutableResult
 import movie.core.ResultCallback
 import movie.core.adapter.MovieFromId
