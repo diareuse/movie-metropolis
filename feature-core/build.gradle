@@ -14,7 +14,6 @@ dependencies {
     implementation project(":feature-core-database")
     implementation project(":feature-pulse")
     implementation project(":feature-settings")
-    implementation project(":feature-rating")
     implementation project(":feature-image-analysis")
     implementation project(":feature-calendar")
     implementation project(":feature-log")

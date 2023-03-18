@@ -20,6 +20,8 @@ dependencies {
     implementation project(":style")
     implementation project(":feature-log")
     implementation project(":feature-wear")
+    implementation project(":feature-rating")
+    implementation project(":feature-image-analysis")
 
     implementation "androidx.startup:startup-runtime:1.1.1"
     implementation "androidx.lifecycle:lifecycle-livedata-core:2.6.0"

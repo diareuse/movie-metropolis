@@ -150,18 +150,6 @@ class DatabaseModule {
     }
 
     @Provides
-    internal fun movieRating(
-        database: MovieDatabase,
-        tracer: PerformanceTracer
-    ): MovieRatingDao {
-        var dao: MovieRatingDao = database.movieRating()
-        dao = MovieRatingDaoLowercase(dao)
-        dao = MovieRatingDaoPerformance(dao, tracer)
-        dao = MovieRatingDaoThreading(dao)
-        return dao
-    }
-
-    @Provides
     internal fun moviePromo(
         database: MovieDatabase,
         tracer: PerformanceTracer

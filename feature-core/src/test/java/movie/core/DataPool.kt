@@ -313,11 +313,7 @@ interface DataPool<T> {
                 directors = emptyList(),
                 description = "",
                 screeningFrom = Date(),
-                ageRestrictionUrl = "",
-                rating = 0,
-                linkImdb = null,
-                linkRottenTomatoes = null,
-                linkCsfd = null
+                ageRestrictionUrl = ""
             )
         }.map(modifier)
 
