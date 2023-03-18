@@ -1,5 +1,7 @@
 package movie.core
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.MovieDetailFromDatabase
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
@@ -11,12 +13,15 @@ class EventDetailFeatureDatabase(
     private val media: MovieMediaDao
 ) : EventDetailFeature {
 
-    override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        val output = MovieDetailFromDatabase(
-            detail.select(movie.id),
-            media.select(movie.id)
-        )
-        result(Result.success(output))
+    override suspend fun get(movie: Movie): Result<MovieDetail> = kotlin.runCatching {
+        coroutineScope {
+            val detail = async { detail.select(movie.id) }
+            val media = async { media.select(movie.id) }
+            MovieDetailFromDatabase(
+                detail.await(),
+                media.await()
+            )
+        }
     }
 
 }

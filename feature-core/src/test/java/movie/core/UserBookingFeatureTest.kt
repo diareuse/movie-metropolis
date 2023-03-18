@@ -16,8 +16,6 @@ import movie.core.nwk.UserService
 import movie.core.nwk.model.BookingResponse
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
-import movie.core.util.callback
-import movie.core.util.thenBlocking
 import movie.core.util.wheneverBlocking
 import movie.wear.WearService
 import org.junit.Before
@@ -216,15 +214,12 @@ class UserBookingFeatureTest {
     }
 
     private fun detail_responds_success() {
-        wheneverBlocking { detail.get(any(), any()) }.thenBlocking {
-            callback(1) {
-                Result.success(mock<MovieDetail> {
-                    on { id }.thenReturn("")
-                    on { duration }.thenReturn(2.hours)
-                    on { name }.thenReturn("")
-                })
-            }
+        val movie = mock<MovieDetail> {
+            on { id }.thenReturn("")
+            on { duration }.thenReturn(2.hours)
+            on { name }.thenReturn("")
         }
+        wheneverBlocking { detail.get(any()) }.thenReturn(Result.success(movie))
     }
 
     private fun cinema_responds_success() {

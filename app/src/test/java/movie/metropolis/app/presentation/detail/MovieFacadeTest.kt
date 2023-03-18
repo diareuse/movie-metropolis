@@ -216,11 +216,8 @@ class MovieFacadeTest : FeatureTest() {
     private suspend fun movie_responds_success(
         modifier: KStubbing<MovieDetail>.(MovieDetail) -> Unit = {}
     ) {
-        whenever(detail.get(any(), any())).thenBlocking {
-            callback(1) {
-                Result.success(mock(stubbing = modifier))
-            }
-        }
+        val data = mock(stubbing = modifier)
+        whenever(detail.get(any())).thenReturn(Result.success(data))
     }
 
     private suspend fun cinema_responds_cinema(modifier: KStubbing<Cinema>.(Cinema) -> Unit = {}): Cinema {

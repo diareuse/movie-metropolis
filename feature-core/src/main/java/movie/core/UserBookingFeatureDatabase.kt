@@ -32,10 +32,8 @@ class UserBookingFeatureDatabase(
         }
         callback(Result.success(bookings))
         callback.parallelizeContinuous(this, bookings) { booking, callback ->
-            movie.get(booking.movie) { result ->
-                result.onSuccess { movie ->
-                    callback(booking.withDetail(movie))
-                }
+            movie.get(booking.movie).onSuccess { movie ->
+                callback(booking.withDetail(movie))
             }
         }
     }

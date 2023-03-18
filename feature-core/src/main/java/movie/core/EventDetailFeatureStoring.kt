@@ -1,5 +1,7 @@
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import movie.core.adapter.asStored
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
@@ -11,13 +13,16 @@ class EventDetailFeatureStoring(
     private val origin: EventDetailFeature,
     private val movie: MovieDao,
     private val detail: MovieDetailDao,
-    private val media: MovieMediaDao
+    private val media: MovieMediaDao,
+    private val scope: CoroutineScope
 ) : EventDetailFeature {
 
-    override suspend fun get(movie: Movie, result: ResultCallback<MovieDetail>) {
-        origin.get(movie, result.then {
-            store(it)
-        })
+    override suspend fun get(movie: Movie): Result<MovieDetail> {
+        return origin.get(movie).onSuccess {
+            scope.launch {
+                store(it)
+            }
+        }
     }
 
     private suspend fun store(model: MovieDetail) {

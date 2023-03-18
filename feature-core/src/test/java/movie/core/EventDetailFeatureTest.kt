@@ -2,6 +2,7 @@
 
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.MovieDao
@@ -9,23 +10,23 @@ import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
 import movie.core.di.EventFeatureModule
 import movie.core.model.Movie
-import movie.core.model.MovieDetail
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.MovieDetailResponse
 import movie.core.nwk.model.MovieDetailsResponse
+import movie.core.util.awaitChildJobCompletion
 import movie.core.util.wheneverBlocking
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 
 class EventDetailFeatureTest {
 
     private lateinit var item: Movie
-    private lateinit var feature: EventDetailFeature
+    private lateinit var feature: (CoroutineScope) -> EventDetailFeature
     private lateinit var media: MovieMediaDao
     private lateinit var detail: MovieDetailDao
     private lateinit var movie: MovieDao
@@ -37,8 +38,10 @@ class EventDetailFeatureTest {
         detail = mock {}
         movie = mock {}
         service = mock {}
-        feature = EventFeatureModule()
-            .detail(service, movie, detail, media)
+        feature = { scope ->
+            EventFeatureModule()
+                .detail(service, movie, detail, media, scope)
+        }
         item = mock {
             on { id }.thenReturn("")
         }
@@ -47,17 +50,15 @@ class EventDetailFeatureTest {
     @Test
     fun get_returns_fromNetwork() = runTest {
         service_responds_success()
-        val outputs = feature.get(item)
-        for (output in outputs)
-            output.getOrThrow()
+        val output = feature(this).get(item)
+        output.getOrThrow()
     }
 
     @Test
     fun get_returns_fromDatabase() = runTest {
         database_responds_success()
-        val outputs = feature.get(item)
-        for (output in outputs)
-            output.getOrThrow()
+        val output = feature(this).get(item)
+        output.getOrThrow()
     }
 
     /*@Test // fixme move to presentation
@@ -74,10 +75,11 @@ class EventDetailFeatureTest {
     @Test
     fun get_stores() = runTest {
         val testData = service_responds_success()
-        feature.get(item)
-        verify(movie, atMost(1)).insertOrUpdate(any())
-        verify(detail, atMost(1)).insertOrUpdate(any())
-        verify(media, atMost(testData.media.size)).insertOrUpdate(any())
+        feature(this).get(item)
+        awaitChildJobCompletion()
+        verify(movie, times(1)).insertOrUpdate(any())
+        verify(detail, times(1)).insertOrUpdate(any())
+        verify(media, times(testData.media.size)).insertOrUpdate(any())
     }
 
     /*@Test // fixme move to presentation test
@@ -143,14 +145,6 @@ class EventDetailFeatureTest {
         wheneverBlocking { service.getDetail(any()) }
             .thenReturn(Result.success(BodyResponse(MovieDetailsResponse(data))))
         return data
-    }
-
-    private suspend fun EventDetailFeature.get(movie: Movie): List<Result<MovieDetail>> {
-        val outputs = mutableListOf<Result<MovieDetail>>()
-        get(movie) {
-            outputs += it
-        }
-        return outputs
     }
 
 }

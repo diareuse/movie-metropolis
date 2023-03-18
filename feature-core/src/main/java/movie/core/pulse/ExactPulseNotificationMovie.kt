@@ -10,7 +10,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.Data
 import movie.core.EventDetailFeature
-import movie.core.EventDetailFeature.Companion.get
 import movie.core.FavoriteFeature
 import movie.core.R
 import movie.core.adapter.MovieFromId
