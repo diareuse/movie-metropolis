@@ -10,6 +10,11 @@ fun <T> List<T>.requireNotEmpty() = apply {
     require(isNotEmpty()) { "List was empty" }
 }
 
+@JvmName("requireSequenceNotEmpty")
+fun <T> Sequence<T>.requireNotEmpty() = apply {
+    require(firstOrNull() != null) { "List was empty" }
+}
+
 @JvmName("requireIterableNotEmpty")
 fun <T> Result<Iterable<T>>.requireNotEmpty() = mapCatching {
     it.requireNotEmpty()
@@ -20,7 +25,7 @@ fun <T> Iterable<T>.requireNotEmpty() = apply {
     @Suppress("ReplaceSizeZeroCheckWithIsEmpty")
     val isEmpty = when (this) {
         is List<*> -> isEmpty()
-        else -> count() <= 0
+        else -> firstOrNull() != null
     }
     require(!isEmpty) { "List was empty" }
 }
