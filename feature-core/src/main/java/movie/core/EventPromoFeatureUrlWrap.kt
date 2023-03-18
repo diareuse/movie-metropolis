@@ -10,10 +10,10 @@ class EventPromoFeatureUrlWrap(
     private val provider: EndpointProvider
 ) : EventPromoFeature {
 
-    override suspend fun get(movie: Movie, callback: ResultCallback<MoviePromoPoster>) {
-        origin.get(movie, callback.map {
+    override suspend fun get(movie: Movie): Result<MoviePromoPoster> {
+        return origin.get(movie).map {
             MoviePromoPosterWithUrl(it, provider)
-        })
+        }
     }
 
 }

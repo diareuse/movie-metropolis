@@ -9,9 +9,9 @@ class EventPromoFeatureDatabase(
     private val dao: MoviePromoDao
 ) : EventPromoFeature {
 
-    override suspend fun get(movie: Movie, callback: ResultCallback<MoviePromoPoster>) {
-        val stored = dao.select(movie.id).let(::requireNotNull)
-        callback(Result.success(stored.let(::MoviePromoPosterFromDatabase)))
-    }
+    override suspend fun get(movie: Movie): Result<MoviePromoPoster> = dao
+        .runCatching { select(movie.id) }
+        .mapCatching(::requireNotNull)
+        .map(::MoviePromoPosterFromDatabase)
 
 }

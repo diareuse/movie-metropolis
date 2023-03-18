@@ -1,5 +1,7 @@
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import movie.core.adapter.MoviePromoPosterFromDatabase
 import movie.core.db.dao.MoviePromoDao
 import movie.core.db.model.MoviePromoStored
@@ -9,16 +11,21 @@ import movie.core.nwk.CinemaService
 
 class EventPromoFeatureNetworkAndUpdate(
     private val service: CinemaService,
-    private val dao: MoviePromoDao
+    private val dao: MoviePromoDao,
+    private val scope: CoroutineScope
 ) : EventPromoFeature {
 
-    override suspend fun get(movie: Movie, callback: ResultCallback<MoviePromoPoster>) {
-        val items = service.getPromoCards().getOrThrow().results
-            .map { MoviePromoStored(it.id, it.imageId) }
-        val entry = items.first { it.movie == movie.id }
-        callback(Result.success(MoviePromoPosterFromDatabase(entry.url)))
-        for (item in items)
-            dao.insertOrUpdate(item)
+    override suspend fun get(movie: Movie): Result<MoviePromoPoster> {
+        return service.getPromoCards()
+            .map { it.results.map { MoviePromoStored(it.id, it.imageId) } }
+            .onSuccess {
+                scope.launch {
+                    for (item in it)
+                        dao.insertOrUpdate(item)
+                }
+            }
+            .mapCatching { it.first { it.movie == movie.id }.url }
+            .map(::MoviePromoPosterFromDatabase)
     }
 
 }
