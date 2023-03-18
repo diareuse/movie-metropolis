@@ -44,7 +44,6 @@ class MovieFacadeFilterable(
         listenable -= listener
     }
 
-
     override suspend fun getShowings(
         date: Date,
         latitude: Double,
@@ -53,9 +52,11 @@ class MovieFacadeFilterable(
     ) = origin.getShowings(date, latitude, longitude) { result ->
         val output = result.onSuccess {
             val availableTypes = it.asSequence().flatMap { it.availability.keys }
-            if (filterable.addFrom(availableTypes.asIterable())) {
+            val wasEmpty = filterable.getSelectedLanguages().isEmpty()
+            if (filterable.addFrom(availableTypes.asIterable()))
+                listenable.notify { onChanged() }
+            if (wasEmpty)
                 filterable.selectAll()
-            }
             if (mutex.isLocked) {
                 mutex.unlock()
             }

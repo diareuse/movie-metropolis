@@ -47,10 +47,11 @@ class CinemaFacadeFilterable(
         origin.getShowings(date) { result ->
             val output = result.onSuccess {
                 val availableTypes = it.asSequence().flatMap { it.availability.keys }
-                if (filterable.addFrom(availableTypes.asIterable())) {
-                    filterable.selectAll()
+                val wasEmpty = filterable.getSelectedLanguages().isEmpty()
+                if (filterable.addFrom(availableTypes.asIterable()))
                     listenable.notify { onChanged() }
-                }
+                if (wasEmpty)
+                    filterable.selectAll()
                 if (mutex.isLocked) {
                     mutex.unlock()
                 }
