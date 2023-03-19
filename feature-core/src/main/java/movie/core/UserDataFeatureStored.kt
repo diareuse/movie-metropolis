@@ -2,7 +2,6 @@ package movie.core
 
 import movie.core.adapter.UserFromStored
 import movie.core.model.FieldUpdate
-import movie.core.model.User
 import movie.core.preference.UserPreference
 
 class UserDataFeatureStored(
@@ -14,9 +13,8 @@ class UserDataFeatureStored(
         throw IllegalStateException("Not supported by offline storage")
     }
 
-    override suspend fun get(callback: ResultCallback<User>) {
-        val user = cinema.get(null).map { UserFromStored(preference, it.asIterable()) }
-        callback(user)
+    override suspend fun get() = cinema.get(null).mapCatching {
+        UserFromStored(preference, it.asIterable())
     }
 
 }

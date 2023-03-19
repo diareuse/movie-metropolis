@@ -5,5 +5,5 @@ import movie.core.model.User
 
 interface UserDataFeature {
     suspend fun update(data: Iterable<FieldUpdate>)
-    suspend fun get(callback: ResultCallback<User>)
+    suspend fun get(): Result<User>
 }

@@ -19,10 +19,14 @@ class UserDataFeatureChain(
             throw chainError
     }
 
-    override suspend fun get(callback: ResultCallback<User>) {
+    override suspend fun get(): Result<User> {
+        var user: Result<User> = Result.failure(IllegalStateException("Chain is empty"))
         for (link in links) {
-            link.get(callback)
+            val next = link.get()
+            if (next.isSuccess)
+                user = link.get()
         }
+        return user
     }
 
 }

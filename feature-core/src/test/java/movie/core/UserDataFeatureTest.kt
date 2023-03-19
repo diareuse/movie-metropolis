@@ -3,7 +3,6 @@ package movie.core
 import kotlinx.coroutines.test.runTest
 import movie.core.di.UserFeatureModule
 import movie.core.model.FieldUpdate
-import movie.core.model.User
 import movie.core.nwk.UserService
 import movie.core.nwk.model.CustomerResponse
 import movie.core.preference.UserPreference
@@ -21,7 +20,6 @@ import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
-import kotlin.test.assertTrue
 
 class UserDataFeatureTest {
 
@@ -107,18 +105,14 @@ class UserDataFeatureTest {
     fun get_returns_fromNetwork() = runTest {
         cinema_responds_success()
         service_responds_success()
-        assertTrue {
-            feature.get().any { it.isSuccess }
-        }
+        feature.get().getOrThrow()
     }
 
     @Test
     fun get_returns_fromStored() = runTest {
         cinema_responds_success()
         stored_responds_success()
-        assertTrue {
-            feature.get().any { it.isSuccess }
-        }
+        feature.get().getOrThrow()
     }
 
     // ---
@@ -148,12 +142,6 @@ class UserDataFeatureTest {
     private fun cinema_responds_success() {
         val data = DataPool.Cinemas.all().asSequence()
         wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.success(data))
-    }
-
-    private suspend fun UserDataFeature.get(): List<Result<User>> {
-        val results = mutableListOf<Result<User>>()
-        get { results += it }
-        return results
     }
 
 }

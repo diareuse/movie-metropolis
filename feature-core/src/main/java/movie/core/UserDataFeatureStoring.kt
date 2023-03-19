@@ -1,7 +1,6 @@
 package movie.core
 
 import movie.core.model.FieldUpdate
-import movie.core.model.User
 import movie.core.preference.UserPreference
 
 class UserDataFeatureStoring(
@@ -23,10 +22,8 @@ class UserDataFeatureStoring(
         }
     }
 
-    override suspend fun get(callback: ResultCallback<User>) {
-        origin.get(callback.then {
-            preference.set(it)
-        })
+    override suspend fun get() = origin.get().onSuccess {
+        preference.set(it)
     }
 
 }
