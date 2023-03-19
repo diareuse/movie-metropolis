@@ -2,13 +2,13 @@ package movie.core.adapter
 
 import movie.core.model.Booking
 import movie.core.model.Cinema
-import movie.core.model.MovieDetail
+import movie.core.model.Movie
 import movie.core.model.Ticket
 import java.util.Date
 
 data class BookingActiveFromTicket(
     private val ticket: Ticket,
-    override val movie: MovieDetail,
+    private val movie: Movie,
     override val cinema: Cinema
 ) : Booking.Active {
 
@@ -22,6 +22,8 @@ data class BookingActiveFromTicket(
         get() = Date()
     override val eventId: String
         get() = ticket.eventId
+    override val movieId: String
+        get() = ticket.movieId
     override val hall: String
         get() = ticket.venue
     override val seats: List<Booking.Active.Seat>

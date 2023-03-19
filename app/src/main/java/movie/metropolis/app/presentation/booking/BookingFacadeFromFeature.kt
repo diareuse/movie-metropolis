@@ -19,8 +19,10 @@ class BookingFacadeFromFeature(
 
     override suspend fun getBookings(
         callback: ResultCallback<List<BookingView>>
-    ) = booking.get { result ->
-        callback(result.map { it.map(::BookingViewFromFeature) })
+    ) = booking.get().map { result ->
+        result.map(::BookingViewFromFeature).toList()
+    }.let {
+        callback(it)
     }
 
     override fun refresh() {

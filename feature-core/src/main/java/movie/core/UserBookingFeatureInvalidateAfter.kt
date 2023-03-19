@@ -12,12 +12,12 @@ class UserBookingFeatureInvalidateAfter(
     private val duration: Duration
 ) : UserBookingFeature {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) {
+    override suspend fun get(): Result<Sequence<Booking>> {
         val lastRefresh = preference.booking
         if (!lastRefresh.isInThreshold(duration)) {
-            return callback(Result.failure(ExpiredException(lastRefresh, duration)))
+            return Result.failure(ExpiredException(lastRefresh, duration))
         }
-        origin.get(callback)
+        return origin.get()
     }
 
     override fun invalidate() {

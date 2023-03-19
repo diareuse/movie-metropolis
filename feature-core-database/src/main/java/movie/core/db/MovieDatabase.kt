@@ -2,10 +2,13 @@ package movie.core.db
 
 import androidx.room.AutoMigration
 import androidx.room.Database
+import androidx.room.DeleteTable
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import movie.core.db.MovieDatabase.Migration11to12
 import movie.core.db.converters.DateConverter
 import movie.core.db.converters.IterableStringConverter
 import movie.core.db.dao.BookingDao
@@ -64,7 +67,7 @@ import movie.core.db.model.ShowingStored
         AutoMigration(6, 7),
         AutoMigration(8, 9),
         AutoMigration(9, 10),
-        AutoMigration(11, 12),
+        AutoMigration(11, 12, Migration11to12::class),
     ]
 )
 @TypeConverters(
@@ -119,5 +122,12 @@ internal abstract class MovieDatabase : RoomDatabase() {
             database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_ratings_movie` ON `movie_ratings` (`movie`)")
         }
     }
+
+    @DeleteTable.Entries(
+        DeleteTable(
+            tableName = "movie_ratings"
+        )
+    )
+    class Migration11to12 : AutoMigrationSpec
 
 }

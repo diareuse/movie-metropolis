@@ -4,7 +4,6 @@ import kotlinx.coroutines.runBlocking
 import movie.core.di.TicketShareRegistryModule
 import movie.core.model.Booking
 import movie.core.model.Cinema
-import movie.core.model.MovieDetail
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
@@ -40,9 +39,6 @@ class TicketShareRegistryTest {
 
     companion object {
 
-        private val TestMovie = mock<MovieDetail> {
-            on { id }.thenReturn("id")
-        }
         private val TestCinema = mock<Cinema> {
             on { id }.thenReturn("id")
         }
@@ -50,7 +46,7 @@ class TicketShareRegistryTest {
             on { id }.thenReturn("id")
             on { startsAt }.thenReturn(Date(123))
             on { hall }.thenReturn("hall")
-            on { movie }.thenReturn(TestMovie)
+            on { movieId }.thenReturn("id")
             on { eventId }.thenReturn("eventId")
             on { cinema }.thenReturn(TestCinema)
             on { seats }.thenReturn(emptyList())

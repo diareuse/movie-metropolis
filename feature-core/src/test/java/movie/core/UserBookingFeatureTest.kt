@@ -2,11 +2,13 @@
 
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.calendar.CalendarWriter
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
+import movie.core.db.dao.MovieDao
 import movie.core.db.model.BookingStored
 import movie.core.di.UserFeatureModule
 import movie.core.model.Booking
@@ -16,16 +18,17 @@ import movie.core.nwk.UserService
 import movie.core.nwk.model.BookingResponse
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
+import movie.core.util.awaitChildJobCompletion
 import movie.core.util.wheneverBlocking
 import movie.wear.WearService
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.atLeast
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
@@ -35,7 +38,8 @@ import kotlin.time.Duration.Companion.hours
 
 class UserBookingFeatureTest {
 
-    private lateinit var feature: UserBookingFeature
+    private lateinit var feature: (CoroutineScope) -> UserBookingFeature
+    private lateinit var movie: MovieDao
     private lateinit var wear: WearService
     private lateinit var sync: SyncPreference
     private lateinit var store: TicketStore
@@ -64,23 +68,28 @@ class UserBookingFeatureTest {
         seats = mock {}
         booking = mock {}
         wear = mock {}
-        feature = UserFeatureModule().booking(
-            booking,
-            seats,
-            service,
-            cinema,
-            detail,
-            writer,
-            preference,
-            store,
-            sync,
-            wear
-        )
+        movie = mock {}
+        feature = { scope ->
+            UserFeatureModule().booking(
+                booking,
+                seats,
+                service,
+                cinema,
+                detail,
+                writer,
+                preference,
+                store,
+                sync,
+                wear,
+                scope,
+                movie
+            )
+        }
     }
 
     @Test
     fun invalidate_sets_preference() = runTest {
-        feature.invalidate()
+        feature(this).invalidate()
         verify(sync).booking = Date(0)
     }
 
@@ -89,9 +98,8 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val testData = service_responds_success()
-        val outputs = feature.get()
-        for (output in outputs)
-            assertEquals(testData.size, output.getOrThrow().size)
+        val output = feature(this).get()
+        assertEquals(testData.size, output.getOrThrow().count())
     }
 
     @Test
@@ -99,9 +107,8 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val testData = database_responds_success()
-        val outputs = feature.get()
-        for (output in outputs)
-            assertEquals(testData.size, output.getOrThrow().size)
+        val output = feature(this).get()
+        assertEquals(testData.size, output.getOrThrow().count())
     }
 
     @Test
@@ -109,10 +116,11 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val testData = service_responds_success()
-        feature.get()
-        verify(booking, atLeast(testData.size)).insertOrUpdate(any())
-        verify(seats, atLeastOnce()).insertOrUpdate(any())
-        verify(seats, atLeastOnce()).deleteFor(any())
+        feature(this).get()
+        awaitChildJobCompletion()
+        verify(booking, times(testData.size)).insertOrUpdate(any())
+        verify(seats, times(testData.count { !it.isExpired() })).insertOrUpdate(any())
+        verify(seats, times(testData.count { it.isExpired() })).deleteFor(any())
     }
 
     @Test
@@ -120,7 +128,7 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         service_responds_success()
-        feature.get()
+        feature(this).get()
         verify(sync, atLeastOnce()).booking = any()
     }
 
@@ -131,9 +139,9 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         service_responds_success()
-        val results = feature.get().map { it.getOrThrow() }
+        val result = feature(this).get().getOrThrow()
         assertTrue {
-            results.flatten().any { it.id == ticket.id }
+            result.any { it.id == ticket.id }
         }
     }
 
@@ -144,16 +152,16 @@ class UserBookingFeatureTest {
         service_responds_security()
         cinema_responds_success()
         detail_responds_success()
-        val results = feature.get().map { it.getOrThrow() }
+        val result = feature(this).get().getOrThrow()
         assertTrue {
-            results.flatten().any { it.id == ticket.id }
+            result.any { it.id == ticket.id }
         }
     }
 
     @Test
     fun get_defaults_toNetwork_whenInvalidated() = runTest {
         sync_responds_invalid()
-        feature.get()
+        feature(this).get()
         verify(service).getBookings()
     }
 
@@ -162,10 +170,9 @@ class UserBookingFeatureTest {
         service_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        for (output in feature.get()) {
-            assertTrue(output.getOrThrow().any { it is Booking.Expired })
-            assertTrue(output.getOrThrow().any { it is Booking.Active })
-        }
+        val output = feature(this).get()
+        assertTrue(output.getOrThrow().any { it is Booking.Expired })
+        assertTrue(output.getOrThrow().any { it is Booking.Active })
     }
 
     @Test
@@ -173,10 +180,10 @@ class UserBookingFeatureTest {
         database_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        for (output in feature.get()) {
-            assertTrue(output.getOrThrow().any { it is Booking.Expired })
-            assertTrue(output.getOrThrow().any { it is Booking.Active })
-        }
+        val output = feature(this).get()
+        awaitChildJobCompletion()
+        assertTrue(output.getOrThrow().any { it is Booking.Expired })
+        assertTrue(output.getOrThrow().any { it is Booking.Active })
     }
 
     @Test
@@ -184,8 +191,9 @@ class UserBookingFeatureTest {
         database_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        feature.get()
-        verify(wear, atLeastOnce()).send(eq("/bookings"), any())
+        feature(this).get()
+        awaitChildJobCompletion()
+        verify(wear).send(eq("/bookings"), any())
     }
 
     @Test
@@ -193,8 +201,9 @@ class UserBookingFeatureTest {
         service_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        feature.get()
-        verify(wear, atLeastOnce()).send(eq("/bookings"), any())
+        feature(this).get()
+        awaitChildJobCompletion()
+        verify(wear).send(eq("/bookings"), any())
     }
 
     @Test
@@ -203,8 +212,9 @@ class UserBookingFeatureTest {
         service_responds_empty()
         cinema_responds_success()
         detail_responds_success()
-        feature.get().last().getOrThrow()
-        verify(wear, atLeastOnce()).remove("/bookings")
+        feature(this).get().getOrThrow()
+        awaitChildJobCompletion()
+        verify(wear).remove("/bookings")
     }
 
     // ---
@@ -255,11 +265,4 @@ class UserBookingFeatureTest {
         wheneverBlocking { booking.selectAll() }.thenReturn(emptyList())
         wheneverBlocking { seats.select(any()) }.thenReturn(emptyList())
     }
-
-    private suspend fun UserBookingFeature.get(): List<Result<List<Booking>>> {
-        val outputs = mutableListOf<Result<List<Booking>>>()
-        get { outputs += it }
-        return outputs
-    }
-
 }

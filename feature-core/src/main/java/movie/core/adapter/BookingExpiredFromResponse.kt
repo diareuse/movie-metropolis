@@ -2,22 +2,19 @@ package movie.core.adapter
 
 import movie.core.model.Booking
 import movie.core.model.Cinema
-import movie.core.model.MovieDetail
+import movie.core.nwk.model.BookingResponse
 import java.util.Date
 
 internal data class BookingExpiredFromResponse(
-    private val response: movie.core.nwk.model.BookingResponse,
-    override val movie: MovieDetail,
+    private val response: BookingResponse,
     override val cinema: Cinema
 ) : Booking.Expired {
 
     constructor(
-        response: movie.core.nwk.model.BookingResponse,
-        movie: MovieDetail,
-        cinemas: List<Cinema>
+        response: BookingResponse,
+        cinemas: Iterable<Cinema>
     ) : this(
         response = response,
-        movie = movie,
         cinema = cinemas.first { it.id == response.cinemaId }
     )
 
@@ -31,5 +28,7 @@ internal data class BookingExpiredFromResponse(
         get() = response.paidAt
     override val eventId: String
         get() = response.eventId
+    override val movieId: String
+        get() = response.movieId
 
 }

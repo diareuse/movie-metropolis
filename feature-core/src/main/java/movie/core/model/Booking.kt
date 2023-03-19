@@ -8,7 +8,7 @@ sealed interface Booking {
     val name: String
     val startsAt: Date
     val paidAt: Date
-    val movie: MovieDetail
+    val movieId: String
     val eventId: String
     val cinema: Cinema
 
