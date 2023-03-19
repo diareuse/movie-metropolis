@@ -3,7 +3,6 @@ package movie.metropolis.app.presentation.listing
 import movie.core.EventPreviewFeature
 import movie.core.EventPromoFeature
 import movie.core.FavoriteFeature
-import movie.core.ResultCallback
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.Listenable
 import movie.metropolis.app.presentation.OnChangedListener
@@ -16,15 +15,12 @@ class ListingFacadeFromFeature(
 
     private val listenable = Listenable<OnChangedListener>()
 
-    override suspend fun get(callback: ResultCallback<ListingFacade.Action>) {
-        val result = preview.get().map {
-            var out: ListingFacade.Action
-            out = ListingFacadeActionFromData(it.asIterable())
-            out = ListingFacadeActionFavorite(out, favorite)
-            out = ListingFacadeActionWithPoster(out, promo)
-            out
-        }
-        callback(result)
+    override suspend fun get(): Result<ListingFacade.Action> = preview.get().map {
+        var out: ListingFacade.Action
+        out = ListingFacadeActionFromData(it.asIterable())
+        out = ListingFacadeActionFavorite(out, favorite)
+        out = ListingFacadeActionWithPoster(out, promo)
+        out
     }
 
     override suspend fun toggle(item: MovieView) {
