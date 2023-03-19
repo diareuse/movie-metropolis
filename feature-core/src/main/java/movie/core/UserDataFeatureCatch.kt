@@ -1,7 +1,6 @@
 package movie.core
 
 import movie.core.model.FieldUpdate
-import movie.core.model.User
 import movie.log.logSevere
 
 class UserDataFeatureCatch(
@@ -12,10 +11,6 @@ class UserDataFeatureCatch(
         origin.runCatching { update(data) }.logSevere()
     }
 
-    override suspend fun get(callback: ResultCallback<User>) {
-        runCatchingResult(callback) {
-            origin.get(it)
-        }
-    }
+    override suspend fun get() = wrap { origin.get() }
 
 }

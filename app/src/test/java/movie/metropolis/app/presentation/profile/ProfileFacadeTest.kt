@@ -11,9 +11,7 @@ import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.presentation.FeatureTest
-import movie.metropolis.app.util.callback
 import movie.metropolis.app.util.nextString
-import movie.metropolis.app.util.thenBlocking
 import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -148,19 +146,11 @@ class ProfileFacadeTest : FeatureTest() {
     }
 
     private fun data_responds_success(user: User = mock()) {
-        wheneverBlocking { data.get(any()) }.thenBlocking {
-            callback<User>(0) {
-                Result.success(user)
-            }
-        }
+        wheneverBlocking { data.get() }.thenReturn(Result.success(user))
     }
 
     private fun data_responds_failure() {
-        wheneverBlocking { data.get(any()) }.thenBlocking {
-            callback<User>(0) {
-                Result.failure(RuntimeException())
-            }
-        }
+        wheneverBlocking { data.get() }.thenReturn(Result.failure(RuntimeException()))
     }
 
     private fun cinema_responds_success() {

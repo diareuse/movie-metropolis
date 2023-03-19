@@ -89,7 +89,7 @@ class MovieViewModel private constructor(
         }
         viewModelScope.launch {
             var favorite: AndroidLocation? = null
-            user.get { favorite = it.getOrNull()?.favorite?.location?.toPlatform() }
+            user.get()
             location.compareAndSet(null, favorite)
         }
     }

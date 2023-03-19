@@ -5,8 +5,6 @@ import movie.core.model.FieldUpdate
 import movie.core.model.User
 import movie.core.nwk.UserService
 import movie.core.nwk.model.CustomerDataRequest
-import movie.core.nwk.model.CustomerPointsResponse
-import java.util.Date
 
 class UserDataFeatureNetwork(
     private val service: UserService,
@@ -21,18 +19,15 @@ class UserDataFeatureNetwork(
         service.updateUser(request)
     }
 
-    override suspend fun get(callback: ResultCallback<User>) {
+    override suspend fun get(): Result<User> = kotlin.runCatching {
         val user = service.getUser().getOrThrow()
         val cinema = cinema.get(null).getOrThrow()
-        var output = UserFromRemote(
+        val points = service.getPoints().getOrThrow()
+        UserFromRemote(
             customer = user,
-            customerPoints = CustomerPointsResponse(0.0, 0.0, Date()),
+            customerPoints = points,
             favorite = cinema.firstOrNull { it.id == user.favoriteCinema }
         )
-        callback(Result.success(output))
-        val points = service.getPoints().getOrThrow()
-        output = output.copy(customerPoints = points)
-        callback(Result.success(output))
     }
 
     // ---
