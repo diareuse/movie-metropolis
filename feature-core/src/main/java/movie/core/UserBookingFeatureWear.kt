@@ -1,6 +1,8 @@
 package movie.core
 
 import com.google.android.gms.wearable.DataMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import movie.core.model.Booking
 import movie.wear.WearService
 
@@ -29,17 +31,18 @@ import movie.wear.WearService
  * */
 class UserBookingFeatureWear(
     private val origin: UserBookingFeature,
-    private val wear: WearService
+    private val wear: WearService,
+    private val scope: CoroutineScope
 ) : UserBookingFeature by origin {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) {
-        origin.get(callback.then {
-            val active = it.filterIsInstance<Booking.Active>()
+    override suspend fun get() = origin.get().onSuccess {
+        scope.launch {
+            val active = it.filterIsInstance<Booking.Active>().toList()
             when {
                 active.isEmpty() -> wear.remove("/bookings")
                 else -> wear.send("/bookings", active.asDataMap())
             }
-        })
+        }
     }
 
     private fun List<Booking.Active>.asDataMap() = DataMap().also { map ->
@@ -52,7 +55,7 @@ class UserBookingFeatureWear(
         map.putLong("starts_at", startsAt.time)
         map.putString("hall", hall)
         map.putDataMapArrayList("seats", seats.asDataMap())
-        map.putString("name", movie.name)
+        map.putString("name", name)
     }
 
     private fun List<Booking.Active.Seat>.asDataMap() = map { it.asDataMap() }

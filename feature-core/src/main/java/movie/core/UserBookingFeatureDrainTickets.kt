@@ -1,9 +1,7 @@
 package movie.core
 
-import kotlinx.coroutines.coroutineScope
 import movie.core.adapter.BookingActiveFromTicket
 import movie.core.adapter.MovieFromId
-import movie.core.model.Booking
 
 class UserBookingFeatureDrainTickets(
     private val origin: UserBookingFeature,
@@ -12,10 +10,12 @@ class UserBookingFeatureDrainTickets(
     private val store: TicketStore
 ) : UserBookingFeature by origin {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) = coroutineScope {
-        origin.get(callback.thenMap(this) {
-            it + getStored()
-        })
+    override suspend fun get() = origin.get().map {
+        val stored = getStored()
+        sequence {
+            yieldAll(it)
+            yieldAll(stored)
+        }
     }
 
     private suspend fun getStored() = store.getAll().mapNotNull { ticket ->

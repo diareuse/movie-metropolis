@@ -3,12 +3,10 @@ package movie.core.adapter
 import movie.core.db.model.BookingStored
 import movie.core.model.Booking
 import movie.core.model.Cinema
-import movie.core.model.MovieDetail
 import java.util.Date
 
 data class BookingExpiredFromDatabase(
     private val bookingStored: BookingStored,
-    override val movie: MovieDetail,
     override val cinema: Cinema
 ) : Booking.Expired {
     override val id: String
@@ -21,4 +19,6 @@ data class BookingExpiredFromDatabase(
         get() = bookingStored.paidAt
     override val eventId: String
         get() = bookingStored.eventId
+    override val movieId: String
+        get() = bookingStored.movieId
 }

@@ -453,7 +453,7 @@ interface DataPool<T> {
             this += BookingResponse(
                 id = "1",
                 name = "",
-                startsAt = Date(System.currentTimeMillis() - 2.hours.inWholeMilliseconds),
+                startsAt = Date(System.currentTimeMillis() - 4.hours.inWholeMilliseconds),
                 paidAt = Date(),
                 isPaid = true,
                 movieId = "",
@@ -503,7 +503,7 @@ interface DataPool<T> {
             this += BookingResponse(
                 id = "6",
                 name = "",
-                startsAt = Date(System.currentTimeMillis() + 3.hours.inWholeMilliseconds),
+                startsAt = Date(System.currentTimeMillis() + 4.hours.inWholeMilliseconds),
                 paidAt = Date(),
                 isPaid = true,
                 movieId = "",
@@ -531,7 +531,7 @@ interface DataPool<T> {
             this += BookingStored(
                 id = "",
                 name = "",
-                startsAt = Date(System.currentTimeMillis() - 2.hours.inWholeMilliseconds),
+                startsAt = Date(System.currentTimeMillis() - 4.hours.inWholeMilliseconds),
                 paidAt = Date(),
                 movieId = "",
                 eventId = "",
@@ -581,7 +581,7 @@ interface DataPool<T> {
             this += BookingStored(
                 id = "",
                 name = "",
-                startsAt = Date(System.currentTimeMillis() + 3.hours.inWholeMilliseconds),
+                startsAt = Date(System.currentTimeMillis() + 4.hours.inWholeMilliseconds),
                 paidAt = Date(),
                 movieId = "",
                 eventId = "",

@@ -21,6 +21,10 @@ class MovieDaoPerformance(
         origin.update(model)
     }
 
+    override suspend fun getDuration(id: String) = tracer.trace("$Tag.getDuration") {
+        origin.getDuration(id)
+    }
+
     companion object {
         private const val Tag = "movie"
     }

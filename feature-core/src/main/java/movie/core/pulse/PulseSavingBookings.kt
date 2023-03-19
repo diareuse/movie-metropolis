@@ -8,10 +8,8 @@ class PulseSavingBookings(
     private val user: UserBookingFeature
 ) : Pulse {
 
-    override suspend fun execute(): Result<List<Booking>> {
-        var result: Result<List<Booking>> = Result.failure(IndexOutOfBoundsException())
-        user.get { result = it }
-        return result
+    override suspend fun execute(): Result<Sequence<Booking>> {
+        return user.get()
     }
 
 }

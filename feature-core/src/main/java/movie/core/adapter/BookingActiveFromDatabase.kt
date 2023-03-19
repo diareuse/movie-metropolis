@@ -4,12 +4,10 @@ import movie.core.db.model.BookingSeatsView
 import movie.core.db.model.BookingStored
 import movie.core.model.Booking
 import movie.core.model.Cinema
-import movie.core.model.MovieDetail
 import java.util.Date
 
 data class BookingActiveFromDatabase(
     private val bookingStored: BookingStored,
-    override val movie: MovieDetail,
     override val cinema: Cinema,
     private val seatsStored: List<BookingSeatsView>
 ) : Booking.Active {
@@ -23,6 +21,8 @@ data class BookingActiveFromDatabase(
         get() = bookingStored.paidAt
     override val eventId: String
         get() = bookingStored.eventId
+    override val movieId: String
+        get() = bookingStored.movieId
     override val hall: String
         get() = bookingStored.hall.orEmpty()
     override val seats: List<Booking.Active.Seat>

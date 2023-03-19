@@ -11,8 +11,6 @@ import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
 import movie.metropolis.app.presentation.FeatureTest
-import movie.metropolis.app.util.callback
-import movie.metropolis.app.util.thenBlocking
 import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
 import org.mockito.kotlin.any
@@ -83,15 +81,12 @@ class BookingFacadeTest : FeatureTest() {
     }
 
     private fun booking_responds_failure(throwable: Throwable = SecurityException()) {
-        wheneverBlocking { booking.get(any()) }.thenThrow(throwable)
+        wheneverBlocking { booking.get() }.thenThrow(throwable)
     }
 
     private fun booking_responds_success() {
-        wheneverBlocking { booking.get(any()) }.thenBlocking {
-            callback(0) {
-                Result.success(listOf(mock<Booking.Active>(), mock<Booking.Expired>()))
-            }
-        }
+        val data = Result.success(sequenceOf(mock<Booking.Active>(), mock<Booking.Expired>()))
+        wheneverBlocking { booking.get() }.thenReturn(data)
     }
 
 }

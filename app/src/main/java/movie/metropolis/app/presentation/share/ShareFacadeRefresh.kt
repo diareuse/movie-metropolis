@@ -14,7 +14,7 @@ class ShareFacadeRefresh(
             coroutineScope {
                 launch {
                     user.invalidate()
-                    user.get {}
+                    user.get()
                 }
             }
         }

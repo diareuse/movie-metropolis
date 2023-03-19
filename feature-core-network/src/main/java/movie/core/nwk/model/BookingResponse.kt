@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 import movie.core.nwk.serializer.TimestampSerializer
 import java.util.Date
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 
 @Serializable
 data class BookingResponse(
@@ -20,7 +21,7 @@ data class BookingResponse(
     @SerialName("eventId") val eventId: String
 ) {
 
-    fun isExpired(duration: Duration) =
+    fun isExpired(duration: Duration = 3.hours) =
         Date().after(Date(startsAt.time + duration.inWholeMilliseconds))
 
 }

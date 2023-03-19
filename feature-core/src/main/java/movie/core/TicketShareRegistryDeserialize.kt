@@ -24,7 +24,7 @@ class TicketShareRegistryDeserialize(
         id = id,
         startsAt = startsAt,
         venue = hall,
-        movieId = movie.id,
+        movieId = movieId,
         eventId = eventId,
         cinemaId = cinema.id,
         seats = seats.map {

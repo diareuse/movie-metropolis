@@ -5,7 +5,6 @@ import movie.core.TicketShareRegistry
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.presentation.FeatureTest
 import org.junit.Test
-import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import java.nio.IntBuffer
@@ -42,7 +41,7 @@ class ShareFacadeTest : FeatureTest() {
     @Test
     fun putTicket_updates_tickets() = runTest {
         facade.putTicket(TicketRepresentation.Text("foo"))
-        verify(booking).get(any())
+        verify(booking).get()
     }
 
 }

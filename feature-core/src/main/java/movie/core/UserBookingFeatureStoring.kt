@@ -1,5 +1,7 @@
 package movie.core
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import movie.core.adapter.asStored
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
@@ -8,20 +10,25 @@ import movie.core.model.Booking
 class UserBookingFeatureStoring(
     private val origin: UserBookingFeature,
     private val bookingDao: BookingDao,
-    private val bookingSeatsDao: BookingSeatsDao
+    private val bookingSeatsDao: BookingSeatsDao,
+    private val scope: CoroutineScope
 ) : UserBookingFeature by origin {
 
-    override suspend fun get(callback: ResultCallback<List<Booking>>) {
-        origin.get(callback.then {
-            for (booking in it) {
-                bookingDao.insertOrUpdate(booking.asStored())
-                when (booking) {
-                    is Booking.Expired -> bookingSeatsDao.deleteFor(booking.id)
-                    is Booking.Active -> for (seat in booking.seats)
-                        bookingSeatsDao.insertOrUpdate(seat.asStored(booking))
-                }
+    override suspend fun get() = origin.get().onSuccess {
+        scope.launch {
+            store(it)
+        }
+    }
+
+    private suspend fun store(bookings: Sequence<Booking>) {
+        for (booking in bookings) {
+            bookingDao.insertOrUpdate(booking.asStored())
+            when (booking) {
+                is Booking.Expired -> bookingSeatsDao.deleteFor(booking.id)
+                is Booking.Active -> for (seat in booking.seats)
+                    bookingSeatsDao.insertOrUpdate(seat.asStored(booking))
             }
-        })
+        }
     }
 
 }

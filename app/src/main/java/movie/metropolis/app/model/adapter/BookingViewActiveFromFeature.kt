@@ -23,7 +23,7 @@ data class BookingViewActiveFromFeature(
     override val time: String
         get() = timeFormat.format(booking.startsAt)
     override val movie: MovieDetailView
-        get() = MovieDetailViewFromFeature(booking.movie)
+        get() = TODO("Add loading movie detail")//MovieDetailViewFromFeature(booking.movie)
     override val isPaid: Boolean
         get() = booking.paidAt.before(Date())
     override val cinema: CinemaView
