@@ -17,7 +17,7 @@ import kotlin.time.Duration.Companion.seconds
 
 interface ListingFacade {
 
-    suspend fun get(callback: ResultCallback<Action>)
+    suspend fun get(): Result<Action>
     suspend fun toggle(item: MovieView)
 
     fun addListener(listener: OnChangedListener): OnChangedListener
@@ -51,13 +51,9 @@ interface ListingFacade {
 
         val ListingFacade.actionsFlow
             get() = channelFlow {
-                get {
-                    send(it.asLoadable())
-                }
+                send(get().asLoadable())
                 toggleFlow.collect {
-                    get {
-                        send(it.asLoadable())
-                    }
+                    send(get().asLoadable())
                 }
             }
 

@@ -53,11 +53,11 @@ abstract class ListingFacadeTest : FeatureTest() {
     fun promotions_returns_setOfAtMost3() = runTest {
         val count = nextInt(0, 100)
         preview_responds_success(count)
-        for (action in facade.get())
-            for (output in action.getOrThrow().promotions())
-                assertTrue {
-                    output.getOrThrow().size in 0..3
-                }
+        val action = facade.get()
+        for (output in action.getOrThrow().promotions())
+            assertTrue {
+                output.getOrThrow().size in 0..3
+            }
     }
 
     @Test
@@ -66,12 +66,12 @@ abstract class ListingFacadeTest : FeatureTest() {
         preview_responds_success(count) {
             on { genres }.thenReturn(listOf("1", "2"))
         }
-        for (action in facade.get())
-            for (output in action.getOrThrow().groupUp())
-                assertContentEquals(
-                    setOf(Genre("1"), Genre("2")),
-                    output.getOrThrow().keys.asIterable()
-                )
+        val action = facade.get()
+        for (output in action.getOrThrow().groupUp())
+            assertContentEquals(
+                setOf(Genre("1"), Genre("2")),
+                output.getOrThrow().keys.asIterable()
+            )
     }
 
     @Test
@@ -79,7 +79,7 @@ abstract class ListingFacadeTest : FeatureTest() {
         preview_responds_success()
         val url = promo_responds_success().url
         val outputs = facade
-            .get().last().getOrThrow()
+            .get().getOrThrow()
             .promotions().last().getOrThrow()
         for (output in outputs)
             assertEquals(url, output.poster?.url)
@@ -101,7 +101,7 @@ abstract class ListingFacadeTest : FeatureTest() {
         preview_responds_success()
         promo_responds_success()
         val outputs = facade
-            .get().last().getOrThrow()
+            .get().getOrThrow()
             .promotions().last().getOrThrow()
         for (output in outputs)
             assertEquals(1.5f, output.poster?.aspectRatio)
@@ -110,10 +110,10 @@ abstract class ListingFacadeTest : FeatureTest() {
     @Test
     fun get_fails() = runTest {
         preview_responds_failure()
-        for (output in facade.get())
-            assertFails {
-                output.getOrThrow()
-            }
+        val output = facade.get()
+        assertFails {
+            output.getOrThrow()
+        }
     }
 
     @Test
@@ -121,7 +121,7 @@ abstract class ListingFacadeTest : FeatureTest() {
         preview_responds_success()
         val value = favorite_responds_success()
         val outputs = facade
-            .get().last().getOrThrow()
+            .get().getOrThrow()
             .promotions().last().getOrThrow()
         for (output in outputs)
             assertEquals(value, output.favorite)
@@ -132,12 +132,12 @@ abstract class ListingFacadeTest : FeatureTest() {
         preview_responds_success {
             on { genres }.thenReturn(emptyList())
         }
-        for (action in facade.get())
-            for (output in action.getOrThrow().groupUp())
-                assertContentEquals(
-                    setOf(Genre("other")),
-                    output.getOrThrow().keys.asIterable()
-                )
+        val action = facade.get()
+        for (output in action.getOrThrow().groupUp())
+            assertContentEquals(
+                setOf(Genre("other")),
+                output.getOrThrow().keys.asIterable()
+            )
     }
 
     @Test
@@ -175,7 +175,7 @@ abstract class ListingFacadeTest : FeatureTest() {
     fun promotions_return_noRegularPosters() = runTest {
         val testData = preview_responds_success()
         val outputs = facade
-            .get().last().getOrThrow()
+            .get().getOrThrow()
             .promotions().last().getOrThrow()
         for (output in outputs) {
             assertNull(output.poster?.url)
@@ -218,12 +218,6 @@ abstract class ListingFacadeTest : FeatureTest() {
 
     private fun preview_responds_failure() {
         wheneverBlocking { previewFork.get() }.thenReturn(Result.failure(RuntimeException()))
-    }
-
-    private suspend fun ListingFacade.get(): List<Result<ListingFacade.Action>> {
-        val outputs = mutableListOf<Result<ListingFacade.Action>>()
-        get { outputs += it }
-        return outputs
     }
 
     private suspend fun ListingFacade.Action.promotions(): List<Result<List<MovieView>>> {
