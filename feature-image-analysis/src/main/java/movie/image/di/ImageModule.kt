@@ -10,6 +10,7 @@ import movie.image.ImageAnalyzerDefault
 import movie.image.ImageAnalyzerFallback
 import movie.image.ImageAnalyzerNetwork
 import movie.image.ImageAnalyzerSaving
+import movie.image.ImageAnalyzerSerial
 import movie.image.database.AnalysisDao
 import movie.image.database.ColorDao
 import movie.image.database.ImageDao
@@ -24,13 +25,14 @@ internal class ImageModule {
         colorDao: ColorDao,
         analysisDao: AnalysisDao
     ): ImageAnalyzer {
-        var network: ImageAnalyzer
-        network = ImageAnalyzerNetwork()
-        network = ImageAnalyzerSaving(network, imageDao, colorDao)
+        var out: ImageAnalyzer
+        out = ImageAnalyzerNetwork()
+        out = ImageAnalyzerSaving(out, imageDao, colorDao)
+        out = ImageAnalyzerSerial(out)
 
         return ImageAnalyzerFallback(
             ImageAnalyzerDatabase(analysisDao),
-            network,
+            out,
             ImageAnalyzerDefault()
         )
     }

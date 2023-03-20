@@ -13,3 +13,4 @@ internal class ImageAnalyzerDatabase(
     )
 
 }
+
