@@ -1,6 +1,7 @@
 package movie.metropolis.app.presentation.listing
 
-import movie.core.ResultCallback
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import movie.core.model.MoviePreview
 import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
@@ -10,12 +11,12 @@ data class ListingFacadeActionFromData(
     val data: Iterable<MoviePreview>
 ) : ListingFacade.Action {
 
-    override suspend fun promotions(callback: ResultCallback<List<MovieView>>) {
-        val data = data.take(3).map { MovieViewFromFeature(it, false) }
-        callback(Result.success(data))
+    override val promotions: Flow<Result<List<MovieView>>> = flow {
+        val items = data.take(3).map { MovieViewFromFeature(it, false) }
+        emit(Result.success(items))
     }
 
-    override suspend fun groupUp(callback: ResultCallback<Map<Genre, List<MovieView>>>) {
+    override val groups: Flow<Result<Map<Genre, List<MovieView>>>> = flow {
         val groups = mutableMapOf<Genre, MutableList<MoviePreview>>()
         for (item in data) {
             var count = 0
@@ -29,7 +30,7 @@ data class ListingFacadeActionFromData(
         }
         val out = groups
             .mapValues { (_, values) -> values.map { MovieViewFromFeature(it, false) } }
-        callback(Result.success(out))
+        emit(Result.success(out))
     }
 
 }

@@ -15,13 +15,22 @@ import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.preference.EventPreference
+import movie.image.ImageAnalyzer
+import movie.image.Swatch
+import movie.image.SwatchColor.Companion.Black
 import movie.log.Logger
 import movie.log.PlatformLogger
+import movie.rating.RatingProvider
+import movie.rating.internal.ComposedRating
 import org.junit.Before
+import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 
 abstract class FeatureTest {
 
+    protected lateinit var rating: RatingProvider.Composed
+    protected lateinit var analyzer: ImageAnalyzer
     protected lateinit var promo: EventPromoFeature
     protected lateinit var favorite: FavoriteFeature
     protected lateinit var preview: EventPreviewFeature.Factory
@@ -41,7 +50,6 @@ abstract class FeatureTest {
     fun prepareInternal() {
         Logger.setLogger(PlatformLogger())
         prepareEvent()
-        prepareUser()
         prepare()
     }
 
@@ -61,16 +69,21 @@ abstract class FeatureTest {
         detail = mock()
         cinema = mock()
         prefs = mock()
-    }
-
-    private fun prepareUser() {
+        analyzer = mock {
+            onBlocking { getColors(any()) }.thenReturn(Swatch(Black, Black, Black))
+        }
+        rating = mock {
+            onBlocking { get(anyVararg()) }.thenReturn(ComposedRating.None)
+        }
         data = mock()
         credentials = mock()
         booking = mock()
         calendars = mock()
         setup = mock()
         favorite = mock()
-        promo = mock()
+        promo = mock {
+            onBlocking { get(any()) }.thenReturn(Result.failure(IllegalStateException()))
+        }
     }
 
 }

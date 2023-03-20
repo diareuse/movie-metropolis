@@ -3,20 +3,25 @@ package movie.metropolis.app.presentation.listing
 import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.test.runTest
 import movie.core.EventPreviewFeature
+import movie.core.model.MovieDetail
 import movie.core.model.MoviePreview
 import movie.core.model.MoviePromoPoster
+import movie.image.Swatch
+import movie.image.SwatchColor.Companion.White
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.util.wheneverBlocking
+import movie.rating.internal.ComposedRating
 import org.junit.Test
 import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
-import kotlin.random.Random.Default.nextBoolean
+import java.util.Date
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -28,20 +33,67 @@ import kotlin.test.assertTrue
 abstract class ListingFacadeTest : FeatureTest() {
 
     private lateinit var previewFork: EventPreviewFeature
-    private lateinit var facade: ListingFacade
+    lateinit var facade: ListingFacade
 
     abstract fun choose(factory: ListingFacade.Factory): ListingFacade
     abstract fun choose(factory: EventPreviewFeature.Factory): EventPreviewFeature
 
     override fun prepare() {
         wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(Result.success(false))
-        facade = FacadeModule().listing(preview, favorite, promo).run(::choose)
+        facade = FacadeModule()
+            .listing(preview, favorite, promo, analyzer, rating, detail)
+            .run(::choose)
         previewFork = choose(preview)
     }
 
     class Upcoming : ListingFacadeTest() {
+
         override fun choose(factory: ListingFacade.Factory) = factory.upcoming()
         override fun choose(factory: EventPreviewFeature.Factory) = factory.upcoming()
+
+        @Test
+        fun toggle_notifies() = runTest {
+            favorite_responds_success()
+            var notified = false
+            facade.addListener { notified = true }
+            facade.toggle(mock {
+                on { getBase() }.thenReturn(mock())
+            })
+            assertTrue(notified)
+        }
+
+        @Test
+        fun toggle_doesNotNotify_whenRemoved() = runTest {
+            favorite_responds_success()
+            var notified = false
+            val listener = facade.addListener { notified = true }
+            facade.removeListener(listener)
+            facade.toggle(mock {
+                on { getBase() }.thenReturn(mock())
+            })
+            assertFalse(notified)
+        }
+
+        @Test
+        fun toggle_calls_feature() = runTest {
+            facade.toggle(mock {
+                on { getBase() }.thenReturn(mock())
+            })
+            verify(favorite).toggle(any())
+        }
+
+        @Test
+        fun promotions_returns_favorite() = runTest {
+            preview_responds_success()
+            promo_responds_success()
+            val value = favorite_responds_success()
+            val outputs = facade
+                .get().getOrThrow()
+                .promotions().last().getOrThrow()
+            for (output in outputs)
+                assertEquals(value, output.favorite)
+        }
+
     }
 
     class Current : ListingFacadeTest() {
@@ -53,6 +105,7 @@ abstract class ListingFacadeTest : FeatureTest() {
     fun promotions_returns_setOfAtMost3() = runTest {
         val count = nextInt(0, 100)
         preview_responds_success(count)
+        promo_responds_success()
         val action = facade.get()
         for (output in action.getOrThrow().promotions())
             assertTrue {
@@ -63,6 +116,7 @@ abstract class ListingFacadeTest : FeatureTest() {
     @Test
     fun groupUp_returns_moviesInGenres() = runTest {
         val count = nextInt(0, 100)
+        detail_responds_success()
         preview_responds_success(count) {
             on { genres }.thenReturn(listOf("1", "2"))
         }
@@ -85,16 +139,17 @@ abstract class ListingFacadeTest : FeatureTest() {
             assertEquals(url, output.poster?.url)
     }
 
-    /*@Test // fixme this should take a color from analyzer
+    @Test
     fun promotions_returns_withPosterColors() = runTest {
         preview_responds_success()
-        val color = promo_responds_success().spotColor
+        val color = analyzer_responds_success()
+        promo_responds_success()
         val outputs = facade
-            .get().last().getOrThrow()
+            .get().getOrThrow()
             .promotions().last().getOrThrow()
         for (output in outputs)
             assertEquals(Color(color), output.poster?.spotColor)
-    }*/
+    }
 
     @Test
     fun promotions_returns_withPosterRatio() = runTest {
@@ -117,18 +172,8 @@ abstract class ListingFacadeTest : FeatureTest() {
     }
 
     @Test
-    fun promotions_returns_favorite() = runTest {
-        preview_responds_success()
-        val value = favorite_responds_success()
-        val outputs = facade
-            .get().getOrThrow()
-            .promotions().last().getOrThrow()
-        for (output in outputs)
-            assertEquals(value, output.favorite)
-    }
-
-    @Test
     fun groups_returns_defaultGroup() = runTest {
+        detail_responds_success()
         preview_responds_success {
             on { genres }.thenReturn(emptyList())
         }
@@ -138,37 +183,6 @@ abstract class ListingFacadeTest : FeatureTest() {
                 setOf(Genre("other")),
                 output.getOrThrow().keys.asIterable()
             )
-    }
-
-    @Test
-    fun toggle_notifies() = runTest {
-        favorite_responds_success()
-        var notified = false
-        facade.addListener { notified = true }
-        facade.toggle(mock {
-            on { getBase() }.thenReturn(mock())
-        })
-        assertTrue(notified)
-    }
-
-    @Test
-    fun toggle_doesNotNotify_whenRemoved() = runTest {
-        favorite_responds_success()
-        var notified = false
-        val listener = facade.addListener { notified = true }
-        facade.removeListener(listener)
-        facade.toggle(mock {
-            on { getBase() }.thenReturn(mock())
-        })
-        assertFalse(notified)
-    }
-
-    @Test
-    fun toggle_calls_feature() = runTest {
-        facade.toggle(mock {
-            on { getBase() }.thenReturn(mock())
-        })
-        verify(favorite).toggle(any())
     }
 
     @Test
@@ -186,14 +200,34 @@ abstract class ListingFacadeTest : FeatureTest() {
 
     // ---
 
-    private fun favorite_responds_success(): Boolean {
-        val value = nextBoolean()
+    private fun analyzer_responds_success(): Int {
+        wheneverBlocking { analyzer.getColors(any()) }.thenReturn(Swatch(White, White, White))
+        return White.rgb
+    }
+
+    private fun rating_response_success() {
+        wheneverBlocking { rating.get(anyVararg()) }.thenReturn(ComposedRating.None)
+    }
+
+    private fun detail_responds_success(
+        modifier: KStubbing<MovieDetail>.() -> Unit = {
+            on { releasedAt }.thenReturn(Date())
+            on { originalName }.thenReturn("original")
+            on { name }.thenReturn("name")
+        }
+    ) {
+        val movie = mock { modifier() }
+        wheneverBlocking { detail.get(any()) }.thenReturn(Result.success(movie))
+    }
+
+    fun favorite_responds_success(): Boolean {
+        val value = true
         wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(Result.success(value))
         wheneverBlocking { favorite.toggle(any()) }.thenReturn(Result.success(value))
         return value
     }
 
-    private fun promo_responds_success(): MoviePromoPoster {
+    fun promo_responds_success(): MoviePromoPoster {
         val poster = mock<MoviePromoPoster> {
             on { url }.thenReturn("https://examp.le/image/${nextInt()}")
         }
@@ -201,7 +235,7 @@ abstract class ListingFacadeTest : FeatureTest() {
         return poster
     }
 
-    private fun preview_responds_success(
+    fun preview_responds_success(
         count: Int = 10,
         modifier: KStubbing<MoviePreview>.(Int) -> Unit = {}
     ): List<MoviePreview> {
@@ -220,15 +254,15 @@ abstract class ListingFacadeTest : FeatureTest() {
         wheneverBlocking { previewFork.get() }.thenReturn(Result.failure(RuntimeException()))
     }
 
-    private suspend fun ListingFacade.Action.promotions(): List<Result<List<MovieView>>> {
+    suspend fun ListingFacade.Action.promotions(): List<Result<List<MovieView>>> {
         val outputs = mutableListOf<Result<List<MovieView>>>()
-        promotions { outputs += it }
+        promotions.collect { outputs += it }
         return outputs
     }
 
     private suspend fun ListingFacade.Action.groupUp(): List<Result<Map<Genre, List<MovieView>>>> {
         val outputs = mutableListOf<Result<Map<Genre, List<MovieView>>>>()
-        groupUp { outputs += it }
+        groups.collect { outputs += it }
         return outputs
     }
 
