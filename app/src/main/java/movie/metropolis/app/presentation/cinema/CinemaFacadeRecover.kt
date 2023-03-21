@@ -1,13 +1,9 @@
 package movie.metropolis.app.presentation.cinema
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import movie.core.Recoverable
-import movie.core.ResultCallback
-import movie.core.result
-import movie.log.flatMapCatching
-import movie.log.log
-import movie.log.logSevere
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
 import java.util.Date
 
@@ -15,20 +11,20 @@ class CinemaFacadeRecover(
     private val origin: CinemaFacade
 ) : CinemaFacade by origin, Recoverable {
 
-    override suspend fun getCinema(callback: ResultCallback<CinemaView>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getCinema(it)
+    override val cinema: Flow<Result<CinemaView>> = flow {
+        try {
+            origin.cinema.collect(this)
+        } catch (e: Throwable) {
+            emit(Result.failure(e))
         }
     }
 
-    override suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getShowings(date, it)
+    override fun showings(date: Date): Flow<Result<List<MovieBookingView>>> = flow {
+        try {
+            origin.showings(date).collect(this)
+        } catch (e: Throwable) {
+            emit(Result.failure(e))
         }
-    }
-
-    override suspend fun getOptions(): Result<Map<Filter.Type, List<Filter>>> {
-        return origin.flatMapCatching { getOptions() }.log()
     }
 
 }

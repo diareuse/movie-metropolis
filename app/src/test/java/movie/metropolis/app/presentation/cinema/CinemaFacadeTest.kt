@@ -62,7 +62,7 @@ class CinemaFacadeTest : FeatureTest() {
         cinemas_returns_cinema()
         showings_returns_value(1)
         val result = MutableResult.getOrThrow {
-            facade.getShowings(Date(0), it.asResultCallback())
+            facade.showings(Date(0), it.asResultCallback())
         }
         assertEquals(1, result.size)
     }
@@ -70,7 +70,7 @@ class CinemaFacadeTest : FeatureTest() {
     @Test
     fun returns_failure_ifCinemaNotFound() = runTest {
         cinemas_returns_empty()
-        facade.getShowings(Date(0)) {
+        facade.showings(Date(0)) {
             assertFails {
                 it.getOrThrow()
             }
@@ -81,7 +81,7 @@ class CinemaFacadeTest : FeatureTest() {
     fun returns_sortedShowings() = runTest {
         cinemas_returns_cinema()
         showings_returns_value(4)
-        facade.getShowings(Date(0)) {
+        facade.showings(Date(0)) {
             var previousSize = Int.MAX_VALUE
             for (item in it.getOrThrow())
                 assert(previousSize >= item.availability.size) {
@@ -96,11 +96,11 @@ class CinemaFacadeTest : FeatureTest() {
     fun returns_filteredShowings() = runTest {
         cinemas_returns_cinema()
         showings_returns_value(4)
-        facade.getShowings(Date(0)) {} // only to populate the filters
+        facade.showings(Date(0)) {} // only to populate the filters
         facade.disableAll()
         facade.toggle(Filter(false, "type"))
         facade.toggle(Filter(false, "language"))
-        facade.getShowings(Date(0)) {
+        facade.showings(Date(0)) {
             val result = it.getOrThrow()
             val hasRequestedKeys = result.flatMap { it.availability.keys }
                 .all { it.language == "language" && "type" in it.types }
@@ -112,7 +112,7 @@ class CinemaFacadeTest : FeatureTest() {
     fun returns_options() = runTest {
         cinemas_returns_cinema()
         showings_returns_value(4)
-        facade.getShowings(Date(0)) {}
+        facade.showings(Date(0)) {}
         val options = facade.getOptions().getOrThrow()
         assertEquals(2, options[Filter.Type.Language]?.size)
         assertEquals(2, options[Filter.Type.Projection]?.size)
@@ -132,8 +132,8 @@ class CinemaFacadeTest : FeatureTest() {
         showings_returns_value(4)
         val listener = mock<OnChangedListener>()
         facade.addOnChangedListener(listener)
-        facade.getShowings(Date()) { it.getOrThrow() }
-        facade.getShowings(Date()) { it.getOrThrow() }
+        facade.showings(Date()) { it.getOrThrow() }
+        facade.showings(Date()) { it.getOrThrow() }
         // intentionally invoking twice, listener should be invoked just once
         verify(listener).onChanged()
     }
