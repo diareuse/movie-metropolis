@@ -23,6 +23,7 @@ import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.booking.BookingFacadeFromFeature
 import movie.metropolis.app.presentation.booking.BookingFacadeRecover
 import movie.metropolis.app.presentation.booking.BookingFacadeWithDetail
+import movie.metropolis.app.presentation.booking.BookingFacadeWithSpotColor
 import movie.metropolis.app.presentation.cinema.CinemaFacade
 import movie.metropolis.app.presentation.cinema.CinemaFacadeCaching
 import movie.metropolis.app.presentation.cinema.CinemaFacadeFilterable
@@ -74,11 +75,13 @@ class FacadeModule {
     fun booking(
         booking: UserBookingFeature,
         share: TicketShareRegistry,
-        detail: EventDetailFeature
+        detail: EventDetailFeature,
+        analyzer: ImageAnalyzer
     ): BookingFacade {
         var facade: BookingFacade
         facade = BookingFacadeFromFeature(booking, share)
         facade = BookingFacadeWithDetail(facade, detail)
+        facade = BookingFacadeWithSpotColor(facade, analyzer)
         facade = BookingFacadeRecover(facade)
         return facade
     }
