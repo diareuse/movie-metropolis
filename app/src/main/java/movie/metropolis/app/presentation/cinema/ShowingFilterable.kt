@@ -38,7 +38,7 @@ class ShowingFilterable {
         .map { Filter(it in selected, it) }
         .sortedBy { it.value }
 
-    fun getSelectedLanguages() = selected.filter { it in languages }.toSet()
-    fun getSelectedTypes() = selected.filter { it in types }.toSet()
+    val selectedLanguages get() = selected.filter { it in languages }.toSet()
+    val selectedTypes get() = selected.filter { it in types }.toSet()
 
 }

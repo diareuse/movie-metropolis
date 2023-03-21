@@ -35,6 +35,7 @@ import movie.metropolis.app.presentation.cinema.CinemasFacadeRecover
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.presentation.detail.MovieFacadeFilterable
 import movie.metropolis.app.presentation.detail.MovieFacadeFromFeature
+import movie.metropolis.app.presentation.detail.MovieFacadeReactive
 import movie.metropolis.app.presentation.detail.MovieFacadeRecover
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.home.HomeFacadeFromFeature
@@ -115,8 +116,9 @@ class FacadeModule {
     ) = MovieFacade.Factory {
         var facade: MovieFacade
         facade = MovieFacadeFromFeature(it, showings, detail, favorite)
-        facade = MovieFacadeFilterable(facade)
+        facade = MovieFacadeReactive(facade)
         facade = MovieFacadeRecover(facade)
+        facade = MovieFacadeFilterable(facade)
         facade
     }
 

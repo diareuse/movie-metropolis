@@ -1,64 +1,53 @@
 package movie.metropolis.app.presentation.detail
 
-import movie.core.Recoverable
-import movie.core.ResultCallback
-import movie.core.result
-import movie.log.flatMapCatching
-import movie.log.log
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import movie.log.Logger
 import movie.log.logSevere
 import movie.metropolis.app.model.CinemaBookingView
-import movie.metropolis.app.model.Filter
-import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
-import movie.metropolis.app.model.VideoView
 import java.util.Date
 
 class MovieFacadeRecover(
     private val origin: MovieFacade
-) : MovieFacade by origin, Recoverable {
+) : MovieFacade by origin {
 
-    override suspend fun getAvailableFrom(callback: ResultCallback<Date>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getAvailableFrom(it)
+    override val movie: Flow<Result<MovieDetailView>> = flow {
+        try {
+            origin.movie.collect(this)
+        } catch (e: Throwable) {
+            Logger.error("MM", e.message ?: "Exception occurred", e)
+            emit(Result.failure(e))
+        }
+    }
+    override val favorite: Flow<Boolean> = flow {
+        try {
+            origin.favorite.collect(this)
+        } catch (e: Throwable) {
+            Logger.error("MM", e.message ?: "Exception occurred", e)
+            emit(false)
+        }
+    }
+    override val availability: Flow<Date> = flow {
+        try {
+            origin.availability.collect(this)
+        } catch (e: Throwable) {
+            Logger.error("MM", e.message ?: "Exception occurred", e)
+            emit(Date())
         }
     }
 
-    override suspend fun getMovie(callback: ResultCallback<MovieDetailView>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getMovie(it)
-        }
-    }
-
-    override suspend fun getPoster(callback: ResultCallback<ImageView>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getPoster(it)
-        }
-    }
-
-    override suspend fun getTrailer(callback: ResultCallback<VideoView>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getTrailer(it)
-        }
-    }
-
-    override suspend fun getShowings(
+    override fun showings(
         date: Date,
         latitude: Double,
-        longitude: Double,
-        callback: ResultCallback<List<CinemaBookingView>>
-    ) = runCatchingResult(callback.result { it.logSevere() }) {
-        origin.getShowings(date, latitude, longitude, it)
+        longitude: Double
+    ): Flow<Result<List<CinemaBookingView>>> = flow {
+        try {
+            origin.showings(date, latitude, longitude).collect(this)
+        } catch (e: Throwable) {
+            emit(Result.failure(e))
+        }
     }
-
-    override suspend fun getOptions() =
-        origin.flatMapCatching { getOptions() }.log()
-
-    override fun toggle(filter: Filter) {
-        origin.runCatching { toggle(filter) }.logSevere()
-    }
-
-    override suspend fun isFavorite() =
-        origin.flatMapCatching { isFavorite() }.logSevere()
 
     override suspend fun toggleFavorite() {
         origin.runCatching { toggleFavorite() }.logSevere()
