@@ -1,5 +1,6 @@
 package movie.metropolis.app.presentation.booking
 
+import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -30,8 +31,8 @@ class BookingFacadeWithDetail(
         for ((index, booking) in output.withIndex()) launch {
             val movie = booking.movie
             locks.getOrPut(movie.id) { Mutex() }.withLock {
-                val detail =
-                    detail.get(MovieFromId(movie.id)).logSevere().getOrNull() ?: return@launch
+                val detail = detail.get(MovieFromId(movie.id)).logSevere().getOrNull()
+                    ?: return@launch
                 val view = BookingViewWithDetail(booking, detail)
                 output[index] = view
                 send(output.toList())
