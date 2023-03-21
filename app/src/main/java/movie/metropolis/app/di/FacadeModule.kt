@@ -22,6 +22,7 @@ import movie.metropolis.app.feature.billing.BillingFacade
 import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.booking.BookingFacadeFromFeature
 import movie.metropolis.app.presentation.booking.BookingFacadeRecover
+import movie.metropolis.app.presentation.booking.BookingFacadeWithDetail
 import movie.metropolis.app.presentation.cinema.CinemaFacade
 import movie.metropolis.app.presentation.cinema.CinemaFacadeCaching
 import movie.metropolis.app.presentation.cinema.CinemaFacadeFilterable
@@ -72,10 +73,12 @@ class FacadeModule {
     @Provides
     fun booking(
         booking: UserBookingFeature,
-        share: TicketShareRegistry
+        share: TicketShareRegistry,
+        detail: EventDetailFeature
     ): BookingFacade {
         var facade: BookingFacade
         facade = BookingFacadeFromFeature(booking, share)
+        facade = BookingFacadeWithDetail(facade, detail)
         facade = BookingFacadeRecover(facade)
         return facade
     }
