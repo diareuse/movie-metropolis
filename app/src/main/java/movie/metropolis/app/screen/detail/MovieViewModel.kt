@@ -6,24 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import movie.core.UserDataFeature
 import movie.core.model.Location
 import movie.metropolis.app.model.Filter
-import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.optionsFlow
+import movie.metropolis.app.presentation.asLoadable
 import movie.metropolis.app.presentation.detail.MovieFacade
-import movie.metropolis.app.presentation.detail.MovieFacade.Companion.availableFromFlow
-import movie.metropolis.app.presentation.detail.MovieFacade.Companion.favoriteFlow
-import movie.metropolis.app.presentation.detail.MovieFacade.Companion.movieFlow
-import movie.metropolis.app.presentation.detail.MovieFacade.Companion.posterFlow
-import movie.metropolis.app.presentation.detail.MovieFacade.Companion.showingsFlow
-import movie.metropolis.app.presentation.detail.MovieFacade.Companion.trailerFlow
+import movie.metropolis.app.presentation.mapLoadable
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import java.util.Date
@@ -33,7 +26,7 @@ import android.location.Location as AndroidLocation
 @Stable
 @HiltViewModel
 class MovieViewModel private constructor(
-    private val facade: MovieFacade,
+    private val facade: MovieFacade.Filterable,
     private val user: UserDataFeature,
     val hideShowings: Boolean
 ) : ViewModel() {
@@ -62,34 +55,36 @@ class MovieViewModel private constructor(
     val selectedDate = MutableStateFlow(null as Date?)
     val location = MutableStateFlow(null as AndroidLocation?)
 
-    val startDate = facade.availableFromFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val detail = facade.movieFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val trailer = facade.trailerFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val poster = facade.posterFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val showings = facade.showingsFlow(selectedDate.filterNotNull(), location.filterNotNull())
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val options = showings.flatMapLatest { facade.optionsFlow }
-        .retainStateIn(viewModelScope, Loadable.loading())
-    val favorite = facade.favoriteFlow
+    val detail = facade.movie
+        .map { it.asLoadable() }
         .retainStateIn(viewModelScope)
-    val showFavorite = startDate.map { hideShowings && (it.getOrNull() ?: Date(0)) >= Date() }
+    val startDate = facade.availability
+        .onEach { selectedDate.compareAndSet(null, it) }
+        .retainStateIn(viewModelScope, Date(0))
+    val trailer = detail.mapLoadable { it.trailer }
+        .retainStateIn(viewModelScope)
+    val poster = detail.mapLoadable { it.poster }
+        .retainStateIn(viewModelScope)
+    val showings = combineTransform(
+        selectedDate.filterNotNull(),
+        location.filterNotNull()
+    ) { date, location ->
+        facade.showings(date, location.latitude, location.longitude)
+            .map { it.asLoadable() }
+            .collect(this)
+    }.retainStateIn(viewModelScope)
+    val options = facade.options
+        .retainStateIn(viewModelScope, emptyMap())
+    val favorite = facade.favorite
+        .retainStateIn(viewModelScope, false)
+    val showFavorite = startDate.map { hideShowings && it >= Date() }
         .retainStateIn(viewModelScope, false)
 
     init {
         viewModelScope.launch {
-            facade.getAvailableFrom { result ->
-                result
-                    .map { if (it.before(Date())) Date() else it }
-                    .onSuccess { selectedDate.compareAndSet(null, it) }
-            }
-        }
-        viewModelScope.launch {
-            var favorite: AndroidLocation? = null
-            user.get()
+            val favorite: AndroidLocation? = user.get()
+                .map { it.favorite?.location?.toPlatform() }
+                .getOrNull()
             location.compareAndSet(null, favorite)
         }
     }

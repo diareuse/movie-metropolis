@@ -14,8 +14,8 @@ data class MovieBookingViewFilter(
         filterable: ShowingFilterable,
         origin: MovieBookingView
     ) : this(
-        filterable.getSelectedLanguages(),
-        filterable.getSelectedTypes(),
+        filterable.selectedLanguages,
+        filterable.selectedTypes,
         origin
     )
 
