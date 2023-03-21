@@ -7,8 +7,10 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import movie.metropolis.app.model.Filter
+import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
 import movie.metropolis.app.presentation.cinema.CinemaFacade
 import movie.metropolis.app.screen.Route
@@ -35,8 +37,12 @@ class CinemaViewModel private constructor(
         .map { it.asLoadable() }
         .retainStateIn(viewModelScope)
     val items = selectedDate
-        .flatMapLatest { facade.showings(it) }
-        .map { it.asLoadable() }
+        .flatMapLatest {
+            flow {
+                emit(Loadable.loading())
+                facade.showings(it).map { it.asLoadable() }.collect(this)
+            }
+        }
         .retainStateIn(viewModelScope)
     val options = facade.options
         .retainStateIn(viewModelScope, emptyMap())
