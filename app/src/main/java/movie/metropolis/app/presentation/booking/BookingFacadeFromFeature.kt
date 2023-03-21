@@ -2,7 +2,8 @@ package movie.metropolis.app.presentation.booking
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
-import movie.core.ResultCallback
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import movie.core.TicketShareRegistry
 import movie.core.UserBookingFeature
 import movie.core.model.Booking
@@ -17,19 +18,18 @@ class BookingFacadeFromFeature(
     private val share: TicketShareRegistry
 ) : BookingFacade {
 
-    override suspend fun getBookings(
-        callback: ResultCallback<List<BookingView>>
-    ) = booking.get().map { result ->
-        result.map(::BookingViewFromFeature).toList()
-    }.let {
-        callback(it)
+    override val bookings: Flow<Result<List<BookingView>>> = flow {
+        val items = booking.get().map { items ->
+            items.map(::BookingViewFromFeature).toList()
+        }
+        emit(items)
     }
 
     override fun refresh() {
         booking.invalidate()
     }
 
-    override suspend fun getImage(view: BookingView): Image? {
+    override suspend fun getShareImage(view: BookingView): Image? {
         if (view !is BookingViewActiveFromFeature) return null
         val shareableText = share.get(view.booking)
         return MultiFormatWriter()
@@ -44,3 +44,4 @@ class BookingFacadeFromFeature(
     }
 
 }
+

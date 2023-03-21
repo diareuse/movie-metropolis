@@ -7,6 +7,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import movie.core.TicketShareRegistry
 import movie.core.model.Booking
+import movie.core.model.MovieDetail
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
@@ -16,6 +17,7 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -30,14 +32,24 @@ class BookingFacadeTest : FeatureTest() {
         share = mock {
             on { runBlocking { get(any()) } }.thenReturn("foo".toByteArray())
         }
-        facade = FacadeModule().booking(booking, share)
+        facade = FacadeModule().booking(booking, share, detail)
     }
 
     @Test
-    fun getBookings_returns_values() = runTest {
+    fun bookings_returns_values() = runTest {
         booking_responds_success()
         for (result in facade.getBookings())
             assert(result.getOrThrow().isNotEmpty())
+    }
+
+    @Test
+    fun bookings_returns_detail() = runTest {
+        booking_responds_success()
+        val expected = detail_responds_success()
+        val result = facade.getBookings().last().getOrThrow()
+        for (item in result)
+        // directors are available only from detail
+            assertEquals(item.movie.directors, expected.directors)
     }
 
     @Test
@@ -56,13 +68,13 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun getImage_returns_null() = runTest {
-        assertNull(facade.getImage(BookingView.Empty))
+        assertNull(facade.getShareImage(BookingView.Empty))
     }
 
     @Test
     fun getImage_returns_data() = runTest {
         val view = BookingViewActiveFromFeature(mock())
-        val image = facade.getImage(view)
+        val image = facade.getShareImage(view)
         assertNotNull(image)
     }
 
@@ -76,7 +88,7 @@ class BookingFacadeTest : FeatureTest() {
 
     private suspend fun BookingFacade.getBookings(): List<Result<List<BookingView>>> {
         val outputs = mutableListOf<Result<List<BookingView>>>()
-        getBookings { outputs += it }
+        bookings.collect { outputs += it }
         return outputs
     }
 
@@ -85,8 +97,23 @@ class BookingFacadeTest : FeatureTest() {
     }
 
     private fun booking_responds_success() {
-        val data = Result.success(sequenceOf(mock<Booking.Active>(), mock<Booking.Expired>()))
+        val active = mock<Booking.Active> {
+            on { id }.thenReturn("")
+        }
+        val expired = mock<Booking.Expired> {
+            on { id }.thenReturn("")
+        }
+        val data = Result.success(sequenceOf(active, expired))
         wheneverBlocking { booking.get() }.thenReturn(data)
+    }
+
+    private fun detail_responds_success(): MovieDetail {
+        val movie = mock<MovieDetail> {
+            on { directors }.thenReturn(listOf("a", "b", "c"))
+        }
+        val data = Result.success(movie)
+        wheneverBlocking { detail.get(any()) }.thenReturn(data)
+        return movie
     }
 
 }

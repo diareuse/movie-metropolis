@@ -1,8 +1,8 @@
 package movie.metropolis.app.presentation.booking
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import movie.core.Recoverable
-import movie.core.ResultCallback
-import movie.core.result
 import movie.log.logSevere
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
@@ -11,9 +11,11 @@ class BookingFacadeRecover(
     private val origin: BookingFacade
 ) : BookingFacade, Recoverable {
 
-    override suspend fun getBookings(callback: ResultCallback<List<BookingView>>) {
-        runCatchingResult(callback.result { it.logSevere() }) {
-            origin.getBookings(it)
+    override val bookings: Flow<Result<List<BookingView>>> = flow {
+        kotlin.runCatching {
+            origin.bookings.collect(this)
+        }.onFailure {
+            emit(Result.failure(it))
         }
     }
 
@@ -21,8 +23,8 @@ class BookingFacadeRecover(
         origin.runCatching { refresh() }.logSevere()
     }
 
-    override suspend fun getImage(view: BookingView): Image? {
-        return origin.runCatching { getImage(view) }.logSevere().getOrNull()
+    override suspend fun getShareImage(view: BookingView): Image? {
+        return origin.runCatching { getShareImage(view) }.logSevere().getOrNull()
     }
 
 }

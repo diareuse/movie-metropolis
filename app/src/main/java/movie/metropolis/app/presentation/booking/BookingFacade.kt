@@ -1,36 +1,32 @@
 package movie.metropolis.app.presentation.booking
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import movie.core.ResultCallback
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
-import movie.metropolis.app.util.throttleWithTimeout
-import kotlin.time.Duration.Companion.seconds
 
 interface BookingFacade {
 
-    suspend fun getBookings(callback: ResultCallback<List<BookingView>>)
-    suspend fun getImage(view: BookingView): Image?
+    val bookings: Flow<Result<List<BookingView>>>
+
+    suspend fun getShareImage(view: BookingView): Image?
 
     fun refresh()
 
     companion object {
 
-        fun BookingFacade.bookingsFlow(refresh: Flow<suspend () -> Unit>) = channelFlow {
-            getBookings {
-                send(it.asLoadable())
-            }
+        fun BookingFacade.bookingsFlow(refresh: Flow<suspend () -> Unit>) = flow {
+            emitAll(bookings.map { it.asLoadable() })
             refresh.collect {
-                send(Loadable.loading())
+                emit(Loadable.loading())
                 it()
-                getBookings {
-                    send(it.asLoadable())
-                }
+                emitAll(bookings.map { it.asLoadable() })
             }
-        }.throttleWithTimeout(1.seconds)
+        }
 
     }
 

@@ -64,7 +64,7 @@ class BookingViewModel @Inject constructor(
     }
 
     suspend fun saveAsFile(booking: BookingView.Active): File {
-        val image = facade.getImage(booking)
+        val image = facade.getShareImage(booking)
         val dir = withContext(Dispatchers.IO) { cacheDir }
         return File(dir, "tickets/ticket.png").apply {
             parentFile?.mkdirs()
