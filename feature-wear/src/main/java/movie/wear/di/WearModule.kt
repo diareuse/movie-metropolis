@@ -9,6 +9,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import movie.wear.WearService
+import movie.wear.WearServiceCatching
 import movie.wear.WearServiceImpl
 import movie.wear.WearServiceUriSpec
 
@@ -23,6 +24,7 @@ class WearModule {
         var out: WearService
         out = WearServiceImpl(client)
         out = WearServiceUriSpec(out)
+        out = WearServiceCatching(out)
         return out
     }
 
