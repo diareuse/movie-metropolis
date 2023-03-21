@@ -1,5 +1,6 @@
 package movie.metropolis.app.model.adapter
 
+import movie.core.adapter.MovieDetailFromId
 import movie.core.model.Booking
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
@@ -23,7 +24,7 @@ data class BookingViewExpiredFromFeature(
     override val time: String
         get() = timeFormat.format(booking.startsAt)
     override val movie: MovieDetailView
-        get() = TODO("Add loading movie detail")//MovieDetailViewFromFeature(booking.movie)
+        get() = MovieDetailViewFromFeature(MovieDetailFromId(booking.id))
     override val isPaid: Boolean
         get() = booking.paidAt.before(Date())
     override val cinema: CinemaView

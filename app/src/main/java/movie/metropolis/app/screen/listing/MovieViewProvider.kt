@@ -31,7 +31,7 @@ class MovieViewProvider :
         override val rating: String? = "75%",
         override val posterLarge: ImageView? = PreviewImage()
     ) : MovieView {
-        override fun getBase(): MoviePreview = TODO()
+        override fun getBase(): MoviePreview = throw IllegalAccessError()
     }
 
     private data class PreviewImage(
