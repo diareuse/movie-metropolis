@@ -6,14 +6,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import movie.core.UserDataFeature
 import movie.core.model.Location
 import movie.metropolis.app.model.Filter
+import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.presentation.mapLoadable
@@ -65,14 +68,18 @@ class MovieViewModel private constructor(
         .retainStateIn(viewModelScope)
     val poster = detail.mapLoadable { it.poster }
         .retainStateIn(viewModelScope)
-    val showings = combineTransform(
-        selectedDate.filterNotNull(),
-        location.filterNotNull()
-    ) { date, location ->
-        facade.showings(date, location.latitude, location.longitude)
-            .map { it.asLoadable() }
-            .collect(this)
-    }.retainStateIn(viewModelScope)
+    val showings =
+        combine(selectedDate.filterNotNull(), location.filterNotNull()) { a, b -> a to b }
+            .flatMapLatest { (date, location) ->
+                flow {
+                    emit(Loadable.loading())
+                    facade
+                        .showings(date, location.latitude, location.longitude)
+                        .map { it.asLoadable() }
+                        .collect(this)
+                }
+            }
+            .retainStateIn(viewModelScope)
     val options = facade.options
         .retainStateIn(viewModelScope, emptyMap())
     val favorite = facade.favorite
