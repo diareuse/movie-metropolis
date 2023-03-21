@@ -1,49 +1,20 @@
 package movie.metropolis.app.presentation.cinema
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
-import movie.core.ResultCallback
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieBookingView
-import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.asLoadable
-import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.optionsChangedFlow
-import movie.metropolis.app.util.throttleWithTimeout
 import java.util.Date
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
-interface CinemaFacade : BookingFilterable {
+interface CinemaFacade {
 
-    suspend fun getCinema(callback: ResultCallback<CinemaView>)
-    suspend fun getShowings(date: Date, callback: ResultCallback<List<MovieBookingView>>)
+    val cinema: Flow<Result<CinemaView>>
+
+    fun showings(date: Date): Flow<Result<List<MovieBookingView>>>
+
+    interface Filterable : CinemaFacade, BookingFilterable
 
     fun interface Factory {
-        fun create(id: String): CinemaFacade
-    }
-
-    companion object {
-
-        val CinemaFacade.cinemaFlow
-            get() = flow {
-                emit(Loadable.loading())
-                getCinema {
-                    emit(it.asLoadable())
-                }
-            }.throttleWithTimeout(1.seconds)
-
-        fun CinemaFacade.showingsFlow(date: Flow<Date>) = date.flatMapLatest {
-            flow {
-                emit(Loadable.loading())
-                optionsChangedFlow.collect { _ ->
-                    getShowings(it) {
-                        emit(it.asLoadable())
-                    }
-                }
-            }
-        }.throttleWithTimeout(300.milliseconds)
-
+        fun create(id: String): Filterable
     }
 
 }

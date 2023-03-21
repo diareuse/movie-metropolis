@@ -68,7 +68,7 @@ fun CinemaScreen(
 private fun CinemaScreen(
     cinema: Loadable<CinemaView>,
     items: Loadable<List<MovieBookingView>>,
-    options: Loadable<Map<Filter.Type, List<Filter>>>,
+    options: Map<Filter.Type, List<Filter>>,
     selectedDate: ImmutableDate,
     onSelectedDateChanged: (Date) -> Unit,
     onBookingClick: (String) -> Unit,
@@ -110,7 +110,7 @@ private fun CinemaScreen(
                     onClickDate = onSelectedDateChanged
                 )
             }
-            options.onSuccess { filters ->
+            if (options.isNotEmpty()) {
                 item("filters-title") {
                     Text(
                         modifier = Modifier
@@ -128,14 +128,14 @@ private fun CinemaScreen(
                         FilterRow(
                             contentPadding = PaddingValues(horizontal = 24.dp)
                         ) {
-                            items(filters[Filter.Type.Language].orEmpty()) {
+                            items(options[Filter.Type.Language].orEmpty()) {
                                 FilterItem(filter = it, onClick = { onFilterClick(it) })
                             }
                         }
                         FilterRow(
                             contentPadding = PaddingValues(horizontal = 24.dp)
                         ) {
-                            items(filters[Filter.Type.Projection].orEmpty()) {
+                            items(options[Filter.Type.Projection].orEmpty()) {
                                 FilterItem(filter = it, onClick = { onFilterClick(it) })
                             }
                         }

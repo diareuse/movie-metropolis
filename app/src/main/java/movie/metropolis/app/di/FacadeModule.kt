@@ -25,7 +25,6 @@ import movie.metropolis.app.presentation.booking.BookingFacadeRecover
 import movie.metropolis.app.presentation.booking.BookingFacadeWithDetail
 import movie.metropolis.app.presentation.booking.BookingFacadeWithSpotColor
 import movie.metropolis.app.presentation.cinema.CinemaFacade
-import movie.metropolis.app.presentation.cinema.CinemaFacadeCaching
 import movie.metropolis.app.presentation.cinema.CinemaFacadeFilterable
 import movie.metropolis.app.presentation.cinema.CinemaFacadeFromFeature
 import movie.metropolis.app.presentation.cinema.CinemaFacadeRecover
@@ -102,9 +101,8 @@ class FacadeModule {
     ) = CinemaFacade.Factory {
         var facade: CinemaFacade
         facade = CinemaFacadeFromFeature(it, cinemas, showings)
-        facade = CinemaFacadeCaching(facade)
-        facade = CinemaFacadeFilterable(facade)
         facade = CinemaFacadeRecover(facade)
+        facade = CinemaFacadeFilterable(facade)
         facade
     }
 

@@ -34,6 +34,7 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.map
+import movie.metropolis.app.presentation.mapNotNull
 import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
@@ -83,12 +84,12 @@ fun MovieScreen(
     }
     MovieScreen(
         detail = detail,
-        poster = poster,
-        trailer = trailer,
+        poster = poster.mapNotNull { it },
+        trailer = trailer.mapNotNull { it },
         showings = showings,
         options = options,
-        isFavorite = favorite.getOrNull() ?: false,
-        selectionAvailableStart = startDate.getOrNull()?.immutable(),
+        isFavorite = favorite,
+        selectionAvailableStart = startDate.immutable(),
         selectedDate = selectedDate?.immutable(),
         hideShowings = viewModel.hideShowings,
         showFavorite = showFavorite,
@@ -117,7 +118,7 @@ private fun MovieScreen(
     poster: Loadable<ImageView>,
     trailer: Loadable<VideoView>,
     showings: Loadable<List<CinemaBookingView>>,
-    options: Loadable<Map<Filter.Type, List<Filter>>>,
+    options: Map<Filter.Type, List<Filter>>,
     isFavorite: Boolean,
     selectionAvailableStart: ImmutableDate?,
     selectedDate: ImmutableDate?,
@@ -238,7 +239,7 @@ private fun MovieScreen(
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.MovieDetailShowings(
     showings: Loadable<List<CinemaBookingView>>,
-    options: Loadable<Map<Filter.Type, List<Filter>>>,
+    options: Map<Filter.Type, List<Filter>>,
     selectionAvailableStart: ImmutableDate?,
     selectedDate: ImmutableDate?,
     onSelectedDateUpdated: (Date) -> Unit,
@@ -260,7 +261,7 @@ fun LazyListScope.MovieDetailShowings(
             onClickDate = onSelectedDateUpdated
         )
     }
-    options.onSuccess { filters ->
+    if (options.isNotEmpty()) {
         item("filters-title") {
             Text(
                 modifier = Modifier
@@ -278,14 +279,14 @@ fun LazyListScope.MovieDetailShowings(
                 FilterRow(
                     contentPadding = PaddingValues(horizontal = 24.dp)
                 ) {
-                    items(filters[Filter.Type.Language].orEmpty(), Filter::value) {
+                    items(options[Filter.Type.Language].orEmpty(), Filter::value) {
                         FilterItem(filter = it, onClick = { onFilterClick(it) })
                     }
                 }
                 FilterRow(
                     contentPadding = PaddingValues(horizontal = 24.dp)
                 ) {
-                    items(filters[Filter.Type.Projection].orEmpty(), Filter::value) {
+                    items(options[Filter.Type.Projection].orEmpty(), Filter::value) {
                         FilterItem(filter = it, onClick = { onFilterClick(it) })
                     }
                 }
@@ -348,7 +349,7 @@ private fun Preview(
             detail = Loadable.success(detail),
             poster = Loadable.success(ImageViewPreview()),
             trailer = Loadable.loading(),
-            options = Loadable.loading(),
+            options = emptyMap(),
             selectedDate = Date().immutable(),
             onBackClick = {},
             isFavorite = true,

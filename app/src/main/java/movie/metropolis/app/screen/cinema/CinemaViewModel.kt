@@ -6,15 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.map
 import movie.metropolis.app.model.Filter
-import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.cinema.BookingFilterable.Companion.optionsFlow
+import movie.metropolis.app.presentation.asLoadable
 import movie.metropolis.app.presentation.cinema.CinemaFacade
-import movie.metropolis.app.presentation.cinema.CinemaFacade.Companion.cinemaFlow
-import movie.metropolis.app.presentation.cinema.CinemaFacade.Companion.showingsFlow
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import java.util.Date
@@ -23,7 +19,7 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 class CinemaViewModel private constructor(
-    private val facade: CinemaFacade
+    private val facade: CinemaFacade.Filterable
 ) : ViewModel() {
 
     @Inject
@@ -35,12 +31,15 @@ class CinemaViewModel private constructor(
     )
 
     val selectedDate = MutableStateFlow(Date())
-    val cinema = facade.cinemaFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val items = facade.showingsFlow(selectedDate)
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Loadable.loading())
-    val options = items.flatMapLatest { facade.optionsFlow }
+    val cinema = facade.cinema
+        .map { it.asLoadable() }
         .retainStateIn(viewModelScope)
+    val items = selectedDate
+        .flatMapLatest { facade.showings(it) }
+        .map { it.asLoadable() }
+        .retainStateIn(viewModelScope)
+    val options = facade.options
+        .retainStateIn(viewModelScope, emptyMap())
 
     fun toggleFilter(filter: Filter) = facade.toggle(filter)
 
