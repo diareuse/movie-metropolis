@@ -1,12 +1,9 @@
 package movie.metropolis.app.presentation.detail
 
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import movie.core.EventDetailFeature
 import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
@@ -29,7 +26,7 @@ class MovieFacadeFromFeature(
     private val model = MovieFromId(id)
     private val detailFlow = flow {
         emit(detail.get(model))
-    }.shareIn(GlobalScope, SharingStarted.Lazily, 1)
+    }
 
     override val movie: Flow<Result<MovieDetailView>> = detailFlow.map {
         it.map(::MovieDetailViewFromFeature)

@@ -2,56 +2,63 @@
 
 package movie.metropolis.app.presentation.detail
 
+import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import movie.core.CinemaWithShowings
-import movie.core.MutableResult
 import movie.core.adapter.MovieFromId
 import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Media
 import movie.core.model.MovieDetail
 import movie.core.model.Showing
+import movie.image.Swatch
+import movie.image.SwatchColor
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.presentation.FeatureTest
-import movie.metropolis.app.presentation.OnChangedListener
 import movie.metropolis.app.util.disableAll
+import movie.rating.internal.AvailableRating
+import movie.rating.internal.ComposedRating
 import org.junit.Test
-import org.mockito.internal.verification.NoInteractions
 import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
+import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
-import kotlin.random.Random
+import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 
 class MovieFacadeTest : FeatureTest() {
 
-    private lateinit var facade: MovieFacade
+    private lateinit var facade: MovieFacade.Filterable
 
     override fun prepare() {
-        facade = FacadeModule().movie(showings, detail, favorite).create("5376O2R")
+        facade =
+            FacadeModule().movie(showings, detail, favorite, analyzer, rating).create("5376O2R")
     }
 
     @Test
     fun returns_isFavorite_success() = runTest {
         movie_responds_success()
         whenever(favorite.isFavorite(any())).thenReturn(Result.success(true))
-        facade.isFavorite().getOrThrow()
+        facade.favorite.first()
     }
 
     @Test
     fun returns_isFavorite_failure() = runTest {
         movie_responds_success()
         whenever(favorite.isFavorite(any())).thenThrow(RuntimeException())
-        assertFails {
-            facade.isFavorite().getOrThrow()
-        }
+        assertEquals(false, facade.favorite.first())
     }
 
     @Test
@@ -66,72 +73,28 @@ class MovieFacadeTest : FeatureTest() {
         movie_responds_success {
             on { it.screeningFrom }.thenReturn(Date(3666821600000))
         }
-        facade.getAvailableFrom {
-            assertEquals(Date(3666821600000), it.getOrThrow())
-        }
+        assertEquals(Date(3666821600000), facade.availability.first())
     }
 
     @Test
-    fun returns_availableFrom_failure() = runTest {
-        facade.getAvailableFrom {
-            assertFails {
-                it.getOrThrow()
-            }
-        }
+    fun returns_availableFrom_recoversFailure() = runTest {
+        facade.availability.first()
     }
 
     @Test
     fun returns_movie_success() = runTest {
-        movie_responds_success()
-        facade.getMovie {
-            it.getOrThrow()
+        movie_responds_success {
+            on { releasedAt }.thenReturn(Date())
+            on { originalName }.thenReturn("")
+            on { name }.thenReturn("")
         }
+        facade.movie.first()
     }
 
     @Test
     fun returns_movie_failure() = runTest {
-        facade.getMovie {
-            assertFails {
-                it.getOrThrow()
-            }
-        }
-    }
-
-    @Test
-    fun returns_poster_success() = runTest {
-        movie_responds_success {
-            on { it.media }.thenReturn(listOf(Media.Image(0, 0, "")))
-        }
-        facade.getPoster {
-            it.getOrThrow()
-        }
-    }
-
-    @Test
-    fun returns_poster_failure() = runTest {
-        facade.getPoster {
-            assertFails {
-                it.getOrThrow()
-            }
-        }
-    }
-
-    @Test
-    fun returns_trailer_success() = runTest {
-        movie_responds_success {
-            on { it.media }.thenReturn(listOf(Media.Video("")))
-        }
-        facade.getTrailer {
-            it.getOrThrow()
-        }
-    }
-
-    @Test
-    fun returns_trailer_failure() = runTest {
-        facade.getTrailer {
-            assertFails {
-                it.getOrThrow()
-            }
+        assertFails {
+            facade.movie.first().getOrThrow()
         }
     }
 
@@ -144,17 +107,13 @@ class MovieFacadeTest : FeatureTest() {
             on { id }.thenReturn("id")
         }
         showings_responds_success()
-        facade.getShowings(Date(0), 0.0, 0.0) {
-            it.getOrThrow()
-        }
+        facade.showings(Date(0), 0.0, 0.0).first().getOrThrow()
     }
 
     @Test
     fun returns_showings_failure() = runTest {
-        facade.getShowings(Date(0), 0.0, 0.0) {
-            assertFails {
-                it.getOrThrow()
-            }
+        assertFails {
+            facade.showings(Date(0), 0.0, 0.0).first().getOrThrow()
         }
     }
 
@@ -167,13 +126,11 @@ class MovieFacadeTest : FeatureTest() {
             on { id }.thenReturn("id")
         }
         showings_responds_success(generateShowings(cinema, 4))
-        facade.getShowings(Date(0), 0.0, 0.0) {} // only to populate the filters
+        facade.showings(Date(0), 0.0, 0.0).first() // only to populate the filters
         facade.disableAll()
         facade.toggle(Filter(false, "type"))
         facade.toggle(Filter(false, "language"))
-        val result = MutableResult.getOrThrow {
-            facade.getShowings(Date(0), 0.0, 0.0, it.asResultCallback())
-        }
+        val result = facade.showings(Date(0), 0.0, 0.0).first().getOrThrow()
         val hasRequestedKeys = result.flatMap { it.availability.keys }
             .all { it.language == "language" && "type" in it.types }
         assert(hasRequestedKeys) { result }
@@ -186,30 +143,72 @@ class MovieFacadeTest : FeatureTest() {
             on { id }.thenReturn("id")
         }
         showings_responds_success(generateShowings(cinema, 4))
-        facade.getShowings(Date(0), 0.0, 0.0) {}
-        val options = facade.getOptions().getOrThrow()
+        facade.showings(Date(0), 0.0, 0.0).first()
+        val options = facade.options.first()
         assertEquals(2, options[Filter.Type.Language]?.size)
         assertEquals(2, options[Filter.Type.Projection]?.size)
     }
 
     @Test
     fun toggle_notifiesListeners() = runTest {
-        val listener = mock<OnChangedListener>()
-        facade.addOnChangedListener(listener)
+        val outputs = mutableListOf<Result<*>>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            facade.showings(Date(), 0.0, 0.0).toList(outputs)
+        }
         facade.toggle(Filter(false, ""))
-        verify(listener).onChanged()
+        assertEquals(2, outputs.size)
     }
 
     @Test
-    fun toggle_notifiesNoRemovedListeners() = runTest {
-        val listener = mock<OnChangedListener>()
-        facade.addOnChangedListener(listener)
-        facade.removeOnChangedListener(listener)
-        facade.toggle(Filter(false, ""))
-        verify(listener, NoInteractions()).onChanged()
+    fun detail_returns_color() = runTest {
+        movie_responds_success {
+            on { releasedAt }.thenReturn(Date())
+            on { originalName }.thenReturn("")
+            on { name }.thenReturn("")
+            on { media }.thenReturn(listOf(Media.Image(0, 0, "")))
+        }
+        val color = analyzer_responds_success()
+        val movie = facade.movie.last().getOrThrow()
+        assertEquals(color, movie.poster?.spotColor)
+    }
+
+    @Test
+    fun detail_returns_rating() = runTest {
+        movie_responds_success {
+            on { releasedAt }.thenReturn(Date())
+            on { originalName }.thenReturn("")
+            on { name }.thenReturn("")
+        }
+        val rating = rating_responds_success()
+        val movie = facade.movie.last().getOrThrow()
+        assertEquals("%d%%".format(rating.max!!.value), movie.rating)
+        assertEquals(rating.imdb?.url, movie.links?.imdb)
+        assertEquals(rating.rottenTomatoes?.url, movie.links?.rottenTomatoes)
+        assertEquals(rating.csfd?.url, movie.links?.csfd)
     }
 
     // ---
+
+    private suspend fun rating_responds_success(): ComposedRating {
+        val available = AvailableRating(69, "")
+        val composed = object : ComposedRating {
+            override val imdb: AvailableRating
+                get() = available.copy(url = "imdb")
+            override val rottenTomatoes: AvailableRating
+                get() = available.copy(url = "rtt")
+            override val csfd: AvailableRating
+                get() = available.copy(url = "csfd")
+        }
+        whenever(rating.get(anyVararg())).thenReturn(composed)
+        return composed
+    }
+
+    private suspend fun analyzer_responds_success(): Color {
+        val color = nextInt(0, 0xffffff)
+        val swatch = SwatchColor(color)
+        whenever(analyzer.getColors(any())).thenReturn(Swatch(swatch, swatch, swatch))
+        return Color(color)
+    }
 
     private suspend fun movie_responds_success(
         modifier: KStubbing<MovieDetail>.(MovieDetail) -> Unit = {}
@@ -231,7 +230,7 @@ class MovieFacadeTest : FeatureTest() {
 
     private fun generateShowings(cinema: Cinema, count: Int): CinemaWithShowings = buildMap {
         repeat(count) {
-            val items = List<Showing>(Random.nextInt(2, 20)) {
+            val items = List<Showing>(nextInt(2, 20)) {
                 when (it % 2) {
                     1 -> mock(name = "$it") {
                         on { types }.thenReturn(listOf("type", "type2"))

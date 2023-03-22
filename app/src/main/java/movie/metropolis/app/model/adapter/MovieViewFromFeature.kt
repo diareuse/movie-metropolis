@@ -41,9 +41,7 @@ data class MovieViewFromFeature(
     override val countryOfOrigin: String
         get() = movie.countryOfOrigin
     override val rating: String?
-        get() = null/*movie.rating?.takeUnless { it <= 0 }?.let {
-            "%d%%".format(it)
-        }*/
+        get() = null
     override val poster: ImageView?
         get() = images.middleOrNull()?.let { ImageViewFromFeature(it, Color.Black) }
     override val posterLarge: ImageView?
