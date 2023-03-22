@@ -14,7 +14,7 @@ class EventShowingsFeatureMovieNetwork(
 ) : EventShowingsFeature.Movie {
 
     override suspend fun get(date: Date): Result<CinemaWithShowings> = cinema.get(location)
-        .map { cinemas ->
+        .mapCatching { cinemas ->
             cinemas.associateWith { cinema ->
                 service.getEventsInCinema(cinema.id, date)
                     .map { it.body.events }

@@ -14,7 +14,7 @@ class EventShowingsFeatureCinemaNetwork(
 ) : EventShowingsFeature.Cinema {
 
     override suspend fun get(date: Date) = service.getEventsInCinema(cinema.id, date)
-        .map { response ->
+        .mapCatching { response ->
             val events = response.body.events
             val movies = response.body.movies.associateBy { it.id.lowercase() }
             buildMap<MovieReference, MutableList<Showing>> {
