@@ -50,6 +50,10 @@ data class MovieDetailViewFromFeature(
     override val links: MovieDetailView.Links?
         get() = Links().takeIf { it.isValid }
 
+    override fun base(): MovieDetail {
+        return movie
+    }
+
     inner class Links : MovieDetailView.Links {
         override val imdb: String?
             get() = null//movie.linkImdb

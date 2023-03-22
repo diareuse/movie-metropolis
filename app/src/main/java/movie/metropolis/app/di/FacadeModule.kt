@@ -34,6 +34,8 @@ import movie.metropolis.app.presentation.cinema.CinemasFacadeRecover
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.presentation.detail.MovieFacadeFilterable
 import movie.metropolis.app.presentation.detail.MovieFacadeFromFeature
+import movie.metropolis.app.presentation.detail.MovieFacadePoster
+import movie.metropolis.app.presentation.detail.MovieFacadeRating
 import movie.metropolis.app.presentation.detail.MovieFacadeReactive
 import movie.metropolis.app.presentation.detail.MovieFacadeRecover
 import movie.metropolis.app.presentation.home.HomeFacade
@@ -110,10 +112,14 @@ class FacadeModule {
     fun movie(
         showings: EventShowingsFeature.Factory,
         detail: EventDetailFeature,
-        favorite: FavoriteFeature
+        favorite: FavoriteFeature,
+        analyzer: ImageAnalyzer,
+        rating: RatingProvider.Composed
     ) = MovieFacade.Factory {
         var facade: MovieFacade
         facade = MovieFacadeFromFeature(it, showings, detail, favorite)
+        facade = MovieFacadePoster(facade, analyzer)
+        facade = MovieFacadeRating(facade, rating)
         facade = MovieFacadeReactive(facade)
         facade = MovieFacadeRecover(facade)
         facade = MovieFacadeFilterable(facade)
