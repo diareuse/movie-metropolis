@@ -7,7 +7,7 @@ class EventShowingsFeatureCinemaSort(
 ) : EventShowingsFeature.Cinema {
 
     override suspend fun get(date: Date): Result<MovieWithShowings> {
-        return origin.get(date).map {
+        return origin.get(date).mapCatching {
             it.entries
                 .asSequence()
                 .sortedByDescending { it.value.count() }
