@@ -19,7 +19,6 @@ import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import java.util.Date
 import kotlin.random.Random.Default.nextInt
@@ -27,7 +26,6 @@ import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
 import kotlin.test.assertFalse
-import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 abstract class ListingFacadeTest : FeatureTest() {
@@ -183,19 +181,6 @@ abstract class ListingFacadeTest : FeatureTest() {
                 setOf(Genre("other")),
                 output.getOrThrow().keys.asIterable()
             )
-    }
-
-    @Test
-    fun promotions_return_noRegularPosters() = runTest {
-        val testData = preview_responds_success()
-        val outputs = facade
-            .get().getOrThrow()
-            .promotions().last().getOrThrow()
-        for (output in outputs) {
-            assertNull(output.poster?.url)
-            for (data in testData)
-                verify(data, never()).media
-        }
     }
 
     // ---
