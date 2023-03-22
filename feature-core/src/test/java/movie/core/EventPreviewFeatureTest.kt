@@ -91,42 +91,6 @@ abstract class EventPreviewFeatureTest {
             verify(sync).previewCurrent = any()
         }
 
-        /*@Test // fixme move to presentation
-        fun get_fetches_ratings_fromNetwork() = runTest {
-            service_responds_success()
-            val rating = detail_responds_success()
-            val outputs = feature.get().last()
-            for (output in outputs.getOrThrow())
-                assertEquals(rating, output.rating)
-        }
-
-        @Test
-        fun get_fetches_ratings_fromDatabase() = runTest {
-            database_responds_success()
-            val rating = detail_responds_success()
-            val outputs = feature.get().last()
-            for (output in outputs.getOrThrow())
-                assertEquals(rating, output.rating)
-        }*/
-
-        /*@Test // fixme move to presentation
-        fun get_fetches_preExistingRatings_fromNetwork() = runTest {
-            service_responds_success()
-            val rating = databaseRating_responds_success()
-            val outputs = feature.get().last()
-            for (output in outputs.getOrThrow())
-                assertEquals(rating, output.rating)
-        }
-
-        @Test
-        fun get_fetches_preExistingRatings_fromDatabase() = runTest {
-            database_responds_success()
-            val rating = databaseRating_responds_success()
-            val outputs = feature.get().last()
-            for (output in outputs.getOrThrow())
-                assertEquals(rating, output.rating)
-        }*/
-
     }
 
     class Upcoming : EventPreviewFeatureTest() {
@@ -209,28 +173,6 @@ abstract class EventPreviewFeatureTest {
         )
     }
 
-    /*@Test // todo move to presentation
-    fun get_fetches_colors_fromNetwork() = runTest {
-        service_responds_success()
-        val color = analyzer_responds_success()
-        val output = feature.get().last().getOrThrow()
-        assertTrue(
-            output.all { it.spotColor == color },
-            "Expected output to contain color $color, but was ${output.map { it.spotColor }}"
-        )
-    }
-
-    @Test
-    fun get_fetches_colors_fromDatabase() = runTest {
-        database_responds_success()
-        val color = analyzer_responds_success()
-        val output = feature.get().last().getOrThrow()
-        assertTrue(
-            output.all { it.spotColor == color },
-            "Expected output to contain color $color, but was ${output.map { it.spotColor }}"
-        )
-    }*/
-
     @Test
     fun get_filtersMovies_fromDatabase() = runTest {
         database_responds_success()
@@ -256,12 +198,6 @@ abstract class EventPreviewFeatureTest {
     protected fun onlyMovies_responds_true() {
         whenever(preference.onlyMovies).thenReturn(true)
     }
-
-    /*protected fun databaseRating_responds_success(): Byte { // fixme move to presentation
-        val value = nextInt(1, 100).toByte()
-        wheneverBlocking { rating.select(any()) }.thenReturn(value)
-        return value
-    }*/
 
     protected fun detail_responds_success(): Byte {
         val value = nextInt(1, 100).toByte()
