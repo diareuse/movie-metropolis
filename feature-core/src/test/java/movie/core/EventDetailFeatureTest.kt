@@ -61,17 +61,6 @@ class EventDetailFeatureTest {
         output.getOrThrow()
     }
 
-    /*@Test // fixme move to presentation
-    fun get_returns_ratingFromNetwork() = runTest {
-        service_responds_success()
-        val rating = rating_responds_success()
-        val output = feature.get(item).last().getOrThrow()
-        assertEquals(rating.rating, output.rating)
-        assertEquals(rating.linkCsfd, output.linkCsfd)
-        assertEquals(rating.linkImdb, output.linkImdb)
-        assertEquals(rating.linkRottenTomatoes, output.linkRottenTomatoes)
-    }*/
-
     @Test
     fun get_stores() = runTest {
         val testData = service_responds_success()
@@ -82,63 +71,14 @@ class EventDetailFeatureTest {
         verify(media, times(testData.media.size)).insertOrUpdate(any())
     }
 
-    /*@Test // fixme move to presentation test
-    fun get_returns_spotColor_fromNetwork() = runTest {
-        service_responds_success()
-        val color = analyzer_responds_success()
-        val output = feature.get(item).last().getOrThrow()
-        assertEquals(color, output.spotColor)
-    }
-
-    @Test
-    fun get_returns_spotColor_fromDatabase() = runTest {
-        database_responds_success()
-        val color = analyzer_responds_success()
-        val output = feature.get(item).last().getOrThrow()
-        assertEquals(color, output.spotColor)
-    }*/
-
-    /*@Test // fixme move to presentation
-    fun get_pollsNetwork_whenNotRecent() = runTest {
-        database_responds_success()
-        database_rating_responds_failure()
-        feature.get(item)
-        verify(rating, atLeastOnce()).get(anyVararg())
-    }*/
-
     // ---
-
-    /*private fun analyzer_responds_success(): Int { // fixme move to presentation tests
-        val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
-        val swatch = Swatch(SwatchColor(color), SwatchColor(color), SwatchColor(color))
-        wheneverBlocking { analyzer.getColors(any()) }.thenReturn(swatch)
-        return color
-    }*/
-
-    /*private fun rating_responds_success(): MovieRatingStored {// fixme move to presentation
-        val data = MovieRatingStored("", nextInt(0, 100).toByte(), "imdb", "rtt", "csfd")
-        val composed = mock<ComposedRating> {
-            on { imdb }.thenReturn(AvailableRating(data.rating, data.linkImdb!!))
-            on { csfd }.thenReturn(AvailableRating(data.rating, data.linkCsfd!!))
-            on { rottenTomatoes }
-                .thenReturn(AvailableRating(data.rating, data.linkRottenTomatoes!!))
-            on { max }.thenReturn(AvailableRating(data.rating, data.linkImdb!!))
-        }
-        wheneverBlocking { rating.get(anyVararg()) }.thenReturn(composed)
-        return data
-    }*/
 
     private fun database_responds_success() {
         val detailView = DataPool.MovieDetailViews.first()
         val mediaViews = DataPool.MovieMediaViews.all()
         wheneverBlocking { detail.select(any()) }.thenReturn(detailView)
         wheneverBlocking { media.select(any()) }.thenReturn(mediaViews)
-        //wheneverBlocking { ratings.isRecent(any()) }.thenReturn(true)
     }
-
-    /*private fun database_rating_responds_failure() {// fixme move to presentation
-        wheneverBlocking { ratings.isRecent(any()) }.thenReturn(false)
-    }*/
 
     private fun service_responds_success(): MovieDetailResponse {
         val data = DataPool.MovieDetailResponses.first()

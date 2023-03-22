@@ -7,7 +7,6 @@ import movie.core.db.dao.ShowingDao
 import movie.core.model.Movie
 import java.util.Date
 
-// fixme this is faulty due to the fact we only check data is empty when loading from database, once one movie loads then it's not empty and fucks the experience royally
 class EventShowingsFeatureMovieStoring(
     private val origin: EventShowingsFeature.Movie,
     private val movie: Movie,

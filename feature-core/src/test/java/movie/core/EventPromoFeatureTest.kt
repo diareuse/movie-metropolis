@@ -57,22 +57,6 @@ class EventPromoFeatureTest {
         assertContains(output.getOrThrow().url, testData.imageId)
     }
 
-    /*@Test // todo move to presentation
-    fun get_returnsColor_fromNetwork() = runTest {
-        network_responds_success()
-        val color = analyzer_responds_success()
-        val output = feature(this).get(movie)
-        assertEquals(color, output.getOrThrow().spotColor)
-    }
-
-    @Test
-    fun get_returnsColor_fromDatabase() = runTest {
-        database_responds_success()
-        val color = analyzer_responds_success()
-        val output = feature(this).get(movie)
-        assertEquals(color, output.getOrThrow().spotColor)
-    }*/
-
     @Test
     fun get_returnsFullUrl_fromNetwork() = runTest {
         val domain = provider.domain
