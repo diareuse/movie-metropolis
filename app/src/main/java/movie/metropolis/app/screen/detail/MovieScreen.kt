@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
+import movie.core.model.MovieDetail
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
@@ -402,7 +403,9 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val trailer: VideoView? = null,
         override val rating: String? = "78%",
         override val links: MovieDetailView.Links? = Links(),
-    ) : MovieDetailView
+    ) : MovieDetailView {
+        override fun base(): MovieDetail = throw NotImplementedError()
+    }
 
     private data class Links(
         override val imdb: String? = "https://imdb.com/",
