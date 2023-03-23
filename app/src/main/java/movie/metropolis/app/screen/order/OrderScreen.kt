@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.order
 
 import android.graphics.Bitmap
+import android.os.Bundle
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
@@ -12,6 +13,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
@@ -106,6 +108,9 @@ fun OrderScreen(
     }
 }
 
+private val state = Bundle()
+
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun WebView(
     request: RequestView,
@@ -116,6 +121,12 @@ fun WebView(
     val backPress = LocalOnBackPressedDispatcherOwner.current
     val backgroundColor = Theme.color.container.background.toArgb()
     var callback by remember { mutableStateOf(null as OnBackPressedCallback?) }
+    val state by remember {
+        derivedStateOf {
+            if (state.getString("url") != request.url) state.clear()
+            state
+        }
+    }
     DisposableEffect(callback) {
         onDispose {
             callback?.isEnabled = false
@@ -145,6 +156,8 @@ fun WebView(
                     allowFileAccess = false
                     allowContentAccess = false
                     domStorageEnabled = true
+                    databaseEnabled = true
+                    offscreenPreRaster = true
                 }
                 setBackgroundColor(backgroundColor)
                 callback = backPress?.onBackPressedDispatcher?.addCallback(enabled = true) {
@@ -155,11 +168,26 @@ fun WebView(
                         backPress.onBackPressedDispatcher.onBackPressed()
                     }
                 }
-                loadUrl(request.url, request.headers)
+                if (state.isEmpty) {
+                    loadUrl(request.url, request.headers)
+                } else {
+                    restoreState(state)
+                }
             }
         },
         update = {
-            it.loadUrl(request.url, request.headers)
+            if (state.isEmpty) {
+                it.loadUrl(request.url, request.headers)
+            } else {
+                it.restoreState(state)
+            }
+        },
+        onRelease = {
+            it.saveState(state)
+            state.putString("url", request.url)
+        },
+        onReset = {
+            it.restoreState(state)
         }
     )
 }
