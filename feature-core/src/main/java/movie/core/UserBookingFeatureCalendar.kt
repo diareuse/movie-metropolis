@@ -27,10 +27,11 @@ class UserBookingFeatureCalendar(
         val calendar = preference.calendarId ?: return
         val writer = writer.create(calendar)
         for (booking in bookings) {
+            val duration = dao.getDuration(booking.movieId)?.milliseconds ?: continue
             val metadata = EventMetadata(
                 name = booking.name,
                 start = booking.startsAt,
-                duration = dao.getDuration(booking.movieId).milliseconds,
+                duration = duration,
                 description = null,
                 location = booking.cinema.address.joinToString()
             )

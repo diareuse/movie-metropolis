@@ -8,6 +8,6 @@ import movie.core.db.model.MovieStored
 interface MovieDao : DaoBase<MovieStored> {
 
     @Query("select duration from movies where id=:id")
-    suspend fun getDuration(id: String): Long
+    suspend fun getDuration(id: String): Long?
 
 }

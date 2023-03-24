@@ -10,7 +10,7 @@ class UserBookingFeatureDrainTickets(
     private val store: TicketStore
 ) : UserBookingFeature by origin {
 
-    override suspend fun get() = origin.get().map {
+    override suspend fun get() = origin.get().mapCatching {
         val stored = getStored()
         sequence {
             yieldAll(it)
