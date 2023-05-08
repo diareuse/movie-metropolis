@@ -23,23 +23,22 @@ dependencies {
     implementation project(":feature-rating")
     implementation project(":feature-image-analysis")
 
-    implementation "androidx.startup:startup-runtime:1.1.1"
-    implementation "androidx.lifecycle:lifecycle-livedata-core:2.6.0"
-    implementation "androidx.work:work-runtime-ktx:2.8.0"
-    implementation "androidx.profileinstaller:profileinstaller:1.2.2"
+    implementation libs.androidx.startup
+    implementation libs.androidx.livedata
+    implementation libs.androidx.work
+    implementation libs.androidx.profileinstaller
 
-    implementation platform("com.google.firebase:firebase-bom:31.0.3")
-    implementation "com.google.firebase:firebase-analytics-ktx"
-    implementation "com.google.firebase:firebase-crashlytics-ktx"
-    implementation 'com.google.firebase:firebase-perf-ktx'
+    implementation libs.firebase.analytics
+    implementation libs.firebase.crashlytics
+    implementation libs.firebase.perf
 
-    implementation "com.google.android.gms:play-services-location:21.0.1"
+    implementation libs.google.location
 
-    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation libs.zxing.embedded
 
-    implementation "com.google.android.play:review-ktx:2.0.1"
-    implementation "com.google.android.play:app-update-ktx:2.0.1"
+    implementation libs.google.review
+    implementation libs.google.update
 
-    implementation "com.android.billingclient:billing-ktx:5.1.0"
+    implementation libs.android.billing
 
 }

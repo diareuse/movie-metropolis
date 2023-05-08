@@ -17,8 +17,8 @@ dependencies {
     implementation project(":style")
     implementation project(":feature-wear")
 
-    implementation "androidx.wear.compose:compose-material:1.2.0-alpha05"
-    implementation "androidx.wear.compose:compose-foundation:1.2.0-alpha05"
-    implementation "androidx.wear.compose:compose-navigation:1.2.0-alpha05"
+    implementation libs.compose.wear.material
+    implementation libs.compose.wear.foundation
+    implementation libs.compose.wear.navigation
 
 }

@@ -1,0 +1,93 @@
+[versions]
+accompanist = "0.31.1-alpha"
+android-billing = "5.2.0"
+androidx-activity = { strictly = "1.7.1" }
+androidx-livedata = "2.6.1"
+androidx-profileinstaller = "1.3.1"
+androidx-startup = "1.1.1"
+androidx-work = "2.8.1"
+androidx-room = "2.5.1"
+androidx-appcompat = "1.6.1"
+androidx-compose = "1.5.0-alpha03"
+androidx-wear = "1.2.0-alpha09"
+androidx-navigation = "2.6.0-beta01"
+androidx-palette = "1.0.0"
+google-material = { strictly = "1.9.0" }
+google-update = "2.0.1"
+google-services = "4.3.15"
+google-location = "21.0.1"
+google-review = "2.0.1"
+google-wearable = "18.0.0"
+compose-material = "1.5.0-alpha03"
+compose-material3 = "1.1.0-rc01"
+firebase-analytics = "21.2.2"
+firebase-perf = "20.3.2"
+firebase-crashlytics = "18.3.7"
+firebase-plugin = "2.9.5"
+kotlin = "1.8.21"
+android = "8.2.0-alpha02"
+coil = "2.3.0"
+hilt = "2.45"
+json = "1.5.0"
+ktor = "2.2.4"
+zxing = "3.5.1"
+zxing-embed = "4.3.0"
+ksp = "1.8.21-1.0.11"
+
+[libraries]
+android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-livedata = { module = "androidx.lifecycle:lifecycle-livedata-core", version.ref = "androidx-livedata" }
+androidx-palette = { module = "androidx.palette:palette-ktx", version.ref = "androidx-palette" }
+androidx-profileinstaller = { module = "androidx.profileinstaller:profileinstaller", version.ref = "androidx-profileinstaller" }
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
+androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup" }
+androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+google-update = { module = "com.google.android.play:app-update-ktx", version.ref = "google-update" }
+google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
+google-location = { module = "com.google.android.gms:play-services-location", version.ref = "google-location" }
+google-review = { module = "com.google.android.play:review-ktx", version.ref = "google-review" }
+google-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "google-wearable" }
+google-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
+google-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
+google-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
+compose-ui-core = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose-material" }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "androidx-compose" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+compose-ui-test = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
+compose-wear-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear" }
+compose-wear-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "androidx-wear" }
+compose-wear-material = { module = "androidx.wear.compose:compose-material", version.ref = "androidx-wear" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
+firebase-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin" }
+firebase-perf = { module = "com.google.firebase:firebase-perf-ktx", version.ref = "firebase-perf" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
+zxing-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing-embed" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "android" }
+android-application = { id = "com.android.application", version.ref = "android" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+[bundles]
+

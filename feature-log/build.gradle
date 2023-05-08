@@ -9,6 +9,6 @@ android {
 
 dependencies {
 
-    implementation "com.google.firebase:firebase-crashlytics-ktx:18.3.5"
+    implementation libs.firebase.crashlytics
 
 }

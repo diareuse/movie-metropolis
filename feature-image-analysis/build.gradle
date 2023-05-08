@@ -16,10 +16,10 @@ android {
 
 dependencies {
 
-    implementation "androidx.work:work-runtime-ktx:2.8.0"
-    implementation "androidx.startup:startup-runtime:1.1.1"
-    implementation "androidx.room:room-ktx:2.5.0"
-    implementation "androidx.palette:palette-ktx:1.0.0"
-    kapt "androidx.room:room-compiler:2.5.0"
+    implementation libs.androidx.work
+    implementation libs.androidx.startup
+    implementation libs.androidx.room.ktx
+    implementation libs.androidx.palette
+    ksp libs.androidx.room.compiler
 
 }

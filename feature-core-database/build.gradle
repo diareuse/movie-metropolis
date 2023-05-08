@@ -5,18 +5,15 @@ plugins {
 
 android {
     namespace 'movie.core.db'
-    defaultConfig {
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
-        }
-    }
+}
+
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
 
-    implementation "androidx.room:room-ktx:2.5.0"
-    kapt "androidx.room:room-compiler:2.5.0"
+    implementation libs.androidx.room.ktx
+    ksp libs.androidx.room.compiler
 
 }

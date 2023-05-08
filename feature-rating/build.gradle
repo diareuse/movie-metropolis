@@ -11,13 +11,13 @@ dependencies {
 
     implementation project(":feature-log")
 
-    implementation "io.ktor:ktor-client-core:2.2.4"
-    implementation "io.ktor:ktor-client-cio:2.2.4"
-    testImplementation "io.ktor:ktor-client-mock:2.2.4"
+    implementation libs.ktor.client.core
+    implementation libs.ktor.client.cio
+    testImplementation libs.ktor.client.mock
 
-    implementation "androidx.work:work-runtime-ktx:2.8.0"
-    implementation "androidx.startup:startup-runtime:1.1.1"
-    implementation "androidx.room:room-ktx:2.5.0"
-    kapt "androidx.room:room-compiler:2.5.0"
+    implementation libs.androidx.work
+    implementation libs.androidx.startup
+    implementation libs.androidx.room.ktx
+    ksp libs.androidx.room.compiler
 
 }
