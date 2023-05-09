@@ -32,6 +32,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
