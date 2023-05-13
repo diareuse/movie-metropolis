@@ -24,22 +24,8 @@ fun MovieShowingItemLoading(
             modifier = Modifier
                 .padding(vertical = 24.dp)
                 .fillMaxWidth(),
-            type = {
-                Box(
-                    Modifier
-                        .textPlaceholder()
-                        .size(16.dp)
-                )
-                Text("#".repeat(4), Modifier.textPlaceholder())
-            },
-            language = {
-                Box(
-                    Modifier
-                        .textPlaceholder()
-                        .size(16.dp)
-                )
-                Text("#".repeat(7), Modifier.textPlaceholder())
-            }
+            type = { Text("#".repeat(4), Modifier.textPlaceholder()) },
+            language = { Text("#".repeat(7), Modifier.textPlaceholder()) }
         ) {
             items(3) {
                 ShowingItemTime {

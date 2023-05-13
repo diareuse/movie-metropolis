@@ -25,13 +25,13 @@ fun ShowingsLayout(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Box(modifier = Modifier.padding(horizontal = 24.dp)) {
-            ProvideTextStyle(Theme.textStyle.headline.copy(fontWeight = FontWeight.Bold)) {
+            ProvideTextStyle(Theme.textStyle.title.copy(fontWeight = FontWeight.Bold)) {
                 title()
             }
         }
         Surface(
-            tonalElevation = 4.dp,
-            shape = Theme.container.card
+            shape = Theme.container.card,
+            color = MaterialTheme.colorScheme.surfaceColorAtElevation(4.dp).copy(alpha = .85f)
         ) {
             content()
         }
