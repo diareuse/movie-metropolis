@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
 
 class CutoutShape(
+    private val cardSize: CornerSize,
     private val cornerSize: CornerSize,
     private val width: Dp,
     private val height: Dp
@@ -16,13 +17,14 @@ class CutoutShape(
         layoutDirection: LayoutDirection,
         density: Density
     ): Outline = with(density) {
-        val radius = CornerRadius(cornerSize.toPx(size, density))
+        val radiusCard = CornerRadius(cardSize.toPx(size, density))
+        val radiusCutout = CornerRadius(cornerSize.toPx(size, density))
 
         val primary = Path()
-        primary.addRoundRect(RoundRect(0f, 0f, size.width - width.toPx(), size.height, radius))
+        primary.addRoundRect(RoundRect(0f, 0f, size.width - width.toPx(), size.height, radiusCard))
 
         val secondary = Path()
-        secondary.addRoundRect(RoundRect(0f, height.toPx(), size.width, size.height, radius))
+        secondary.addRoundRect(RoundRect(0f, height.toPx(), size.width, size.height, radiusCard))
 
         val helper = Path()
         helper.addRect(
@@ -41,7 +43,7 @@ class CutoutShape(
                 0f,
                 size.width,
                 height.toPx(),
-                radius
+                radiusCutout
             )
         )
 
@@ -56,11 +58,13 @@ class CutoutShape(
     companion object {
 
         fun from(
-            shape: CornerBasedShape,
+            cardShape: CornerBasedShape,
+            cutoutShape: CornerBasedShape,
             width: Dp,
             height: Dp = width
         ) = CutoutShape(
-            cornerSize = shape.topStart,
+            cardSize = cardShape.topStart,
+            cornerSize = cutoutShape.topStart,
             width = width,
             height = height
         )
