@@ -1,7 +1,6 @@
 package movie.metropolis.app.screen.booking.component
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -21,8 +20,9 @@ fun TicketOverlay(
     content: @Composable BoxScope.() -> Unit
 ) {
     val density = LocalDensity.current
+    val container = Theme.container
     val shape = remember(cutoutOffset, density) {
-        TicketShape(CornerSize(16.dp), 16.dp, cutoutOffset, density)
+        TicketShape(container.card.topStart, 16.dp, cutoutOffset, density)
     }
     CutoutLayout(
         modifier = modifier,
