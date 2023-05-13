@@ -2,16 +2,12 @@ package movie.metropolis.app.screen.detail.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
-import androidx.compose.ui.unit.*
 import movie.metropolis.app.screen.detail.component.ShowingItemTimeParameter.Data
-import movie.style.AppButton
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
 
@@ -21,18 +17,16 @@ fun ShowingItemTime(
     onClick: () -> Unit = {},
     time: @Composable () -> Unit
 ) {
-    AppButton(
+    SuggestionChip(
         modifier = modifier,
         onClick = onClick,
-        elevation = 0.dp,
-        containerColor = Theme.color.container.secondary,
-        contentColor = Theme.color.content.secondary,
-        contentPadding = PaddingValues(16.dp, 8.dp)
-    ) {
-        ProvideTextStyle(Theme.textStyle.body.copy(fontWeight = FontWeight.Bold)) {
-            time()
-        }
-    }
+        label = time,
+        colors = SuggestionChipDefaults.suggestionChipColors(
+            containerColor = Theme.color.container.secondary,
+            labelColor = Theme.color.content.secondary
+        ),
+        border = null
+    )
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)

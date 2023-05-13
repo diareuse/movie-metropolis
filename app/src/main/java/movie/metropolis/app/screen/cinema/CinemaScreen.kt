@@ -122,8 +122,7 @@ private fun CinemaScreen(
                 }
                 item("filters") {
                     Column(
-                        modifier = Modifier.animateItemPlacement(),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.animateItemPlacement()
                     ) {
                         FilterRow(
                             contentPadding = PaddingValues(horizontal = 24.dp)
