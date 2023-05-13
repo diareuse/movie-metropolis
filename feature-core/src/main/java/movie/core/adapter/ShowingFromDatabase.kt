@@ -20,7 +20,7 @@ data class ShowingFromDatabase(
     override val auditorium: String
         get() = showing.auditorium
     override val language: String
-        get() = showing.language
+        get() = showing.language.takeUnless { it == "-" } ?: "🤷‍️"
     override val types: Iterable<String>
         get() = showing.types
 }
