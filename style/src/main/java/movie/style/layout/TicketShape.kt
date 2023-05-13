@@ -1,10 +1,8 @@
 package movie.style.layout
 
 import androidx.compose.foundation.shape.*
-import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 
 class TicketShape(
@@ -16,21 +14,6 @@ class TicketShape(
     bottomEnd: CornerSize,
     bottomStart: CornerSize
 ) : CornerBasedShape(topStart, topEnd, bottomEnd, bottomStart) {
-
-    companion object {
-
-        @Composable
-        operator fun invoke(cornerSize: CornerSize) = TicketShape(
-            bottomOffset = 0,
-            density = LocalDensity.current,
-            cutoutSize = 16.dp,
-            topStart = cornerSize,
-            topEnd = cornerSize,
-            bottomEnd = cornerSize,
-            bottomStart = cornerSize
-        )
-
-    }
 
     constructor(
         cornerSize: CornerSize,
