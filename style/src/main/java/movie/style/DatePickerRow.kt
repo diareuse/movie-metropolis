@@ -1,10 +1,12 @@
 package movie.style
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -14,6 +16,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.haptic.withHaptics
 import movie.style.theme.Theme
+import movie.style.theme.contentColorFor
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -78,15 +81,17 @@ private fun DatePickerItem(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    val color = when {
-        selected -> Theme.color.container.primary
-        else -> Theme.color.container.background
-    }
+    val color by animateColorAsState(
+        targetValue = when {
+            selected -> Theme.color.container.primary
+            else -> Theme.color.container.background
+        }
+    )
     Surface(
         modifier = Modifier.alpha(if (enabled) 1f else .5f),
         shape = Theme.container.button,
         color = color,
-        contentColor = contentColorFor(color),
+        contentColor = Theme.color.contentColorFor(color),
         border = BorderStroke(1.dp, Theme.color.container.outline).takeUnless { selected }
     ) {
         Text(
