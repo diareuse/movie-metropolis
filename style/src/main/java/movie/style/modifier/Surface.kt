@@ -16,8 +16,8 @@ fun Modifier.surface(
     elevation: Dp = 0.dp,
     shadowColor: Color = color
 ) = shadow(elevation, shape, false, shadowColor, shadowColor)
-    .background(color, shape)
     .clip(shape)
+    .background(color, shape)
 
 fun Modifier.surface(
     tonalElevation: Dp,
