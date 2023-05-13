@@ -54,6 +54,7 @@ fun CutoutLayout(
         val containerShape =
             if (width <= 0.dp || height <= 0.dp) contentShape
             else CutoutShape.from(
+                contentShape,
                 contentShape.extendBy(cutoutPadding),
                 width + cutoutPadding,
                 height + cutoutPadding
