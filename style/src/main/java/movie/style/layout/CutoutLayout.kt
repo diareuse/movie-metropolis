@@ -11,6 +11,7 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import movie.style.modifier.surface
+import movie.style.state.animate
 import movie.style.theme.Theme
 import movie.style.theme.contentColorFor
 import movie.style.theme.extendBy
@@ -47,18 +48,22 @@ fun CutoutLayout(
     Box(
         modifier = modifier
     ) {
-        var width by remember { mutableStateOf(0.dp) }
-        var height by remember { mutableStateOf(0.dp) }
+        val (nextWidth, setWidth) = remember { mutableStateOf(0.dp) }
+        val (nextHeight, setHeight) = remember { mutableStateOf(0.dp) }
+        val width = nextWidth.animate()
+        val height = nextHeight.animate()
         val density = LocalDensity.current
-        val color = animateColorAsState(color).value
-        val containerShape =
+        val color = color.animate()
+        val expandedShape = contentShape.extendBy(cutoutPadding)
+        val containerShape = remember(width, height) {
             if (width <= 0.dp || height <= 0.dp) contentShape
             else CutoutShape.from(
                 contentShape,
-                contentShape.extendBy(cutoutPadding),
+                expandedShape,
                 width + cutoutPadding,
                 height + cutoutPadding
             )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,10 +78,11 @@ fun CutoutLayout(
         }
         Box(
             modifier = Modifier
+                .animateContentSize()
                 .onGloballyPositioned {
                     with(density) {
-                        width = it.size.width.toDp()
-                        height = it.size.height.toDp()
+                        setWidth(it.size.width.toDp())
+                        setHeight(it.size.height.toDp())
                     }
                 }
                 .align(Alignment.TopEnd)
