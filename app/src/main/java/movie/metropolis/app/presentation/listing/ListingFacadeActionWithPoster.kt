@@ -31,44 +31,48 @@ data class ListingFacadeActionWithPoster(
     private fun withPoster(items: List<MovieView>) = channelFlow {
         val output = items.map { MovieViewWithPoster(it) }.toMutableList()
         send(output)
-        for ((index, item) in items.withIndex()) launch {
+        for ((index, item) in output.withIndex()) launch {
             val promo = cachePoster.getOrPut(item.id) { getPoster(item) }
-            val poster = MovieViewWithPoster(item, promo)
+            val poster = item.copy(poster = promo)
             output[index] = poster
             send(output.toList())
             if (promo != null) {
-                val color = cacheColor.getOrPut(item.id) { getSpotColor(promo) }
-                output[index] = poster.copy(poster = color)
+                output[index] = poster.copy(poster = getSpotColor(promo))
                 send(output.toList())
             }
         }
     }.map(Result.Companion::success)
 
     private fun withSpotColors(items: Map<Genre, List<MovieView>>) = channelFlow {
+        send(items)
         val output = items.mapValues { (_, it) -> it.toMutableList() }
-        val locks = mutableMapOf<String, Mutex>()
-        send(output)
-        for ((genre, movies) in items) {
-            for ((index, movie) in movies.withIndex()) launch {
-                val poster = movie.poster ?: return@launch
-                val updated = locks.getOrPut(movie.id) { Mutex() }.withLock {
-                    val rating = cacheColor.getOrPut(movie.id) { getSpotColor(poster) }
-                    val updated = MovieViewWithPoster(movie, rating)
-                    output.getValue(genre)[index] = updated
-                    output.mapValues { (_, it) -> it.toList() }
+        val writeLock = Mutex()
+        val movies = items.asSequence()
+            .flatMap { it.value }
+            .distinctBy { it.id }
+        for (movie in movies) launch {
+            val poster = movie.poster?.run { getSpotColor(this) } ?: return@launch
+            val updated = MovieViewWithPoster(movie, poster)
+            writeLock.withLock {
+                output.mapValues { (_, it) ->
+                    it.replaceAll { m ->
+                        if (m.id == movie.id) updated else m
+                    }
                 }
-                send(updated)
             }
+            send(output)
         }
     }.map(Result.Companion::success)
 
-    private suspend fun getPoster(movie: MovieView): ImageView? = promo.get(movie.getBase())
-        .map { ImageViewFromPoster(it, Color.Black) }
-        .getOrNull()
+    private suspend fun getPoster(movie: MovieView) = cachePoster.getOrPut(movie.id) {
+        promo.get(movie.getBase())
+            .map { ImageViewFromPoster(it, Color.Black) }
+            .getOrNull()
+    }
 
-    private suspend fun getSpotColor(image: ImageView): ImageView {
+    private suspend fun getSpotColor(image: ImageView) = cacheColor.getOrPut(image.url) {
         val color = analyzer.getColors(image.url).vibrant.rgb.let(::Color)
-        return ImageViewWithColor(image, color)
+        ImageViewWithColor(image, color)
     }
 
 }

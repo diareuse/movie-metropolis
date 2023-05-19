@@ -26,24 +26,28 @@ class ListingFacadeActionWithRating(
     override val groups = origin.groups.flatMapResult { withRating(it) }
 
     private fun withRating(items: Map<Genre, List<MovieView>>) = channelFlow {
+        send(items)
         val output = items.mapValues { (_, it) -> it.toMutableList() }
-        val locks = mutableMapOf<String, Mutex>()
-        send(output)
-        for ((genre, movies) in items) {
-            for ((index, movie) in movies.withIndex()) launch {
-                val updated = locks.getOrPut(movie.id) { Mutex() }.withLock {
-                    val base = movie.getBase()
-                    val rating = cache.getOrPut(movie.id) { getRating(base) ?: return@launch }
-                    val updated = MovieViewWithRating(movie, rating)
-                    output.getValue(genre)[index] = updated
-                    output.mapValues { (_, it) -> it.toList() }
+        val writeLock = Mutex()
+        val movies = items.asSequence()
+            .flatMap { it.value }
+            .distinctBy { it.id }
+        for (movie in movies) launch {
+            val base = movie.getBase()
+            val rating = getRating(base) ?: return@launch
+            val updated = MovieViewWithRating(movie, rating)
+            writeLock.withLock {
+                output.mapValues { (_, it) ->
+                    it.replaceAll { m ->
+                        if (m.id == movie.id) updated else m
+                    }
                 }
-                send(updated)
             }
+            send(output)
         }
     }.map(Result.Companion::success)
 
-    private suspend fun getRating(movie: MoviePreview): Byte? {
+    private suspend fun getRating(movie: MoviePreview): Byte? = cache.getOrPut(movie.id) {
         val descriptors = detail.get(movie).map {
             val year = Calendar.getInstance().apply { time = it.releasedAt }[Calendar.YEAR]
             arrayOf(
@@ -51,7 +55,7 @@ class ListingFacadeActionWithRating(
                 MovieDescriptor.Local(it.name, year)
             )
         }.getOrNull() ?: return null
-        return rating.get(descriptors = descriptors).max?.value
+        rating.get(descriptors = descriptors).max?.value ?: return null
     }
 
 }
