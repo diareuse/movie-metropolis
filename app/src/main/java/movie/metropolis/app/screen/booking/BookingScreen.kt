@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.booking
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.*
 import androidx.compose.material3.*
@@ -11,7 +12,6 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.PagerScope
 import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
@@ -63,7 +63,7 @@ fun BookingScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun BookingScreenContent(
     padding: PaddingValues,
@@ -116,14 +116,13 @@ private fun BookingScreenContent(
             )
             itemsActive + itemsExpired
         }
-        Modifier.weight(1f)
-        rememberPagerState()
-        PaddingValues(horizontal = 64.dp, vertical = 16.dp)
-        PagerDefaults.flingBehavior(
+        val state = rememberPagerState { items.size }
+        HorizontalPager(
             state = state,
-            endContentPadding = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
-        )
-        fun PagerScope.(it: Int) {
+            contentPadding = PaddingValues(horizontal = 64.dp, vertical = 16.dp),
+            pageSpacing = 32.dp,
+            modifier = Modifier.weight(1f)
+        ) {
             when (val item = items[it]) {
                 is BookingView.Active -> TicketItemActive(
                     modifier = Modifier.fillMaxHeight(),

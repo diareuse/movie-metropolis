@@ -1,7 +1,9 @@
 package movie.metropolis.app.screen.listing.component
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -10,12 +12,6 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerScope
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.calculateCurrentOffsetForPage
-import com.google.accompanist.pager.rememberPagerState
 import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.Loadable
@@ -30,21 +26,19 @@ import movie.style.theme.Theme
 import movie.style.util.lerp
 import kotlin.math.absoluteValue
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun MoviePromo(
     items: Loadable<List<MovieView>>,
     onClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    state: PagerState = rememberPagerState(),
+    modifier: Modifier = Modifier
 ) {
-    TickOnChange(value = state.currentPage)
     items.onLoading {
+        val state = rememberPagerState { 3 }
         HorizontalPager(
             modifier = modifier,
-            count = 3,
             userScrollEnabled = false,
-            state = rememberPagerState(),
+            state = state,
             contentPadding = PaddingValues(start = 24.dp, end = 64.dp, top = 32.dp, bottom = 32.dp),
         ) { index ->
             MoviePoster(
@@ -53,14 +47,16 @@ fun MoviePromo(
                     .padding(end = 16.dp)
                     .fillMaxWidth()
                     .aspectRatio(1.5f)
-                    .interpolateSize(this, index, Theme.container.poster)
+                    .interpolateSize(state, index, Theme.container.poster)
             )
         }
     }.onSuccess {
         val list = items.getOrNull().orEmpty()
+        val state = rememberPagerState { list.size }.also {
+            TickOnChange(value = it.currentPage)
+        }
         HorizontalPager(
             modifier = modifier,
-            count = list.size,
             key = { list[it].id },
             contentPadding = PaddingValues(start = 24.dp, end = 64.dp, top = 32.dp, bottom = 32.dp),
             state = state
@@ -76,7 +72,7 @@ fun MoviePromo(
                         .fillMaxWidth()
                         .aspectRatio(item.poster?.aspectRatio ?: 1.5f)
                         .interpolateSize(
-                            scope = this@HorizontalPager,
+                            state = state,
                             page = index,
                             shape = Theme.container.poster,
                             shadowColor = animateColorAsState(
@@ -108,9 +104,8 @@ fun MoviePromo(
     }.onEmpty {
         HorizontalPager(
             modifier = modifier,
-            count = 1,
             userScrollEnabled = false,
-            state = rememberPagerState(),
+            state = rememberPagerState { 1 },
             contentPadding = PaddingValues(horizontal = 64.dp, vertical = 32.dp)
         ) { _ ->
             EmptyShapeLayout(
@@ -138,9 +133,8 @@ fun MoviePromo(
     }.onFailure {
         HorizontalPager(
             modifier = modifier,
-            count = 1,
             userScrollEnabled = false,
-            state = rememberPagerState(),
+            state = rememberPagerState { 1 },
             contentPadding = PaddingValues(horizontal = 64.dp, vertical = 32.dp)
         ) { _ ->
             EmptyShapeLayout(
@@ -169,14 +163,14 @@ fun MoviePromo(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 private fun Modifier.interpolateSize(
-    scope: PagerScope,
+    state: PagerState,
     page: Int,
     shape: Shape,
     shadowColor: Color = Color.Black,
 ) = run {
-    val offset = scope.calculateCurrentOffsetForPage(page)
+    val offset = with(state) { (currentPage - page) + currentPageOffsetFraction }
     val pageOffset = offset.absoluteValue
     val fraction = 1f - pageOffset.coerceIn(0f, 1f)
     val alpha = lerp(
@@ -199,7 +193,6 @@ private fun Modifier.interpolateSize(
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {
@@ -213,7 +206,6 @@ private fun Preview() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewEmpty() {
@@ -227,7 +219,6 @@ private fun PreviewEmpty() {
     }
 }
 
-@OptIn(ExperimentalPagerApi::class)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewError() {

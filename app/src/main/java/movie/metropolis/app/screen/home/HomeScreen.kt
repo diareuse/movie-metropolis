@@ -43,6 +43,9 @@ fun HomeScreen(
     val controller = rememberAnimatedNavController()
     val destination by controller.currentDestinationAsState()
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    LaunchedEffect(destination) {
+        behavior.state.contentOffset = 0f
+    }
     HomeScreen(
         isLoggedIn = email != null,
         route = destination?.route ?: startWith,
