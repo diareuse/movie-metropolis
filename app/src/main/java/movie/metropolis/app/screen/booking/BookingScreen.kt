@@ -1,23 +1,17 @@
 package movie.metropolis.app.screen.booking
 
-import androidx.activity.result.contract.ActivityResultContracts.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerScope
 import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
@@ -69,10 +63,7 @@ fun BookingScreen(
     )
 }
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalPagerApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BookingScreenContent(
     padding: PaddingValues,
@@ -125,12 +116,14 @@ private fun BookingScreenContent(
             )
             itemsActive + itemsExpired
         }
-        HorizontalPager(
-            count = items.size,
-            contentPadding = PaddingValues(horizontal = 64.dp, vertical = 16.dp),
-            itemSpacing = 32.dp,
-            modifier = Modifier.weight(1f)
-        ) {
+        Modifier.weight(1f)
+        rememberPagerState()
+        PaddingValues(horizontal = 64.dp, vertical = 16.dp)
+        PagerDefaults.flingBehavior(
+            state = state,
+            endContentPadding = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
+        )
+        fun PagerScope.(it: Int) {
             when (val item = items[it]) {
                 is BookingView.Active -> TicketItemActive(
                     modifier = Modifier.fillMaxHeight(),
