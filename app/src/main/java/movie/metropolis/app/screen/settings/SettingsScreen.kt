@@ -16,29 +16,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.*
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.*
+import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.detail.plus
 import movie.style.AppDialog
-import movie.style.AppIconButton
 import movie.style.AppSettings
-import movie.style.AppToolbar
 import movie.style.InputField
 import movie.style.state.ImmutableMap
 import movie.style.state.ImmutableMap.Companion.immutableMapOf
 import movie.style.theme.Theme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    viewModel: SettingsViewModel = hiltViewModel(),
-    onBackClick: () -> Unit
+    padding: PaddingValues,
+    behavior: TopAppBarScrollBehavior,
+    viewModel: SettingsViewModel
 ) {
     val filterSeen by viewModel.filterSeen.collectAsState()
     val addToCalendar by viewModel.addToCalendar.collectAsState()
@@ -46,6 +46,8 @@ fun SettingsScreen(
     val clipRadius by viewModel.clipRadius.collectAsState()
     val onlyMovies by viewModel.onlyMovies.collectAsState()
     SettingsScreen(
+        padding = padding,
+        behavior = behavior,
         filterSeen = filterSeen,
         onFilterSeenChanged = viewModel::updateFilterSeen,
         addToCalendar = addToCalendar,
@@ -54,14 +56,15 @@ fun SettingsScreen(
         onClipRadiusChanged = viewModel::updateClipRadius,
         onlyMovies = onlyMovies,
         onOnlyMoviesChanged = viewModel::updateOnlyMovies,
-        calendars = calendars,
-        onBackClick = onBackClick
+        calendars = calendars
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
+    padding: PaddingValues = PaddingValues(),
+    behavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
     filterSeen: Boolean = false,
     onFilterSeenChanged: (Boolean) -> Unit = {},
     addToCalendar: Boolean = false,
@@ -70,63 +73,48 @@ private fun SettingsScreen(
     onClipRadiusChanged: (Int) -> Unit = {},
     onlyMovies: Boolean = false,
     onOnlyMoviesChanged: (Boolean) -> Unit = {},
-    calendars: ImmutableMap<String, String> = immutableMapOf(),
-    onBackClick: () -> Unit = {}
+    calendars: ImmutableMap<String, String> = immutableMapOf()
 ) {
-    Scaffold(
-        topBar = {
-            AppToolbar(
-                navigationIcon = {
-                    AppIconButton(
-                        onClick = onBackClick,
-                        painter = painterResource(id = R.drawable.ic_back)
-                    )
-                },
-                title = {
-                    Text(stringResource(R.string.settings))
-                }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .nestedScroll(behavior.nestedScrollConnection),
+        contentPadding = padding + PaddingValues(24.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
+    ) {
+        item {
+            Text(stringResource(R.string.movies), style = Theme.textStyle.headline)
+        }
+        item("filter-seen") {
+            FilterSeen(
+                checked = filterSeen,
+                onCheckedChanged = onFilterSeenChanged
             )
         }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = padding + PaddingValues(24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
-        ) {
-            item {
-                Text(stringResource(R.string.movies), style = Theme.textStyle.headline)
-            }
-            item("filter-seen") {
-                FilterSeen(
-                    checked = filterSeen,
-                    onCheckedChanged = onFilterSeenChanged
-                )
-            }
-            item("only-movies") {
-                OnlyMovies(
-                    checked = onlyMovies,
-                    onCheckedChanged = onOnlyMoviesChanged
-                )
-            }
-            item {
-                Text(stringResource(R.string.tickets), style = Theme.textStyle.headline)
-            }
-            item("add-to-calendar") {
-                Calendar(
-                    checked = addToCalendar,
-                    onSelected = onCalendarChanged,
-                    calendars = calendars
-                )
-            }
-            item {
-                Text(stringResource(R.string.cinemas), style = Theme.textStyle.headline)
-            }
-            item("clip-radius") {
-                ClipRadius(
-                    value = clipRadius,
-                    onChanged = onClipRadiusChanged
-                )
-            }
+        item("only-movies") {
+            OnlyMovies(
+                checked = onlyMovies,
+                onCheckedChanged = onOnlyMoviesChanged
+            )
+        }
+        item {
+            Text(stringResource(R.string.tickets), style = Theme.textStyle.headline)
+        }
+        item("add-to-calendar") {
+            Calendar(
+                checked = addToCalendar,
+                onSelected = onCalendarChanged,
+                calendars = calendars
+            )
+        }
+        item {
+            Text(stringResource(R.string.cinemas), style = Theme.textStyle.headline)
+        }
+        item("clip-radius") {
+            ClipRadius(
+                value = clipRadius,
+                onChanged = onClipRadiusChanged
+            )
         }
     }
 }
@@ -256,6 +244,7 @@ fun LazyItemScope.Calendar(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true)
 @Composable
 private fun Preview() {

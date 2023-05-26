@@ -133,7 +133,7 @@ sealed class Route(
             route.replace("{url}", url.encodeBase64())
     }
 
-    object Settings : Route("users/me/settings") {
+    object Settings : Route("settings") {
         fun destination() = route
     }
 

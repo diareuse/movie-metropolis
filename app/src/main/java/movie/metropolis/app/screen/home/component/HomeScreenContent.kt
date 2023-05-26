@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
@@ -19,13 +18,14 @@ import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.home.component.HomeScreenContentParameter.Data
 import movie.style.layout.PreviewLayout
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun HomeScreenContent(
     startWith: Route,
     listing: @Composable () -> Unit,
     cinemas: @Composable () -> Unit,
     booking: @Composable () -> Unit,
+    settings: @Composable () -> Unit,
     controller: NavHostController = rememberAnimatedNavController()
 ) {
     AnimatedNavHost(
@@ -49,6 +49,12 @@ fun HomeScreenContent(
             deepLinks = Route.Tickets.deepLinks
         ) {
             booking()
+        }
+        composable(
+            route = Route.Settings(),
+            deepLinks = Route.Settings.deepLinks
+        ) {
+            settings()
         }
     }
 }
@@ -81,6 +87,13 @@ private fun HomeScreenContentPreview(
                 Modifier
                     .fillMaxSize()
                     .background(Color.Blue)
+            )
+        },
+        settings = {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Yellow)
             )
         }
     )

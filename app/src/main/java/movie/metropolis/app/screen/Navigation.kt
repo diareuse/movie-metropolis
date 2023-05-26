@@ -1,7 +1,6 @@
 package movie.metropolis.app.screen
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.*
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -19,7 +18,6 @@ import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.order.complete.OrderCompleteScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
-import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.setup.SetupScreen
 import movie.metropolis.app.screen.setup.SetupViewModel
 
@@ -71,7 +69,6 @@ fun Navigation(
             deepLinks = Route.User.deepLinks
         ) {
             UserScreen(
-                onNavigateToSettings = { controller.navigate(Route.Settings.destination()) },
                 onNavigateBack = controller::navigateUp
             )
         }
@@ -129,14 +126,6 @@ fun Navigation(
                     controller.popBackStack(Route.Order(), true)
                     controller.navigate(Route.OrderComplete.destination())
                 }
-            )
-        }
-        composable(
-            route = Route.Settings(),
-            deepLinks = Route.Settings.deepLinks
-        ) {
-            SettingsScreen(
-                onBackClick = controller::navigateUp
             )
         }
     }

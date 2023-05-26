@@ -25,6 +25,8 @@ import movie.metropolis.app.screen.home.component.ProfileIcon
 import movie.metropolis.app.screen.home.component.SelectableNavigationBarItem
 import movie.metropolis.app.screen.listing.ListingScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
+import movie.metropolis.app.screen.settings.SettingsScreen
+import movie.metropolis.app.screen.settings.SettingsViewModel
 import movie.style.AppButton
 import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
@@ -62,6 +64,7 @@ fun HomeScreen(
                 Route.Cinemas() -> stringResource(id = R.string.cinemas)
                 Route.Movies() -> stringResource(id = R.string.movies)
                 Route.Tickets() -> stringResource(id = R.string.tickets)
+                Route.Settings() -> stringResource(id = R.string.settings)
                 else -> ""
             }
             Text(text)
@@ -79,6 +82,7 @@ fun HomeScreen(
         val listing: ListingViewModel = hiltViewModel()
         val cinemas: CinemasViewModel = hiltViewModel()
         val booking: BookingViewModel = hiltViewModel()
+        val settings: SettingsViewModel = hiltViewModel()
         HomeScreenContent(
             startWith = Route.by(startWith),
             controller = controller,
@@ -106,6 +110,13 @@ fun HomeScreen(
                     behavior = behavior,
                     onMovieClick = { onClickMovie(it, true) },
                     viewModel = booking
+                )
+            },
+            settings = {
+                SettingsScreen(
+                    padding = padding,
+                    behavior = behavior,
+                    viewModel = settings
                 )
             }
         )
@@ -169,6 +180,13 @@ private fun HomeScreen(
                         index = Route.Tickets.destination(),
                         label = { Text(stringResource(R.string.tickets)) },
                         icon = { Icon(painterResource(R.drawable.ic_ticket), null) },
+                        onSelected = onRouteChanged
+                    )
+                    SelectableNavigationBarItem(
+                        selected = route,
+                        index = Route.Settings.destination(),
+                        label = { Text(stringResource(R.string.settings)) },
+                        icon = { Icon(painterResource(R.drawable.ic_settings), null) },
                         onSelected = onRouteChanged
                     )
                 }

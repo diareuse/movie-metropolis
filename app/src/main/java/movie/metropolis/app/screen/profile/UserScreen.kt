@@ -32,7 +32,6 @@ import movie.style.theme.Theme
 
 @Composable
 fun UserScreen(
-    onNavigateToSettings: () -> Unit,
     onNavigateBack: () -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
     state: ScrollState = rememberScrollState()
@@ -69,7 +68,6 @@ fun UserScreen(
         onPasswordCurrentChanged = { viewModel.passwordCurrent.value = it },
         onPasswordNewChanged = { viewModel.passwordNew.value = it },
         onSaveClick = viewModel::save,
-        onSettingsClick = onNavigateToSettings,
         onBackClick = onNavigateBack,
         state = state
     )
@@ -99,7 +97,6 @@ private fun UserScreen(
     onPasswordNewChanged: (String) -> Unit,
     onSaveClick: () -> Unit,
     onBackClick: () -> Unit,
-    onSettingsClick: () -> Unit,
     state: ScrollState = rememberScrollState()
 ) {
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -111,12 +108,6 @@ private fun UserScreen(
                     AppIconButton(
                         onClick = onBackClick,
                         painter = painterResource(id = R.drawable.ic_back)
-                    )
-                },
-                actions = {
-                    AppIconButton(
-                        onClick = onSettingsClick,
-                        painter = painterResource(id = R.drawable.ic_settings)
                     )
                 },
                 scrollBehavior = behavior
@@ -261,8 +252,7 @@ private fun Preview() {
             onPasswordCurrentChanged = {},
             onPasswordNewChanged = {},
             onSaveClick = {},
-            onBackClick = {},
-            onSettingsClick = {}
+            onBackClick = {}
         )
     }
 }
