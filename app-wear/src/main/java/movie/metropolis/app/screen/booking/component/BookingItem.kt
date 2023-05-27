@@ -1,63 +1,54 @@
 package movie.metropolis.app.screen.booking.component
 
-import androidx.compose.animation.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
-import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import kotlinx.coroutines.delay
-import movie.metropolis.app.R
 import movie.metropolis.app.model.TicketView
 import movie.metropolis.app.model.preview.TicketViewPreview
 import movie.style.layout.PreviewWearLayout
-import movie.style.modifier.surface
 import movie.style.theme.Theme
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun BookingItem(
     name: @Composable () -> Unit,
     date: @Composable () -> Unit,
     time: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    var isVisible by remember { mutableStateOf(false) }
-    LaunchedEffect(isVisible) {
-        if (isVisible) delay(5000)
-        isVisible = false
-    }
-    CompositionLocalProvider(LocalContentColor provides Theme.color.content.surface) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .surface(2.dp, Theme.container.button)
-                .combinedClickable(onClick = onClick, onLongClick = { isVisible = true })
-                .padding(16.dp, 8.dp),
-            verticalAlignment = Alignment.CenterVertically
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Surface(
+            shape = Theme.container.button,
+            tonalElevation = 2.dp,
+            onClick = onClick
         ) {
-            Column(
+            Row(
                 modifier = Modifier
-                    .weight(1f),
-                verticalArrangement = Arrangement.Center
+                    .fillMaxWidth()
+                    .padding(16.dp, 8.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                ProvideTextStyle(Theme.textStyle.emphasis.copy(fontWeight = FontWeight.Medium)) {
-                    name()
-                }
-                AnimatedVisibility(isVisible) {
+                Column(verticalArrangement = Arrangement.Center) {
+                    ProvideTextStyle(Theme.textStyle.body.copy(fontWeight = FontWeight.Medium)) {
+                        name()
+                    }
                     FlowRow(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .alpha(.8f),
+                            .alpha(.7f),
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        ProvideTextStyle(Theme.textStyle.caption) {
+                        ProvideTextStyle(Theme.textStyle.caption.copy(fontSize = 10.sp)) {
                             date()
                             Text("•")
                             time()
@@ -65,11 +56,6 @@ fun BookingItem(
                     }
                 }
             }
-            Icon(
-                painter = painterResource(R.drawable.ic_right),
-                contentDescription = null,
-                tint = LocalContentColor.current
-            )
         }
     }
 }
@@ -78,10 +64,10 @@ fun BookingItem(
 @Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true, showBackground = true)
 @Composable
 private fun Preview(
-    @PreviewParameter(TicketViewPreview::class, 2) view: TicketView
+    @PreviewParameter(TicketViewPreview::class, 1) view: TicketView
 ) = PreviewWearLayout {
     BookingItem(
-        name = { Text(view.name) },
+        name = { Text(view.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         date = { Text(view.date) },
         time = { Text(view.time) },
         onClick = {}
