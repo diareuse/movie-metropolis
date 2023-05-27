@@ -1,10 +1,12 @@
 package movie.metropolis.app.model.adapter
 
+import android.annotation.SuppressLint
 import com.google.android.gms.wearable.DataMap
 import movie.metropolis.app.model.TicketView
 import java.text.DateFormat
 import java.util.Date
 
+@SuppressLint("VisibleForTests")
 data class TicketViewFromDataMap(
     private val map: DataMap
 ) : TicketView {

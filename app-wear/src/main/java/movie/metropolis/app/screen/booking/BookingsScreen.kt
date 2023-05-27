@@ -14,6 +14,7 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.scrollAway
 import movie.metropolis.app.R
@@ -51,19 +52,23 @@ private fun BookingsScreen(
                 modifier = Modifier.scrollAway(state),
                 timeTextStyle = Theme.textStyle.headline
             )
+        },
+        positionIndicator = {
+            PositionIndicator(state)
         }
     ) {
         ScalingLazyColumn(
             modifier = Modifier.fillMaxSize(),
             state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            autoCentering = AutoCenteringParams(itemOffset = 1)
+            autoCentering = AutoCenteringParams(itemOffset = 1),
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             item { Text(stringResource(R.string.bookings_title), style = Theme.textStyle.title) }
             items.onSuccess { items ->
                 items(items, key = { it.id }) {
                     BookingItem(
-                        name = { Text(it.name) },
+                        name = { Text(it.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
                         date = { Text(it.date) },
                         time = { Text(it.time) },
                         onClick = { onTicketClick(it.id) }

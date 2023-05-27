@@ -44,7 +44,7 @@ class TicketViewPreview : CollectionPreviewParameterProvider<TicketView>(
     companion object {
 
         private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
-        private val timeFormat = DateFormat.getDateInstance(DateFormat.SHORT)
+        private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
         private val nextDate
             get() = Date(
                 nextLong(
