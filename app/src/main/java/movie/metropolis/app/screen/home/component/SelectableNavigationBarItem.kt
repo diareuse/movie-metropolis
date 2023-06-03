@@ -62,7 +62,7 @@ fun <T> SelectableNavigationBarItem(
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        val color = when (selected) {
+        val color by when (selected) {
             index -> Theme.color.container.primary
             else -> Theme.color.container.background
         }.animate()

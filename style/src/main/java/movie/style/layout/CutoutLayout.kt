@@ -12,6 +12,7 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import movie.style.modifier.surface
 import movie.style.state.animate
+import movie.style.state.smartAnimate
 import movie.style.theme.Theme
 import movie.style.theme.contentColorFor
 import movie.style.theme.extendBy
@@ -48,12 +49,12 @@ fun CutoutLayout(
     Box(
         modifier = modifier
     ) {
-        val (nextWidth, setWidth) = remember { mutableStateOf(0.dp) }
-        val (nextHeight, setHeight) = remember { mutableStateOf(0.dp) }
-        val width = nextWidth.animate()
-        val height = nextHeight.animate()
+        val (nextWidth, setWidth) = remember(overlay) { mutableStateOf(0.dp) }
+        val (nextHeight, setHeight) = remember(overlay) { mutableStateOf(0.dp) }
+        val width by nextWidth.smartAnimate()
+        val height by nextHeight.smartAnimate()
+        val color by color.animate()
         val density = LocalDensity.current
-        val color = color.animate()
         val expandedShape = contentShape.extendBy(cutoutPadding)
         val containerShape = remember(width, height) {
             if (width <= 0.dp || height <= 0.dp) contentShape
