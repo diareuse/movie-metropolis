@@ -31,7 +31,8 @@ fun BottomNavigationBar(
     Surface(
         modifier = modifier
             .navigationBarsPadding()
-            .padding(24.dp),
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 24.dp),
         shape = CircleShape,
         tonalElevation = 2.dp,
         shadowElevation = 16.dp
