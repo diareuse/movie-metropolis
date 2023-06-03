@@ -38,7 +38,7 @@ fun <T> Flow<Loadable<T>>.retainStateIn(scope: CoroutineScope) = retainStateIn(
 )
 
 inline fun <T, R> Flow<Result<T>>.mapResult(crossinline body: suspend (value: T) -> R) =
-    map { result -> result.map { body(it) } }
+    map { result -> result.mapCatching { body(it) } }
 
 inline fun <T> Flow<Result<T>>.flatMapResult(crossinline body: suspend (value: T) -> Flow<Result<T>>) =
     flatMapLatest { result ->
