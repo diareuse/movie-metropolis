@@ -5,9 +5,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.text.font.*
@@ -35,7 +33,9 @@ fun DatePickerRow(
     disabledValues: List<Date> = emptyList(),
     formatter: DateFormat = SimpleDateFormat("EE'\n'MMM'\n'd", Locale.getDefault()),
 ) {
-    val start = remember(start) { start.normalize() }
+    val start = remember(start) {
+        (start.time - 7.days.inWholeMilliseconds).coerceAtLeast(Date().time).let(::Date).normalize()
+    }
     val dates = remember(start, end) {
         buildList {
             val calendar = Calendar.getInstance()
@@ -48,10 +48,12 @@ fun DatePickerRow(
     }
     val selected = remember(selected) { selected.normalize() }
     val disabledValues = remember(disabledValues) { disabledValues.map { it.normalize() } }
+    val state = rememberLazyListState()
     LazyRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(horizontal = 24.dp)
+        contentPadding = PaddingValues(horizontal = 24.dp),
+        state = state
     ) {
         items(dates, key = { it }) {
             DatePickerItem(
@@ -61,6 +63,9 @@ fun DatePickerRow(
                 onClick = { onClickDate(it) }
             )
         }
+    }
+    LaunchedEffect(selected, dates) {
+        state.animateScrollToItem(dates.indexOf(selected))
     }
 }
 
