@@ -1,5 +1,6 @@
 package movie.style
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.*
 import androidx.compose.material3.*
@@ -23,6 +24,7 @@ fun EllipsisText(
     }
     Text(
         modifier = modifier
+            .animateContentSize()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
