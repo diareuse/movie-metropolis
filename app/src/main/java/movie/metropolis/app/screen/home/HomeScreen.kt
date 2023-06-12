@@ -11,23 +11,23 @@ import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import movie.metropolis.app.R
-import movie.metropolis.app.feature.play.PlayUpdate
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.currentDestinationAsState
-import movie.metropolis.app.screen.home.component.BottomNavigationBar
 import movie.metropolis.app.screen.home.component.HomeScreenContent
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.metropolis.app.screen.home.component.ProfileIcon
-import movie.metropolis.app.screen.home.component.SelectableNavigationBarItem
 import movie.metropolis.app.screen.listing.ListingScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.settings.SettingsViewModel
 import movie.style.AppButton
+import movie.style.AppNavigationBar
+import movie.style.AppNavigationBarItem
+import movie.style.AppScaffold
 import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
 
@@ -76,7 +76,7 @@ fun HomeScreen(
             )
         },
         onNavigateToLogin = onClickLogin
-    ) { padding ->
+    ) {
         val moviesState = rememberLazyListState()
         val cinemasState = rememberLazyListState()
         val listing: ListingViewModel = hiltViewModel()
@@ -88,7 +88,7 @@ fun HomeScreen(
             controller = controller,
             listing = {
                 ListingScreen(
-                    padding = padding,
+                    padding = PaddingValues(),
                     behavior = behavior,
                     onClickMovie = onClickMovie,
                     state = moviesState,
@@ -97,7 +97,7 @@ fun HomeScreen(
             },
             cinemas = {
                 CinemasScreen(
-                    padding = padding,
+                    padding = PaddingValues(),
                     onClickCinema = onClickCinema,
                     state = cinemasState,
                     behavior = behavior,
@@ -106,7 +106,7 @@ fun HomeScreen(
             },
             booking = {
                 BookingScreen(
-                    padding = padding,
+                    padding = PaddingValues(),
                     behavior = behavior,
                     onMovieClick = { onClickMovie(it, true) },
                     viewModel = booking
@@ -114,7 +114,7 @@ fun HomeScreen(
             },
             settings = {
                 SettingsScreen(
-                    padding = padding,
+                    padding = PaddingValues(),
                     behavior = behavior,
                     viewModel = settings
                 )
@@ -133,10 +133,10 @@ private fun HomeScreen(
     profileIcon: @Composable () -> Unit,
     onRouteChanged: (String) -> Unit,
     behavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable () -> Unit
 ) {
     ClickOnChange(route)
-    Scaffold(
+    AppScaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
         topBar = {
@@ -157,42 +157,44 @@ private fun HomeScreen(
             }
         },
         floatingActionButtonPosition = FabPosition.Center,
-        bottomBar = {
-            Column {
-                PlayUpdate(modifier = Modifier.align(Alignment.CenterHorizontally))
-                BottomNavigationBar {
-                    SelectableNavigationBarItem(
-                        selected = route,
-                        index = Route.Movies.destination(),
-                        label = { Text(stringResource(R.string.movies)) },
-                        icon = { Icon(painterResource(R.drawable.ic_movie), null) },
-                        onSelected = onRouteChanged
-                    )
-                    SelectableNavigationBarItem(
-                        selected = route,
-                        index = Route.Cinemas.destination(),
-                        label = { Text(stringResource(R.string.cinemas)) },
-                        icon = { Icon(painterResource(R.drawable.ic_cinema), null) },
-                        onSelected = onRouteChanged
-                    )
-                    SelectableNavigationBarItem(
-                        selected = route,
-                        index = Route.Tickets.destination(),
-                        label = { Text(stringResource(R.string.tickets)) },
-                        icon = { Icon(painterResource(R.drawable.ic_ticket), null) },
-                        onSelected = onRouteChanged
-                    )
-                    SelectableNavigationBarItem(
-                        selected = route,
-                        index = Route.Settings.destination(),
-                        label = { Text(stringResource(R.string.settings)) },
-                        icon = { Icon(painterResource(R.drawable.ic_settings), null) },
-                        onSelected = onRouteChanged
-                    )
-                }
+        navigationBar = {
+            /*Column {
+                PlayUpdate(modifier = Modifier.align(Alignment.CenterHorizontally))*/
+            AppNavigationBar {
+                AppNavigationBarItem(
+                    selected = route,
+                    index = Route.Movies.destination(),
+                    label = { Text(stringResource(R.string.movies)) },
+                    icon = { Icon(painterResource(R.drawable.ic_movie), null) },
+                    onSelected = onRouteChanged
+                )
+                AppNavigationBarItem(
+                    selected = route,
+                    index = Route.Cinemas.destination(),
+                    label = { Text(stringResource(R.string.cinemas)) },
+                    icon = { Icon(painterResource(R.drawable.ic_cinema), null) },
+                    onSelected = onRouteChanged
+                )
+                AppNavigationBarItem(
+                    selected = route,
+                    index = Route.Tickets.destination(),
+                    label = { Text(stringResource(R.string.tickets)) },
+                    icon = { Icon(painterResource(R.drawable.ic_ticket), null) },
+                    onSelected = onRouteChanged
+                )
+                AppNavigationBarItem(
+                    selected = route,
+                    index = Route.Settings.destination(),
+                    label = { Text(stringResource(R.string.settings)) },
+                    icon = { Icon(painterResource(R.drawable.ic_settings), null) },
+                    onSelected = onRouteChanged
+                )
             }
+            //}
         }
     ) {
-        content(it)
+        Box(Modifier.padding(it)) {
+            content()
+        }
     }
 }

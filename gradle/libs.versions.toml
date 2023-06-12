@@ -62,6 +62,7 @@ compose-foundation = { module = "androidx.compose.foundation:foundation", versio
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 compose-ui-test = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
+compose-ui-window = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "compose-material3" }
 compose-wear-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear" }
 compose-wear-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "androidx-wear" }
 compose-wear-material = { module = "androidx.wear.compose:compose-material", version.ref = "androidx-wear" }
