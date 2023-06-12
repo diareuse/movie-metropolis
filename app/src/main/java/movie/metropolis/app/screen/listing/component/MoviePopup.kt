@@ -9,6 +9,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -40,8 +41,18 @@ private fun MoviePopup(
     ) {
         AppImage(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(aspectRatio)
+                .weight(1f)
+                .layout { measurable, constraints ->
+                    val placeable = if (constraints.maxWidth > constraints.maxHeight) {
+                        val width = (constraints.maxHeight * aspectRatio).toInt()
+                        measurable.measure(constraints.copy(minWidth = width, maxWidth = width))
+                    } else {
+                        measurable.measure(constraints)
+                    }
+                    layout(constraints.maxWidth, constraints.maxHeight) {
+                        placeable.place((constraints.maxWidth - placeable.width) / 2, 0)
+                    }
+                }
                 .clip(Theme.container.card),
             url = url
         )
