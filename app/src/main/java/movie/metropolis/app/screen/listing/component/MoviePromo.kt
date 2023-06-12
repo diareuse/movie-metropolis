@@ -19,6 +19,7 @@ import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.style.AppHorizontalPager
 import movie.style.haptic.TickOnChange
 import movie.style.layout.EmptyShapeLayout
 import movie.style.modifier.overlay
@@ -35,7 +36,7 @@ fun MoviePromo(
 ) {
     items.onLoading {
         val state = rememberPagerState { 3 }
-        HorizontalPager(
+        AppHorizontalPager(
             modifier = modifier,
             userScrollEnabled = false,
             state = state,
@@ -55,7 +56,7 @@ fun MoviePromo(
         val state = rememberPagerState { list.size }.also {
             TickOnChange(value = it.currentPage)
         }
-        HorizontalPager(
+        AppHorizontalPager(
             modifier = modifier,
             key = { list[it].id },
             contentPadding = PaddingValues(start = 24.dp, end = 64.dp, top = 32.dp, bottom = 32.dp),
@@ -102,7 +103,7 @@ fun MoviePromo(
             )
         }
     }.onEmpty {
-        HorizontalPager(
+        AppHorizontalPager(
             modifier = modifier,
             userScrollEnabled = false,
             state = rememberPagerState { 1 },
@@ -131,7 +132,7 @@ fun MoviePromo(
             }
         }
     }.onFailure {
-        HorizontalPager(
+        AppHorizontalPager(
             modifier = modifier,
             userScrollEnabled = false,
             state = rememberPagerState { 1 },
