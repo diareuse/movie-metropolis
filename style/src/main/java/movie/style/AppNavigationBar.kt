@@ -45,7 +45,7 @@ private fun AppNavigationBarCompact(
             modifier = Modifier
                 .fillMaxWidth()
                 .navigationBarsPadding()
-                .padding(12.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             content()
@@ -58,24 +58,28 @@ private fun AppNavigationBarMedium(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Surface(
+    Box(
         modifier = modifier
+            .fillMaxHeight()
             .statusBarsPadding()
             .navigationBarsPadding(),
-        shape = Theme.container.card.copy(
-            topStart = CornerSize(0),
-            bottomStart = CornerSize(0)
-        ),
-        tonalElevation = 4.dp
+        contentAlignment = Alignment.Center
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Surface(
+            shape = Theme.container.card.copy(
+                topStart = CornerSize(0),
+                bottomStart = CornerSize(0)
+            ),
+            tonalElevation = 4.dp
         ) {
-            content()
+            Column(
+                modifier = Modifier
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                content()
+            }
         }
     }
 }
