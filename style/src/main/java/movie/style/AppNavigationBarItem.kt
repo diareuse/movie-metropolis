@@ -45,17 +45,7 @@ fun <T> AppNavigationBarItem(
             interactionSource
         )
 
-        WindowWidthSizeClass.Medium -> AppNavigationBarItemMedium(
-            selected,
-            index,
-            icon,
-            label,
-            onSelected,
-            modifier,
-            interactionSource
-        )
-
-        WindowWidthSizeClass.Expanded -> AppNavigationBarItemExtended(
+        else -> AppNavigationBarItemMedium(
             selected,
             index,
             icon,

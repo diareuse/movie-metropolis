@@ -9,6 +9,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.Route
@@ -35,6 +36,7 @@ import movie.style.theme.Theme
 @Composable
 fun HomeScreen(
     startWith: String,
+    controller: NavHostController = rememberAnimatedNavController(),
     viewModel: HomeViewModel = hiltViewModel(),
     onClickMovie: (String, Boolean) -> Unit,
     onClickCinema: (String) -> Unit,
@@ -42,7 +44,6 @@ fun HomeScreen(
     onClickLogin: () -> Unit
 ) {
     val email = viewModel.email
-    val controller = rememberAnimatedNavController()
     val destination by controller.currentDestinationAsState()
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     LaunchedEffect(destination) {
