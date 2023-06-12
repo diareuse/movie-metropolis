@@ -25,13 +25,3 @@ data class ActivityActions(
 val LocalActivityActions = staticCompositionLocalOf {
     ActivityActions.Default
 }
-
-@Composable
-fun ProvideActivityActions(
-    actions: ActivityActions,
-    content: @Composable () -> Unit
-) {
-    CompositionLocalProvider(LocalActivityActions provides actions) {
-        content()
-    }
-}

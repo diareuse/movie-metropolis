@@ -10,8 +10,8 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.*
+import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.platform.*
 import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
@@ -21,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.screen.Route
+import movie.style.LocalWindowSizeClass
 import movie.style.theme.Theme
 import java.io.File
 import kotlin.coroutines.resume
@@ -35,14 +36,17 @@ class MainActivity : AppCompatActivity() {
         actionShare = ::share
     )
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             PlayRating()
             Theme {
-                ProvideActivityActions(actions = actions) {
+                CompositionLocalProvider(
+                    LocalActivityActions provides actions,
+                    LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
+                ) {
                     val controller = rememberAnimatedNavController()
                     Navigation(controller = controller)
                     LaunchedEffect(Unit) {

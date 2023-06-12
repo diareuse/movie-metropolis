@@ -13,6 +13,7 @@ dependencies {
 
     api libs.compose.ui.core
     api libs.compose.ui.tooling
+    api libs.compose.ui.window
     api libs.compose.foundation
     api libs.compose.material3
     api libs.compose.material
