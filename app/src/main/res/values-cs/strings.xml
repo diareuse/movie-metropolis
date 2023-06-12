@@ -108,4 +108,5 @@
     <string name="support_title">Podpoř misi</string>
     <string name="support_bottom_line_caption">Pamatuj prosím na to, že aplikace je kompletně zdarma a Cinema City ji nesponzoruje. Nabídky nahoře jsou dýška pro vývojáře téhle appky.</string>
     <string name="share_add_ticket">Přidat lístek</string>
+    <string name="select_content_left">Ještě tu nic není, vyber něco zleva</string>
 </resources>
