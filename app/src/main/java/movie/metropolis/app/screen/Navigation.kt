@@ -131,8 +131,10 @@ fun Navigation(
                         user(innerController)
                         cinema(innerController)
                         movie(innerController)
-                        order(innerController)
-                        orderComplete(innerController)
+                        order(
+                            controller = innerController,
+                            onNavigateToOrderComplete = { controller.navigate(Route.OrderComplete.destination()) }
+                        )
                     }
                 }
 
@@ -144,7 +146,10 @@ fun Navigation(
         user(controller)
         cinema(controller)
         movie(controller)
-        order(controller)
+        order(
+            controller = controller,
+            onNavigateToOrderComplete = { controller.navigate(Route.OrderComplete.destination()) }
+        )
         orderComplete(controller)
     }
 }
@@ -207,7 +212,8 @@ fun NavGraphBuilder.movie(
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.order(
-    controller: NavHostController
+    controller: NavHostController,
+    onNavigateToOrderComplete: () -> Unit
 ) = composable(
     route = Route.Order(),
     arguments = Route.Order.arguments,
@@ -217,7 +223,7 @@ fun NavGraphBuilder.order(
         onBackClick = controller::navigateUp,
         onCompleted = {
             controller.popBackStack(Route.Order(), true)
-            controller.navigate(Route.OrderComplete.destination())
+            onNavigateToOrderComplete()
         }
     )
 }
