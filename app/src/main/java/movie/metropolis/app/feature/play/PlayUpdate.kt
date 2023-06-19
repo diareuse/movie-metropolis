@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions.defaultOptions
 import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
@@ -131,10 +132,21 @@ fun rememberAppUpdateState(): State<AppUpdateState> {
     }
 
     fun AppUpdateInfo.startUpdate(@AppUpdateType type: Int) = when (type) {
-        IMMEDIATE -> manager.startUpdateFlowForResult(this, IMMEDIATE, context.findActivity(), 1)
+        IMMEDIATE -> manager.startUpdateFlowForResult(
+            this,
+            context.findActivity(),
+            defaultOptions(IMMEDIATE),
+            1
+        )
+
         FLEXIBLE -> when (context.isConnectionMetered) {
             true -> false
-            else -> manager.startUpdateFlowForResult(this, FLEXIBLE, context.findActivity(), 1)
+            else -> manager.startUpdateFlowForResult(
+                this,
+                context.findActivity(),
+                defaultOptions(FLEXIBLE),
+                1
+            )
         }
 
         else -> false
@@ -158,7 +170,7 @@ fun rememberAppUpdateState(): State<AppUpdateState> {
         val info = manager.appUpdateInfo.runCatching { await() }.getOrNull()
         when (info?.updateAvailability()) {
             UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS ->
-                manager.startUpdateFlowForResult(info, IMMEDIATE, activity, 1)
+                manager.startUpdateFlowForResult(info, activity, defaultOptions(IMMEDIATE), 1)
 
             UpdateAvailability.UPDATE_AVAILABLE -> when {
                 info.isFlexibleUpdateAllowed -> info.startUpdate(FLEXIBLE)
