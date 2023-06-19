@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import movie.metropolis.app.R
+import movie.metropolis.app.feature.play.PlayUpdate
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
@@ -159,8 +160,6 @@ private fun HomeScreen(
         },
         floatingActionButtonPosition = FabPosition.Center,
         navigationBar = {
-            /*Column {
-                PlayUpdate(modifier = Modifier.align(Alignment.CenterHorizontally))*/
             AppNavigationBar {
                 AppNavigationBarItem(
                     selected = route,
@@ -191,11 +190,11 @@ private fun HomeScreen(
                     onSelected = onRouteChanged
                 )
             }
-            //}
         }
     ) {
         Box(Modifier.padding(it)) {
             content()
+            PlayUpdate(modifier = Modifier.align(Alignment.BottomCenter))
         }
     }
 }
