@@ -1,5 +1,5 @@
 [versions]
-accompanist = "0.31.3-beta"
+accompanist = "0.31.4-beta"
 android-billing = "6.0.0"
 androidx-activity = { strictly = "1.7.2" }
 androidx-livedata = "2.6.1"
