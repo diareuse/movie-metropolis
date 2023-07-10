@@ -32,7 +32,7 @@ json = "1.5.1"
 ktor = "2.3.2"
 zxing = "3.5.1"
 zxing-embed = "4.3.0"
-ksp = "1.8.22-1.0.11"
+ksp = "1.9.0-1.0.11"
 
 [libraries]
 android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
