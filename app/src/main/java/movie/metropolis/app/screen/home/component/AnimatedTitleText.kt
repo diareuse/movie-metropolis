@@ -6,9 +6,7 @@ import androidx.compose.animation.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.tooling.preview.datasource.*
 import movie.style.layout.PreviewLayout
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -22,7 +20,7 @@ fun <T> AnimatedTitleText(
         modifier = modifier,
         targetState = target,
         transitionSpec = {
-            fadeIn() + slideInHorizontally { it } with fadeOut() + slideOutHorizontally { -it }
+            fadeIn() + slideInHorizontally { it } togetherWith fadeOut() + slideOutHorizontally { -it }
         }
     ) {
         content(it)

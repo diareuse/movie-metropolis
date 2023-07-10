@@ -20,9 +20,9 @@ class ShortcutActivity : Activity() {
             .setAction(Intent.ACTION_VIEW)
             .setData(route)
             .setPackage(packageName)
-        overridePendingTransition(0, 0)
+
+        window.setWindowAnimations(0)
         startActivity(intent)
-        overridePendingTransition(0, 0)
         finish()
     }
 

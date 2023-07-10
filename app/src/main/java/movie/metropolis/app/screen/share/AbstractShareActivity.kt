@@ -32,10 +32,9 @@ abstract class AbstractShareActivity : AppCompatActivity() {
         val context = this
         lifecycleScope.launch {
             facade.putTicket(ticket)
+            window.setWindowAnimations(0)
             startActivity(MainActivity.tickets(context))
-            overridePendingTransition(0, 0)
             finish()
-            overridePendingTransition(0, 0)
         }
     }
 

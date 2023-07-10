@@ -17,9 +17,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import movie.metropolis.app.R
@@ -36,14 +36,13 @@ import movie.style.LocalWindowSizeClass
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun Navigation(
-    controller: NavHostController = rememberAnimatedNavController()
+    controller: NavHostController = rememberNavController()
 ) {
     val setupViewModel = hiltViewModel<SetupViewModel>()
     val requiresSetup by setupViewModel.requiresSetup.collectAsState()
-    AnimatedNavHost(
+    NavHost(
         navController = controller,
         startDestination = if (requiresSetup) Route.Setup() else Route.Home(),
         enterTransition = { slideInHorizontally { it } },
@@ -73,7 +72,7 @@ fun Navigation(
             @Composable
             fun draw(
                 controller: NavHostController,
-                originController: NavHostController = rememberAnimatedNavController()
+                originController: NavHostController = rememberNavController()
             ) {
                 HomeScreen(
                     startWith = args.screen,
@@ -88,8 +87,8 @@ fun Navigation(
             }
             when (LocalWindowSizeClass.current.widthSizeClass) {
                 WindowWidthSizeClass.Expanded -> Row {
-                    val innerController = rememberAnimatedNavController()
-                    val homeController = rememberAnimatedNavController()
+                    val innerController = rememberNavController()
+                    val homeController = rememberNavController()
                     val destination by homeController.currentDestinationAsState()
                     LaunchedEffect(destination) {
                         do {
@@ -109,7 +108,7 @@ fun Navigation(
                             .navigationBarsPadding()
                             .background(LocalContentColor.current, CircleShape)
                     )
-                    AnimatedNavHost(
+                    NavHost(
                         modifier = Modifier
                             .fillMaxHeight()
                             .weight(1f)
@@ -154,7 +153,6 @@ fun Navigation(
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.login(
     controller: NavHostController
 ) = composable(
@@ -170,7 +168,6 @@ fun NavGraphBuilder.login(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.user(
     controller: NavHostController
 ) = composable(
@@ -182,7 +179,6 @@ fun NavGraphBuilder.user(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.cinema(
     controller: NavHostController
 ) = composable(
@@ -196,7 +192,6 @@ fun NavGraphBuilder.cinema(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.movie(
     controller: NavHostController
 ) = composable(
@@ -210,7 +205,6 @@ fun NavGraphBuilder.movie(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.order(
     controller: NavHostController,
     onNavigateToOrderComplete: () -> Unit
@@ -228,7 +222,6 @@ fun NavGraphBuilder.order(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.orderComplete(
     controller: NavHostController
 ) = composable(

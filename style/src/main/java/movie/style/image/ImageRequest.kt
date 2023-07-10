@@ -7,7 +7,9 @@ import coil.request.ImageRequest
 import coil.size.Precision
 import coil.size.Scale
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun rememberImageRequest(url: String): ImageRequest {
     val context = LocalContext.current

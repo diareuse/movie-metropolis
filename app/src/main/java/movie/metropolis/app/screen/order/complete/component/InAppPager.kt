@@ -5,22 +5,19 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ProductDetailView
 import movie.metropolis.app.presentation.Loadable
 import movie.style.AnticipateOvershootEasing
 import movie.style.layout.PreviewLayout
 
-
-@OptIn(ExperimentalPagerApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun InAppPager(
     items: Loadable<List<ProductDetailView>>,
@@ -47,8 +44,7 @@ fun InAppPager(
         val items = items.getOrNull().orEmpty()
         HorizontalPager(
             modifier = modifier,
-            count = 3,
-            state = rememberPagerState(1),
+            state = rememberPagerState(1) { 3 },
             contentPadding = PaddingValues(start = 32.dp, end = 32.dp, top = 32.dp, bottom = 32.dp),
             verticalAlignment = Alignment.Top
         ) { index ->

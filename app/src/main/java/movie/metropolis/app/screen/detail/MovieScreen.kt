@@ -112,6 +112,7 @@ fun MovieScreen(
     )
 }
 
+@Suppress("FunctionName")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MovieScreen(
@@ -237,6 +238,7 @@ private fun MovieScreen(
     }
 }
 
+@Suppress("FunctionName")
 @OptIn(ExperimentalFoundationApi::class)
 fun LazyListScope.MovieDetailShowings(
     showings: Loadable<List<CinemaBookingView>>,
@@ -296,8 +298,8 @@ fun LazyListScope.MovieDetailShowings(
             Divider(Modifier.padding(horizontal = 32.dp))
         }
     }
-    showings.onSuccess { showings ->
-        items(showings, key = { it.cinema.id }) {
+    showings.onSuccess { items ->
+        items(items, key = { it.cinema.id }) {
             ShowingItem(
                 modifier = Modifier
                     .animateItemPlacement()

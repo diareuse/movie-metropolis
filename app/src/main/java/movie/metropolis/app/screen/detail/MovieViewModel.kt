@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
@@ -68,6 +69,8 @@ class MovieViewModel private constructor(
         .retainStateIn(viewModelScope)
     val poster = detail.mapLoadable { it.poster }
         .retainStateIn(viewModelScope)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val showings =
         combine(selectedDate.filterNotNull(), location.filterNotNull()) { a, b -> a to b }
             .flatMapLatest { (date, location) ->

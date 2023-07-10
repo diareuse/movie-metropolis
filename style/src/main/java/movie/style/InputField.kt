@@ -53,11 +53,13 @@ fun InputField(
                 isError = isError,
                 readOnly = readOnly,
                 shape = Theme.container.button,
-                colors = TextFieldDefaults.textFieldColors(
+                colors = TextFieldDefaults.colors(
                     focusedTextColor = Theme.color.content.surface,
                     unfocusedTextColor = Theme.color.content.surface,
                     disabledTextColor = Theme.color.content.surface.copy(alpha = .38f),
-                    containerColor = Theme.color.container.surface,
+                    focusedContainerColor = Theme.color.container.surface,
+                    unfocusedContainerColor = Theme.color.container.surface,
+                    disabledContainerColor = Theme.color.container.surface,
                     cursorColor = Theme.color.content.surface,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
@@ -65,7 +67,7 @@ fun InputField(
                     errorIndicatorColor = Color.Transparent,
                     focusedPlaceholderColor = Theme.color.content.surface.copy(alpha = .5f),
                     unfocusedPlaceholderColor = Theme.color.content.surface.copy(alpha = .5f),
-                    disabledPlaceholderColor = Theme.color.content.surface.copy(alpha = .25f)
+                    disabledPlaceholderColor = Theme.color.content.surface.copy(alpha = .25f),
                 ),
                 placeholder = placeholder,
                 supportingText = supportingText,
