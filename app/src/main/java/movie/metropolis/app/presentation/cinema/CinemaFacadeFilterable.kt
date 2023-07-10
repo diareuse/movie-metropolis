@@ -1,5 +1,6 @@
 package movie.metropolis.app.presentation.cinema
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -18,6 +19,7 @@ class CinemaFacadeFilterable(
 
     override val options = MutableStateFlow(mapOf<Filter.Type, List<Filter>>())
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun showings(date: Date): Flow<Result<List<MovieBookingView>>> = options
         .flatMapLatest { origin.showings(date) }
         .onEach { result ->

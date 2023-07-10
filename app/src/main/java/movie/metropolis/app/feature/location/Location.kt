@@ -54,7 +54,7 @@ private val LocationSaver = object : Saver<Location?, Bundle> {
     }
 
     override fun SaverScope.save(value: Location?): Bundle? {
-        return value?.let { value ->
+        return value?.let {
             bundleOf(
                 "latitude" to value.latitude,
                 "longitude" to value.longitude

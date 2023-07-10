@@ -1,34 +1,44 @@
 package movie.metropolis.app.screen.booking.component
 
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.layout.*
-import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TicketActions(
     actions: @Composable RowScope.() -> Unit,
     modifier: Modifier = Modifier,
-    state: SwipeableState<Int> = rememberSwipeableState(initialValue = 0),
     content: @Composable () -> Unit
 ) {
-    var anchorSize by remember { mutableStateOf(1f) }
-    val anchors = remember(anchorSize) { mapOf(0f to 0, anchorSize to 1) }
-    Box(
-        modifier = modifier.swipeable(
-            state = state,
+    var anchorSize by remember { mutableFloatStateOf(1f) }
+    val anchors = DraggableAnchors {
+        0 at 0f
+        1 at anchorSize
+    }
+    val state = remember {
+        AnchoredDraggableState(
+            initialValue = 0,
             anchors = anchors,
-            thresholds = { _, _ -> FractionalThreshold(1f) },
-            orientation = Orientation.Vertical
-        ),
+            positionalThreshold = { it },
+            velocityThreshold = { 0f },
+            animationSpec = tween()
+        )
+    }
+    SideEffect {
+        state.updateAnchors(anchors)
+    }
+
+
+    Box(
+        modifier = modifier.anchoredDraggable(state, Orientation.Vertical),
         contentAlignment = Alignment.TopCenter
     ) {
         Row(
@@ -38,7 +48,7 @@ fun TicketActions(
         )
         Box(
             modifier = Modifier.offset {
-                val offset = state.offset.value.takeUnless { it.isNaN() } ?: 0f
+                val offset = state.requireOffset().takeUnless { it.isNaN() } ?: 0f
                 IntOffset(0, offset.roundToInt())
             }
         ) {

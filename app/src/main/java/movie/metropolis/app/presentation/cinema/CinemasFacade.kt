@@ -1,6 +1,7 @@
 package movie.metropolis.app.presentation.cinema
 
 import android.location.Location
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -20,6 +21,7 @@ interface CinemasFacade {
 
     companion object {
 
+        @OptIn(ExperimentalCoroutinesApi::class)
         fun CinemasFacade.cinemasFlow(
             location: Flow<Location?>
         ) = location.flatMapLatest {

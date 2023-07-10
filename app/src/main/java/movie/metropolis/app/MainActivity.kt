@@ -16,7 +16,7 @@ import androidx.core.content.FileProvider.getUriForFile
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                     LocalActivityActions provides actions,
                     LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
                 ) {
-                    val controller = rememberAnimatedNavController()
+                    val controller = rememberNavController()
                     Navigation(controller = controller)
                     LaunchedEffect(Unit) {
                         navigateIfNecessary(controller)

@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package movie.metropolis.app.presentation
 
 import androidx.compose.runtime.*

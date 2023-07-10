@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -36,6 +37,8 @@ class CinemaViewModel private constructor(
     val cinema = facade.cinema
         .map { it.asLoadable() }
         .retainStateIn(viewModelScope)
+
+    @OptIn(ExperimentalCoroutinesApi::class)
     val items = selectedDate
         .flatMapLatest {
             flow {

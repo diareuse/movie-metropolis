@@ -134,18 +134,22 @@ sealed class Route(
     }
 
     object Settings : Route("settings") {
+        val index = 4
         fun destination() = route
     }
 
     object Movies : Route("movies") {
+        val index = 1
         fun destination() = route
     }
 
     object Tickets : Route("tickets") {
+        val index = 3
         fun destination() = route
     }
 
     object Cinemas : Route("cinemas") {
+        val index = 2
         fun destination() = route
     }
 

@@ -10,7 +10,7 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.play.PlayUpdate
 import movie.metropolis.app.screen.Route
@@ -37,7 +37,7 @@ import movie.style.theme.Theme
 @Composable
 fun HomeScreen(
     startWith: String,
-    controller: NavHostController = rememberAnimatedNavController(),
+    controller: NavHostController = rememberNavController(),
     viewModel: HomeViewModel = hiltViewModel(),
     onClickMovie: (String, Boolean) -> Unit,
     onClickCinema: (String) -> Unit,

@@ -10,15 +10,23 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.home.component.HomeScreenContentParameter.Data
 import movie.style.layout.PreviewLayout
 
-@OptIn(ExperimentalAnimationApi::class)
+private fun NavBackStackEntry.getIndex() = when (destination.route) {
+    Route.Movies() -> Route.Movies.index
+    Route.Cinemas() -> Route.Cinemas.index
+    Route.Tickets() -> Route.Tickets.index
+    Route.Settings() -> Route.Settings.index
+    else -> 0
+}
+
 @Composable
 fun HomeScreenContent(
     startWith: Route,
@@ -26,11 +34,29 @@ fun HomeScreenContent(
     cinemas: @Composable () -> Unit,
     booking: @Composable () -> Unit,
     settings: @Composable () -> Unit,
-    controller: NavHostController = rememberAnimatedNavController()
+    controller: NavHostController = rememberNavController()
 ) {
-    AnimatedNavHost(
+    NavHost(
         navController = controller,
-        startDestination = startWith()
+        startDestination = startWith(),
+        enterTransition = {
+            val initial = initialState.getIndex()
+            val target = targetState.getIndex()
+            if (initial < target) {
+                slideInHorizontally { it }
+            } else {
+                slideInHorizontally { -it }
+            }
+        },
+        exitTransition = {
+            val initial = initialState.getIndex()
+            val target = targetState.getIndex()
+            if (initial < target) {
+                slideOutHorizontally { -it }
+            } else {
+                slideOutHorizontally { it }
+            }
+        }
     ) {
         composable(
             route = Route.Movies(),
