@@ -20,7 +20,6 @@ class SetupViewModel @Inject constructor(
 ) : ViewModel() {
 
     val requiresSetup = facade.requiresSetupFlow
-        .retainStateIn(viewModelScope, facade.requiresSetup)
 
     val regions = facade.regionsFlow
         .retainStateIn(viewModelScope, Loadable.loading())

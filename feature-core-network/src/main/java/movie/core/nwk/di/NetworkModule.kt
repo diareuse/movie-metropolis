@@ -21,9 +21,11 @@ import movie.core.auth.AuthMetadata
 import movie.core.auth.UserAccount
 import movie.core.nwk.CinemaService
 import movie.core.nwk.CinemaServiceImpl
+import movie.core.nwk.CinemaServiceThread
 import movie.core.nwk.EndpointProvider
 import movie.core.nwk.EventService
 import movie.core.nwk.EventServiceImpl
+import movie.core.nwk.EventServiceThread
 import movie.core.nwk.LazyHttpClient
 import movie.core.nwk.LazyHttpClientEngine
 import movie.core.nwk.PerformanceTracer
@@ -32,6 +34,7 @@ import movie.core.nwk.UserServiceImpl
 import movie.core.nwk.UserServiceLogout
 import movie.core.nwk.UserServiceReauthorize
 import movie.core.nwk.UserServiceSaving
+import movie.core.nwk.UserServiceThread
 import movie.core.nwk.trace
 import javax.inject.Singleton
 
@@ -129,8 +132,9 @@ class NetworkModule {
         @ClientQuickbook
         clientQuickbook: LazyHttpClient
     ): EventService {
-        val service: EventService
+        var service: EventService
         service = EventServiceImpl(client, clientQuickbook)
+        service = EventServiceThread(service)
         return service
     }
 
@@ -139,8 +143,9 @@ class NetworkModule {
         @ClientRoot
         client: LazyHttpClient
     ): CinemaService {
-        val service: CinemaService
+        var service: CinemaService
         service = CinemaServiceImpl(client)
+        service = CinemaServiceThread(service)
         return service
     }
 
@@ -156,6 +161,7 @@ class NetworkModule {
         service = UserServiceSaving(service, account)
         service = UserServiceReauthorize(service, account, auth.captcha)
         service = UserServiceLogout(service, account)
+        service = UserServiceThread(service)
         return service
     }
 

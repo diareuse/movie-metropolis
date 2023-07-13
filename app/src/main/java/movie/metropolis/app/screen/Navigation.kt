@@ -41,10 +41,18 @@ fun Navigation(
     controller: NavHostController = rememberNavController()
 ) {
     val setupViewModel = hiltViewModel<SetupViewModel>()
-    val requiresSetup by setupViewModel.requiresSetup.collectAsState()
+    LaunchedEffect(setupViewModel) {
+        setupViewModel.requiresSetup.collect {
+            if (it) controller.navigate(Route.Setup()) {
+                popUpTo(Route.Home()) {
+                    inclusive = true
+                }
+            }
+        }
+    }
     NavHost(
         navController = controller,
-        startDestination = if (requiresSetup) Route.Setup() else Route.Home(),
+        startDestination = Route.Home(),
         enterTransition = { slideInHorizontally { it } },
         exitTransition = { fadeOut() + slideOutHorizontally() },
         popEnterTransition = { fadeIn() + slideInHorizontally() },

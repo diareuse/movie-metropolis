@@ -12,6 +12,7 @@ androidx-compose = "1.6.0-alpha01"
 androidx-wear = "1.2.0-beta02"
 androidx-navigation = "2.7.0-beta02"
 androidx-palette = "1.0.0"
+androidx-process = "2.6.1"
 google-material = "1.11.0-alpha01"
 google-update = "2.1.0"
 google-services = "4.3.15"
@@ -21,7 +22,6 @@ google-wearable = "18.0.0"
 compose-material = "1.6.0-alpha01"
 compose-material3 = "1.2.0-alpha03"
 firebase-analytics = "21.3.0"
-firebase-perf = "20.3.3"
 firebase-crashlytics = "18.3.7"
 firebase-plugin = "2.9.6"
 kotlin = "1.8.22"
@@ -33,6 +33,10 @@ ktor = "2.3.2"
 zxing = "3.5.1"
 zxing-embed = "4.3.0"
 ksp = "1.8.22-1.0.11"
+junit = "1.1.5"
+espresso-core = "3.5.1"
+uiautomator = "2.2.0"
+benchmark-macro-junit4 = "1.2.0-alpha16"
 
 [libraries]
 android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
@@ -44,6 +48,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
 androidx-startup = { module = "androidx.startup:startup-runtime", version.ref = "androidx-startup" }
 androidx-work = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+androidx-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "androidx-process" }
 coil-svg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 google-update = { module = "com.google.android.play:app-update-ktx", version.ref = "google-update" }
@@ -68,7 +73,6 @@ compose-wear-foundation = { module = "androidx.wear.compose:compose-foundation",
 compose-wear-material = { module = "androidx.wear.compose:compose-material", version.ref = "androidx-wear" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
 firebase-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin" }
-firebase-perf = { module = "com.google.firebase:firebase-perf-ktx", version.ref = "firebase-perf" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
@@ -80,6 +84,10 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
 zxing-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing-embed" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
+junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
+benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "benchmark-macro-junit4" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
@@ -89,6 +97,7 @@ android-library = { id = "com.android.library", version.ref = "android" }
 android-application = { id = "com.android.application", version.ref = "android" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+androidTest = { id = "com.android.test", version.ref = "android" }
 
 [bundles]
 
