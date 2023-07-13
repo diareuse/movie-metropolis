@@ -43,18 +43,18 @@ fun HomeScreenContent(
             val initial = initialState.getIndex()
             val target = targetState.getIndex()
             if (initial < target) {
-                slideInHorizontally { it }
+                fadeIn() + slideInHorizontally { it }
             } else {
-                slideInHorizontally { -it }
+                fadeIn() + slideInHorizontally { -it }
             }
         },
         exitTransition = {
             val initial = initialState.getIndex()
             val target = targetState.getIndex()
             if (initial < target) {
-                slideOutHorizontally { -it }
+                fadeOut() + slideOutHorizontally { -it }
             } else {
-                slideOutHorizontally { it }
+                fadeOut() + slideOutHorizontally { it }
             }
         }
     ) {
