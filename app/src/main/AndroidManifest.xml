@@ -26,6 +26,9 @@
         android:theme="@style/Theme.MovieMetropolis"
         tools:targetApi="31">
 
+        <!--suppress AndroidElementNotAllowed -->
+        <profileable android:shell="true" />
+
         <meta-data
             android:name="firebase_analytics_collection_deactivated"
             android:value="${debug}" />

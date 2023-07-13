@@ -87,7 +87,8 @@ private fun ListingScreenContent(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .nestedScroll(behavior.nestedScrollConnection),
+            .nestedScroll(behavior.nestedScrollConnection)
+            .testTag("listingColumn"),
         contentPadding = contentPadding,
         state = state,
     ) {

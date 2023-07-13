@@ -10,6 +10,14 @@ android {
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    buildTypes {
+        benchmark {
+            initWith release
+            signingConfig signingConfigs.debug
+            matchingFallbacks = ['release']
+            debuggable false
+        }
+    }
 
 }
 
@@ -26,11 +34,11 @@ dependencies {
     implementation libs.androidx.startup
     implementation libs.androidx.livedata
     implementation libs.androidx.work
+    implementation libs.androidx.process
     implementation libs.androidx.profileinstaller
 
     implementation libs.firebase.analytics
     implementation libs.firebase.crashlytics
-    implementation libs.firebase.perf
 
     implementation libs.google.location
 

@@ -34,9 +34,11 @@ fun HomeScreenContent(
     cinemas: @Composable () -> Unit,
     booking: @Composable () -> Unit,
     settings: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
     controller: NavHostController = rememberNavController()
 ) {
     NavHost(
+        modifier = modifier,
         navController = controller,
         startDestination = startWith(),
         enterTransition = {

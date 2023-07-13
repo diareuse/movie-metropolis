@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -33,7 +34,10 @@ import movie.style.AppScaffold
 import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
 
-@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(
+    ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun HomeScreen(
     startWith: String,
@@ -86,6 +90,9 @@ fun HomeScreen(
         val booking: BookingViewModel = hiltViewModel()
         val settings: SettingsViewModel = hiltViewModel()
         HomeScreenContent(
+            modifier = Modifier.semantics {
+                testTagsAsResourceId = true
+            },
             startWith = Route.by(startWith),
             controller = controller,
             listing = {

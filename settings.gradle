@@ -27,3 +27,4 @@ include ":feature-image-analysis"
 include ":feature-calendar"
 include ":feature-log"
 include ":feature-wear"
+include ':app:benchmark'

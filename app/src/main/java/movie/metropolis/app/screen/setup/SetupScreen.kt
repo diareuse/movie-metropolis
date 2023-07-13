@@ -31,10 +31,11 @@ fun SetupScreen(
     onNavigateHome: () -> Unit,
     viewModel: SetupViewModel
 ) {
-    val requiresSetup by viewModel.requiresSetup.collectAsState()
     val regions by viewModel.regions.collectAsState()
-    LaunchedEffect(requiresSetup) {
-        if (!requiresSetup) onNavigateHome()
+    LaunchedEffect(viewModel) {
+        viewModel.requiresSetup.collect {
+            if (!it) onNavigateHome()
+        }
     }
     SetupScreen(
         regions = regions,

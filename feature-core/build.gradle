@@ -19,7 +19,7 @@ dependencies {
     implementation project(":feature-log")
     implementation project(":feature-wear")
 
-    implementation libs.firebase.perf
+    implementation libs.androidx.process
 
     testImplementation libs.ktor.client.mock
 
