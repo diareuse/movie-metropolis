@@ -24,7 +24,9 @@ jobs:
           echo "MM_CAPTCHA=${{ secrets.CAPTCHA }}" >> secrets.properties
 
       - run: |
-          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/" buildSrc/src/main/groovy/application-conventions.gradle 
+          versionNumber=${{github.run_number}}
+          versionNumber=$(($versionNumber+100))
+          sed -i "s/versionCode 1/versionCode $versionNumber/" buildSrc/src/main/groovy/application-conventions.gradle
 
       - name: Set up JDK
         uses: actions/setup-java@v3
