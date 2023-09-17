@@ -4,6 +4,7 @@ import movie.core.adapter.ShowingFromResponse
 import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.nwk.EventService
+import movie.core.util.requireNotEmpty
 import java.util.Date
 
 class EventShowingsFeatureMovieNetwork(
@@ -14,6 +15,8 @@ class EventShowingsFeatureMovieNetwork(
 ) : EventShowingsFeature.Movie {
 
     override suspend fun get(date: Date): Result<CinemaWithShowings> = cinema.get(location)
+        .mapCatching { it.requireNotEmpty() }
+        .recoverCatching { cinema.get(null).getOrThrow() }
         .mapCatching { cinemas ->
             cinemas.associateWith { cinema ->
                 service.getEventsInCinema(cinema.id, date)

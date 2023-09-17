@@ -118,8 +118,7 @@ internal class EventFeatureModule {
             out = EventShowingsFeatureMovieFold(
                 EventShowingsFeatureMovieTimeout(out),
                 EventShowingsFeatureMovieRequireNotEmpty(database),
-                out,
-                database
+                out
             )
             out = EventShowingsFeatureMovieCatch(out)
             return out
