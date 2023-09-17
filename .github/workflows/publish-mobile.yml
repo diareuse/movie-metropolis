@@ -1,0 +1,51 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - "**/src/main/**"
+
+jobs:
+  build-aab:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          echo "${{ secrets.DEPLOY_SIGNING_KEY }}" | base64 --decode > keystore.jks
+          echo "${{ secrets.DEPLOY_SIGNING_PROPERTIES }}" | base64 --decode > keystore.properties
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
+          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
+          echo "MM_BASIC_USER=${{ secrets.BASIC_USER }}" >> secrets.properties
+          echo "MM_BASIC_PASS=${{ secrets.BASIC_PASS }}" >> secrets.properties
+          echo "MM_CAPTCHA=${{ secrets.CAPTCHA }}" >> secrets.properties
+
+      - run: |
+          sed -i "s/versionCode 1/versionCode ${{ github.run_number }}/" buildSrc/src/main/groovy/application-conventions.gradle 
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: app:bundleRelease
+
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: service-account.json
+          packageName: movie.metropolis.app
+          releaseFiles: app/build/outputs/bundle/release/*.aab
+          track: production
+          status: completed
+          inAppUpdatePriority: 3
+          mappingFile: build/outputs/mapping/release/mapping.txt
