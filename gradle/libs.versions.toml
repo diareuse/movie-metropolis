@@ -24,12 +24,18 @@ compose-material3 = "1.2.0-alpha07"
 firebase-analytics = "21.3.0"
 firebase-crashlytics = "18.4.1"
 firebase-plugin = "2.9.9"
+hilt-compiler = "1.0.0"
+hilt-navigation = "1.1.0-alpha01"
+hilt-work = "1.0.0"
 kotlin = "1.9.10"
 android = "8.3.0-alpha04"
 coil = "2.4.0"
 hilt = "2.48"
 json = "1.6.0"
+coroutines = "1.7.3"
 ktor = "2.3.4"
+mockito-kotlin = "5.1.0"
+mockito-core = "5.4.0"
 zxing = "3.5.2"
 zxing-embed = "4.3.0"
 ksp = "1.9.10-1.0.13"
@@ -74,6 +80,17 @@ compose-wear-material = { module = "androidx.wear.compose:compose-material", ver
 firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
 firebase-gradle = { module = "com.google.firebase:firebase-crashlytics-gradle", version.ref = "firebase-plugin" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx", version.ref = "firebase-crashlytics" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
+hilt-compiler2 = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
+hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hilt-compiler" }
+hilt-work = { module = "androidx.hilt:hilt-work", version.ref = "hilt-work" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinx-coroutines-play-services = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services", version.ref = "coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "json" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
@@ -82,6 +99,8 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 zxing-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing-embed" }
 zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 junit = { group = "androidx.test.ext", name = "junit", version.ref = "junit" }

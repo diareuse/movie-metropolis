@@ -36,19 +36,15 @@ android {
 
 dependencies {
 
-    // bom
-    implementation platform('org.jetbrains.kotlinx:kotlinx-coroutines-bom:[1,2[')
-
     // lang
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services'
+    implementation libs.kotlin.stdlib
+    implementation libs.kotlin.reflect
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.play.services
 
-    testImplementation "org.jetbrains.kotlin:kotlin-test"
-    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test"
-    testImplementation "org.mockito:mockito-core:[4,5["
-    testImplementation "org.mockito.kotlin:mockito-kotlin:[4,5["
+    testImplementation libs.kotlin.test
+    testImplementation libs.kotlinx.coroutines.test
+    testImplementation libs.mockito.core
+    testImplementation libs.mockito.kotlin
 
 }
