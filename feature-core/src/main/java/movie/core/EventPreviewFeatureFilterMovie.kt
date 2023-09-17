@@ -10,9 +10,21 @@ class EventPreviewFeatureFilterMovie(
     @Suppress("ReplaceSizeCheckWithIsNotEmpty")
     override suspend fun get() = origin.get().map { movies ->
         when (preference.onlyMovies) {
-            true -> movies.filter { it.genres.count() > 0 && "musical" !in it.genres }
+            true -> movies.filter { it.genres.count() > 0 && it.genres !in DisabledEvents }
             else -> movies
         }
+    }
+
+    private operator fun Iterable<String>.contains(other: Iterable<String>): Boolean {
+        for (it in this)
+            if (it in other) return true
+        return false
+    }
+
+    companion object {
+
+        private val DisabledEvents = listOf("musical", "dance", "concert")
+
     }
 
 }
