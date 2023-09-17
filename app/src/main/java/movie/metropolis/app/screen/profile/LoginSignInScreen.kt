@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
@@ -17,6 +18,8 @@ import movie.metropolis.app.screen.profile.component.ActionsWithProgress
 import movie.metropolis.app.screen.profile.component.EmailField
 import movie.metropolis.app.screen.profile.component.LoginScreenLayout
 import movie.metropolis.app.screen.profile.component.PasswordField
+import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
+import movie.metropolis.app.screen.profile.component.requestOneTapAsState
 import movie.metropolis.app.screen.setup.component.Background
 import movie.style.AppButton
 import movie.style.theme.Theme
@@ -30,9 +33,17 @@ fun LoginSignInScreen(
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val domain = remember(viewModel) { viewModel.domain }
-    val state by viewModel.state.collectAsState()
-    LaunchedEffect(state) {
-        if (state.getOrNull() == true) onNavigateHome()
+    val state by viewModel.loading.collectAsState()
+    val oneTap by requestOneTapAsState()
+    val oneTapSave = rememberOneTapSaving()
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(oneTap) {
+        val oneTap = oneTap
+        if (oneTap != null) {
+            viewModel.email.value = oneTap.userName
+            viewModel.password.value = oneTap.password.concatToString()
+            viewModel.send(onNavigateHome)
+        }
     }
     LoginSignInScreen(
         email = email,
@@ -42,7 +53,14 @@ fun LoginSignInScreen(
         domain = domain,
         onEmailChanged = { viewModel.email.value = it },
         onPasswordChanged = { viewModel.password.value = it },
-        onSendClick = viewModel::send,
+        onSendClick = {
+            viewModel.send {
+                scope.launch {
+                    oneTapSave.save(email, password)
+                    onNavigateHome()
+                }
+            }
+        },
         onBackClick = onBackClick
     )
 }

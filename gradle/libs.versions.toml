@@ -13,6 +13,7 @@ androidx-wear = "1.2.0"
 androidx-navigation = "2.7.2"
 androidx-palette = "1.0.0"
 androidx-process = "2.6.2"
+google-auth = "20.7.0"
 google-material = "1.11.0-alpha02"
 google-update = "2.1.0"
 google-services = "4.3.15"
@@ -60,6 +61,7 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 google-update = { module = "com.google.android.play:app-update-ktx", version.ref = "google-update" }
 google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
 google-location = { module = "com.google.android.gms:play-services-location", version.ref = "google-location" }
+google-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "google-auth" }
 google-review = { module = "com.google.android.play:review-ktx", version.ref = "google-review" }
 google-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "google-wearable" }
 google-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
