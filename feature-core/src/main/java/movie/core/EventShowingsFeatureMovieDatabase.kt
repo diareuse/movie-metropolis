@@ -6,6 +6,7 @@ import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.util.dayEnd
 import movie.core.util.dayStart
+import movie.core.util.requireNotEmpty
 import java.util.Date
 
 class EventShowingsFeatureMovieDatabase(
@@ -15,8 +16,10 @@ class EventShowingsFeatureMovieDatabase(
     private val cinema: EventCinemaFeature
 ) : EventShowingsFeature.Movie {
 
-    override suspend fun get(date: Date): Result<CinemaWithShowings> =
-        cinema.get(location).mapCatching {
+    override suspend fun get(date: Date) = cinema.get(location)
+        .mapCatching { it.requireNotEmpty() }
+        .recoverCatching { cinema.get(null).getOrThrow() }
+        .mapCatching {
             it.asIterable().associateWith { cinema ->
                 showing.selectByCinema(
                     rangeStart = date.dayStart.coerceAtLeast(Date()).time,

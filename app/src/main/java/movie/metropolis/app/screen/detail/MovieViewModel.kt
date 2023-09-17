@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import movie.core.UserDataFeature
 import movie.core.model.Location
@@ -71,18 +71,17 @@ class MovieViewModel private constructor(
         .retainStateIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val showings =
-        combine(selectedDate.filterNotNull(), location.filterNotNull()) { a, b -> a to b }
-            .flatMapLatest { (date, location) ->
-                flow {
-                    emit(Loadable.loading())
-                    facade
-                        .showings(date, location.latitude, location.longitude)
-                        .map { it.asLoadable() }
-                        .collect(this)
-                }
-            }
-            .retainStateIn(viewModelScope)
+    val showings = combine(
+        selectedDate.filterNotNull(),
+        location.filterNotNull().onStart { emit(android.location.Location(null)) }
+    ) { a, b -> a to b }
+        .flatMapLatest { (date, location) ->
+            facade
+                .showings(date, location.latitude, location.longitude)
+                .map { it.asLoadable() }
+                .onStart { emit(Loadable.loading()) }
+        }
+        .retainStateIn(viewModelScope)
     val options = facade.options
         .retainStateIn(viewModelScope, emptyMap())
     val favorite = facade.favorite
