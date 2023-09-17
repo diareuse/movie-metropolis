@@ -17,7 +17,7 @@ class LoginFacadeTest : FeatureTest() {
     private lateinit var facade: LoginFacade
 
     override fun prepare() {
-        facade = FacadeModule().login(credentials, setup)
+        facade = FacadeModule().login(credentials, setup, poster)
     }
 
     @Test
