@@ -41,6 +41,7 @@ dependencies {
     implementation libs.firebase.crashlytics
 
     implementation libs.google.location
+    implementation libs.google.auth
 
     implementation libs.zxing.embedded
 
