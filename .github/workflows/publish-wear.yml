@@ -38,49 +38,14 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: bundleRelease
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: release-bundle
-          path: |
-            app/**/*.aab
-            app/**/mapping.txt
-          if-no-files-found: error
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: release-wear-bundle
-          path: |
-            app-wear/**/*.aab
-          if-no-files-found: error
-
-  publish-aab:
-    runs-on: ubuntu-latest
-    needs: [ build-aab ]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: release-bundle
-
-      - uses: actions/download-artifact@v3
-        with:
-          name: release-wear-bundle
-
-      - run: ls -R
-
-      - run: |
-          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
+          arguments: app-wear:bundleRelease
 
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service-account.json
           packageName: movie.metropolis.app
-          releaseFiles: build/outputs/bundle/release/*.aab
-          track: production
+          releaseFiles: app-wear/build/outputs/bundle/release/*.aab
+          track: wear:production
           status: completed
           inAppUpdatePriority: 3
           mappingFile: build/outputs/mapping/release/mapping.txt
-
