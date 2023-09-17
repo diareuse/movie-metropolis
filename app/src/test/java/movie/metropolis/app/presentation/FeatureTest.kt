@@ -7,6 +7,7 @@ import movie.core.EventPreviewFeature
 import movie.core.EventPromoFeature
 import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
+import movie.core.PosterFeature
 import movie.core.SetupFeature
 import movie.core.UserBookingFeature
 import movie.core.UserCredentialFeature
@@ -43,6 +44,7 @@ abstract class FeatureTest {
     protected lateinit var data: UserDataFeature
     protected lateinit var credentials: UserCredentialFeature
     protected lateinit var booking: UserBookingFeature
+    protected lateinit var poster: PosterFeature
 
     abstract fun prepare()
 
@@ -84,6 +86,7 @@ abstract class FeatureTest {
         promo = mock {
             onBlocking { get(any()) }.thenReturn(Result.failure(IllegalStateException()))
         }
+        poster = mock {}
     }
 
 }
