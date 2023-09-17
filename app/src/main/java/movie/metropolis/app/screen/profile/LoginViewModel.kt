@@ -9,6 +9,8 @@ import kotlinx.coroutines.launch
 import movie.metropolis.app.model.LoginMode
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.login.LoginFacade
+import movie.metropolis.app.presentation.login.LoginFacade.Companion.postersFlow
+import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @Stable
@@ -26,6 +28,7 @@ class LoginViewModel @Inject constructor(
     val firstName = MutableStateFlow("")
     val lastName = MutableStateFlow("")
     val phone = MutableStateFlow("")
+    val posters = facade.postersFlow().retainStateIn(viewModelScope, emptyList())
 
     fun send(onSuccess: () -> Unit) = when (mode.value) {
         LoginMode.Login -> login(onSuccess)

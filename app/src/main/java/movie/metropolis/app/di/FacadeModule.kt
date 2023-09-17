@@ -11,6 +11,7 @@ import movie.core.EventPreviewFeature
 import movie.core.EventPromoFeature
 import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
+import movie.core.PosterFeature
 import movie.core.SetupFeature
 import movie.core.TicketShareRegistry
 import movie.core.UserBookingFeature
@@ -166,10 +167,11 @@ class FacadeModule {
     @Provides
     fun login(
         user: UserCredentialFeature,
-        setup: SetupFeature
+        setup: SetupFeature,
+        poster: PosterFeature
     ): LoginFacade {
         val facade: LoginFacade
-        facade = LoginFacadeFromFeature(user, setup)
+        facade = LoginFacadeFromFeature(user, setup, poster)
         return facade
     }
 

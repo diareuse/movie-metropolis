@@ -29,10 +29,9 @@ fun InputField(
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
-        color = Theme.color.container.background,
+        color = Theme.color.container.secondary.copy(alpha = .2f),
         contentColor = Theme.color.content.background,
-        shape = Theme.container.button,
-        tonalElevation = 1.dp
+        shape = Theme.container.button
     ) {
         Column(
             modifier = Modifier
