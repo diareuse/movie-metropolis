@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -20,7 +18,6 @@ import movie.metropolis.app.screen.profile.component.LoginScreenLayout
 import movie.metropolis.app.screen.profile.component.PasswordField
 import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
 import movie.metropolis.app.screen.profile.component.requestOneTapAsState
-import movie.metropolis.app.screen.setup.component.Background
 import movie.style.AppButton
 import movie.style.theme.Theme
 
@@ -79,30 +76,9 @@ private fun LoginSignInScreen(
     actions: ActivityActions = LocalActivityActions.current
 ) {
     LoginScreenLayout(
-        title = { Text(stringResource(R.string.login_title)) },
+        title = {},
         onBackClick = onBackClick
     ) { padding ->
-        Background(count = 5) {
-            when (it % 2) {
-                1 -> Image(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(.2f),
-                    painter = painterResource(id = R.drawable.ic_cinema),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(Theme.color.container.primary)
-                )
-
-                else -> Image(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .alpha(.2f),
-                    painter = painterResource(id = R.drawable.ic_movie),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(Theme.color.container.secondary)
-                )
-            }
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -133,9 +109,9 @@ private fun LoginSignInScreen(
                 onValueChange = onPasswordChanged,
                 error = error,
                 readOnly = loading,
-                supportingText = {
-                    if (error) Text(stringResource(R.string.password_failure))
-                }
+                supportingText = (@Composable {
+                    Text(stringResource(R.string.password_failure))
+                }).takeIf { error }
             )
             ActionsWithProgress(
                 loading = loading,

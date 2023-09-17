@@ -3,6 +3,7 @@ package movie.metropolis.app.screen.profile.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import movie.metropolis.app.R
 import movie.style.AppIconButton
@@ -27,6 +28,8 @@ fun LoginScreenLayout(
                 }
             )
         },
+        containerColor = Color.Transparent,
+        contentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface),
         content = content
     )
 }

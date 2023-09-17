@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
@@ -58,6 +59,8 @@ import movie.core.EventShowingsFeatureMovieNetwork
 import movie.core.EventShowingsFeatureMovieRequireNotEmpty
 import movie.core.EventShowingsFeatureMovieStoring
 import movie.core.EventShowingsFeatureMovieTimeout
+import movie.core.PosterFeature
+import movie.core.PosterFeatureDatabase
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.CinemaDao
 import movie.core.db.dao.MovieDao
@@ -66,6 +69,7 @@ import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.dao.MoviePromoDao
 import movie.core.db.dao.MovieReferenceDao
+import movie.core.db.dao.PosterDao
 import movie.core.db.dao.ShowingDao
 import movie.core.model.Cinema
 import movie.core.model.Location
@@ -83,6 +87,7 @@ import kotlin.time.Duration.Companion.days
 internal class EventFeatureModule {
 
     @Provides
+    @Reusable
     fun showings(
         showing: ShowingDao,
         reference: MovieReferenceDao,
@@ -126,6 +131,7 @@ internal class EventFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun preview(
         service: EventService,
         movie: MovieDao,
@@ -161,6 +167,7 @@ internal class EventFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun detail(
         service: EventService,
         movie: MovieDao,
@@ -177,6 +184,7 @@ internal class EventFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun cinema(
         service: CinemaService,
         cinema: CinemaDao,
@@ -203,6 +211,7 @@ internal class EventFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun promo(
         dao: MoviePromoDao,
         service: CinemaService,
@@ -217,6 +226,14 @@ internal class EventFeatureModule {
         out = EventPromoFeatureUrlWrap(out, provider)
         out = EventPromoFeatureCatch(out)
         return out
+    }
+
+    @Provides
+    @Reusable
+    fun poster(
+        dao: PosterDao
+    ): PosterFeature {
+        return PosterFeatureDatabase(dao)
     }
 
 }

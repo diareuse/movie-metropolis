@@ -21,6 +21,7 @@ import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.dao.MoviePromoDao
 import movie.core.db.dao.MovieReferenceDao
+import movie.core.db.dao.PosterDao
 import movie.core.db.dao.ShowingDao
 import movie.core.db.model.BookingSeatsStored
 import movie.core.db.model.BookingStored
@@ -88,6 +89,7 @@ internal abstract class MovieDatabase : RoomDatabase() {
     abstract fun moviePreview(): MoviePreviewDao
     abstract fun movieFavorite(): MovieFavoriteDao
     abstract fun moviePromo(): MoviePromoDao
+    abstract fun poster(): PosterDao
 
     class Migration2to3 : Migration(2, 3) {
         override fun migrate(database: SupportSQLiteDatabase) {
