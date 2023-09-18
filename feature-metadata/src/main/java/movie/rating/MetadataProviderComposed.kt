@@ -9,11 +9,11 @@ import movie.rating.internal.RatingType.Csfd
 import movie.rating.internal.RatingType.Imdb
 import movie.rating.internal.RatingType.RottenTomatoes
 
-internal class RatingProviderComposed(
-    private val rtt: RatingProvider,
-    private val imdb: RatingProvider,
-    private val csfd: RatingProvider
-) : RatingProvider.Composed {
+internal class MetadataProviderComposed(
+    private val rtt: MetadataProvider,
+    private val imdb: MetadataProvider,
+    private val csfd: MetadataProvider
+) : MetadataProvider.Composed {
 
     override suspend fun get(vararg descriptors: MovieDescriptor): ComposedRating {
         val output = mutableMapOf<RatingType, AvailableRating>()
@@ -27,10 +27,10 @@ internal class RatingProviderComposed(
         return ComposedRatingMap(output)
     }
 
-    private suspend fun RatingProvider.getOrNull(descriptor: MovieDescriptor): AvailableRating? =
+    private suspend fun MetadataProvider.getOrNull(descriptor: MovieDescriptor): AvailableRating? =
         kotlin.runCatching { get(descriptor) }.getOrNull()
 
-    private suspend fun RatingProvider.get(vararg descriptors: MovieDescriptor): AvailableRating? =
+    private suspend fun MetadataProvider.get(vararg descriptors: MovieDescriptor): AvailableRating? =
         descriptors.firstNotNullOfOrNull { getOrNull(it) }
 
     private data class ComposedRatingMap(

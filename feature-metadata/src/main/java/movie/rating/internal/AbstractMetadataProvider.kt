@@ -2,11 +2,11 @@ package movie.rating.internal
 
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
+import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
-import movie.rating.RatingProvider
 import movie.rating.ResultNotFoundException
 
-internal abstract class AbstractRatingProvider : RatingProvider {
+internal abstract class AbstractMetadataProvider : MetadataProvider {
 
     abstract val client: LazyHttpClient
     abstract val provider: LinkProvider

@@ -68,7 +68,7 @@ import movie.metropolis.app.presentation.share.ShareFacadeImageConvert
 import movie.metropolis.app.presentation.share.ShareFacadeRecover
 import movie.metropolis.app.presentation.share.ShareFacadeRefresh
 import movie.metropolis.app.presentation.share.ShareFacadeText
-import movie.rating.RatingProvider
+import movie.rating.MetadataProvider
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -115,7 +115,7 @@ class FacadeModule {
         detail: EventDetailFeature,
         favorite: FavoriteFeature,
         analyzer: ImageAnalyzer,
-        rating: RatingProvider.Composed
+        rating: MetadataProvider.Composed
     ) = MovieFacade.Factory {
         var facade: MovieFacade
         facade = MovieFacadeFromFeature(it, showings, detail, favorite)
@@ -133,7 +133,7 @@ class FacadeModule {
         favorite: FavoriteFeature,
         promo: EventPromoFeature,
         analyzer: ImageAnalyzer,
-        rating: RatingProvider.Composed,
+        rating: MetadataProvider.Composed,
         detail: EventDetailFeature
     ): ListingFacade.Factory {
         return object : ListingFacade.Factory {

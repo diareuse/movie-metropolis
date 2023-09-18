@@ -1,13 +1,13 @@
 package movie.rating
 
-import movie.rating.internal.AbstractRatingProvider
+import movie.rating.internal.AbstractMetadataProvider
 import movie.rating.internal.LazyHttpClient
 import movie.rating.internal.LinkProvider
 
-internal class RatingProviderImdb(
+internal class MetadataProviderImdb(
     override val client: LazyHttpClient,
     override val provider: LinkProvider
-) : AbstractRatingProvider() {
+) : AbstractMetadataProvider() {
 
     @Throws(ResultNotFoundException::class)
     override fun getRating(content: String): Byte {

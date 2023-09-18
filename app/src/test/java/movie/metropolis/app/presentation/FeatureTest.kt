@@ -21,7 +21,7 @@ import movie.image.Swatch
 import movie.image.SwatchColor.Companion.Black
 import movie.log.Logger
 import movie.log.PlatformLogger
-import movie.rating.RatingProvider
+import movie.rating.MetadataProvider
 import movie.rating.internal.ComposedRating
 import org.junit.Before
 import org.mockito.kotlin.any
@@ -30,7 +30,7 @@ import org.mockito.kotlin.mock
 
 abstract class FeatureTest {
 
-    protected lateinit var rating: RatingProvider.Composed
+    protected lateinit var rating: MetadataProvider.Composed
     protected lateinit var analyzer: ImageAnalyzer
     protected lateinit var promo: EventPromoFeature
     protected lateinit var favorite: FavoriteFeature

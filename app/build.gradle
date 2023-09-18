@@ -28,7 +28,7 @@ dependencies {
     implementation project(":style")
     implementation project(":feature-log")
     implementation project(":feature-wear")
-    implementation project(":feature-rating")
+    implementation project(":feature-metadata")
     implementation project(":feature-image-analysis")
 
     implementation libs.androidx.startup

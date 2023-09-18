@@ -4,10 +4,10 @@ import movie.rating.database.RatingDao
 import movie.rating.database.RatingStored
 import movie.rating.internal.AvailableRating
 
-internal class RatingProviderDatabase(
+internal class MetadataProviderDatabase(
     private val dao: RatingDao,
     domain: String
-) : RatingProvider {
+) : MetadataProvider {
 
     private val domain = "%$domain%"
 

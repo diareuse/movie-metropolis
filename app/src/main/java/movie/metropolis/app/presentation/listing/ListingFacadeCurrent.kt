@@ -7,13 +7,13 @@ import movie.image.ImageAnalyzer
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.Listenable
 import movie.metropolis.app.presentation.OnChangedListener
-import movie.rating.RatingProvider
+import movie.rating.MetadataProvider
 
 class ListingFacadeCurrent(
     private val preview: EventPreviewFeature,
     private val promo: EventPromoFeature,
     private val analyzer: ImageAnalyzer,
-    private val rating: RatingProvider.Composed,
+    private val rating: MetadataProvider.Composed,
     private val detail: EventDetailFeature
 ) : ListingFacade {
 

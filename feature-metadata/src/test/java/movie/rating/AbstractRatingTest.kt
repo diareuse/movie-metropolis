@@ -30,7 +30,7 @@ abstract class AbstractRatingTest {
 
     internal lateinit var dao: RatingDao
     protected lateinit var descriptor: MovieDescriptor
-    protected lateinit var provider: (CoroutineScope) -> RatingProvider.Composed
+    protected lateinit var provider: (CoroutineScope) -> MetadataProvider.Composed
 
     @Before
     fun prepareInternal() {
