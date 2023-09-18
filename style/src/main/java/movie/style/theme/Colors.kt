@@ -1,5 +1,6 @@
 package movie.style.theme
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import androidx.compose.foundation.*
@@ -68,6 +69,7 @@ private val DarkSurfaceTint = Color(0xFFFFB68D)
 private val DarkOutlineVariant = Color(0xFF52443C)
 private val DarkScrim = Color(0xFF000000)
 
+@SuppressLint("NewApi")
 @Composable
 internal fun themeColors(
     context: Context = LocalContext.current,

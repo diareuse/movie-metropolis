@@ -1,5 +1,6 @@
 package movie.core.pulse
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Context
 import android.graphics.Bitmap
@@ -29,6 +30,7 @@ class ExactPulseNotificationMovie(
     private val image: ImageAnalyzer
 ) : ExactPulseCoroutine() {
 
+    @SuppressLint("MissingPermission")
     override suspend fun executeAsync(context: Context, data: Data) {
         val manager = NotificationManagerCompat.from(context)
         if (!manager.areNotificationsEnabled()) return
