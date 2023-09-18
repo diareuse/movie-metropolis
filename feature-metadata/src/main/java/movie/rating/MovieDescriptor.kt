@@ -31,4 +31,8 @@ sealed class MovieDescriptor(name: String) {
         return result
     }
 
+    override fun toString(): String {
+        return "MovieDescriptor(year=$year, name='$name')"
+    }
+
 }

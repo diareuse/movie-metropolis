@@ -8,11 +8,12 @@ import movie.metropolis.app.model.adapter.MovieDetailViewWithRating
 import movie.metropolis.app.util.flatMapResult
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
+import movie.rating.MovieMetadata
 import java.util.Calendar
 
 class MovieFacadeRating(
     private val origin: MovieFacade,
-    private val rating: MetadataProvider.Composed
+    private val rating: MetadataProvider
 ) : MovieFacade by origin {
 
     override val movie: Flow<Result<MovieDetailView>> = origin.movie.flatMapResult {
@@ -23,7 +24,9 @@ class MovieFacadeRating(
                 MovieDescriptor.Original(it.nameOriginal, year),
                 MovieDescriptor.Local(it.name, year)
             )
-            val rating = rating.get(descriptors = descriptors)
+            val rating = descriptors.fold(null as MovieMetadata?) { acc, it ->
+                acc ?: rating.get(it)
+            }
             emit(MovieDetailViewWithRating(it, rating))
         }.map(Result.Companion::success)
     }

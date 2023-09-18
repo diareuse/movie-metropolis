@@ -5,34 +5,26 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class RatingProviderCsfdTest : AbstractRatingTest() {
-
-    override val domain: String
-        get() = "csfd.cz"
+class RatingProviderTMDBTest : AbstractRatingTest() {
 
     override fun prepare() {
         descriptor = MovieDescriptor.Local("Avatar: The Way of Water", 2022)
     }
 
     override fun respond(request: HttpRequestData): String {
-        if (!request.url.host.contains("csfd"))
-            throw IllegalArgumentException()
-        return when {
-            request.url.toString().contains("/film/") -> "csfd-detail.html"
-            else -> "csfd-query.html"
-        }
+        return "tmdb-response.json"
     }
 
     @Test
     fun returns_fromNetwork() = runTest {
-        val result = provider(this).get(descriptor).csfd?.value
-        assertEquals(86, result)
+        val result = provider(this).get(descriptor)?.rating
+        assertEquals(76, result)
     }
 
     @Test
     fun returns_fromDatabase() = runTest {
         val rating = database_returns_success()
-        val result = provider(this).get(descriptor).csfd?.value
+        val result = provider(this).get(descriptor)?.rating
         assertEquals(rating, result)
     }
 

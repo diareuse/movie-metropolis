@@ -1,11 +1,12 @@
 package movie.rating
 
-import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.MockEngineConfig
+import io.ktor.client.engine.mock.respond
 import io.ktor.client.engine.mock.respondBadRequest
-import io.ktor.client.engine.mock.respondOk
 import io.ktor.client.request.HttpRequestData
+import io.ktor.http.HttpHeaders
+import io.ktor.http.headersOf
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.job
@@ -15,11 +16,9 @@ import movie.log.PlatformLogger
 import movie.rating.database.RatingDao
 import movie.rating.database.RatingStored
 import movie.rating.di.RatingProviderModule
-import movie.rating.internal.LazyHttpClient
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -28,9 +27,9 @@ import kotlin.random.Random.Default.nextInt
 
 abstract class AbstractRatingTest {
 
-    internal lateinit var dao: RatingDao
+    private lateinit var dao: RatingDao
     protected lateinit var descriptor: MovieDescriptor
-    protected lateinit var provider: (CoroutineScope) -> MetadataProvider.Composed
+    protected lateinit var provider: (CoroutineScope) -> MetadataProvider
 
     @Before
     fun prepareInternal() {
@@ -38,21 +37,20 @@ abstract class AbstractRatingTest {
         val config = MockEngineConfig().apply {
             addHandler {
                 try {
-                    respondOk(respond(it).let(::resourceFile))
+                    respond(
+                        respond(it).let(::resourceFile),
+                        headers = headersOf(HttpHeaders.ContentType, "application/json")
+                    )
                 } catch (e: Throwable) {
                     respondBadRequest()
                 }
             }
         }
-        val client = LazyHttpClient { HttpClient(MockEngine(config)) {} }
+        val client = RatingProviderModule().client(MockEngine(config))
         val module = RatingProviderModule()
         dao = mock()
         provider = {
-            module.rating(
-                tomatoes = module.rtRating(client, dao, it),
-                imdb = module.imdbRating(client, dao, it),
-                csfd = module.csfdRating(client, dao, it)
-            )
+            module.rating(client, dao)
         }
         descriptor = MovieDescriptor.Original("Avatar: The Way of Water", 2022)
         prepare()
@@ -60,7 +58,6 @@ abstract class AbstractRatingTest {
 
     abstract fun prepare()
     abstract fun respond(request: HttpRequestData): String
-    abstract val domain: String
 
     private fun resourceFile(name: String) = Thread.currentThread().contextClassLoader
         ?.getResourceAsStream(name)
@@ -68,8 +65,14 @@ abstract class AbstractRatingTest {
         ?.let(::String).orEmpty()
 
     internal suspend fun database_returns_success(): Byte {
-        val data = RatingStored(descriptor.name, descriptor.year, nextInt(0, 100).toByte(), "url")
-        whenever(dao.select(any(), any(), eq("%$domain%"))).thenReturn(data)
+        val data = RatingStored(
+            name = descriptor.name,
+            year = descriptor.year,
+            rating = nextInt(0, 100).toByte(),
+            poster = "url",
+            overlay = "url"
+        )
+        whenever(dao.select(any(), any())).thenReturn(data)
         return data.rating
     }
 

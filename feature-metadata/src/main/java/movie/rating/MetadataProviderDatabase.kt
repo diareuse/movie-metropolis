@@ -2,22 +2,19 @@ package movie.rating
 
 import movie.rating.database.RatingDao
 import movie.rating.database.RatingStored
-import movie.rating.internal.AvailableRating
 
 internal class MetadataProviderDatabase(
-    private val dao: RatingDao,
-    domain: String
+    private val dao: RatingDao
 ) : MetadataProvider {
 
-    private val domain = "%$domain%"
-
-    override suspend fun get(descriptor: MovieDescriptor): AvailableRating? {
-        return dao.select(descriptor.name, descriptor.year, domain)?.let(::AvailableRating)
+    override suspend fun get(descriptor: MovieDescriptor): MovieMetadata? {
+        return dao.select(descriptor.name, descriptor.year)?.let(::MovieMetadata)
     }
 
-    private fun AvailableRating(rating: RatingStored) = AvailableRating(
-        value = rating.rating,
-        url = rating.url
+    private fun MovieMetadata(rating: RatingStored) = MovieMetadata(
+        rating = rating.rating,
+        posterImageUrl = rating.poster,
+        overlayImageUrl = rating.overlay
     )
 
 }

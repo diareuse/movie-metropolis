@@ -115,7 +115,7 @@ class FacadeModule {
         detail: EventDetailFeature,
         favorite: FavoriteFeature,
         analyzer: ImageAnalyzer,
-        rating: MetadataProvider.Composed
+        rating: MetadataProvider
     ) = MovieFacade.Factory {
         var facade: MovieFacade
         facade = MovieFacadeFromFeature(it, showings, detail, favorite)
@@ -133,7 +133,7 @@ class FacadeModule {
         favorite: FavoriteFeature,
         promo: EventPromoFeature,
         analyzer: ImageAnalyzer,
-        rating: MetadataProvider.Composed,
+        rating: MetadataProvider,
         detail: EventDetailFeature
     ): ListingFacade.Factory {
         return object : ListingFacade.Factory {
