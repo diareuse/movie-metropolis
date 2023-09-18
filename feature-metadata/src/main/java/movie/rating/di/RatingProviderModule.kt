@@ -9,14 +9,14 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.header
 import kotlinx.coroutines.CoroutineScope
-import movie.rating.RatingProvider
-import movie.rating.RatingProviderComposed
-import movie.rating.RatingProviderCsfd
-import movie.rating.RatingProviderDatabase
-import movie.rating.RatingProviderFold
-import movie.rating.RatingProviderImdb
-import movie.rating.RatingProviderRottenTomatoes
-import movie.rating.RatingProviderStoring
+import movie.rating.MetadataProvider
+import movie.rating.MetadataProviderComposed
+import movie.rating.MetadataProviderCsfd
+import movie.rating.MetadataProviderDatabase
+import movie.rating.MetadataProviderFold
+import movie.rating.MetadataProviderImdb
+import movie.rating.MetadataProviderRottenTomatoes
+import movie.rating.MetadataProviderStoring
 import movie.rating.database.RatingDao
 import movie.rating.internal.LazyHttpClient
 import movie.rating.internal.LinkProvider
@@ -31,10 +31,10 @@ internal class RatingProviderModule {
 
     @Provides
     fun rating(
-        @RottenTomatoes tomatoes: RatingProvider,
-        @Imdb imdb: RatingProvider,
-        @Csfd csfd: RatingProvider,
-    ): RatingProvider.Composed = RatingProviderComposed(
+        @RottenTomatoes tomatoes: MetadataProvider,
+        @Imdb imdb: MetadataProvider,
+        @Csfd csfd: MetadataProvider,
+    ): MetadataProvider.Composed = MetadataProviderComposed(
         rtt = tomatoes,
         imdb = imdb,
         csfd = csfd
@@ -49,11 +49,11 @@ internal class RatingProviderModule {
         scope: CoroutineScope,
         @Csfd
         link: LinkProvider = csfdLink(client)
-    ): RatingProvider {
-        var out: RatingProvider
-        out = RatingProviderCsfd(client, link)
-        out = RatingProviderStoring(out, dao, scope)
-        out = RatingProviderFold(RatingProviderDatabase(dao, "csfd.cz"), out)
+    ): MetadataProvider {
+        var out: MetadataProvider
+        out = MetadataProviderCsfd(client, link)
+        out = MetadataProviderStoring(out, dao, scope)
+        out = MetadataProviderFold(MetadataProviderDatabase(dao, "csfd.cz"), out)
         return out
     }
 
@@ -75,11 +75,11 @@ internal class RatingProviderModule {
         scope: CoroutineScope,
         @Imdb
         link: LinkProvider = imdbLink(client)
-    ): RatingProvider {
-        var out: RatingProvider
-        out = RatingProviderImdb(client, link)
-        out = RatingProviderStoring(out, dao, scope)
-        out = RatingProviderFold(RatingProviderDatabase(dao, "imdb.com"), out)
+    ): MetadataProvider {
+        var out: MetadataProvider
+        out = MetadataProviderImdb(client, link)
+        out = MetadataProviderStoring(out, dao, scope)
+        out = MetadataProviderFold(MetadataProviderDatabase(dao, "imdb.com"), out)
         return out
     }
 
@@ -101,11 +101,11 @@ internal class RatingProviderModule {
         scope: CoroutineScope,
         @RottenTomatoes
         link: LinkProvider = rtLink(client)
-    ): RatingProvider {
-        var out: RatingProvider
-        out = RatingProviderRottenTomatoes(client, link)
-        out = RatingProviderStoring(out, dao, scope)
-        out = RatingProviderFold(RatingProviderDatabase(dao, "rottentomatoes.com"), out)
+    ): MetadataProvider {
+        var out: MetadataProvider
+        out = MetadataProviderRottenTomatoes(client, link)
+        out = MetadataProviderStoring(out, dao, scope)
+        out = MetadataProviderFold(MetadataProviderDatabase(dao, "rottentomatoes.com"), out)
         return out
     }
 

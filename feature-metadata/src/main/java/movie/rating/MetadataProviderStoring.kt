@@ -6,11 +6,11 @@ import movie.rating.database.RatingDao
 import movie.rating.database.RatingStored
 import movie.rating.internal.AvailableRating
 
-internal class RatingProviderStoring(
-    private val origin: RatingProvider,
+internal class MetadataProviderStoring(
+    private val origin: MetadataProvider,
     private val dao: RatingDao,
     private val scope: CoroutineScope
-) : RatingProvider {
+) : MetadataProvider {
 
     override suspend fun get(descriptor: MovieDescriptor): AvailableRating? {
         return origin.get(descriptor)?.also {

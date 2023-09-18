@@ -11,13 +11,13 @@ import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithRating
 import movie.metropolis.app.util.flatMapResult
+import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
-import movie.rating.RatingProvider
 import java.util.Calendar
 
 class ListingFacadeActionWithRating(
     private val origin: ListingFacade.Action,
-    private val rating: RatingProvider.Composed,
+    private val rating: MetadataProvider.Composed,
     private val detail: EventDetailFeature
 ) : ListingFacade.Action by origin {
 

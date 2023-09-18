@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.map
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.adapter.MovieDetailViewWithRating
 import movie.metropolis.app.util.flatMapResult
+import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
-import movie.rating.RatingProvider
 import java.util.Calendar
 
 class MovieFacadeRating(
     private val origin: MovieFacade,
-    private val rating: RatingProvider.Composed
+    private val rating: MetadataProvider.Composed
 ) : MovieFacade by origin {
 
     override val movie: Flow<Result<MovieDetailView>> = origin.movie.flatMapResult {

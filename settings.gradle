@@ -22,7 +22,7 @@ include ":feature-core",
         ":feature-core-network"
 include ":feature-pulse"
 include ":feature-settings"
-include ":feature-rating"
+include ":feature-metadata"
 include ":feature-image-analysis"
 include ":feature-calendar"
 include ":feature-log"
