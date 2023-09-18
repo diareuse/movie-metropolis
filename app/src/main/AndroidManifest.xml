@@ -82,7 +82,7 @@
             android:exported="true"
             android:label="@string/share_add_ticket"
             android:theme="@style/Theme.MovieMetropolis">
-            <intent-filter>
+            <intent-filter tools:ignore="AppLinkUrlError">
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <action android:name="android.intent.action.VIEW" />
