@@ -23,13 +23,11 @@ import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.util.disableAll
-import movie.rating.internal.AvailableRating
-import movie.rating.internal.ComposedRating
+import movie.rating.MovieMetadata
 import org.junit.Test
 import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
 import org.mockito.kotlin.anyOrNull
-import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -181,25 +179,14 @@ class MovieFacadeTest : FeatureTest() {
         }
         val rating = rating_responds_success()
         val movie = facade.movie.last().getOrThrow()
-        assertEquals("%d%%".format(rating.max!!.value), movie.rating)
-        assertEquals(rating.imdb?.url, movie.links?.imdb)
-        assertEquals(rating.rottenTomatoes?.url, movie.links?.rottenTomatoes)
-        assertEquals(rating.csfd?.url, movie.links?.csfd)
+        assertEquals("%d%%".format(rating.rating), movie.rating)
     }
 
     // ---
 
-    private suspend fun rating_responds_success(): ComposedRating {
-        val available = AvailableRating(69, "")
-        val composed = object : ComposedRating {
-            override val imdb: AvailableRating
-                get() = available.copy(url = "imdb")
-            override val rottenTomatoes: AvailableRating
-                get() = available.copy(url = "rtt")
-            override val csfd: AvailableRating
-                get() = available.copy(url = "csfd")
-        }
-        whenever(rating.get(anyVararg())).thenReturn(composed)
+    private suspend fun rating_responds_success(): MovieMetadata {
+        val composed = MovieMetadata(69, "", "")
+        whenever(rating.get(any())).thenReturn(composed)
         return composed
     }
 

@@ -13,11 +13,9 @@ import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.util.wheneverBlocking
-import movie.rating.internal.ComposedRating
 import org.junit.Test
 import org.mockito.kotlin.KStubbing
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyVararg
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import java.util.Date
@@ -188,10 +186,6 @@ abstract class ListingFacadeTest : FeatureTest() {
     private fun analyzer_responds_success(): Int {
         wheneverBlocking { analyzer.getColors(any()) }.thenReturn(Swatch(White, White, White))
         return White.rgb
-    }
-
-    private fun rating_response_success() {
-        wheneverBlocking { rating.get(anyVararg()) }.thenReturn(ComposedRating.None)
     }
 
     private fun detail_responds_success(
