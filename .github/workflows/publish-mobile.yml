@@ -50,4 +50,4 @@ jobs:
           track: production
           status: completed
           inAppUpdatePriority: 3
-          mappingFile: build/outputs/mapping/release/mapping.txt
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
