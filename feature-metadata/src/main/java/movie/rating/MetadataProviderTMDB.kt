@@ -28,8 +28,7 @@ class MetadataProviderTMDB(
                 append("primary_release_year", descriptor.year.toString())
             }
         }
-        return result.body<ListResponse<SearchData>>()
-            .also { println("$descriptor -> $it") }.results.firstOrNull()
+        return result.body<ListResponse<SearchData>>().results.firstOrNull()
     }
 
     companion object {
