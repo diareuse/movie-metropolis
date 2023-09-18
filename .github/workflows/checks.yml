@@ -15,6 +15,7 @@ jobs:
           echo "MM_BASIC_USER=${{ secrets.BASIC_USER }}" >> secrets.properties
           echo "MM_BASIC_PASS=${{ secrets.BASIC_PASS }}" >> secrets.properties
           echo "MM_CAPTCHA=${{ secrets.CAPTCHA }}" >> secrets.properties
+          echo "MM_TMDB=${{ secrets.TMDB }}" >> secrets.properties
 
       - name: Set Java
         uses: actions/setup-java@v3

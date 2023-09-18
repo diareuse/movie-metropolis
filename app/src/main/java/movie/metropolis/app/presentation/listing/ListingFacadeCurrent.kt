@@ -13,7 +13,7 @@ class ListingFacadeCurrent(
     private val preview: EventPreviewFeature,
     private val promo: EventPromoFeature,
     private val analyzer: ImageAnalyzer,
-    private val rating: MetadataProvider.Composed,
+    private val rating: MetadataProvider,
     private val detail: EventDetailFeature
 ) : ListingFacade {
 

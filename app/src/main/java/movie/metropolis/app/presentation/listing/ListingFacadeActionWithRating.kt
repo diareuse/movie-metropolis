@@ -13,11 +13,12 @@ import movie.metropolis.app.model.adapter.MovieViewWithRating
 import movie.metropolis.app.util.flatMapResult
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
+import movie.rating.MovieMetadata
 import java.util.Calendar
 
 class ListingFacadeActionWithRating(
     private val origin: ListingFacade.Action,
-    private val rating: MetadataProvider.Composed,
+    private val rating: MetadataProvider,
     private val detail: EventDetailFeature
 ) : ListingFacade.Action by origin {
 
@@ -55,7 +56,9 @@ class ListingFacadeActionWithRating(
                 MovieDescriptor.Local(it.name, year)
             )
         }.getOrNull() ?: return null
-        rating.get(descriptors = descriptors).max?.value ?: return null
+        descriptors.fold(null as MovieMetadata?) { acc, it ->
+            acc ?: rating.get(it)
+        }?.rating ?: return null
     }
 
 }

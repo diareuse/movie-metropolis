@@ -1,24 +1,22 @@
 package movie.rating
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import movie.rating.database.RatingDao
 import movie.rating.database.RatingStored
-import movie.rating.internal.AvailableRating
 
 internal class MetadataProviderStoring(
     private val origin: MetadataProvider,
-    private val dao: RatingDao,
-    private val scope: CoroutineScope
+    private val dao: RatingDao
 ) : MetadataProvider {
 
-    override suspend fun get(descriptor: MovieDescriptor): AvailableRating? {
-        return origin.get(descriptor)?.also {
-            scope.launch {
-                val stored = RatingStored(descriptor.name, descriptor.year, it.value, it.url)
-                dao.insertOrUpdate(stored)
-            }
-        }
+    override suspend fun get(descriptor: MovieDescriptor) = origin.get(descriptor)?.also {
+        val stored = RatingStored(
+            name = descriptor.name,
+            year = descriptor.year,
+            rating = it.rating,
+            poster = it.posterImageUrl,
+            overlay = it.overlayImageUrl
+        )
+        dao.insertOrUpdate(stored)
     }
 
 }

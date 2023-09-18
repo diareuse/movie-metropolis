@@ -18,14 +18,6 @@ interface MovieDetailView {
     val poster: ImageView?
     val trailer: VideoView?
     val rating: String?
-    val links: Links?
 
     fun base(): MovieDetail
-
-    @Immutable
-    interface Links {
-        val imdb: String?
-        val csfd: String?
-        val rottenTomatoes: String?
-    }
 }

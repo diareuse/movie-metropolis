@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
     entities = [
         RatingStored::class
     ],
-    version = 1
+    version = 2
 )
 internal abstract class RatingDatabase : RoomDatabase() {
 

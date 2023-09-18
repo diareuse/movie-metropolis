@@ -5,7 +5,7 @@ import androidx.room.Entity
 
 @Entity(
     tableName = "ratings",
-    primaryKeys = ["name", "year", "url"]
+    primaryKeys = ["name", "year"]
 )
 internal data class RatingStored(
     @ColumnInfo(name = "name")
@@ -14,6 +14,8 @@ internal data class RatingStored(
     val year: Int,
     @ColumnInfo(name = "rating")
     val rating: Byte,
-    @ColumnInfo(name = "url")
-    val url: String
+    @ColumnInfo(name = "poster")
+    val poster: String,
+    @ColumnInfo(name = "overlay")
+    val overlay: String
 )

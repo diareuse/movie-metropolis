@@ -34,7 +34,6 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.map
 import movie.metropolis.app.presentation.mapNotNull
 import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
@@ -49,7 +48,6 @@ import movie.metropolis.app.screen.detail.component.MovieScreenAppBar
 import movie.metropolis.app.screen.detail.component.ShowingItem
 import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.style.AppButton
-import movie.style.AppDropdownIconButton
 import movie.style.AppImage
 import movie.style.DatePickerRow
 import movie.style.EllipsisText
@@ -142,35 +140,6 @@ private fun MovieScreen(
                         isChecked = isFavorite,
                         onClick = onFavoriteClick
                     )
-                    val links = detail.map { it.links }.getOrNull()
-                    if (links != null) AppDropdownIconButton(painterResource(id = R.drawable.ic_rate)) {
-                        val csfd = links.csfd
-                        if (csfd != null) DropdownMenuItem(
-                            text = { Text(text = stringResource(R.string.csfd)) },
-                            onClick = { actions.actionView(csfd) },
-                            leadingIcon = { Icon(painterResource(R.drawable.ic_csfd), null) },
-                            trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
-                        )
-                        val imdb = links.imdb
-                        if (imdb != null) DropdownMenuItem(
-                            text = {},
-                            onClick = { actions.actionView(imdb) },
-                            leadingIcon = { Icon(painterResource(R.drawable.ic_imdb), null) },
-                            trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
-                        )
-                        val rottenTomatoes = links.rottenTomatoes
-                        if (rottenTomatoes != null) DropdownMenuItem(
-                            text = {},
-                            onClick = { actions.actionView(rottenTomatoes) },
-                            leadingIcon = {
-                                Icon(
-                                    painterResource(R.drawable.ic_rotten_tomatoes),
-                                    null
-                                )
-                            },
-                            trailingIcon = { Icon(painterResource(R.drawable.ic_link), null) }
-                        )
-                    }
                 }
             )
         }
@@ -250,7 +219,7 @@ fun LazyListScope.MovieDetailShowings(
     onFilterClick: (Filter) -> Unit
 ) {
     item(key = "divider") {
-        Divider(
+        HorizontalDivider(
             Modifier
                 .padding(horizontal = 32.dp)
                 .animateItemPlacement()
@@ -295,7 +264,7 @@ fun LazyListScope.MovieDetailShowings(
             }
         }
         item("filters-divider") {
-            Divider(Modifier.padding(horizontal = 32.dp))
+            HorizontalDivider(Modifier.padding(horizontal = 32.dp))
         }
     }
     showings.onSuccess { items ->
@@ -402,17 +371,10 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val availableFrom: String = "23. 4. 2022",
         override val poster: ImageView? = null,
         override val trailer: VideoView? = null,
-        override val rating: String? = "78%",
-        override val links: MovieDetailView.Links? = Links(),
+        override val rating: String? = "78%"
     ) : MovieDetailView {
         override fun base(): MovieDetail = throw NotImplementedError()
     }
-
-    private data class Links(
-        override val imdb: String? = "https://imdb.com/",
-        override val csfd: String? = "https://csfd.cz/",
-        override val rottenTomatoes: String? = "https://rottentomatoes.com/"
-    ) : MovieDetailView.Links
 
 }
 
