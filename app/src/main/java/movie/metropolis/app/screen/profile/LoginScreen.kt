@@ -12,6 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import movie.metropolis.app.model.LoginMode
 import movie.style.AppImage
+import kotlin.math.max
 
 @Composable
 fun LoginScreen(
@@ -47,7 +48,7 @@ fun LoginScreen(
         }
         LaunchedEffect(index) {
             delay(5000)
-            index = (index + 1) % urls.size
+            index = (index + 1) % max(urls.size, 1)
         }
         when (viewModel.mode.collectAsState().value) {
             LoginMode.Login -> LoginSignInScreen(
