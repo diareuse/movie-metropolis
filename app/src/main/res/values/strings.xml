@@ -112,4 +112,5 @@
     <string name="support_bottom_line_caption">Please note that the application is completely free of charge and not sponsored by Cinema City. Offers above are tips to the developers of this application.</string>
     <string name="share_add_ticket">Add a ticket</string>
     <string name="select_content_left">There\'s nothing here yet, select content from the left to display it here</string>
+    <string name="install">Install</string>
 </resources>
