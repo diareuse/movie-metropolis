@@ -14,6 +14,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import movie.rating.BuildConfig
 import movie.rating.MetadataProvider
+import movie.rating.MetadataProviderCatch
 import movie.rating.MetadataProviderDatabase
 import movie.rating.MetadataProviderFold
 import movie.rating.MetadataProviderStoring
@@ -38,6 +39,7 @@ internal class RatingProviderModule {
             MetadataProviderDatabase(dao),
             out
         )
+        out = MetadataProviderCatch(out)
         return out
     }
 
