@@ -26,6 +26,7 @@ import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.style.AppDialog
 import movie.style.AppSettings
 import movie.style.InputField
@@ -36,8 +37,8 @@ import movie.style.theme.Theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    padding: PaddingValues,
     behavior: TopAppBarScrollBehavior,
+    profileIcon: @Composable () -> Unit,
     viewModel: SettingsViewModel
 ) {
     val filterSeen by viewModel.filterSeen.collectAsState()
@@ -46,8 +47,8 @@ fun SettingsScreen(
     val clipRadius by viewModel.clipRadius.collectAsState()
     val onlyMovies by viewModel.onlyMovies.collectAsState()
     SettingsScreen(
-        padding = padding,
         behavior = behavior,
+        profileIcon = profileIcon,
         filterSeen = filterSeen,
         onFilterSeenChanged = viewModel::updateFilterSeen,
         addToCalendar = addToCalendar,
@@ -63,8 +64,8 @@ fun SettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SettingsScreen(
-    padding: PaddingValues = PaddingValues(),
     behavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
+    profileIcon: @Composable () -> Unit,
     filterSeen: Boolean = false,
     onFilterSeenChanged: (Boolean) -> Unit = {},
     addToCalendar: Boolean = false,
@@ -74,7 +75,15 @@ private fun SettingsScreen(
     onlyMovies: Boolean = false,
     onOnlyMoviesChanged: (Boolean) -> Unit = {},
     calendars: ImmutableMap<String, String> = immutableMapOf()
-) {
+) = Scaffold(
+    topBar = {
+        HomeScreenToolbar(
+            profileIcon = profileIcon,
+            behavior = behavior,
+            title = { Text(stringResource(id = R.string.settings)) }
+        )
+    }
+) { padding ->
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -223,7 +232,7 @@ fun LazyItemScope.Calendar(
                             stringResource(R.string.select_calendar_description),
                             style = Theme.textStyle.caption
                         )
-                        Divider()
+                        HorizontalDivider()
                     }
                 }
                 items(calendars.toList(), key = { (id) -> id }) { (id, name) ->
@@ -249,6 +258,6 @@ fun LazyItemScope.Calendar(
 @Composable
 private fun Preview() {
     Theme {
-        SettingsScreen()
+        SettingsScreen(profileIcon = {})
     }
 }

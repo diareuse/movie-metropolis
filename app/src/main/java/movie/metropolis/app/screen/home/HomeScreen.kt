@@ -1,8 +1,6 @@
 package movie.metropolis.app.screen.home
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -21,8 +19,8 @@ import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.currentDestinationAsState
 import movie.metropolis.app.screen.home.component.HomeScreenContent
-import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.metropolis.app.screen.home.component.ProfileIcon
+import movie.metropolis.app.screen.home.component.rememberScreenState
 import movie.metropolis.app.screen.listing.ListingScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.settings.SettingsScreen
@@ -35,7 +33,7 @@ import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
 
 @OptIn(
-    ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterial3Api::class,
     ExperimentalComposeUiApi::class
 )
 @Composable
@@ -50,14 +48,9 @@ fun HomeScreen(
 ) {
     val email = viewModel.email
     val destination by controller.currentDestinationAsState()
-    val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    LaunchedEffect(destination) {
-        behavior.state.contentOffset = 0f
-    }
     HomeScreen(
         isLoggedIn = email != null,
         route = destination?.route ?: startWith,
-        behavior = behavior,
         onRouteChanged = listener@{
             if (destination?.route == it) return@listener
             while (controller.popBackStack()) {
@@ -65,30 +58,18 @@ fun HomeScreen(
             }
             controller.navigate(it)
         },
-        title = {
-            val text = when (destination?.route) {
-                Route.Cinemas() -> stringResource(id = R.string.cinemas)
-                Route.Movies() -> stringResource(id = R.string.movies)
-                Route.Tickets() -> stringResource(id = R.string.tickets)
-                Route.Settings() -> stringResource(id = R.string.settings)
-                else -> ""
-            }
-            Text(text)
-        },
-        profileIcon = {
+        onNavigateToLogin = onClickLogin
+    ) {
+        val listing = rememberScreenState<ListingViewModel>()
+        val cinemas = rememberScreenState<CinemasViewModel>()
+        val booking = rememberScreenState<BookingViewModel>()
+        val settings = rememberScreenState<SettingsViewModel>()
+        val profileIcon = @Composable {
             if (email != null) ProfileIcon(
                 email = email,
                 onClick = onClickUser
             )
-        },
-        onNavigateToLogin = onClickLogin
-    ) {
-        val moviesState = rememberLazyListState()
-        val cinemasState = rememberLazyListState()
-        val listing: ListingViewModel = hiltViewModel()
-        val cinemas: CinemasViewModel = hiltViewModel()
-        val booking: BookingViewModel = hiltViewModel()
-        val settings: SettingsViewModel = hiltViewModel()
+        }
         HomeScreenContent(
             modifier = Modifier.semantics {
                 testTagsAsResourceId = true
@@ -97,64 +78,53 @@ fun HomeScreen(
             controller = controller,
             listing = {
                 ListingScreen(
-                    padding = PaddingValues(),
-                    behavior = behavior,
-                    onClickMovie = onClickMovie,
-                    state = moviesState,
-                    viewModel = listing
+                    behavior = listing.behavior,
+                    state = listing.list,
+                    viewModel = listing.viewModel,
+                    profileIcon = profileIcon,
+                    onClickMovie = onClickMovie
                 )
             },
             cinemas = {
                 CinemasScreen(
-                    padding = PaddingValues(),
-                    onClickCinema = onClickCinema,
-                    state = cinemasState,
-                    behavior = behavior,
-                    viewModel = cinemas
+                    behavior = cinemas.behavior,
+                    state = cinemas.list,
+                    viewModel = cinemas.viewModel,
+                    profileIcon = profileIcon,
+                    onClickCinema = onClickCinema
                 )
             },
             booking = {
                 BookingScreen(
-                    padding = PaddingValues(),
-                    behavior = behavior,
-                    onMovieClick = { onClickMovie(it, true) },
-                    viewModel = booking
+                    behavior = booking.behavior,
+                    viewModel = booking.viewModel,
+                    profileIcon = profileIcon,
+                    onMovieClick = { onClickMovie(it, true) }
                 )
             },
             settings = {
                 SettingsScreen(
-                    padding = PaddingValues(),
-                    behavior = behavior,
-                    viewModel = settings
+                    behavior = settings.behavior,
+                    viewModel = settings.viewModel,
+                    profileIcon = profileIcon,
                 )
             }
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreen(
     isLoggedIn: Boolean,
     route: String,
     onNavigateToLogin: () -> Unit,
-    title: @Composable () -> Unit,
-    profileIcon: @Composable () -> Unit,
     onRouteChanged: (String) -> Unit,
-    behavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
     content: @Composable () -> Unit
 ) {
     ClickOnChange(route)
     AppScaffold(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
-        topBar = {
-            HomeScreenToolbar(
-                profileIcon = profileIcon,
-                behavior = behavior,
-                title = title
-            )
-        },
         floatingActionButton = {
             if (!isLoggedIn) AppButton(
                 onClick = onNavigateToLogin,
