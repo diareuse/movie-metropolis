@@ -23,6 +23,7 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
+import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.metropolis.app.screen.listing.component.MoviePromo
 import movie.metropolis.app.screen.listing.component.MovieRow
 import movie.style.state.ImmutableList.Companion.immutable
@@ -32,9 +33,9 @@ import movie.style.theme.Theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListingScreen(
-    padding: PaddingValues,
     behavior: TopAppBarScrollBehavior,
     onClickMovie: (String, upcoming: Boolean) -> Unit,
+    profileIcon: @Composable () -> Unit,
     state: LazyListState,
     viewModel: ListingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
@@ -49,9 +50,9 @@ fun ListingScreen(
         upcomingPromotions = upcomingPromotions,
         currentGroups = currentGroups,
         upcomingGroups = upcomingGroups,
-        contentPadding = padding,
         behavior = behavior,
         state = state,
+        profileIcon = profileIcon,
         onClickFavorite = {
             scope.launch {
                 val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -77,19 +78,27 @@ private fun ListingScreenContent(
     upcomingPromotions: Loadable<List<MovieView>>,
     currentGroups: Loadable<Map<Genre, List<MovieView>>>,
     upcomingGroups: Loadable<Map<Genre, List<MovieView>>>,
-    contentPadding: PaddingValues,
     behavior: TopAppBarScrollBehavior,
     state: LazyListState,
+    profileIcon: @Composable () -> Unit,
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String, upcoming: Boolean) -> Unit
-) {
+) = Scaffold(
+    topBar = {
+        HomeScreenToolbar(
+            profileIcon = profileIcon,
+            behavior = behavior,
+            title = { Text(stringResource(id = R.string.movies)) }
+        )
+    }
+) { padding ->
     val context = LocalContext.current
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(behavior.nestedScrollConnection)
             .testTag("listingColumn"),
-        contentPadding = contentPadding,
+        contentPadding = padding,
         state = state,
     ) {
         item { MoviePromo(items = currentPromotions, onClick = { onClick(it, false) }) }

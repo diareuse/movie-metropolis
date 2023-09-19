@@ -25,6 +25,7 @@ import movie.metropolis.app.screen.booking.component.TicketItemEmpty
 import movie.metropolis.app.screen.booking.component.TicketItemError
 import movie.metropolis.app.screen.booking.component.TicketItemExpired
 import movie.metropolis.app.screen.booking.component.TicketItemLoading
+import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.style.AppButton
 import movie.style.state.ImmutableList
 import movie.style.theme.Theme
@@ -32,9 +33,9 @@ import movie.style.theme.Theme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookingScreen(
-    padding: PaddingValues,
     behavior: TopAppBarScrollBehavior,
     onMovieClick: (String) -> Unit,
+    profileIcon: @Composable () -> Unit,
     viewModel: BookingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
@@ -43,19 +44,18 @@ fun BookingScreen(
     val scope = rememberCoroutineScope()
     var isReaderActive by rememberSaveable { mutableStateOf(false) }
     BookingScreenContent(
-        padding = padding,
         behavior = behavior,
         active = active,
         expired = expired,
+        profileIcon = profileIcon,
         onRefreshClick = viewModel::refresh,
         onMovieClick = onMovieClick,
         onShareClick = {
             scope.launch {
                 actions.actionShare(viewModel.saveAsFile(it))
             }
-        },
-        onCameraClick = { isReaderActive = true }
-    )
+        }
+    ) { isReaderActive = true }
     ReaderDialog(
         isVisible = isReaderActive,
         onVisibilityChanged = { isReaderActive = it },
@@ -66,15 +66,23 @@ fun BookingScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun BookingScreenContent(
-    padding: PaddingValues,
     active: Loadable<ImmutableList<BookingView.Active>>,
     expired: Loadable<ImmutableList<BookingView.Expired>>,
     behavior: TopAppBarScrollBehavior,
+    profileIcon: @Composable () -> Unit,
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
     onShareClick: (BookingView.Active) -> Unit = {},
     onCameraClick: () -> Unit = {}
-) {
+) = Scaffold(
+    topBar = {
+        HomeScreenToolbar(
+            profileIcon = profileIcon,
+            behavior = behavior,
+            title = { Text(stringResource(id = R.string.tickets)) }
+        )
+    }
+) { padding ->
     Column(
         modifier = Modifier
             .nestedScroll(behavior.nestedScrollConnection)
@@ -159,10 +167,10 @@ private fun BookingScreenContent(
 private fun Preview() {
     Theme {
         BookingScreenContent(
-            padding = PaddingValues(),
             active = Loadable.loading(),
             expired = Loadable.loading(),
-            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+            profileIcon = {}
         )
     }
 }

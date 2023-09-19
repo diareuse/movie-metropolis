@@ -8,10 +8,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.presentation.Loadable
@@ -25,14 +27,15 @@ import movie.metropolis.app.screen.cinema.component.CinemaItemError
 import movie.metropolis.app.screen.cinema.component.CinemaItemLoading
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.detail.plus
+import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.style.layout.PreviewLayout
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CinemasScreen(
-    padding: PaddingValues,
     onClickCinema: (String) -> Unit,
     state: LazyListState,
+    profileIcon: @Composable () -> Unit,
     behavior: TopAppBarScrollBehavior,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
@@ -44,7 +47,7 @@ fun CinemasScreen(
     CinemasScreen(
         items = items,
         behavior = behavior,
-        padding = padding,
+        profileIcon = profileIcon,
         onClickCinema = onClickCinema,
         state = state
     )
@@ -54,11 +57,19 @@ fun CinemasScreen(
 @Composable
 private fun CinemasScreen(
     items: Loadable<List<CinemaView>>,
-    padding: PaddingValues,
     behavior: TopAppBarScrollBehavior,
+    profileIcon: @Composable () -> Unit,
     onClickCinema: (String) -> Unit,
     state: LazyListState = rememberLazyListState()
-) {
+) = Scaffold(
+    topBar = {
+        HomeScreenToolbar(
+            profileIcon = profileIcon,
+            behavior = behavior,
+            title = { Text(stringResource(id = R.string.cinemas)) }
+        )
+    }
+) { padding ->
     LazyColumn(
         modifier = Modifier
             .nestedScroll(behavior.nestedScrollConnection)
@@ -100,7 +111,7 @@ private fun CinemaItemPreview(
 ) = PreviewLayout(padding = PaddingValues()) {
     CinemasScreen(
         items = items,
-        padding = PaddingValues(),
+        profileIcon = {},
         behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
         onClickCinema = {}
     )
