@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.profile.component
 
 import android.content.Context
+import android.util.Patterns
 import androidx.activity.compose.LocalActivityResultRegistryOwner
 import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.ActivityResultRegistryOwner
@@ -21,16 +22,23 @@ fun rememberOneTapSaving(
 ): OneTapSaving {
     return remember(context, owner) {
         val client = Identity.getCredentialSavingClient(context)
-        OneTapSaving(client, owner?.activityResultRegistry)
+        var out: OneTapSaving
+        out = OneTapSavingImpl(client, owner?.activityResultRegistry)
+        out = OneTapSavingFilterInvalid(out)
+        out
     }
 }
 
-class OneTapSaving(
+interface OneTapSaving {
+    suspend fun save(email: String, password: String)
+}
+
+class OneTapSavingImpl(
     private val client: CredentialSavingClient,
     private val registry: ActivityResultRegistry?
-) {
+) : OneTapSaving {
 
-    suspend fun save(email: String, password: String) {
+    override suspend fun save(email: String, password: String) {
         val registry = registry ?: return
         val contract = ActivityResultContracts.StartIntentSenderForResult()
         val signInPassword = SignInPassword(email, password)
@@ -45,6 +53,20 @@ class OneTapSaving(
         }
         val senderRequest = IntentSenderRequest.Builder(result.pendingIntent).build()
         launcher.launch(senderRequest)
+    }
+
+}
+
+class OneTapSavingFilterInvalid(
+    private val origin: OneTapSaving
+) : OneTapSaving {
+
+    override suspend fun save(email: String, password: String) {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
+            return
+        if (password.isBlank())
+            return
+        origin.save(email, password)
     }
 
 }
