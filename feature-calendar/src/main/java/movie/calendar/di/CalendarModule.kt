@@ -9,6 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import movie.calendar.CalendarList
 import movie.calendar.CalendarListPlatform
+import movie.calendar.CalendarListRecover
 import movie.calendar.CalendarWriter
 import movie.calendar.CalendarWriterPlatform
 import movie.calendar.CalendarWriterPreventIfExists
@@ -21,7 +22,10 @@ internal class CalendarModule {
     fun list(
         resolver: ContentResolver
     ): CalendarList {
-        return CalendarListPlatform(resolver)
+        var out: CalendarList
+        out = CalendarListPlatform(resolver)
+        out = CalendarListRecover(out)
+        return out
     }
 
     @Provides
