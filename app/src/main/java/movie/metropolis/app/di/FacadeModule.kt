@@ -2,6 +2,7 @@ package movie.metropolis.app.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.calendar.CalendarList
@@ -75,6 +76,7 @@ import movie.rating.MetadataProvider
 class FacadeModule {
 
     @Provides
+    @Reusable
     fun booking(
         booking: UserBookingFeature,
         share: TicketShareRegistry,
@@ -90,6 +92,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun cinemas(event: EventCinemaFeature): CinemasFacade {
         var facade: CinemasFacade
         facade = CinemasFacadeFromFeature(event)
@@ -98,10 +101,11 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun cinema(
         cinemas: EventCinemaFeature,
         showings: EventShowingsFeature.Factory
-    ) = CinemaFacade.Factory {
+    ): CinemaFacade.Factory = CinemaFacade.Factory {
         var facade: CinemaFacade
         facade = CinemaFacadeFromFeature(it, cinemas, showings)
         facade = CinemaFacadeRecover(facade)
@@ -110,13 +114,14 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun movie(
         showings: EventShowingsFeature.Factory,
         detail: EventDetailFeature,
         favorite: FavoriteFeature,
         analyzer: ImageAnalyzer,
         rating: MetadataProvider
-    ) = MovieFacade.Factory {
+    ): MovieFacade.Factory = MovieFacade.Factory {
         var facade: MovieFacade
         facade = MovieFacadeFromFeature(it, showings, detail, favorite)
         facade = MovieFacadePoster(facade, analyzer)
@@ -128,6 +133,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun listing(
         preview: EventPreviewFeature.Factory,
         favorite: FavoriteFeature,
@@ -152,6 +158,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun profile(
         cinema: EventCinemaFeature,
         user: UserDataFeature,
@@ -165,6 +172,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun login(
         user: UserCredentialFeature,
         setup: SetupFeature,
@@ -176,6 +184,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun order(
         user: UserCredentialFeature,
         booking: BookingFacade
@@ -188,6 +197,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun settings(
         prefs: EventPreference,
         calendars: CalendarList
@@ -200,11 +210,13 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun home(user: UserCredentialFeature): HomeFacade {
         return HomeFacadeFromFeature(user)
     }
 
     @Provides
+    @Reusable
     fun share(
         share: TicketShareRegistry,
         user: UserBookingFeature
@@ -218,6 +230,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun setup(
         feature: SetupFeature
     ): SetupFacade {
@@ -227,6 +240,7 @@ class FacadeModule {
     }
 
     @Provides
+    @Reusable
     fun orderComplete(
         facade: BillingFacade
     ): OrderCompleteFacade {

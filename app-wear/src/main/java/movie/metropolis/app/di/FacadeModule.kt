@@ -2,6 +2,7 @@ package movie.metropolis.app.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import movie.metropolis.app.presentation.booking.BookingsFacade
@@ -14,6 +15,7 @@ import movie.wear.WearService
 class FacadeModule {
 
     @Provides
+    @Reusable
     fun booking(
         service: WearService
     ): BookingsFacade {

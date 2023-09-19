@@ -3,6 +3,7 @@ package movie.core.di
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -14,7 +15,12 @@ import movie.core.EventShowingsFeature
 import movie.core.FavoriteFeature
 import movie.core.UserBookingFeature
 import movie.core.notification.NotificationInfoProvider
-import movie.core.pulse.*
+import movie.core.pulse.ExactPulseNotificationMovie
+import movie.core.pulse.PulseSavingBookings
+import movie.core.pulse.PulseSavingCurrent
+import movie.core.pulse.PulseSavingShowings
+import movie.core.pulse.PulseSavingUpcoming
+import movie.core.pulse.PulseScheduling
 import movie.image.ImageAnalyzer
 import movie.pulse.ExactPulse
 import movie.pulse.Pulse
@@ -27,6 +33,7 @@ class PulseModule {
 
     @Daily
     @Provides
+    @Reusable
     fun pulse(
         preview: EventPreviewFeature.Factory,
         cinema: EventCinemaFeature,

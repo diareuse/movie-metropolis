@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.preference.EventPreference
@@ -21,6 +22,7 @@ import movie.settings.di.User
 class PreferenceModule {
 
     @Provides
+    @Reusable
     fun event(
         @Functionality
         store: PreferenceStore
@@ -29,6 +31,7 @@ class PreferenceModule {
     }
 
     @Provides
+    @Reusable
     fun region(
         @User
         store: PreferenceStore
@@ -37,6 +40,7 @@ class PreferenceModule {
     }
 
     @Provides
+    @Reusable
     fun sync(
         @User
         store: PreferenceStore
@@ -45,6 +49,7 @@ class PreferenceModule {
     }
 
     @Provides
+    @Reusable
     fun user(
         @User
         store: PreferenceStore
