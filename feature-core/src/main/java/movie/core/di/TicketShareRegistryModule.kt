@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 class TicketShareRegistryModule {
 
     @Provides
+    @Reusable
     fun registry(
         store: TicketStore = store(),
         json: Json = Json

@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.SetupFeature
@@ -14,6 +15,7 @@ import movie.core.preference.RegionPreference
 class SetupFeatureModule {
 
     @Provides
+    @Reusable
     fun feature(
         preference: RegionPreference
     ): SetupFeature {
@@ -21,6 +23,7 @@ class SetupFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun endpoint(
         feature: SetupFeature
     ): EndpointProvider = object : EndpointProvider {

@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.nwk.PerformanceTracer
@@ -13,6 +14,7 @@ import movie.core.nwk.PerformanceTracer as NetworkTracer
 class TracingModule {
 
     @Provides
+    @Reusable
     fun database(): DbTracer = object : DbTracer {
         override fun trace(tag: String): DbTracer.Trace {
             return DbTracer.Trace {}
@@ -20,6 +22,7 @@ class TracingModule {
     }
 
     @Provides
+    @Reusable
     fun network(): NetworkTracer = object : NetworkTracer {
         override fun trace(url: String, method: String): PerformanceTracer.Trace {
             return object : NetworkTracer.Trace {

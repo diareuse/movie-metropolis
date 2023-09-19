@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +48,7 @@ import kotlin.time.Duration.Companion.days
 internal class UserFeatureModule {
 
     @Provides
+    @Reusable
     fun credential(
         service: UserService,
         account: UserAccount
@@ -55,6 +57,7 @@ internal class UserFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun data(
         service: UserService,
         cinema: EventCinemaFeature,
@@ -74,6 +77,7 @@ internal class UserFeatureModule {
     }
 
     @Provides
+    @Reusable
     fun booking(
         booking: BookingDao,
         seats: BookingSeatsDao,

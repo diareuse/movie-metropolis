@@ -2,6 +2,7 @@ package movie.core.nwk.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
@@ -43,6 +44,7 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
+    @Reusable
     fun serializer(): Json = Json {
         ignoreUnknownKeys = true
         explicitNulls = false
@@ -50,6 +52,7 @@ class NetworkModule {
 
     @ClientRoot
     @Provides
+    @Singleton
     fun clientRoot(
         engine: HttpClientEngine,
         provider: EndpointProvider,
@@ -81,6 +84,7 @@ class NetworkModule {
 
     @ClientData
     @Provides
+    @Singleton
     fun clientData(
         @ClientRoot
         client: LazyHttpClient,
@@ -95,6 +99,7 @@ class NetworkModule {
 
     @ClientQuickbook
     @Provides
+    @Singleton
     fun clientQuickbook(
         @ClientRoot
         client: LazyHttpClient,
@@ -109,6 +114,7 @@ class NetworkModule {
 
     @ClientCustomer
     @Provides
+    @Singleton
     fun clientCustomer(
         @ClientRoot
         client: LazyHttpClient,
@@ -126,6 +132,7 @@ class NetworkModule {
     fun engine(): HttpClientEngine = LazyHttpClientEngine { CIO.create() }
 
     @Provides
+    @Reusable
     fun event(
         @ClientData
         client: LazyHttpClient,
@@ -139,6 +146,7 @@ class NetworkModule {
     }
 
     @Provides
+    @Reusable
     fun cinema(
         @ClientRoot
         client: LazyHttpClient
@@ -150,6 +158,7 @@ class NetworkModule {
     }
 
     @Provides
+    @Reusable
     fun user(
         @ClientCustomer
         client: LazyHttpClient,

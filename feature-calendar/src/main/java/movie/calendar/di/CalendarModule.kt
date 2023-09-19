@@ -4,6 +4,7 @@ import android.content.ContentResolver
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -19,6 +20,7 @@ import movie.calendar.CalendarWriterPreventIfExists
 internal class CalendarModule {
 
     @Provides
+    @Reusable
     fun list(
         resolver: ContentResolver
     ): CalendarList {
@@ -29,6 +31,7 @@ internal class CalendarModule {
     }
 
     @Provides
+    @Reusable
     fun writer(
         resolver: ContentResolver
     ): CalendarWriter.Factory = CalendarWriter.Factory { id ->
@@ -39,6 +42,7 @@ internal class CalendarModule {
     }
 
     @Provides
+    @Reusable
     fun resolver(
         @ApplicationContext
         context: Context

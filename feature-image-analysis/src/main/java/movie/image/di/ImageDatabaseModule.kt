@@ -6,6 +6,7 @@ import androidx.room.ExperimentalRoomApi
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -20,6 +21,7 @@ internal class ImageDatabaseModule {
 
     @OptIn(ExperimentalRoomApi::class)
     @Provides
+    @Reusable
     fun database(
         @ApplicationContext
         context: Context
@@ -31,6 +33,7 @@ internal class ImageDatabaseModule {
     }
 
     @Provides
+    @Reusable
     fun analysis(
         database: ImageDatabase
     ): AnalysisDao {
@@ -38,6 +41,7 @@ internal class ImageDatabaseModule {
     }
 
     @Provides
+    @Reusable
     fun image(
         database: ImageDatabase
     ): ImageDao {
@@ -45,6 +49,7 @@ internal class ImageDatabaseModule {
     }
 
     @Provides
+    @Reusable
     fun color(
         database: ImageDatabase
     ): ColorDao {

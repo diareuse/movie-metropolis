@@ -4,6 +4,7 @@ import android.accounts.AccountManager
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -23,6 +24,7 @@ import movie.core.auth.UserAccountLogout
 class AuthModule {
 
     @Provides
+    @Reusable
     fun account(
         @ApplicationContext
         context: Context,
@@ -35,6 +37,7 @@ class AuthModule {
     }
 
     @Provides
+    @Reusable
     fun encryption(
         @ApplicationContext
         context: Context
@@ -49,6 +52,7 @@ class AuthModule {
     }
 
     @Provides
+    @Reusable
     fun authMeta(): AuthMetadata = AuthMetadata(
         user = BuildConfig.BasicUser,
         password = BuildConfig.BasicPass,

@@ -5,6 +5,7 @@ import com.google.android.gms.wearable.DataClient
 import com.google.android.gms.wearable.Wearable
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -18,6 +19,7 @@ import movie.wear.WearServiceUriSpec
 class WearModule {
 
     @Provides
+    @Reusable
     fun service(
         client: DataClient
     ): WearService {
@@ -29,6 +31,7 @@ class WearModule {
     }
 
     @Provides
+    @Reusable
     internal fun client(
         @ApplicationContext
         context: Context

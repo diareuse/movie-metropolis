@@ -2,6 +2,7 @@ package movie.core.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.core.FavoriteFeature
@@ -16,6 +17,7 @@ import movie.pulse.ExactPulseScheduler
 class FavoriteFeatureModule {
 
     @Provides
+    @Reusable
     fun feature(
         favorite: MovieFavoriteDao,
         media: MovieMediaDao,

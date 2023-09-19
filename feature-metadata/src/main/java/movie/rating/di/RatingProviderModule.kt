@@ -2,6 +2,7 @@ package movie.rating.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
@@ -28,6 +29,7 @@ import javax.inject.Singleton
 internal class RatingProviderModule {
 
     @Provides
+    @Reusable
     fun rating(
         @Rating client: LazyHttpClient,
         dao: RatingDao

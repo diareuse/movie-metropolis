@@ -2,6 +2,7 @@ package movie.image.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.image.ImageAnalyzer
@@ -20,6 +21,7 @@ import movie.image.database.ImageDao
 internal class ImageModule {
 
     @Provides
+    @Reusable
     fun analyzer(
         imageDao: ImageDao,
         colorDao: ColorDao,
