@@ -20,6 +20,7 @@ import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.currentDestinationAsState
 import movie.metropolis.app.screen.home.component.HomeScreenContent
 import movie.metropolis.app.screen.home.component.ProfileIcon
+import movie.metropolis.app.screen.home.component.rememberInstantApp
 import movie.metropolis.app.screen.home.component.rememberScreenState
 import movie.metropolis.app.screen.listing.ListingScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
@@ -48,8 +49,10 @@ fun HomeScreen(
 ) {
     val email = viewModel.email
     val destination by controller.currentDestinationAsState()
+    val instantApp = rememberInstantApp()
     HomeScreen(
         isLoggedIn = email != null,
+        isInstantApp = instantApp.isInstant,
         route = destination?.route ?: startWith,
         onRouteChanged = listener@{
             if (destination?.route == it) return@listener
@@ -58,7 +61,8 @@ fun HomeScreen(
             }
             controller.navigate(it)
         },
-        onNavigateToLogin = onClickLogin
+        onNavigateToLogin = onClickLogin,
+        onNavigateToInstall = instantApp::install
     ) {
         val listing = rememberScreenState<ListingViewModel>()
         val cinemas = rememberScreenState<CinemasViewModel>()
@@ -116,8 +120,10 @@ fun HomeScreen(
 @Composable
 private fun HomeScreen(
     isLoggedIn: Boolean,
+    isInstantApp: Boolean,
     route: String,
     onNavigateToLogin: () -> Unit,
+    onNavigateToInstall: () -> Unit,
     onRouteChanged: (String) -> Unit,
     content: @Composable () -> Unit
 ) {
@@ -126,13 +132,21 @@ private fun HomeScreen(
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
         floatingActionButton = {
-            if (!isLoggedIn) AppButton(
-                onClick = onNavigateToLogin,
-                containerColor = Theme.color.container.error,
-                contentColor = Theme.color.content.error,
-                elevation = 16.dp
-            ) {
-                Text(stringResource(R.string.sign_in))
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                if (!isLoggedIn) AppButton(
+                    onClick = onNavigateToLogin,
+                    containerColor = Theme.color.container.error,
+                    contentColor = Theme.color.content.error,
+                    elevation = 16.dp
+                ) {
+                    Text(stringResource(R.string.sign_in))
+                }
+                if (isInstantApp) AppButton(
+                    onClick = onNavigateToInstall,
+                    elevation = 16.dp
+                ) {
+                    Text(stringResource(id = R.string.install))
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center,

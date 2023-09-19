@@ -44,6 +44,7 @@ junit = "1.1.5"
 espresso-core = "3.5.1"
 uiautomator = "2.2.0"
 benchmark-macro-junit4 = "1.2.0-beta05"
+instant = "18.0.1"
 
 [libraries]
 android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
@@ -67,6 +68,7 @@ google-wearable = { module = "com.google.android.gms:play-services-wearable", ve
 google-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
 google-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
 google-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
+google-instant = { module = "com.google.android.gms:play-services-instantapps", version.ref = "instant" }
 compose-ui-core = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 compose-material = { module = "androidx.compose.material:material", version.ref = "compose-material" }
