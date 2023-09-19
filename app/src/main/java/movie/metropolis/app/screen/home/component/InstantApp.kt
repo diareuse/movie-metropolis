@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.home.component
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import androidx.compose.runtime.*
@@ -27,7 +28,10 @@ data class InstantApp(
         val postInstall = Intent(Intent.ACTION_MAIN)
             .addCategory(Intent.CATEGORY_DEFAULT)
             .setPackage("movie.metropolis.app")
-        InstantApps.showInstallPrompt(activity, postInstall, 100, null)
+        try {
+            InstantApps.showInstallPrompt(activity, postInstall, 100, null)
+        } catch (ignore: ActivityNotFoundException) {
+        }
     }
 
 }
