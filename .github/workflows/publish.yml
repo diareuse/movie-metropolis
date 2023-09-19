@@ -26,7 +26,7 @@ jobs:
 
       - run: |
           versionNumber=${{github.run_number}}
-          versionNumber=$(($versionNumber+100))
+          versionNumber=$(($versionNumber+107))
           sed -i "s/versionCode 1/versionCode $versionNumber/" buildSrc/src/main/groovy/application-conventions.gradle
 
       - name: Set up JDK
@@ -41,14 +41,66 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: app:bundleRelease
+          arguments: bundleRelease
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-bundle
+          path: |
+            app/**/*.aab
+            app/**/mapping.txt
+          if-no-files-found: error
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: release-wear-bundle
+          path: |
+            app-wear/**/*.aab
+            app-wear/**/mapping.txt
+          if-no-files-found: error
+
+  publish-wear:
+    runs-on: ubuntu-latest
+    needs: [ build-aab ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: release-wear-bundle
+
+      - run: |
+          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
 
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service-account.json
           packageName: movie.metropolis.app
-          releaseFiles: app/build/outputs/bundle/release/*.aab
+          releaseFiles: build/outputs/bundle/release/*.aab
+          track: wear:production
+          status: completed
+          inAppUpdatePriority: 3
+          mappingFile: build/outputs/mapping/release/mapping.txt
+
+  publish-mobile:
+    runs-on: ubuntu-latest
+    needs: [ build-aab ]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: release-bundle
+
+      - run: |
+          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
+
+      - uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJson: service-account.json
+          packageName: movie.metropolis.app
+          releaseFiles: build/outputs/bundle/release/*.aab
           track: production
           status: completed
           inAppUpdatePriority: 3
-          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          mappingFile: build/outputs/mapping/release/mapping.txt
