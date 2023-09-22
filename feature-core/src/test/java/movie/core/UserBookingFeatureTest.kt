@@ -193,7 +193,8 @@ class UserBookingFeatureTest {
         detail_responds_success()
         feature(this).get()
         awaitChildJobCompletion()
-        verify(wear).send(eq("/bookings"), any())
+        verify(wear).send(eq("/bookings/active"), any())
+        verify(wear).send(eq("/bookings/expired"), any())
     }
 
     @Test
@@ -203,7 +204,8 @@ class UserBookingFeatureTest {
         detail_responds_success()
         feature(this).get()
         awaitChildJobCompletion()
-        verify(wear).send(eq("/bookings"), any())
+        verify(wear).send(eq("/bookings/active"), any())
+        verify(wear).send(eq("/bookings/expired"), any())
     }
 
     @Test
@@ -214,7 +216,8 @@ class UserBookingFeatureTest {
         detail_responds_success()
         feature(this).get().getOrThrow()
         awaitChildJobCompletion()
-        verify(wear).remove("/bookings")
+        verify(wear).remove("/bookings/active")
+        verify(wear).remove("/bookings/expired")
     }
 
     // ---

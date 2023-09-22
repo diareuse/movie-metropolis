@@ -78,7 +78,8 @@ class BookingFacadeTest {
         val data = DataMap().apply {
             putDataMapArrayList("bookings", ArrayList(items))
         }
-        wheneverBlocking { service.get(path) }.thenReturn(data)
+        wheneverBlocking { service.get("$path/active") }.thenReturn(data)
+        wheneverBlocking { service.get("$path/expired") }.thenReturn(DataMap())
         return items.map(::TicketViewActiveFromDataMap)
     }
 
