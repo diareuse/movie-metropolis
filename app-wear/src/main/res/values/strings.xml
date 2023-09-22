@@ -2,5 +2,5 @@
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Your tickets</string>
     <string name="bookings_expired_title">Expired</string>
-    <string name="bookings_empty">We couldn\'t find any tickets. Try opening %s app on Tickets screen.</string>
+    <string name="bookings_empty">We couldn\'t find any tickets. Try opening Movie Metropolis app on Tickets screen.</string>
 </resources>
