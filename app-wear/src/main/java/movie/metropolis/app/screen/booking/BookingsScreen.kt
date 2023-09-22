@@ -22,9 +22,11 @@ import movie.metropolis.app.model.TicketView
 import movie.metropolis.app.model.preview.TicketViewPreviews
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.onEmpty
+import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.booking.component.BookingItem
 import movie.style.layout.PreviewWearLayout
+import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import androidx.wear.compose.material.Scaffold as WearScaffold
 
@@ -33,16 +35,19 @@ fun BookingsScreen(
     viewModel: BookingsViewModel = hiltViewModel(),
     onTicketClick: (String) -> Unit
 ) {
-    val items by viewModel.items.collectAsState()
+    val active by viewModel.active.collectAsState()
+    val expired by viewModel.expired.collectAsState()
     BookingsScreen(
-        items = items,
+        active = active,
+        expired = expired,
         onTicketClick = onTicketClick
     )
 }
 
 @Composable
 private fun BookingsScreen(
-    items: Loadable<List<TicketView>> = Loadable.loading(),
+    active: Loadable<List<TicketView>> = Loadable.loading(),
+    expired: Loadable<List<TicketView>> = Loadable.loading(),
     onTicketClick: (String) -> Unit = {},
     state: ScalingLazyListState = rememberScalingLazyListState()
 ) {
@@ -65,7 +70,7 @@ private fun BookingsScreen(
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             item { Text(stringResource(R.string.bookings_title), style = Theme.textStyle.title) }
-            items.onSuccess { items ->
+            active.onSuccess { items ->
                 items(items, key = { it.id }) {
                     BookingItem(
                         name = { Text(it.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
@@ -74,15 +79,47 @@ private fun BookingsScreen(
                         onClick = { onTicketClick(it.id) }
                     )
                 }
+            }.onLoading {
+                item {
+                    BookingItem(
+                        name = { Text("#".repeat(10), modifier = Modifier.textPlaceholder()) },
+                        date = { Text("#".repeat(23), modifier = Modifier.textPlaceholder()) },
+                        time = { Text("#".repeat(5), modifier = Modifier.textPlaceholder()) },
+                        onClick = {}
+                    )
+                }
             }.onEmpty {
                 item {
-                    Text(
-                        text = stringResource(
-                            R.string.bookings_empty,
-                            stringResource(id = R.string.app_name)
-                        ),
-                        textAlign = TextAlign.Center
+                    Text(stringResource(R.string.bookings_empty))
+                }
+            }
+            item {
+                Text(
+                    stringResource(R.string.bookings_expired_title),
+                    style = Theme.textStyle.title
+                )
+            }
+            expired.onSuccess { items ->
+                items(items, key = { it.id }) {
+                    BookingItem(
+                        name = { Text(it.name, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                        date = { Text(it.date) },
+                        time = { Text(it.time) },
+                        onClick = { onTicketClick(it.id) }
                     )
+                }
+            }.onLoading {
+                item {
+                    BookingItem(
+                        name = { Text("#".repeat(10), modifier = Modifier.textPlaceholder()) },
+                        date = { Text("#".repeat(23), modifier = Modifier.textPlaceholder()) },
+                        time = { Text("#".repeat(5), modifier = Modifier.textPlaceholder()) },
+                        onClick = {}
+                    )
+                }
+            }.onEmpty {
+                item {
+                    Text(stringResource(R.string.bookings_empty))
                 }
             }
         }

@@ -4,7 +4,7 @@ import com.google.android.gms.wearable.DataMap
 import kotlinx.coroutines.test.runTest
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.TicketView
-import movie.metropolis.app.model.adapter.TicketViewFromDataMap
+import movie.metropolis.app.model.adapter.TicketViewActiveFromDataMap
 import movie.metropolis.app.presentation.OnChangedListener
 import movie.metropolis.app.util.wheneverBlocking
 import movie.wear.WearService
@@ -79,7 +79,7 @@ class BookingFacadeTest {
             putDataMapArrayList("bookings", ArrayList(items))
         }
         wheneverBlocking { service.get(path) }.thenReturn(data)
-        return items.map(::TicketViewFromDataMap)
+        return items.map(::TicketViewActiveFromDataMap)
     }
 
     private fun TicketView(

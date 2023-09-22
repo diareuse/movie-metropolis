@@ -34,7 +34,7 @@ class TicketViewPreview : CollectionPreviewParameterProvider<TicketView>(
             "Black Panther: Wakanda Forever",
             "Knock at the Cabin"
         ).random()
-    ) : TicketView
+    ) : TicketView.Active
 
     data class TicketViewSeatPreview(
         override val row: String = "10",

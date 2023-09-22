@@ -37,16 +37,43 @@ class UserBookingFeatureWear(
 
     override suspend fun get() = origin.get().onSuccess {
         scope.launch {
-            val active = it.filterIsInstance<Booking.Active>().toList()
-            when {
-                active.isEmpty() -> wear.remove("/bookings")
-                else -> wear.send("/bookings", active.asDataMap())
+            val active = mutableListOf<Booking.Active>()
+            val expired = mutableListOf<Booking.Expired>()
+            for (booking in it) when (booking) {
+                is Booking.Active -> active += booking
+                is Booking.Expired -> expired += booking
             }
+            update("/bookings/active", active.asDataMap())
+            update("/bookings/expired", expired.asDataMap())
         }
     }
 
+    // ---
+
+    private suspend fun update(path: String, data: DataMap) {
+        if (data.isEmpty) wear.remove(path)
+        else wear.send(path, data)
+    }
+
+    // ---
+
+    @JvmName("expiredAsDataMap")
+    private fun List<Booking.Expired>.asDataMap() = DataMap().also { map ->
+        if (isNotEmpty())
+            map.putDataMapArrayList("bookings", map { it.asDataMap() }.let(::ArrayList))
+    }
+
+    @JvmName("activeAsDataMap")
     private fun List<Booking.Active>.asDataMap() = DataMap().also { map ->
-        map.putDataMapArrayList("bookings", map { it.asDataMap() }.let(::ArrayList))
+        if (isNotEmpty())
+            map.putDataMapArrayList("bookings", map { it.asDataMap() }.let(::ArrayList))
+    }
+
+    private fun Booking.Expired.asDataMap() = DataMap().also { map ->
+        map.putString("id", id)
+        map.putString("cinema", cinema.name)
+        map.putLong("starts_at", startsAt.time)
+        map.putString("name", name)
     }
 
     private fun Booking.Active.asDataMap() = DataMap().also { map ->

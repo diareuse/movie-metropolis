@@ -1,7 +1,8 @@
 package movie.metropolis.app.presentation.booking
 
 import movie.metropolis.app.model.TicketView
-import movie.metropolis.app.model.adapter.TicketViewFromDataMap
+import movie.metropolis.app.model.adapter.TicketViewActiveFromDataMap
+import movie.metropolis.app.model.adapter.TicketViewExpiredFromDataMap
 import movie.metropolis.app.presentation.OnChangedListener
 import movie.wear.WearService
 
@@ -10,10 +11,13 @@ class BookingsFacadeFromService(
 ) : BookingsFacade {
 
     override suspend fun get(): Result<List<TicketView>> {
-        return service.get("/bookings")
+        val active = service.get("/bookings/active")
             .getDataMapArrayList("bookings")
-            ?.map(::TicketViewFromDataMap).orEmpty()
-            .let(Result.Companion::success)
+            ?.map(::TicketViewActiveFromDataMap).orEmpty()
+        val expired = service.get("/bookings/expired")
+            .getDataMapArrayList("bookings")
+            ?.map(::TicketViewExpiredFromDataMap).orEmpty()
+        return Result.success(active + expired)
     }
 
     override fun addOnChangedListener(listener: OnChangedListener): OnChangedListener {

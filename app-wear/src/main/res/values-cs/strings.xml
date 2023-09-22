@@ -2,5 +2,6 @@
 <resources>
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Tvoje lístky</string>
-    <string name="bookings_empty">Otevři %s na svém mobilním zařízení, aktivní lístky se tu hned zobrazí.</string>
+    <string name="bookings_expired_title">Vypršené</string>
+    <string name="bookings_empty">Nemůžeme najít žádné lístky. Zkus otevřít %s na na obrazovce s lítsky.</string>
 </resources>
