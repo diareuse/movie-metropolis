@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen.listing.component
+package movie.style
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES

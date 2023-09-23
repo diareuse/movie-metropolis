@@ -26,10 +26,10 @@ import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.metropolis.app.screen.home.component.SectionHeadline
-import movie.metropolis.app.screen.listing.component.CenterAlignedTabRow
 import movie.metropolis.app.screen.listing.component.MoviePromo
 import movie.metropolis.app.screen.listing.component.MovieRow
-import movie.metropolis.app.screen.listing.component.Tab
+import movie.style.CenterAlignedTabRow
+import movie.style.Tab
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
