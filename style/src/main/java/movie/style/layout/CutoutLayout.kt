@@ -79,6 +79,7 @@ fun CutoutLayout(
         }
         Box(
             modifier = Modifier
+                .surface(color, cutoutShape, elevation, color)
                 .animateContentSize()
                 .onGloballyPositioned {
                     with(density) {
@@ -87,7 +88,6 @@ fun CutoutLayout(
                     }
                 }
                 .align(Alignment.TopEnd)
-                .surface(color, cutoutShape, elevation, color)
         ) {
             CompositionLocalProvider(
                 LocalContentColor provides Theme.color.contentColorFor(color),
