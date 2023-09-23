@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.semantics.*
@@ -77,6 +78,7 @@ fun Tab(
 ) {
     Box(
         modifier = modifier
+            .clip(CircleShape)
             .clickable(role = Role.Tab, onClick = onClick)
             .padding(16.dp, 8.dp)
     ) {
