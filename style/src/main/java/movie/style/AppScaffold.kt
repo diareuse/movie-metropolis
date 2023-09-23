@@ -5,7 +5,9 @@ import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.unit.*
 
 @Composable
 fun AppScaffold(
@@ -106,6 +108,7 @@ private fun AppScaffoldMedium(
     }
 }
 
-val LocalWindowSizeClass = staticCompositionLocalOf<WindowSizeClass> {
-    error("Not initialized")
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+val LocalWindowSizeClass = staticCompositionLocalOf {
+    WindowSizeClass.calculateFromSize(Size(1080f, 1920f), Density(1f))
 }

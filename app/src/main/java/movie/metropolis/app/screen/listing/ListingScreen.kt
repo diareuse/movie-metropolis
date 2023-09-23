@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.listing
 
 import android.Manifest
+import android.content.res.Configuration
 import android.os.Build
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -11,7 +12,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.tooling.preview.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
@@ -24,8 +25,11 @@ import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
+import movie.metropolis.app.screen.home.component.SectionHeadline
+import movie.metropolis.app.screen.listing.component.CenterAlignedTabRow
 import movie.metropolis.app.screen.listing.component.MoviePromo
 import movie.metropolis.app.screen.listing.component.MovieRow
+import movie.metropolis.app.screen.listing.component.Tab
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -40,16 +44,15 @@ fun ListingScreen(
     viewModel: ListingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
-    val currentPromotions by viewModel.currentPromotions.collectAsState()
-    val upcomingPromotions by viewModel.upcomingPromotions.collectAsState()
-    val currentGroups by viewModel.currentGroups.collectAsState()
-    val upcomingGroups by viewModel.upcomingGroups.collectAsState()
+    val promotions by viewModel.promotions.collectAsState()
+    val groups by viewModel.groups.collectAsState()
+    val selectedType by viewModel.selectedType.collectAsState()
     val scope = rememberCoroutineScope()
     ListingScreenContent(
-        currentPromotions = currentPromotions,
-        upcomingPromotions = upcomingPromotions,
-        currentGroups = currentGroups,
-        upcomingGroups = upcomingGroups,
+        promotions = promotions,
+        groups = groups,
+        selectedType = selectedType,
+        onSelectedTypeChange = { viewModel.selectedType.value = it },
         behavior = behavior,
         state = state,
         profileIcon = profileIcon,
@@ -74,16 +77,18 @@ fun ListingScreen(
 )
 @Composable
 private fun ListingScreenContent(
-    currentPromotions: Loadable<List<MovieView>>,
-    upcomingPromotions: Loadable<List<MovieView>>,
-    currentGroups: Loadable<Map<Genre, List<MovieView>>>,
-    upcomingGroups: Loadable<Map<Genre, List<MovieView>>>,
-    behavior: TopAppBarScrollBehavior,
-    state: LazyListState,
+    promotions: Loadable<List<MovieView>>,
+    groups: Loadable<Map<Genre, List<MovieView>>>,
+    selectedType: ShowingType,
+    onSelectedTypeChange: (ShowingType) -> Unit,
     profileIcon: @Composable () -> Unit,
     onClickFavorite: (MovieView) -> Unit,
-    onClick: (String, upcoming: Boolean) -> Unit
+    onClick: (String, upcoming: Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+    behavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+    state: LazyListState = rememberLazyListState()
 ) = Scaffold(
+    modifier = modifier,
     topBar = {
         HomeScreenToolbar(
             profileIcon = profileIcon,
@@ -93,6 +98,7 @@ private fun ListingScreenContent(
     }
 ) { padding ->
     val context = LocalContext.current
+    val upcoming = selectedType == ShowingType.Upcoming
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -101,22 +107,39 @@ private fun ListingScreenContent(
         contentPadding = padding,
         state = state,
     ) {
-        item { MoviePromo(items = currentPromotions, onClick = { onClick(it, false) }) }
-        currentGroups.onSuccess {
+        item {
+            CenterAlignedTabRow(
+                selected = selectedType.ordinal,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Tab(
+                    selected = selectedType == ShowingType.Available,
+                    onClick = { onSelectedTypeChange(ShowingType.Available) }) {
+                    Text(text = stringResource(id = R.string.showing))
+                }
+                Tab(
+                    selected = selectedType == ShowingType.Upcoming,
+                    onClick = { onSelectedTypeChange(ShowingType.Upcoming) }) {
+                    Text(text = stringResource(id = R.string.upcoming))
+                }
+            }
+        }
+        item { MoviePromo(items = promotions, onClick = { onClick(it, upcoming) }) }
+        groups.onSuccess {
             for ((genre, items) in it) {
-                item(key = "current-$genre-title") {
+                item {
                     SectionHeadline(
                         modifier = Modifier.animateItemPlacement(),
                         name = genre.getName(context)
                     )
                 }
-                item(key = "current-$genre-content") {
+                item {
                     MovieRow(
                         modifier = Modifier.animateItemPlacement(),
                         items = Loadable.success(items.immutable()),
-                        isShowing = true,
+                        isShowing = !upcoming,
                         onClickFavorite = onClickFavorite,
-                        onClick = { onClick(it, false) }
+                        onClick = { onClick(it, upcoming) }
                     )
                 }
             }
@@ -149,95 +172,21 @@ private fun ListingScreenContent(
                 )
             }
         }
-
-        // ---
-
-        item {
-            SectionTitle(
-                modifier = Modifier.animateItemPlacement(),
-                name = stringResource(id = R.string.upcoming)
-            )
-        }
-        item {
-            MoviePromo(
-                modifier = Modifier.animateItemPlacement(),
-                items = upcomingPromotions, onClick = { onClick(it, true) })
-        }
-        upcomingGroups.onSuccess {
-            for ((genre, items) in it) {
-                item(key = "upcoming-$genre-title") {
-                    SectionHeadline(
-                        modifier = Modifier.animateItemPlacement(),
-                        name = genre.getName(context)
-                    )
-                }
-                item(key = "upcoming-$genre-content") {
-                    MovieRow(
-                        modifier = Modifier.animateItemPlacement(),
-                        items = Loadable.success(items.immutable()),
-                        isShowing = false,
-                        onClickFavorite = onClickFavorite,
-                        onClick = { onClick(it, true) }
-                    )
-                }
-            }
-        }.onLoading {
-            item(key = "upcoming-title") {
-                SectionHeadline(
-                    modifier = Modifier
-                        .textPlaceholder()
-                        .animateItemPlacement(),
-                    name = "#".repeat(10)
-                )
-            }
-            item(key = "upcoming-content") {
-                MovieRow(
-                    modifier = Modifier.animateItemPlacement(),
-                    items = Loadable.loading(),
-                    isShowing = false,
-                    onClickFavorite = onClickFavorite,
-                    onClick = {}
-                )
-            }
-        }.onFailure {
-            item(key = "upcoming-content") {
-                MovieRow(
-                    modifier = Modifier.animateItemPlacement(),
-                    items = Loadable.failure(it),
-                    isShowing = false,
-                    onClickFavorite = onClickFavorite,
-                    onClick = {}
-                )
-            }
-        }
-
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-fun SectionTitle(
-    name: String,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = Modifier
-            .padding(horizontal = 24.dp)
-            .then(modifier),
-        text = name,
-        style = Theme.textStyle.title
-    )
-}
-
-@Composable
-fun SectionHeadline(
-    name: String,
-    modifier: Modifier = Modifier
-) {
-    Text(
-        modifier = Modifier
-            .padding(horizontal = 24.dp)
-            .then(modifier),
-        text = name,
-        style = Theme.textStyle.headline
+private fun ListingScreenPreview() = Theme {
+    ListingScreenContent(
+        promotions = Loadable.loading(),
+        groups = Loadable.loading(),
+        selectedType = ShowingType.Upcoming,
+        onSelectedTypeChange = {},
+        profileIcon = { /*TODO*/ },
+        onClickFavorite = {},
+        onClick = { _, _ -> }
     )
 }
