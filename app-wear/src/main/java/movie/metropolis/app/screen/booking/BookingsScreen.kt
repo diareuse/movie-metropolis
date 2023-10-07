@@ -1,9 +1,11 @@
 package movie.metropolis.app.screen.booking
 
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.input.rotary.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
@@ -17,6 +19,8 @@ import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.scrollAway
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.model.TicketView
 import movie.metropolis.app.model.preview.TicketViewPreviews
@@ -49,7 +53,8 @@ private fun BookingsScreen(
     active: Loadable<List<TicketView>> = Loadable.loading(),
     expired: Loadable<List<TicketView>> = Loadable.loading(),
     onTicketClick: (String) -> Unit = {},
-    state: ScalingLazyListState = rememberScalingLazyListState()
+    state: ScalingLazyListState = rememberScalingLazyListState(),
+    scope: CoroutineScope = rememberCoroutineScope()
 ) {
     WearScaffold(
         timeText = {
@@ -63,7 +68,14 @@ private fun BookingsScreen(
         }
     ) {
         ScalingLazyColumn(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .onRotaryScrollEvent {
+                    scope.launch {
+                        state.scrollBy(it.verticalScrollPixels)
+                    }
+                    true
+                },
             state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             autoCentering = AutoCenteringParams(itemOffset = 1),
