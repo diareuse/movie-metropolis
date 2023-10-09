@@ -24,6 +24,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.App.Splash"
             android:exported="true"
             android:taskAffinity=":default">
             <intent-filter>

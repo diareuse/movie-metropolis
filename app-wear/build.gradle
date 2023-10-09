@@ -22,5 +22,6 @@ dependencies {
     implementation libs.compose.wear.foundation
     implementation libs.compose.wear.navigation
     implementation libs.androidx.work
+    implementation libs.androidx.splash
 
 }
