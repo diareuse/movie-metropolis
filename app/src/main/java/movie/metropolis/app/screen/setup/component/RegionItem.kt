@@ -8,7 +8,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import movie.style.haptic.withHaptics
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.util.Locale
@@ -51,7 +50,7 @@ private fun RegionItemLayout(
             Modifier
                 .fillMaxWidth()
                 .clickable(
-                    onClick = onClick?.withHaptics() ?: {},
+                    onClick = onClick ?: {},
                     enabled = onClick != null,
                     role = Role.Button
                 )

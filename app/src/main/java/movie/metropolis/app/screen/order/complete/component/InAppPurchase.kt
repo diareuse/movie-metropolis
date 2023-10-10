@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ProductDetailView
-import movie.style.haptic.withHaptics
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.surface
 import movie.style.theme.Theme
@@ -37,7 +36,7 @@ fun InAppPurchase(
                 .padding(top = 40.dp)
                 .padding(bottom = with(LocalDensity.current) { height.toDp() / 2 })
                 .surface(4.dp, shape = Theme.container.card)
-                .clickable(onClick = onClick.withHaptics())
+                .clickable(onClick = onClick)
                 .padding(top = 16.dp)
                 .padding(32.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -54,7 +53,7 @@ fun InAppPurchase(
                     elevation = 16.dp,
                     shadowColor = Theme.color.container.primary
                 )
-                .clickable(onClick = onClick.withHaptics())
+                .clickable(onClick = onClick)
                 .padding(end = 24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {

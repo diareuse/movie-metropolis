@@ -9,7 +9,6 @@ import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.style.*
-import movie.style.haptic.hapticClick
 
 @Composable
 fun EllipsisText(
@@ -28,7 +27,7 @@ fun EllipsisText(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = hapticClick { expanded = !expanded }
+                onClick = { expanded = !expanded }
             ),
         text = text,
         style = style,

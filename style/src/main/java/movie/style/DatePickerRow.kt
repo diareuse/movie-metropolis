@@ -12,7 +12,6 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import movie.style.haptic.withHaptics
 import movie.style.theme.Theme
 import movie.style.theme.contentColorFor
 import java.text.DateFormat
@@ -101,7 +100,7 @@ private fun DatePickerItem(
     ) {
         Text(
             modifier = Modifier
-                .clickable(enabled = enabled, onClick = onClick.withHaptics())
+                .clickable(enabled = enabled, onClick = onClick)
                 .padding(12.dp, 8.dp),
             text = date,
             style = Theme.textStyle.body,

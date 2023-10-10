@@ -7,7 +7,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.painter.*
 import androidx.compose.ui.unit.*
-import movie.style.haptic.withHaptics
 import movie.style.theme.Theme
 
 @Composable
@@ -23,7 +22,7 @@ fun AppButton(
 ) {
     Button(
         modifier = modifier,
-        onClick = onClick.withHaptics(),
+        onClick = onClick,
         enabled = enabled,
         shape = Theme.container.button,
         contentPadding = contentPadding,
@@ -53,7 +52,7 @@ fun AppIconButton(
     content: @Composable () -> Unit
 ) {
     IconButton(
-        onClick = onClick.withHaptics(),
+        onClick = onClick,
         enabled = enabled,
         modifier = modifier,
         colors = IconButtonDefaults.iconButtonColors(

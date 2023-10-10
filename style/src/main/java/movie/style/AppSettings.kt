@@ -8,7 +8,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import movie.style.haptic.hapticClick
 import movie.style.theme.Theme
 
 @Composable
@@ -31,7 +30,7 @@ fun AppSettings(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = enabled, onClick = hapticClick { onCheckedChanged(!checked) })
+                .clickable(enabled = enabled, onClick = { onCheckedChanged(!checked) })
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)

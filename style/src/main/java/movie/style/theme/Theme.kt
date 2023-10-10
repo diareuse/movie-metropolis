@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.*
 import movie.style.haptic.PlatformHapticFeedback
+import movie.style.haptic.rememberVibrateIndication
 
 @Composable
 fun Theme(
@@ -22,7 +23,8 @@ fun Theme(
         LocalText provides ThemeTextMaterial3(MaterialTheme.typography),
         LocalContainer provides ThemeContainerMaterial3(MaterialTheme.shapes),
         LocalStyle provides ThemeStyleMaterial3(MaterialTheme.colorScheme),
-        LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current)
+        LocalHapticFeedback provides PlatformHapticFeedback(LocalView.current),
+        LocalIndication provides rememberVibrateIndication()
     ) {
         CompositionLocalProvider(
             LocalTextStyle provides Theme.textStyle.body
