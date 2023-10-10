@@ -107,7 +107,7 @@ private fun BookingsScreen(
                 }
             }.onEmpty {
                 item {
-                    Text(stringResource(R.string.bookings_empty))
+                    Text(stringResource(R.string.bookings_empty), textAlign = TextAlign.Center)
                 }
             }
             item {
