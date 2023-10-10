@@ -2,5 +2,4 @@
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Your tickets</string>
     <string name="bookings_expired_title">Expired</string>
-    <string name="bookings_empty">Nothing here, open Movie Metropolis on Tickets screen. Items appear here momentarily.</string>
 </resources>

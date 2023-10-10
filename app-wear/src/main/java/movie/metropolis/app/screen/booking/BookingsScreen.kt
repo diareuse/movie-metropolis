@@ -31,6 +31,7 @@ import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.booking.component.BookingItem
+import movie.metropolis.app.screen.booking.component.EmptyComponent
 import movie.style.layout.PreviewWearLayout
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -107,7 +108,7 @@ private fun BookingsScreen(
                 }
             }.onEmpty {
                 item {
-                    Text(stringResource(R.string.bookings_empty), textAlign = TextAlign.Center)
+                    EmptyComponent(Modifier.fillParentMaxWidth())
                 }
             }
             item {
@@ -136,7 +137,7 @@ private fun BookingsScreen(
                 }
             }.onEmpty {
                 item {
-                    Text(stringResource(R.string.bookings_empty))
+                    EmptyComponent(Modifier.fillParentMaxWidth())
                 }
             }
         }
