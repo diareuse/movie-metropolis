@@ -1,10 +1,12 @@
 package movie.metropolis.app.screen.booking
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.input.rotary.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
@@ -67,6 +69,7 @@ private fun BookingsScreen(
             PositionIndicator(state)
         }
     ) {
+        val focus = remember { FocusRequester() }
         ScalingLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -75,7 +78,9 @@ private fun BookingsScreen(
                         state.scrollBy(it.verticalScrollPixels)
                     }
                     true
-                },
+                }
+                .focusRequester(focus)
+                .focusable(),
             state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             autoCentering = AutoCenteringParams(itemOffset = 1),
@@ -134,6 +139,9 @@ private fun BookingsScreen(
                     Text(stringResource(R.string.bookings_empty))
                 }
             }
+        }
+        LaunchedEffect(Unit) {
+            focus.requestFocus()
         }
     }
 }
