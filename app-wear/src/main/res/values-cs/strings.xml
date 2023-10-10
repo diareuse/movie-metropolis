@@ -3,5 +3,5 @@
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Tvoje lístky</string>
     <string name="bookings_expired_title">Vypršené</string>
-    <string name="bookings_empty">Nemůžeme najít žádné lístky. Zkus otevřít Movie Metropolis na obrazovce s lístky.</string>
+    <string name="bookings_empty">Kde nic tu nic, zkus otevřít Movie Metropolis na obrazovce s lístky. Za chvíli se tu objeví.</string>
 </resources>
