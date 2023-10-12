@@ -80,6 +80,7 @@ jobs:
           track: wear:production
           status: completed
           inAppUpdatePriority: 3
+          changesNotSentForReview: true
           mappingFile: build/outputs/mapping/release/mapping.txt
 
   publish-mobile:
@@ -103,4 +104,5 @@ jobs:
           track: production
           status: completed
           inAppUpdatePriority: 3
+          changesNotSentForReview: true
           mappingFile: build/outputs/mapping/release/mapping.txt
