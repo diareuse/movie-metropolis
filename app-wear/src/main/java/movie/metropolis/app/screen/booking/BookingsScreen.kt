@@ -84,7 +84,7 @@ private fun BookingsScreen(
                 .focusable(),
             state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            autoCentering = AutoCenteringParams(itemOffset = 1),
+            autoCentering = AutoCenteringParams(itemIndex = 1, itemOffset = 1),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             item { Text(stringResource(R.string.bookings_title), style = Theme.textStyle.title) }
@@ -109,6 +109,14 @@ private fun BookingsScreen(
             }.onEmpty {
                 item {
                     EmptyComponent(Modifier.fillParentMaxWidth())
+                }
+                item {
+                    Text(
+                        modifier = Modifier.fillParentMaxWidth(),
+                        text = stringResource(R.string.bookings_active_empty),
+                        style = Theme.textStyle.caption,
+                        textAlign = TextAlign.Center
+                    )
                 }
             }
             item {
@@ -139,6 +147,14 @@ private fun BookingsScreen(
                 item {
                     EmptyComponent(Modifier.fillParentMaxWidth())
                 }
+                item {
+                    Text(
+                        modifier = Modifier.fillParentMaxWidth(),
+                        text = stringResource(R.string.bookings_expired_empty),
+                        style = Theme.textStyle.caption,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
         LaunchedEffect(Unit) {
@@ -154,4 +170,11 @@ private fun Preview(
     @PreviewParameter(TicketViewPreviews::class, 1) previews: List<TicketView>
 ) = PreviewWearLayout(padding = PaddingValues()) {
     BookingsScreen(Loadable.success(previews))
+}
+
+@Preview(device = Devices.WEAR_OS_LARGE_ROUND, showSystemUi = true, showBackground = true)
+@Preview(device = Devices.WEAR_OS_SMALL_ROUND, showSystemUi = true, showBackground = true)
+@Composable
+private fun PreviewEmpty() = PreviewWearLayout(padding = PaddingValues()) {
+    BookingsScreen(Loadable.success(emptyList()))
 }

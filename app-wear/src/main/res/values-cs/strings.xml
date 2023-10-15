@@ -2,5 +2,7 @@
 <resources>
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Tvoje lístky</string>
-    <string name="bookings_expired_title">Vypršené</string>
+    <string name="bookings_expired_title">Expirované</string>
+    <string name="bookings_active_empty">Lístky se zobrazí tady, když budou aktivní. V mobilní aplikaci jdi do sekce s lístky pro obnovení dat v hodinkách.</string>
+    <string name="bookings_expired_empty">Expirované lístky se tu zobrazí. V mobilní aplikaci jdi do sekce s lístky pro obnovení dat v hodinkách.</string>
 </resources>

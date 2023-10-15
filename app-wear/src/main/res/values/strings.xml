@@ -2,4 +2,6 @@
     <string name="app_name">Movie Metropolis</string>
     <string name="bookings_title">Your tickets</string>
     <string name="bookings_expired_title">Expired</string>
+    <string name="bookings_active_empty">Tickets will be displayed here after a purchase whilst they are active. Visit Tickets in your mobile app to push new data to your watch.</string>
+    <string name="bookings_expired_empty">Expired tickets will be displayed here. Visit Tickets in your mobile app to push new data to your watch.</string>
 </resources>
