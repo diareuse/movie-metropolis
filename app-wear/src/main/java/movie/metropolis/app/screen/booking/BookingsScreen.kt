@@ -13,15 +13,19 @@ import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.lazy.AutoCenteringParams
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.ScalingLazyListState
 import androidx.wear.compose.foundation.lazy.items
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.TimeText
 import androidx.wear.compose.material.scrollAway
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.model.TicketView
@@ -51,6 +55,7 @@ fun BookingsScreen(
     )
 }
 
+@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 private fun BookingsScreen(
     active: Loadable<List<TicketView>> = Loadable.loading(),
@@ -70,17 +75,23 @@ private fun BookingsScreen(
             PositionIndicator(state)
         }
     ) {
-        val focus = remember { FocusRequester() }
+        val focusRequester = rememberActiveFocusRequester()
+        val consumer = remember { Channel<Float>() }
+        LaunchedEffect(consumer) {
+            consumer.consumeEach {
+                state.scrollBy(it)
+            }
+        }
         ScalingLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .onRotaryScrollEvent {
                     scope.launch {
-                        state.scrollBy(it.verticalScrollPixels)
+                        consumer.send(it.verticalScrollPixels)
                     }
                     true
                 }
-                .focusRequester(focus)
+                .focusRequester(focusRequester)
                 .focusable(),
             state = state,
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -156,9 +167,6 @@ private fun BookingsScreen(
                     )
                 }
             }
-        }
-        LaunchedEffect(Unit) {
-            focus.requestFocus()
         }
     }
 }
