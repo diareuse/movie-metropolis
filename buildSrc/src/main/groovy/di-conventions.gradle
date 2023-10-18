@@ -2,10 +2,6 @@ plugins {
     id "com.google.dagger.hilt.android"
 }
 
-kapt {
-    correctErrorTypes true
-}
-
 hilt {
     enableAggregatingTask = true
 }
@@ -15,7 +11,7 @@ dependencies {
     implementation libs.hilt.android
     implementation libs.hilt.navigation
     implementation libs.hilt.work
-    kapt libs.hilt.compiler
-    kapt libs.hilt.compiler2
+    ksp libs.hilt.compiler
+    ksp libs.hilt.compiler2
 
 }

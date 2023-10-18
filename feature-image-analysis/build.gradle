@@ -5,13 +5,10 @@ plugins {
 
 android {
     namespace 'movie.image'
-    defaultConfig {
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-            }
-        }
-    }
+}
+
+ksp {
+    arg("-Aroom.schemaLocation", "$projectDir/schemas")
 }
 
 dependencies {
