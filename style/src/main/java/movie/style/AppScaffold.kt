@@ -102,6 +102,7 @@ private fun AppScaffoldMedium(
             containerColor = containerColor,
             contentColor = contentColor,
             contentWindowInsets = contentWindowInsets,
+            bottomBar = {},
             content = content
         )
     }
