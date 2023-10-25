@@ -37,6 +37,7 @@ fun CinemasScreen(
     state: LazyListState,
     profileIcon: @Composable () -> Unit,
     behavior: TopAppBarScrollBehavior,
+    contentPadding: PaddingValues,
     viewModel: CinemasViewModel = hiltViewModel()
 ) {
     val items by viewModel.items.collectAsState()
@@ -49,7 +50,8 @@ fun CinemasScreen(
         behavior = behavior,
         profileIcon = profileIcon,
         onClickCinema = onClickCinema,
-        state = state
+        state = state,
+        contentPadding = contentPadding,
     )
 }
 
@@ -60,6 +62,7 @@ private fun CinemasScreen(
     behavior: TopAppBarScrollBehavior,
     profileIcon: @Composable () -> Unit,
     onClickCinema: (String) -> Unit,
+    contentPadding: PaddingValues = PaddingValues(),
     state: LazyListState = rememberLazyListState()
 ) = Scaffold(
     topBar = {
@@ -74,7 +77,7 @@ private fun CinemasScreen(
         modifier = Modifier
             .nestedScroll(behavior.nestedScrollConnection)
             .fillMaxSize(),
-        contentPadding = padding + PaddingValues(vertical = 24.dp),
+        contentPadding = padding + contentPadding + PaddingValues(vertical = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         state = state,
         userScrollEnabled = items.isSuccess

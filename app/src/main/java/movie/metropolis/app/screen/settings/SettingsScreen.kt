@@ -39,7 +39,8 @@ import movie.style.theme.Theme
 fun SettingsScreen(
     behavior: TopAppBarScrollBehavior,
     profileIcon: @Composable () -> Unit,
-    viewModel: SettingsViewModel
+    viewModel: SettingsViewModel,
+    contentPadding: PaddingValues
 ) {
     val filterSeen by viewModel.filterSeen.collectAsState()
     val addToCalendar by viewModel.addToCalendar.collectAsState()
@@ -57,7 +58,8 @@ fun SettingsScreen(
         onClipRadiusChanged = viewModel::updateClipRadius,
         onlyMovies = onlyMovies,
         onOnlyMoviesChanged = viewModel::updateOnlyMovies,
-        calendars = calendars
+        calendars = calendars,
+        contentPadding = contentPadding
     )
 }
 
@@ -74,7 +76,8 @@ private fun SettingsScreen(
     onClipRadiusChanged: (Int) -> Unit = {},
     onlyMovies: Boolean = false,
     onOnlyMoviesChanged: (Boolean) -> Unit = {},
-    calendars: ImmutableMap<String, String> = immutableMapOf()
+    calendars: ImmutableMap<String, String> = immutableMapOf(),
+    contentPadding: PaddingValues = PaddingValues()
 ) = Scaffold(
     topBar = {
         HomeScreenToolbar(
@@ -88,7 +91,7 @@ private fun SettingsScreen(
         modifier = Modifier
             .fillMaxSize()
             .nestedScroll(behavior.nestedScrollConnection),
-        contentPadding = padding + PaddingValues(24.dp),
+        contentPadding = padding + contentPadding + PaddingValues(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.Top)
     ) {
         item {

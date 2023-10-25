@@ -30,6 +30,7 @@ import movie.metropolis.app.screen.listing.component.MoviePromo
 import movie.metropolis.app.screen.listing.component.MovieRow
 import movie.style.CenterAlignedTabRow
 import movie.style.Tab
+import movie.style.layout.plus
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -41,6 +42,7 @@ fun ListingScreen(
     onClickMovie: (String, upcoming: Boolean) -> Unit,
     profileIcon: @Composable () -> Unit,
     state: LazyListState,
+    contentPadding: PaddingValues,
     viewModel: ListingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
@@ -68,6 +70,7 @@ fun ListingScreen(
             }
         },
         onClick = onClickMovie,
+        contentPadding = contentPadding
     )
 }
 
@@ -85,6 +88,7 @@ private fun ListingScreenContent(
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String, upcoming: Boolean) -> Unit,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     behavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
     state: LazyListState = rememberLazyListState()
 ) = Scaffold(
@@ -104,7 +108,7 @@ private fun ListingScreenContent(
             .fillMaxSize()
             .nestedScroll(behavior.nestedScrollConnection)
             .testTag("listingColumn"),
-        contentPadding = padding,
+        contentPadding = padding + contentPadding,
         state = state,
     ) {
         item {

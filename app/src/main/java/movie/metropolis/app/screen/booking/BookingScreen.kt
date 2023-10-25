@@ -36,6 +36,7 @@ fun BookingScreen(
     behavior: TopAppBarScrollBehavior,
     onMovieClick: (String) -> Unit,
     profileIcon: @Composable () -> Unit,
+    contentPadding: PaddingValues,
     viewModel: BookingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
@@ -54,8 +55,10 @@ fun BookingScreen(
             scope.launch {
                 actions.actionShare(viewModel.saveAsFile(it))
             }
-        }
-    ) { isReaderActive = true }
+        },
+        onCameraClick = { isReaderActive = true },
+        contentPadding = contentPadding,
+    )
     ReaderDialog(
         isVisible = isReaderActive,
         onVisibilityChanged = { isReaderActive = it },
@@ -73,7 +76,8 @@ private fun BookingScreenContent(
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
     onShareClick: (BookingView.Active) -> Unit = {},
-    onCameraClick: () -> Unit = {}
+    onCameraClick: () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(),
 ) = Scaffold(
     topBar = {
         HomeScreenToolbar(
@@ -86,7 +90,9 @@ private fun BookingScreenContent(
     Column(
         modifier = Modifier
             .nestedScroll(behavior.nestedScrollConnection)
+            .verticalScroll(rememberScrollState())
             .padding(padding)
+            .padding(contentPadding)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
