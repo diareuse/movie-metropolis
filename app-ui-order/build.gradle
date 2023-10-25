@@ -1,0 +1,17 @@
+plugins {
+    id 'library-conventions'
+    id 'compose-conventions'
+    id 'di-conventions'
+}
+
+android {
+
+    namespace "ui.order"
+
+}
+
+dependencies {
+
+    implementation project(":style")
+
+}
