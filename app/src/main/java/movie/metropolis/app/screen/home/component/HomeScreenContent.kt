@@ -30,10 +30,11 @@ private fun NavBackStackEntry.getIndex() = when (destination.route) {
 @Composable
 fun HomeScreenContent(
     startWith: Route,
-    listing: @Composable () -> Unit,
-    cinemas: @Composable () -> Unit,
-    booking: @Composable () -> Unit,
-    settings: @Composable () -> Unit,
+    contentPadding: PaddingValues,
+    listing: @Composable (PaddingValues) -> Unit,
+    cinemas: @Composable (PaddingValues) -> Unit,
+    booking: @Composable (PaddingValues) -> Unit,
+    settings: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
     controller: NavHostController = rememberNavController()
 ) {
@@ -64,25 +65,25 @@ fun HomeScreenContent(
             route = Route.Movies(),
             deepLinks = Route.Movies.deepLinks
         ) {
-            listing()
+            listing(contentPadding)
         }
         composable(
             route = Route.Cinemas(),
             deepLinks = Route.Cinemas.deepLinks
         ) {
-            cinemas()
+            cinemas(contentPadding)
         }
         composable(
             route = Route.Tickets(),
             deepLinks = Route.Tickets.deepLinks
         ) {
-            booking()
+            booking(contentPadding)
         }
         composable(
             route = Route.Settings(),
             deepLinks = Route.Settings.deepLinks
         ) {
-            settings()
+            settings(contentPadding)
         }
     }
 }
@@ -123,7 +124,8 @@ private fun HomeScreenContentPreview(
                     .fillMaxSize()
                     .background(Color.Yellow)
             )
-        }
+        },
+        contentPadding = PaddingValues()
     )
 }
 

@@ -1,14 +1,12 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package movie.metropolis.app.screen
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.unit.*
@@ -23,17 +21,27 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import movie.metropolis.app.R
+import movie.metropolis.app.screen.booking.BookingScreen
+import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.cinema.CinemaScreen
+import movie.metropolis.app.screen.cinema.CinemasScreen
+import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.detail.MovieScreen
 import movie.metropolis.app.screen.home.HomeScreen
+import movie.metropolis.app.screen.home.HomeViewModel
+import movie.metropolis.app.screen.home.component.ProfileIcon
+import movie.metropolis.app.screen.home.component.rememberScreenState
+import movie.metropolis.app.screen.listing.ListingScreen
+import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.order.complete.OrderCompleteScreen
 import movie.metropolis.app.screen.profile.LoginScreen
 import movie.metropolis.app.screen.profile.UserScreen
+import movie.metropolis.app.screen.settings.SettingsScreen
+import movie.metropolis.app.screen.settings.SettingsViewModel
 import movie.metropolis.app.screen.setup.SetupScreen
 import movie.metropolis.app.screen.setup.SetupViewModel
-import movie.style.LocalWindowSizeClass
-import movie.style.modifier.surface
+import movie.style.TwoPaneSurface
 import movie.style.theme.Theme
 
 @Composable
@@ -76,55 +84,89 @@ fun Navigation(
             deepLinks = Route.Home.deepLinks
         ) {
             val args = remember(it) { Route.Home.Arguments(it) }
+            val viewModel = hiltViewModel<HomeViewModel>()
+            val email = viewModel.email
+            var controller = controller
+            val homeController = rememberNavController()
 
-            @Composable
-            fun draw(
-                controller: NavHostController,
-                originController: NavHostController = rememberNavController()
-            ) {
-                HomeScreen(
-                    startWith = args.screen,
-                    controller = originController,
-                    onClickMovie = { id, upcoming ->
-                        controller.navigate(Route.Movie.destination(id, upcoming))
-                    },
-                    onClickCinema = { id -> controller.navigate(Route.Cinema.destination(id)) },
-                    onClickUser = { controller.navigate(Route.User.destination()) },
-                    onClickLogin = { controller.navigate(Route.Login.destination()) }
-                )
-            }
-            when (LocalWindowSizeClass.current.widthSizeClass) {
-                WindowWidthSizeClass.Expanded -> Row {
-                    val innerController = rememberNavController()
-                    val homeController = rememberNavController()
+            TwoPaneSurface(
+                primary = {
+                    val listing = rememberScreenState<ListingViewModel>()
+                    val cinemas = rememberScreenState<CinemasViewModel>()
+                    val booking = rememberScreenState<BookingViewModel>()
+                    val settings = rememberScreenState<SettingsViewModel>()
+                    val profileIcon = @Composable {
+                        if (email != null) ProfileIcon(
+                            email = email,
+                            onClick = { controller.navigate(Route.User.destination()) }
+                        )
+                    }
+                    HomeScreen(
+                        loggedIn = email != null,
+                        listing = { padding ->
+                            ListingScreen(
+                                behavior = listing.behavior,
+                                state = listing.list,
+                                viewModel = listing.viewModel,
+                                profileIcon = profileIcon,
+                                onClickMovie = { id, upcoming ->
+                                    controller.navigate(Route.Movie.destination(id, upcoming))
+                                },
+                                contentPadding = padding
+                            )
+                        },
+                        cinemas = { padding ->
+                            CinemasScreen(
+                                behavior = cinemas.behavior,
+                                state = cinemas.list,
+                                viewModel = cinemas.viewModel,
+                                profileIcon = profileIcon,
+                                onClickCinema = { id ->
+                                    controller.navigate(Route.Cinema.destination(id))
+                                },
+                                contentPadding = padding
+                            )
+                        },
+                        booking = { padding ->
+                            BookingScreen(
+                                behavior = booking.behavior,
+                                viewModel = booking.viewModel,
+                                profileIcon = profileIcon,
+                                onMovieClick = { id ->
+                                    controller.navigate(Route.Movie.destination(id, true))
+                                },
+                                contentPadding = padding
+                            )
+                        },
+                        settings = { padding ->
+                            SettingsScreen(
+                                behavior = settings.behavior,
+                                viewModel = settings.viewModel,
+                                profileIcon = profileIcon,
+                                contentPadding = padding
+                            )
+                        },
+                        startWith = args.screen,
+                        onClickLogin = { controller.navigate(Route.Login.destination()) },
+                        controller = homeController
+                    )
+                },
+                secondary = {
+                    controller = rememberNavController()
                     val destination by homeController.currentDestinationAsState()
                     LaunchedEffect(destination) {
-                        do {
-                            if (innerController.currentBackStackEntry?.destination?.route == "none")
-                                break
-                        } while (innerController.popBackStack())
+                        while (controller.currentBackStackEntry?.destination?.route != Route.Home.route)
+                            if (!controller.popBackStack()) break
                     }
-                    Box(modifier = Modifier.weight(1f), propagateMinConstraints = true) {
-                        draw(innerController, homeController)
-                    }
-                    Box(
-                        Modifier
-                            .fillMaxHeight()
-                            .width(1.dp)
-                            .alpha(.18f)
-                            .statusBarsPadding()
-                            .navigationBarsPadding()
-                            .background(LocalContentColor.current, CircleShape)
-                    )
                     NavHost(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .weight(1f)
-                            .surface(1.dp),
-                        navController = innerController,
-                        startDestination = "none"
+                        navController = controller,
+                        startDestination = Route.Home.route
                     ) {
-                        composable("none") {
+                        composable(
+                            route = Route.Home.route,
+                            arguments = Route.Home.arguments,
+                            deepLinks = Route.Home.deepLinks
+                        ) {
                             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                                 Text(
                                     modifier = Modifier.padding(64.dp),
@@ -135,28 +177,20 @@ fun Navigation(
                             }
                         }
                         login(controller)
-                        user(innerController)
-                        cinema(innerController)
-                        movie(innerController)
-                        order(
-                            controller = innerController,
-                            onNavigateToOrderComplete = { controller.navigate(Route.OrderComplete.destination()) }
-                        )
+                        user(controller)
+                        cinema(controller)
+                        movie(controller)
+                        order(controller)
+                        orderComplete(controller)
                     }
                 }
-
-                else -> draw(controller)
-            }
-
+            )
         }
         login(controller)
         user(controller)
         cinema(controller)
         movie(controller)
-        order(
-            controller = controller,
-            onNavigateToOrderComplete = { controller.navigate(Route.OrderComplete.destination()) }
-        )
+        order(controller)
         orderComplete(controller)
     }
 }
@@ -214,8 +248,7 @@ fun NavGraphBuilder.movie(
 }
 
 fun NavGraphBuilder.order(
-    controller: NavHostController,
-    onNavigateToOrderComplete: () -> Unit
+    controller: NavHostController
 ) = composable(
     route = Route.Order(),
     arguments = Route.Order.arguments,
@@ -225,7 +258,7 @@ fun NavGraphBuilder.order(
         onBackClick = controller::navigateUp,
         onCompleted = {
             controller.popBackStack(Route.Order(), true)
-            onNavigateToOrderComplete()
+            controller.navigate(Route.OrderComplete.destination())
         }
     )
 }

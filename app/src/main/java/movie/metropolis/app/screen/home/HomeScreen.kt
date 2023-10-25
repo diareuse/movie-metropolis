@@ -7,51 +7,38 @@ import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.unit.*
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.play.PlayUpdate
 import movie.metropolis.app.screen.Route
-import movie.metropolis.app.screen.booking.BookingScreen
-import movie.metropolis.app.screen.booking.BookingViewModel
-import movie.metropolis.app.screen.cinema.CinemasScreen
-import movie.metropolis.app.screen.cinema.CinemasViewModel
 import movie.metropolis.app.screen.currentDestinationAsState
 import movie.metropolis.app.screen.home.component.HomeScreenContent
-import movie.metropolis.app.screen.home.component.ProfileIcon
 import movie.metropolis.app.screen.home.component.rememberInstantApp
-import movie.metropolis.app.screen.home.component.rememberScreenState
-import movie.metropolis.app.screen.listing.ListingScreen
-import movie.metropolis.app.screen.listing.ListingViewModel
-import movie.metropolis.app.screen.settings.SettingsScreen
-import movie.metropolis.app.screen.settings.SettingsViewModel
 import movie.style.AppButton
 import movie.style.AppNavigationBar
 import movie.style.AppNavigationBarItem
 import movie.style.AppScaffold
-import movie.style.haptic.ClickOnChange
 import movie.style.theme.Theme
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class
-)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun HomeScreen(
+    loggedIn: Boolean,
+    listing: @Composable (PaddingValues) -> Unit,
+    cinemas: @Composable (PaddingValues) -> Unit,
+    booking: @Composable (PaddingValues) -> Unit,
+    settings: @Composable (PaddingValues) -> Unit,
     startWith: String,
+    onClickLogin: () -> Unit,
+    modifier: Modifier = Modifier,
     controller: NavHostController = rememberNavController(),
-    viewModel: HomeViewModel = hiltViewModel(),
-    onClickMovie: (String, Boolean) -> Unit,
-    onClickCinema: (String) -> Unit,
-    onClickUser: () -> Unit,
-    onClickLogin: () -> Unit
 ) {
-    val email = viewModel.email
     val destination by controller.currentDestinationAsState()
     val instantApp = rememberInstantApp()
     HomeScreen(
-        isLoggedIn = email != null,
+        modifier = modifier,
+        isLoggedIn = loggedIn,
         isInstantApp = instantApp.isInstant,
         route = destination?.route ?: startWith,
         onRouteChanged = listener@{
@@ -63,56 +50,18 @@ fun HomeScreen(
         },
         onNavigateToLogin = onClickLogin,
         onNavigateToInstall = instantApp::install
-    ) {
-        val listing = rememberScreenState<ListingViewModel>()
-        val cinemas = rememberScreenState<CinemasViewModel>()
-        val booking = rememberScreenState<BookingViewModel>()
-        val settings = rememberScreenState<SettingsViewModel>()
-        val profileIcon = @Composable {
-            if (email != null) ProfileIcon(
-                email = email,
-                onClick = onClickUser
-            )
-        }
+    ) { padding ->
         HomeScreenContent(
             modifier = Modifier.semantics {
                 testTagsAsResourceId = true
             },
             startWith = Route.by(startWith),
             controller = controller,
-            listing = {
-                ListingScreen(
-                    behavior = listing.behavior,
-                    state = listing.list,
-                    viewModel = listing.viewModel,
-                    profileIcon = profileIcon,
-                    onClickMovie = onClickMovie
-                )
-            },
-            cinemas = {
-                CinemasScreen(
-                    behavior = cinemas.behavior,
-                    state = cinemas.list,
-                    viewModel = cinemas.viewModel,
-                    profileIcon = profileIcon,
-                    onClickCinema = onClickCinema
-                )
-            },
-            booking = {
-                BookingScreen(
-                    behavior = booking.behavior,
-                    viewModel = booking.viewModel,
-                    profileIcon = profileIcon,
-                    onMovieClick = { onClickMovie(it, true) }
-                )
-            },
-            settings = {
-                SettingsScreen(
-                    behavior = settings.behavior,
-                    viewModel = settings.viewModel,
-                    profileIcon = profileIcon,
-                )
-            }
+            listing = listing,
+            cinemas = cinemas,
+            booking = booking,
+            settings = settings,
+            contentPadding = padding
         )
     }
 }
@@ -125,10 +74,11 @@ private fun HomeScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToInstall: () -> Unit,
     onRouteChanged: (String) -> Unit,
-    content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    content: @Composable (PaddingValues) -> Unit
 ) {
-    ClickOnChange(route)
     AppScaffold(
+        modifier = modifier,
         contentWindowInsets = ScaffoldDefaults.contentWindowInsets
             .only(WindowInsetsSides.Bottom + WindowInsetsSides.Horizontal),
         floatingActionButton = {
@@ -182,10 +132,14 @@ private fun HomeScreen(
                 )
             }
         }
-    ) {
-        Box(Modifier.padding(it)) {
-            content()
-            PlayUpdate(modifier = Modifier.align(Alignment.BottomCenter))
+    ) { padding ->
+        Box {
+            content(padding)
+            PlayUpdate(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(padding)
+            )
         }
     }
 }
