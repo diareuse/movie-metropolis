@@ -5,16 +5,21 @@ package movie.metropolis.app.screen.listing
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
@@ -30,11 +35,15 @@ import movie.metropolis.app.screen.listing.component.MovieItemError
 import movie.metropolis.app.screen.listing.component.MovieItemLoading
 import movie.metropolis.app.screen.listing.component.MovieItemUpcoming
 import movie.metropolis.app.screen.listing.component.MoviePopup
-import movie.metropolis.app.screen.listing.component.MoviePromo
+import movie.metropolis.app.screen.listing.component.MoviePoster
+import movie.metropolis.app.screen.listing.component.PromoCard
+import movie.metropolis.app.screen.listing.component.PromoCardPager
 import movie.metropolis.app.screen.listing.component.SimpleRow
+import movie.metropolis.app.screen.listing.component.detectLongPress
 import movie.style.CenterAlignedTabRow
 import movie.style.Tab
 import movie.style.layout.plus
+import movie.style.modifier.overlay
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -61,6 +70,18 @@ fun ListingScreen(
 ) { padding ->
     val context = LocalContext.current
     val upcoming = selectedType == ShowingType.Upcoming
+    val (background, onBackgroundChange) = remember { mutableStateOf<String?>(null) }
+    AnimatedContent(
+        modifier = Modifier
+            .fillMaxSize()
+            .alpha(.4f)
+            .blur(16.dp)
+            .overlay(Theme.color.container.background),
+        targetState = background,
+        transitionSpec = { fadeIn() togetherWith fadeOut() }
+    ) {
+        MoviePoster(url = it)
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -86,11 +107,33 @@ fun ListingScreen(
                 }
             }
         }
-        item {
-            MoviePromo(
-                items = promotions,
-                onClick = { onClick(it, upcoming) }
-            )
+        promotions.onSuccess {
+            ListingLoadedPromo(it, onBackgroundChange = onBackgroundChange) { item ->
+                var showPopup by remember { mutableStateOf(false) }
+                PromoCard(
+                    modifier = Modifier.detectLongPress { showPopup = true },
+                    label = { Text(item.name) }
+                ) {
+                    MoviePoster(
+                        url = item.poster?.url,
+                        onClick = { onClick(item.id, upcoming) },
+                        onLongPress = { showPopup = it }
+                    )
+                }
+                MoviePopup(
+                    isVisible = showPopup,
+                    onVisibilityChanged = { showPopup = false },
+                    url = item.posterLarge?.url.orEmpty(),
+                    year = item.releasedAt,
+                    director = item.directors.joinToString(),
+                    name = item.name,
+                    aspectRatio = item.posterLarge?.aspectRatio ?: DefaultPosterAspectRatio
+                )
+            }
+        }.onLoading {
+            ListingLoadingPromo()
+        }.onFailure {
+            ListingErrorPromo()
         }
         groups.onSuccess {
             ListingLoadedContent(
@@ -131,8 +174,47 @@ fun ListingScreen(
     }
 }
 
+fun LazyListScope.ListingLoadingPromo() = item {
+    PromoCardPager(items = List(3) { it }, enabled = false) {
+        PromoCard(label = { Text("#".repeat(10), Modifier.textPlaceholder()) }) {
+            MoviePoster(null)
+        }
+    }
+}
+
+fun LazyListScope.ListingErrorPromo() = item {
+    PromoCardPager(items = List(3) { it }, enabled = false) {
+        PromoCard(label = {
+            Text(
+                text = stringResource(R.string.error_movie_main_title),
+                modifier = Modifier.textPlaceholder()
+            )
+        }) {}
+    }
+}
+
+fun LazyListScope.ListingLoadedPromo(
+    items: List<MovieView>,
+    onBackgroundChange: (String?) -> Unit,
+    content: @Composable PagerScope.(MovieView) -> Unit
+) = item {
+    val state = rememberPagerState { items.size }
+    val currentShadowColor by animateColorAsState(
+        targetValue = items[state.currentPage].poster?.spotColor ?: Color.Black
+    )
+    LaunchedEffect(state.currentPage, items) {
+        onBackgroundChange(items[state.currentPage].poster?.url)
+    }
+    PromoCardPager(
+        items = items,
+        shadowColor = currentShadowColor,
+        state = state,
+        content = content
+    )
+}
+
 fun LazyListScope.ListingLoadingContent() {
-    item(key = "current-title") {
+    item {
         SectionHeadline(
             name = "#".repeat(10),
             modifier = Modifier
@@ -140,9 +222,9 @@ fun LazyListScope.ListingLoadingContent() {
                 .animateItemPlacement()
         )
     }
-    item(key = "current-content") {
+    item {
         SimpleRow(
-            items = List(5) { 0 }
+            items = List(5) { it }
         ) {
             MovieItemLoading()
         }
@@ -172,8 +254,8 @@ fun LazyListScope.ListingLoadedContent(
 }
 
 fun LazyListScope.ListingErrorContent() {
-    item(key = "current-content") {
-        SimpleRow(items = List(3) { 0 }) {
+    item {
+        SimpleRow(items = List(3) { it }) {
             MovieItemError()
         }
     }
