@@ -1,11 +1,13 @@
 package movie.metropolis.app.screen.home
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.semantics.*
+import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -142,4 +144,19 @@ private fun HomeScreen(
             )
         }
     }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun HomeScreenPreview() = Theme {
+    HomeScreen(
+        loggedIn = false,
+        listing = {},
+        cinemas = {},
+        booking = {},
+        settings = {},
+        startWith = Route.Movies(),
+        onClickLogin = { /*TODO*/ }
+    )
 }

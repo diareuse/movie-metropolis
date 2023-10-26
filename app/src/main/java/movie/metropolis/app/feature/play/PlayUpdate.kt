@@ -30,7 +30,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.util.isConnectionMetered
 import movie.style.AnticipateOvershootEasing
 import movie.style.theme.Theme
-import movie.style.util.findActivity
+import movie.style.util.findActivityOrNull
 
 @Composable
 fun PlayUpdate(
@@ -123,30 +123,19 @@ private fun PreviewDark() {
 @Composable
 fun rememberAppUpdateState(): State<AppUpdateState> {
     val context = LocalContext.current
-    val activity = remember(context) { context.findActivity() }
-    val manager = remember(context) {
-        AppUpdateManagerFactory.create(context)
-    }
     val state = remember {
         mutableStateOf<AppUpdateState>(AppUpdateState.None)
     }
+    val activity = remember(context) { context.findActivityOrNull() } ?: return state
+    val manager = remember(context) {
+        AppUpdateManagerFactory.create(context)
+    }
 
     fun AppUpdateInfo.startUpdate(@AppUpdateType type: Int) = when (type) {
-        IMMEDIATE -> manager.startUpdateFlowForResult(
-            this,
-            context.findActivity(),
-            defaultOptions(IMMEDIATE),
-            1
-        )
-
+        IMMEDIATE -> manager.startUpdateFlowForResult(this, activity, defaultOptions(IMMEDIATE), 1)
         FLEXIBLE -> when (context.isConnectionMetered) {
             true -> false
-            else -> manager.startUpdateFlowForResult(
-                this,
-                context.findActivity(),
-                defaultOptions(FLEXIBLE),
-                1
-            )
+            else -> manager.startUpdateFlowForResult(this, activity, defaultOptions(FLEXIBLE), 1)
         }
 
         else -> false
