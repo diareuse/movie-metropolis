@@ -30,6 +30,7 @@ import movie.metropolis.app.screen.detail.MovieScreen
 import movie.metropolis.app.screen.home.HomeScreen
 import movie.metropolis.app.screen.home.HomeViewModel
 import movie.metropolis.app.screen.home.component.ProfileIcon
+import movie.metropolis.app.screen.home.component.rememberInstantApp
 import movie.metropolis.app.screen.home.component.rememberScreenState
 import movie.metropolis.app.screen.listing.ListingScreen
 import movie.metropolis.app.screen.listing.ListingViewModel
@@ -101,8 +102,10 @@ fun Navigation(
                             onClick = { controller.navigate(Route.User.destination()) }
                         )
                     }
+                    val instantApp = rememberInstantApp()
                     HomeScreen(
                         loggedIn = email != null,
+                        instantApp = instantApp.isInstant,
                         listing = { padding ->
                             ListingScreen(
                                 behavior = listing.behavior,
@@ -148,6 +151,7 @@ fun Navigation(
                         },
                         startWith = args.screen,
                         onClickLogin = { controller.navigate(Route.Login.destination()) },
+                        onClickInstall = instantApp::install,
                         controller = homeController
                     )
                 },
