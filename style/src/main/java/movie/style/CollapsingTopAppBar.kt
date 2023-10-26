@@ -27,6 +27,7 @@ import movie.style.layout.plus
 import movie.style.theme.Theme
 import kotlin.math.max
 
+private const val StatusBar = "statusBar"
 private const val NavigationIcon = "navigationIcon"
 private const val Title = "title"
 private const val Actions = "actions"
@@ -64,8 +65,13 @@ fun CollapsingTopAppBar(
     Layout(
         modifier = modifier
             .padding(contentPadding)
-            .statusBarsPadding(),
+        /*.statusBarsPadding()*/,
         content = {
+            Box(
+                Modifier
+                    .layoutId(StatusBar)
+                    .statusBarsPadding()
+            )
             Box(Modifier.layoutId(NavigationIcon)) { navigationIcon() }
             Box(Modifier.layoutId(Title)) {
                 ProvideTextStyle(titleStyle) {
@@ -82,6 +88,7 @@ fun CollapsingTopAppBar(
     ) { measurables, constraints ->
         // Stage 1: Measure
         var cs = constraints.copy(minWidth = 0, minHeight = 0)
+        val statusBar = measurables.first { it.layoutId == StatusBar }.measure(cs)
         cs = cs.minusWidth(spacing)
         val navigationIcon = measurables.first { it.layoutId == NavigationIcon }.measure(cs)
         cs = cs.minusWidth(navigationIcon.width)
@@ -110,7 +117,8 @@ fun CollapsingTopAppBar(
         )
 
         // Stage 3: Modify scroll behavior
-        val height = max(pinnedHeight, expandedY + expandedTitle.height)
+        val statusBarOffset = statusBar.height
+        val height = max(pinnedHeight, expandedY + expandedTitle.height) + statusBarOffset
         if (scrollBehavior.state.heightOffsetLimit != -height.toFloat()) {
             scrollBehavior.state.heightOffsetLimit = -height.toFloat()
         }
@@ -120,15 +128,15 @@ fun CollapsingTopAppBar(
         layout(constraints.maxWidth, height - offset) {
             navigationIcon.placeRelative(
                 x = offsetNavigationIcon,
-                y = alignment.align(navigationIcon.height, pinnedHeight) - offset
+                y = alignment.align(navigationIcon.height, pinnedHeight) - offset + statusBarOffset
             )
             actions.placeRelative(
                 x = offsetActions,
-                y = alignment.align(actions.height, pinnedHeight) - offset
+                y = alignment.align(actions.height, pinnedHeight) - offset + statusBarOffset
             )
             expandedTitle.placeRelative(
                 x = expandedX,
-                y = expandedY - offset
+                y = expandedY - offset + statusBarOffset
             )
         }
     }
