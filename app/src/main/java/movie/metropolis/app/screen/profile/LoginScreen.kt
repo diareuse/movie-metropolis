@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import movie.metropolis.app.model.LoginMode
@@ -33,16 +34,15 @@ fun LoginScreen(
             AppImage(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(.6f)
+                    .alpha(.2f)
                     .drawWithContent {
-                        val brush = Brush.radialGradient(
-                            listOf(Color.Transparent, surface),
-                            center = center.copy(y = 0f),
-                            radius = size.height
+                        val brush = Brush.verticalGradient(
+                            listOf(Color.Transparent, surface)
                         )
                         drawContent()
                         drawRect(brush)
-                    },
+                    }
+                    .blur(16.dp),
                 url = urls.getOrNull(it) ?: return@AnimatedContent
             )
         }

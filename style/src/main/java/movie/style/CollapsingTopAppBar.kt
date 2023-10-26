@@ -34,9 +34,9 @@ private const val ExpandedTitle = "expandedTitle"
 
 @Composable
 fun CollapsingTopAppBar(
-    scrollBehavior: TopAppBarScrollBehavior,
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable () -> Unit = {},
     minHeight: Dp = 48.dp,

@@ -23,7 +23,9 @@ fun PasswordField(
     label: @Composable () -> Unit = { Text(stringResource(R.string.password)) },
     supportingText: (@Composable () -> Unit)? = null,
     readOnly: Boolean = false,
-    error: Boolean = false
+    error: Boolean = false,
+    imeAction: ImeAction = ImeAction.Default,
+    onClickDone: () -> Unit = {}
 ) {
     var isHidden by remember { mutableStateOf(true) }
     InputField(
@@ -31,8 +33,10 @@ fun PasswordField(
         value = value,
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = if (isHidden) KeyboardType.Password else KeyboardType.Text
+            keyboardType = if (isHidden) KeyboardType.Password else KeyboardType.Text,
+            imeAction = imeAction
         ),
+        keyboardActions = KeyboardActions(onDone = { onClickDone() }),
         isError = error,
         readOnly = readOnly,
         placeholder = { Text("p4$\$w0rd") },

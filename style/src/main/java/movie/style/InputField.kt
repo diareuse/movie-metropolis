@@ -25,7 +25,8 @@ fun InputField(
     label: (@Composable () -> Unit)? = null,
     supportingText: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
@@ -76,7 +77,8 @@ fun InputField(
 
                     else -> VisualTransformation.None
                 },
-                trailingIcon = trailingIcon
+                trailingIcon = trailingIcon,
+                keyboardActions = keyboardActions
             )
         }
     }

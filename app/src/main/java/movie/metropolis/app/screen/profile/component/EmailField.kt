@@ -21,13 +21,16 @@ fun EmailField(
     modifier: Modifier = Modifier,
     supportingText: (@Composable () -> Unit)? = null,
     readOnly: Boolean = false,
-    error: Boolean = false
+    error: Boolean = false,
+    imeAction: ImeAction = ImeAction.Done,
+    onFocusChangeRequest: () -> Unit = {}
 ) {
     InputField(
         modifier = modifier.fillMaxWidth(),
         value = value,
         onValueChange = onValueChange,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = imeAction),
+        keyboardActions = KeyboardActions(onNext = { onFocusChangeRequest() }),
         isError = error,
         readOnly = readOnly,
         placeholder = { Text("john.doe@cinema.com") },

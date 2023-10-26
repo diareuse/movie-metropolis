@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import movie.metropolis.app.R
 import movie.style.AppIconButton
-import movie.style.AppToolbar
+import movie.style.CollapsingTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,7 +18,7 @@ fun LoginScreenLayout(
 ) {
     Scaffold(
         topBar = {
-            AppToolbar(
+            CollapsingTopAppBar(
                 title = title,
                 navigationIcon = {
                     AppIconButton(
