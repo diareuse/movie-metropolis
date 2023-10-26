@@ -38,7 +38,6 @@ import movie.style.theme.Theme
 @Composable
 fun SettingsScreen(
     behavior: TopAppBarScrollBehavior,
-    profileIcon: @Composable () -> Unit,
     viewModel: SettingsViewModel,
     contentPadding: PaddingValues
 ) {
@@ -49,7 +48,6 @@ fun SettingsScreen(
     val onlyMovies by viewModel.onlyMovies.collectAsState()
     SettingsScreen(
         behavior = behavior,
-        profileIcon = profileIcon,
         filterSeen = filterSeen,
         onFilterSeenChanged = viewModel::updateFilterSeen,
         addToCalendar = addToCalendar,
@@ -67,7 +65,6 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreen(
     behavior: TopAppBarScrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(),
-    profileIcon: @Composable () -> Unit,
     filterSeen: Boolean = false,
     onFilterSeenChanged: (Boolean) -> Unit = {},
     addToCalendar: Boolean = false,
@@ -81,7 +78,6 @@ private fun SettingsScreen(
 ) = Scaffold(
     topBar = {
         HomeScreenToolbar(
-            profileIcon = profileIcon,
             behavior = behavior,
             title = { Text(stringResource(id = R.string.settings)) }
         )
@@ -261,6 +257,6 @@ fun LazyItemScope.Calendar(
 @Composable
 private fun Preview() {
     Theme {
-        SettingsScreen(profileIcon = {})
+        SettingsScreen()
     }
 }

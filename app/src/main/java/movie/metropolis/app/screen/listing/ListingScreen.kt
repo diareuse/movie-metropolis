@@ -1,8 +1,6 @@
 package movie.metropolis.app.screen.listing
 
-import android.Manifest
 import android.content.res.Configuration
-import android.os.Build
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -13,10 +11,6 @@ import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.launch
-import movie.metropolis.app.ActivityActions
-import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
@@ -35,56 +29,16 @@ import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ListingScreen(
-    behavior: TopAppBarScrollBehavior,
-    onClickMovie: (String, upcoming: Boolean) -> Unit,
-    profileIcon: @Composable () -> Unit,
-    state: LazyListState,
-    contentPadding: PaddingValues,
-    viewModel: ListingViewModel = hiltViewModel(),
-    actions: ActivityActions = LocalActivityActions.current
-) {
-    val promotions by viewModel.promotions.collectAsState()
-    val groups by viewModel.groups.collectAsState()
-    val selectedType by viewModel.selectedType.collectAsState()
-    val scope = rememberCoroutineScope()
-    ListingScreenContent(
-        promotions = promotions,
-        groups = groups,
-        selectedType = selectedType,
-        onSelectedTypeChange = { viewModel.selectedType.value = it },
-        behavior = behavior,
-        state = state,
-        profileIcon = profileIcon,
-        onClickFavorite = {
-            scope.launch {
-                val granted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    actions.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
-                } else {
-                    true
-                }
-                if (!granted) return@launch
-                viewModel.toggleFavorite(it)
-            }
-        },
-        onClick = onClickMovie,
-        contentPadding = contentPadding
-    )
-}
-
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
 )
 @Composable
-private fun ListingScreenContent(
+fun ListingScreen(
     promotions: Loadable<List<MovieView>>,
     groups: Loadable<Map<Genre, List<MovieView>>>,
     selectedType: ShowingType,
     onSelectedTypeChange: (ShowingType) -> Unit,
-    profileIcon: @Composable () -> Unit,
     onClickFavorite: (MovieView) -> Unit,
     onClick: (String, upcoming: Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -95,7 +49,6 @@ private fun ListingScreenContent(
     modifier = modifier,
     topBar = {
         HomeScreenToolbar(
-            profileIcon = profileIcon,
             behavior = behavior,
             title = { Text(stringResource(id = R.string.movies)) }
         )
@@ -184,12 +137,11 @@ private fun ListingScreenContent(
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun ListingScreenPreview() = Theme {
-    ListingScreenContent(
+    ListingScreen(
         promotions = Loadable.loading(),
         groups = Loadable.loading(),
         selectedType = ShowingType.Upcoming,
         onSelectedTypeChange = {},
-        profileIcon = { /*TODO*/ },
         onClickFavorite = {},
         onClick = { _, _ -> }
     )

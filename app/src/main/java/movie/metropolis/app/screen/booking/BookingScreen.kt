@@ -35,7 +35,6 @@ import movie.style.theme.Theme
 fun BookingScreen(
     behavior: TopAppBarScrollBehavior,
     onMovieClick: (String) -> Unit,
-    profileIcon: @Composable () -> Unit,
     contentPadding: PaddingValues,
     viewModel: BookingViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
@@ -45,10 +44,9 @@ fun BookingScreen(
     val scope = rememberCoroutineScope()
     var isReaderActive by rememberSaveable { mutableStateOf(false) }
     BookingScreenContent(
-        behavior = behavior,
         active = active,
         expired = expired,
-        profileIcon = profileIcon,
+        behavior = behavior,
         onRefreshClick = viewModel::refresh,
         onMovieClick = onMovieClick,
         onShareClick = {
@@ -72,7 +70,6 @@ private fun BookingScreenContent(
     active: Loadable<ImmutableList<BookingView.Active>>,
     expired: Loadable<ImmutableList<BookingView.Expired>>,
     behavior: TopAppBarScrollBehavior,
-    profileIcon: @Composable () -> Unit,
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
     onShareClick: (BookingView.Active) -> Unit = {},
@@ -81,7 +78,6 @@ private fun BookingScreenContent(
 ) = Scaffold(
     topBar = {
         HomeScreenToolbar(
-            profileIcon = profileIcon,
             behavior = behavior,
             title = { Text(stringResource(id = R.string.tickets)) }
         )
@@ -175,8 +171,7 @@ private fun Preview() {
         BookingScreenContent(
             active = Loadable.loading(),
             expired = Loadable.loading(),
-            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
-            profileIcon = {}
+            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
         )
     }
 }
