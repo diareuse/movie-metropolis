@@ -1,66 +1,36 @@
 package movie.metropolis.app.screen.profile
 
-import androidx.compose.animation.*
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection.Companion.Left
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.unit.*
-import androidx.hilt.navigation.compose.hiltViewModel
-import kotlinx.coroutines.delay
 import movie.metropolis.app.model.LoginMode
-import movie.style.AppImage
-import kotlin.math.max
+import movie.metropolis.app.screen.profile.component.AnimatedImageBackground
 
 @Composable
 fun LoginScreen(
-    onNavigateHome: () -> Unit,
-    onBackClick: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
-) {
-    Surface(modifier = Modifier.fillMaxSize()) {
-        val urls by viewModel.posters.collectAsState()
-        var index by remember { mutableStateOf(0) }
-        AnimatedContent(
-            targetState = index,
-            transitionSpec = {
-                slideIntoContainer(Left) togetherWith slideOutOfContainer(Left)
-            }
-        ) {
-            val surface = MaterialTheme.colorScheme.surface
-            AppImage(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .alpha(.2f)
-                    .drawWithContent {
-                        val brush = Brush.verticalGradient(
-                            listOf(Color.Transparent, surface)
-                        )
-                        drawContent()
-                        drawRect(brush)
-                    }
-                    .blur(16.dp),
-                url = urls.getOrNull(it) ?: return@AnimatedContent
-            )
-        }
-        LaunchedEffect(index) {
-            delay(5000)
-            index = (index + 1) % max(urls.size, 1)
-        }
-        when (viewModel.mode.collectAsState().value) {
-            LoginMode.Login -> LoginSignInScreen(
-                viewModel = viewModel,
-                onNavigateHome = onNavigateHome,
-                onBackClick = onBackClick
-            )
+    mode: LoginMode,
+    urls: List<String>,
+    email: String,
+    password: String,
+    error: Boolean,
+    loading: Boolean,
+    domain: String,
+    onEmailChanged: (String) -> Unit,
+    onPasswordChanged: (String) -> Unit,
+    onSendClick: () -> Unit,
+    onBackClick: () -> Unit
+) = AnimatedImageBackground(urls = urls) {
+    when (mode) {
+        LoginMode.Login -> LoginSignInScreen(
+            email = email,
+            password = password,
+            error = error,
+            loading = loading,
+            domain = domain,
+            onEmailChanged = onEmailChanged,
+            onPasswordChanged = onPasswordChanged,
+            onSendClick = onSendClick,
+            onBackClick = onBackClick
+        )
 
-            LoginMode.Registration -> LoginRegistrationScreen(
-                viewModel,
-                onNavigateHome = onNavigateHome
-            )
-        }
+        LoginMode.Registration -> LoginRegistrationScreen()
     }
 }
