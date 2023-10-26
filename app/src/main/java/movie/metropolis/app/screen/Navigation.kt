@@ -41,7 +41,10 @@ import movie.metropolis.app.screen.listing.ListingViewModel
 import movie.metropolis.app.screen.order.OrderScreen
 import movie.metropolis.app.screen.order.complete.OrderCompleteScreen
 import movie.metropolis.app.screen.profile.LoginScreen
+import movie.metropolis.app.screen.profile.LoginViewModel
 import movie.metropolis.app.screen.profile.UserScreen
+import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
+import movie.metropolis.app.screen.profile.component.requestOneTapAsState
 import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.settings.SettingsViewModel
 import movie.metropolis.app.screen.setup.SetupScreen
@@ -228,12 +231,49 @@ fun NavGraphBuilder.login(
     route = Route.Login(),
     deepLinks = Route.Login.deepLinks
 ) {
+    val viewModel = hiltViewModel<LoginViewModel>()
+    val email by viewModel.email.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val domain = remember(viewModel) { viewModel.domain }
+    val state by viewModel.loading.collectAsState()
+    val mode by viewModel.mode.collectAsState()
+    val urls by viewModel.posters.collectAsState()
+    val oneTap by requestOneTapAsState()
+    val oneTapSave = rememberOneTapSaving()
+    val scope = rememberCoroutineScope()
+
+    fun navigateHome() {
+        controller.popBackStack(Route.Home(), true)
+        controller.navigate(Route.Home.destination())
+    }
+
+    LaunchedEffect(oneTap) {
+        val oneTap = oneTap
+        if (oneTap != null) {
+            viewModel.email.value = oneTap.userName
+            viewModel.password.value = oneTap.password.concatToString()
+            viewModel.send { navigateHome() }
+        }
+    }
     LoginScreen(
-        onNavigateHome = {
-            controller.popBackStack(Route.Home(), true)
-            controller.navigate(Route.Home.destination())
+        email = email,
+        password = password,
+        error = state.isFailure,
+        loading = state.isLoading,
+        domain = domain,
+        onEmailChanged = { viewModel.email.value = it },
+        onPasswordChanged = { viewModel.password.value = it },
+        onSendClick = {
+            viewModel.send {
+                scope.launch {
+                    oneTapSave.save(email, password)
+                    navigateHome()
+                }
+            }
         },
-        onBackClick = controller::navigateUp
+        onBackClick = controller::navigateUp,
+        mode = mode,
+        urls = urls
     )
 }
 

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package movie.metropolis.app.screen.profile
 
 import androidx.compose.foundation.*
@@ -6,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.focus.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
@@ -16,11 +19,12 @@ import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.profile.component.ActionsWithProgress
 import movie.metropolis.app.screen.profile.component.EmailField
-import movie.metropolis.app.screen.profile.component.LoginScreenLayout
 import movie.metropolis.app.screen.profile.component.PasswordField
 import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
 import movie.metropolis.app.screen.profile.component.requestOneTapAsState
 import movie.style.AppButton
+import movie.style.AppIconButton
+import movie.style.CollapsingTopAppBar
 import movie.style.layout.rememberFocusRequester
 import movie.style.theme.Theme
 
@@ -66,7 +70,7 @@ fun LoginSignInScreen(
 }
 
 @Composable
-private fun LoginSignInScreen(
+fun LoginSignInScreen(
     email: String,
     password: String,
     error: Boolean,
@@ -78,9 +82,20 @@ private fun LoginSignInScreen(
     onBackClick: () -> Unit,
     actions: ActivityActions = LocalActivityActions.current
 ) {
-    LoginScreenLayout(
-        title = { Text(stringResource(id = R.string.login_title)) },
-        onBackClick = onBackClick
+    Scaffold(
+        topBar = {
+            CollapsingTopAppBar(
+                title = { Text(stringResource(id = R.string.login_title)) },
+                navigationIcon = {
+                    AppIconButton(
+                        onClick = onBackClick,
+                        painter = painterResource(id = R.drawable.ic_back)
+                    )
+                }
+            )
+        },
+        containerColor = Color.Transparent,
+        contentColor = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface)
     ) { padding ->
         Column(
             modifier = Modifier
