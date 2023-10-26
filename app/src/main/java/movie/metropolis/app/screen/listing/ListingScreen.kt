@@ -24,12 +24,17 @@ import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.metropolis.app.screen.home.component.SectionHeadline
+import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
+import movie.metropolis.app.screen.listing.component.MovieItemActive
+import movie.metropolis.app.screen.listing.component.MovieItemError
+import movie.metropolis.app.screen.listing.component.MovieItemLoading
+import movie.metropolis.app.screen.listing.component.MovieItemUpcoming
+import movie.metropolis.app.screen.listing.component.MoviePopup
 import movie.metropolis.app.screen.listing.component.MoviePromo
-import movie.metropolis.app.screen.listing.component.MovieRow
+import movie.metropolis.app.screen.listing.component.SimpleRow
 import movie.style.CenterAlignedTabRow
 import movie.style.Tab
 import movie.style.layout.plus
-import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -90,15 +95,38 @@ fun ListingScreen(
         groups.onSuccess {
             ListingLoadedContent(
                 it = it,
-                context = context,
-                upcoming = upcoming,
-                onClickFavorite = onClickFavorite,
-                onClick = onClick
-            )
+                context = context
+            ) { item ->
+                var showPopup by remember { mutableStateOf(false) }
+                when {
+                    upcoming -> MovieItemUpcoming(
+                        view = item,
+                        onClick = { onClick(item.id, true) },
+                        onClickFavorite = { onClickFavorite(item) },
+                        onLongPress = { showPopup = it }
+                    )
+
+                    else -> MovieItemActive(
+                        view = item,
+                        onClick = { onClick(item.id, false) },
+                        onLongPress = { showPopup = it }
+                    )
+                }
+                val large = item.posterLarge?.url
+                if (large != null) MoviePopup(
+                    isVisible = showPopup,
+                    onVisibilityChanged = { showPopup = false },
+                    url = large,
+                    year = item.releasedAt,
+                    director = item.directors.joinToString(),
+                    name = item.name,
+                    aspectRatio = item.posterLarge?.aspectRatio ?: DefaultPosterAspectRatio
+                )
+            }
         }.onLoading {
             ListingLoadingContent()
         }.onFailure {
-            ListingErrorContent(it)
+            ListingErrorContent()
         }
     }
 }
@@ -113,22 +141,18 @@ fun LazyListScope.ListingLoadingContent() {
         )
     }
     item(key = "current-content") {
-        MovieRow(
-            modifier = Modifier.animateItemPlacement(),
-            items = Loadable.loading(),
-            isShowing = true,
-            onClickFavorite = {},
-            onClick = {}
-        )
+        SimpleRow(
+            items = List(5) { 0 }
+        ) {
+            MovieItemLoading()
+        }
     }
 }
 
 fun LazyListScope.ListingLoadedContent(
     it: Map<Genre, List<MovieView>>,
     context: Context,
-    upcoming: Boolean,
-    onClickFavorite: (MovieView) -> Unit,
-    onClick: (String, upcoming: Boolean) -> Unit
+    item: @Composable (MovieView) -> Unit,
 ) {
     for ((genre, items) in it) {
         item {
@@ -138,26 +162,20 @@ fun LazyListScope.ListingLoadedContent(
             )
         }
         item {
-            MovieRow(
-                modifier = Modifier.animateItemPlacement(),
-                items = Loadable.success(items.immutable()),
-                isShowing = !upcoming,
-                onClickFavorite = onClickFavorite,
-                onClick = { onClick(it, upcoming) }
+            SimpleRow(
+                items = items,
+                key = MovieView::id,
+                content = item
             )
         }
     }
 }
 
-fun LazyListScope.ListingErrorContent(throwable: Throwable) {
+fun LazyListScope.ListingErrorContent() {
     item(key = "current-content") {
-        MovieRow(
-            modifier = Modifier.animateItemPlacement(),
-            items = Loadable.failure(throwable),
-            isShowing = true,
-            onClickFavorite = {},
-            onClick = {}
-        )
+        SimpleRow(items = List(3) { 0 }) {
+            MovieItemError()
+        }
     }
 }
 
