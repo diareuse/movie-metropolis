@@ -16,7 +16,6 @@ import movie.metropolis.app.feature.play.PlayUpdate
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.currentDestinationAsState
 import movie.metropolis.app.screen.home.component.HomeScreenContent
-import movie.metropolis.app.screen.home.component.rememberInstantApp
 import movie.style.AppButton
 import movie.style.AppNavigationBar
 import movie.style.AppNavigationBarItem
@@ -27,21 +26,22 @@ import movie.style.theme.Theme
 @Composable
 fun HomeScreen(
     loggedIn: Boolean,
+    instantApp: Boolean,
     listing: @Composable (PaddingValues) -> Unit,
     cinemas: @Composable (PaddingValues) -> Unit,
     booking: @Composable (PaddingValues) -> Unit,
     settings: @Composable (PaddingValues) -> Unit,
     startWith: String,
     onClickLogin: () -> Unit,
+    onClickInstall: () -> Unit,
     modifier: Modifier = Modifier,
     controller: NavHostController = rememberNavController(),
 ) {
     val destination by controller.currentDestinationAsState()
-    val instantApp = rememberInstantApp()
     HomeScreen(
         modifier = modifier,
         isLoggedIn = loggedIn,
-        isInstantApp = instantApp.isInstant,
+        isInstantApp = instantApp,
         route = destination?.route ?: startWith,
         onRouteChanged = listener@{
             if (destination?.route == it) return@listener
@@ -51,7 +51,7 @@ fun HomeScreen(
             controller.navigate(it)
         },
         onNavigateToLogin = onClickLogin,
-        onNavigateToInstall = instantApp::install
+        onNavigateToInstall = onClickInstall
     ) { padding ->
         HomeScreenContent(
             modifier = Modifier.semantics {
@@ -152,11 +152,13 @@ private fun HomeScreen(
 private fun HomeScreenPreview() = Theme {
     HomeScreen(
         loggedIn = false,
+        instantApp = true,
         listing = {},
         cinemas = {},
         booking = {},
         settings = {},
         startWith = Route.Movies(),
-        onClickLogin = { /*TODO*/ }
+        onClickLogin = { /*TODO*/ },
+        onClickInstall = {}
     )
 }
