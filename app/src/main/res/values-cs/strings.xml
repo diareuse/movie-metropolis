@@ -16,7 +16,7 @@
     <string name="filters">Filtry</string>
     <string name="sign_in">Přihlásit</string>
     <string name="booking">Rezervace</string>
-    <string name="login_title">Vítej zpět!</string>
+    <string name="login_title">Přihlaš se</string>
     <string name="login_error">Email nebo Heslo mohou být špatně</string>
     <string name="expires_at">Vyprší: %s</string>
     <string name="points_count">%s bodů</string>

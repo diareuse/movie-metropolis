@@ -16,7 +16,7 @@
     <string name="filters">Filters</string>
     <string name="sign_in">Sign in</string>
     <string name="booking">Booking</string>
-    <string name="login_title">Welcome back!</string>
+    <string name="login_title">Login</string>
     <string name="login_error">Email or Password might be incorrect</string>
     <string name="expires_at">Expires: %s</string>
     <string name="points_count">%s points</string>

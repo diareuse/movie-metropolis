@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.coroutines.launch
@@ -19,6 +21,7 @@ import movie.metropolis.app.screen.profile.component.PasswordField
 import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
 import movie.metropolis.app.screen.profile.component.requestOneTapAsState
 import movie.style.AppButton
+import movie.style.layout.rememberFocusRequester
 import movie.style.theme.Theme
 
 @Composable
@@ -76,7 +79,7 @@ private fun LoginSignInScreen(
     actions: ActivityActions = LocalActivityActions.current
 ) {
     LoginScreenLayout(
-        title = {},
+        title = { Text(stringResource(id = R.string.login_title)) },
         onBackClick = onBackClick
     ) { padding ->
         Column(
@@ -87,10 +90,13 @@ private fun LoginSignInScreen(
                 .padding(24.dp)
                 .imePadding()
                 .navigationBarsPadding(),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.End
         ) {
+            val emailRequester = rememberFocusRequester(requestFocus = true)
+            val passwordRequester = rememberFocusRequester()
             EmailField(
+                modifier = Modifier.focusRequester(emailRequester),
                 value = email,
                 onValueChange = onEmailChanged,
                 error = error,
@@ -101,17 +107,24 @@ private fun LoginSignInScreen(
                         else -> stringResource(R.string.login_credentials)
                     }
                     Text(text)
-                }
+                },
+                imeAction = ImeAction.Next,
+                onFocusChangeRequest = { passwordRequester.requestFocus() }
             )
             PasswordField(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.focusRequester(passwordRequester),
                 value = password,
                 onValueChange = onPasswordChanged,
                 error = error,
                 readOnly = loading,
                 supportingText = (@Composable {
                     Text(stringResource(R.string.password_failure))
-                }).takeIf { error }
+                }).takeIf { error },
+                imeAction = ImeAction.Done,
+                onClickDone = {
+                    onSendClick()
+                    passwordRequester.freeFocus()
+                }
             )
             ActionsWithProgress(
                 loading = loading,
