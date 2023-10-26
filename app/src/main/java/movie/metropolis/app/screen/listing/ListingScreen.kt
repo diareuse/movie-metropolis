@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@file:Suppress("FunctionName")
+
 package movie.metropolis.app.screen.listing
 
+import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -29,10 +33,6 @@ import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
-@OptIn(
-    ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
-)
 @Composable
 fun ListingScreen(
     promotions: Loadable<List<MovieView>>,
@@ -81,58 +81,86 @@ fun ListingScreen(
                 }
             }
         }
-        item { MoviePromo(items = promotions, onClick = { onClick(it, upcoming) }) }
+        item {
+            MoviePromo(
+                items = promotions,
+                onClick = { onClick(it, upcoming) }
+            )
+        }
         groups.onSuccess {
-            for ((genre, items) in it) {
-                item {
-                    SectionHeadline(
-                        modifier = Modifier.animateItemPlacement(),
-                        name = genre.getName(context)
-                    )
-                }
-                item {
-                    MovieRow(
-                        modifier = Modifier.animateItemPlacement(),
-                        items = Loadable.success(items.immutable()),
-                        isShowing = !upcoming,
-                        onClickFavorite = onClickFavorite,
-                        onClick = { onClick(it, upcoming) }
-                    )
-                }
-            }
+            ListingLoadedContent(
+                it = it,
+                context = context,
+                upcoming = upcoming,
+                onClickFavorite = onClickFavorite,
+                onClick = onClick
+            )
         }.onLoading {
-            item(key = "current-title") {
-                SectionHeadline(
-                    name = "#".repeat(10),
-                    modifier = Modifier
-                        .textPlaceholder()
-                        .animateItemPlacement()
-                )
-            }
-            item(key = "current-content") {
-                MovieRow(
-                    modifier = Modifier.animateItemPlacement(),
-                    items = Loadable.loading(),
-                    isShowing = true,
-                    onClickFavorite = onClickFavorite,
-                    onClick = {}
-                )
-            }
+            ListingLoadingContent()
         }.onFailure {
-            item(key = "current-content") {
-                MovieRow(
-                    modifier = Modifier.animateItemPlacement(),
-                    items = Loadable.failure(it),
-                    isShowing = true,
-                    onClickFavorite = onClickFavorite,
-                    onClick = {}
-                )
-            }
+            ListingErrorContent(it)
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+fun LazyListScope.ListingLoadingContent() {
+    item(key = "current-title") {
+        SectionHeadline(
+            name = "#".repeat(10),
+            modifier = Modifier
+                .textPlaceholder()
+                .animateItemPlacement()
+        )
+    }
+    item(key = "current-content") {
+        MovieRow(
+            modifier = Modifier.animateItemPlacement(),
+            items = Loadable.loading(),
+            isShowing = true,
+            onClickFavorite = {},
+            onClick = {}
+        )
+    }
+}
+
+fun LazyListScope.ListingLoadedContent(
+    it: Map<Genre, List<MovieView>>,
+    context: Context,
+    upcoming: Boolean,
+    onClickFavorite: (MovieView) -> Unit,
+    onClick: (String, upcoming: Boolean) -> Unit
+) {
+    for ((genre, items) in it) {
+        item {
+            SectionHeadline(
+                modifier = Modifier.animateItemPlacement(),
+                name = genre.getName(context)
+            )
+        }
+        item {
+            MovieRow(
+                modifier = Modifier.animateItemPlacement(),
+                items = Loadable.success(items.immutable()),
+                isShowing = !upcoming,
+                onClickFavorite = onClickFavorite,
+                onClick = { onClick(it, upcoming) }
+            )
+        }
+    }
+}
+
+fun LazyListScope.ListingErrorContent(throwable: Throwable) {
+    item(key = "current-content") {
+        MovieRow(
+            modifier = Modifier.animateItemPlacement(),
+            items = Loadable.failure(throwable),
+            isShowing = true,
+            onClickFavorite = {},
+            onClick = {}
+        )
+    }
+}
+
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
