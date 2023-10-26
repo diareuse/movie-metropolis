@@ -31,6 +31,7 @@ fun HomeScreen(
     cinemas: @Composable (PaddingValues) -> Unit,
     booking: @Composable (PaddingValues) -> Unit,
     settings: @Composable (PaddingValues) -> Unit,
+    profileIcon: (@Composable () -> Unit)?,
     startWith: String,
     onClickLogin: () -> Unit,
     onClickInstall: () -> Unit,
@@ -50,6 +51,7 @@ fun HomeScreen(
             }
             controller.navigate(it)
         },
+        profileIcon = profileIcon,
         onNavigateToLogin = onClickLogin,
         onNavigateToInstall = onClickInstall
     ) { padding ->
@@ -76,6 +78,7 @@ private fun HomeScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToInstall: () -> Unit,
     onRouteChanged: (String) -> Unit,
+    profileIcon: (@Composable () -> Unit)?,
     modifier: Modifier = Modifier,
     content: @Composable (PaddingValues) -> Unit
 ) {
@@ -132,6 +135,7 @@ private fun HomeScreen(
                     icon = { Icon(painterResource(R.drawable.ic_settings), null) },
                     onSelected = onRouteChanged
                 )
+                if (profileIcon != null) profileIcon()
             }
         }
     ) { padding ->
@@ -159,6 +163,7 @@ private fun HomeScreenPreview() = Theme {
         settings = {},
         startWith = Route.Movies(),
         onClickLogin = { /*TODO*/ },
-        onClickInstall = {}
+        onClickInstall = {},
+        profileIcon = null
     )
 }

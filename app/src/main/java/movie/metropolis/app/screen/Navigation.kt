@@ -2,6 +2,8 @@
 
 package movie.metropolis.app.screen
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -20,6 +22,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
+import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.booking.BookingScreen
 import movie.metropolis.app.screen.booking.BookingViewModel
@@ -96,26 +100,47 @@ fun Navigation(
                     val cinemas = rememberScreenState<CinemasViewModel>()
                     val booking = rememberScreenState<BookingViewModel>()
                     val settings = rememberScreenState<SettingsViewModel>()
-                    val profileIcon = @Composable {
-                        if (email != null) ProfileIcon(
+                    val profileIcon: (@Composable () -> Unit)? = if (email != null) ({
+                        ProfileIcon(
                             email = email,
                             onClick = { controller.navigate(Route.User.destination()) }
                         )
-                    }
+                    }) else null
                     val instantApp = rememberInstantApp()
                     HomeScreen(
                         loggedIn = email != null,
                         instantApp = instantApp.isInstant,
                         listing = { padding ->
+                            val promotions by listing.viewModel.promotions.collectAsState()
+                            val groups by listing.viewModel.groups.collectAsState()
+                            val selectedType by listing.viewModel.selectedType.collectAsState()
+                            val scope = rememberCoroutineScope()
+                            val actions = LocalActivityActions.current
                             ListingScreen(
-                                behavior = listing.behavior,
-                                state = listing.list,
-                                viewModel = listing.viewModel,
-                                profileIcon = profileIcon,
-                                onClickMovie = { id, upcoming ->
+                                promotions = promotions,
+                                groups = groups,
+                                selectedType = selectedType,
+                                onSelectedTypeChange = {
+                                    listing.viewModel.selectedType.value = it
+                                },
+                                onClickFavorite = {
+                                    scope.launch {
+                                        val granted =
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                                actions.requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS))
+                                            } else {
+                                                true
+                                            }
+                                        if (!granted) return@launch
+                                        listing.viewModel.toggleFavorite(it)
+                                    }
+                                },
+                                onClick = { id, upcoming ->
                                     controller.navigate(Route.Movie.destination(id, upcoming))
                                 },
-                                contentPadding = padding
+                                contentPadding = padding,
+                                behavior = listing.behavior,
+                                state = listing.list,
                             )
                         },
                         cinemas = { padding ->
@@ -123,7 +148,6 @@ fun Navigation(
                                 behavior = cinemas.behavior,
                                 state = cinemas.list,
                                 viewModel = cinemas.viewModel,
-                                profileIcon = profileIcon,
                                 onClickCinema = { id ->
                                     controller.navigate(Route.Cinema.destination(id))
                                 },
@@ -134,7 +158,6 @@ fun Navigation(
                             BookingScreen(
                                 behavior = booking.behavior,
                                 viewModel = booking.viewModel,
-                                profileIcon = profileIcon,
                                 onMovieClick = { id ->
                                     controller.navigate(Route.Movie.destination(id, true))
                                 },
@@ -145,14 +168,14 @@ fun Navigation(
                             SettingsScreen(
                                 behavior = settings.behavior,
                                 viewModel = settings.viewModel,
-                                profileIcon = profileIcon,
                                 contentPadding = padding
                             )
                         },
                         startWith = args.screen,
                         onClickLogin = { controller.navigate(Route.Login.destination()) },
                         onClickInstall = instantApp::install,
-                        controller = homeController
+                        controller = homeController,
+                        profileIcon = profileIcon
                     )
                 },
                 secondary = {

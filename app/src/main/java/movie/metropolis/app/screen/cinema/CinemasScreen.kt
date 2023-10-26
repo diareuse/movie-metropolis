@@ -35,7 +35,6 @@ import movie.style.layout.PreviewLayout
 fun CinemasScreen(
     onClickCinema: (String) -> Unit,
     state: LazyListState,
-    profileIcon: @Composable () -> Unit,
     behavior: TopAppBarScrollBehavior,
     contentPadding: PaddingValues,
     viewModel: CinemasViewModel = hiltViewModel()
@@ -48,10 +47,9 @@ fun CinemasScreen(
     CinemasScreen(
         items = items,
         behavior = behavior,
-        profileIcon = profileIcon,
         onClickCinema = onClickCinema,
-        state = state,
         contentPadding = contentPadding,
+        state = state,
     )
 }
 
@@ -60,14 +58,12 @@ fun CinemasScreen(
 private fun CinemasScreen(
     items: Loadable<List<CinemaView>>,
     behavior: TopAppBarScrollBehavior,
-    profileIcon: @Composable () -> Unit,
     onClickCinema: (String) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
     state: LazyListState = rememberLazyListState()
 ) = Scaffold(
     topBar = {
         HomeScreenToolbar(
-            profileIcon = profileIcon,
             behavior = behavior,
             title = { Text(stringResource(id = R.string.cinemas)) }
         )
@@ -114,7 +110,6 @@ private fun CinemaItemPreview(
 ) = PreviewLayout(padding = PaddingValues()) {
     CinemasScreen(
         items = items,
-        profileIcon = {},
         behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
         onClickCinema = {}
     )
