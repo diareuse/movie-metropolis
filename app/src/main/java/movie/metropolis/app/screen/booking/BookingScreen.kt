@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package movie.metropolis.app.screen.booking
 
+import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.*
@@ -7,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
-import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -85,8 +87,6 @@ private fun BookingScreenContent(
 ) { padding ->
     Column(
         modifier = Modifier
-            .nestedScroll(behavior.nestedScrollConnection)
-            .verticalScroll(rememberScrollState())
             .padding(padding)
             .padding(contentPadding)
             .fillMaxSize(),
@@ -128,10 +128,10 @@ private fun BookingScreenContent(
         }
         val state = rememberPagerState { items.size }
         HorizontalPager(
+            modifier = Modifier.weight(1f),
             state = state,
             contentPadding = PaddingValues(horizontal = 64.dp, vertical = 16.dp),
-            pageSpacing = 32.dp,
-            modifier = Modifier.weight(1f)
+            pageSpacing = 32.dp
         ) {
             when (val item = items[it]) {
                 is BookingView.Active -> TicketItemActive(
@@ -163,15 +163,24 @@ private fun BookingScreenContent(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
-private fun Preview() {
-    Theme {
-        BookingScreenContent(
-            active = Loadable.loading(),
-            expired = Loadable.loading(),
-            behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-        )
-    }
+private fun BookingScreenPreview() = Theme {
+    BookingScreenContent(
+        active = Loadable.loading(),
+        expired = Loadable.loading(),
+        behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    )
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Composable
+private fun BookingScreenErrorPreview() = Theme {
+    BookingScreenContent(
+        active = Loadable.failure(Throwable()),
+        expired = Loadable.failure(Throwable()),
+        behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    )
 }
