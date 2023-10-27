@@ -126,4 +126,19 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidTest = { id = "com.android.test", version.ref = "android" }
 
 [bundles]
-
+compose = [
+    "compose-ui-core",
+    "compose-activity",
+    "compose-material",
+    "compose-material3",
+    "compose-foundation",
+    "compose-navigation",
+    "compose-ui-test",
+    "compose-ui-tooling",
+    "compose-ui-window",
+]
+compose-wear = [
+    "compose-wear-navigation",
+    "compose-wear-foundation",
+    "compose-wear-material",
+]
