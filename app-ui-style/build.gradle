@@ -6,12 +6,18 @@ plugins {
 
 android {
 
-    namespace "ui.share"
+    namespace "ui.style"
 
 }
 
 dependencies {
 
-    implementation project(":style")
+    implementation libs.bundles.compose
+
+    implementation libs.androidx.palette
+    implementation libs.androidx.work
+
+    implementation libs.coil.compose
+    implementation libs.coil.svg
 
 }
