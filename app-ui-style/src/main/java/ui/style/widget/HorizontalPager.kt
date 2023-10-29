@@ -38,6 +38,7 @@ fun HorizontalPager(
     ) {
         FoundationHorizontalPager(
             modifier = Modifier
+                .weight(1f)
                 .background(color, outsideShape)
                 .clip(outsideShape),
             state = state
@@ -47,8 +48,7 @@ fun HorizontalPager(
                     .padding(contentPadding)
                     .shadow(cornerSize * 2)
                     .background(contentColor, insideShape)
-                    .clip(insideShape),
-                propagateMinConstraints = true
+                    .clip(insideShape)
             ) {
                 content(it)
             }
