@@ -55,9 +55,9 @@ fun CutoutLayout(
         val density = LocalDensity.current
         val shape = CompositeShape {
             setBaseline(contentShape)
-            val size = DpSize(width, height)
+            val size = DpSize(width, height) + DpSize(8.dp, 8.dp)
             addShape(
-                shape = CutoutShape(CornerSize(16.dp), CutoutShape.Orientation.TopRight),
+                shape = CutoutShape(CornerSize(24.dp), CutoutShape.Orientation.TopRight),
                 size = size,
                 alignment = Alignment.TopEnd,
                 operation = PathOperation.Difference
