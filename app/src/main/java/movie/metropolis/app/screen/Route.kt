@@ -19,38 +19,36 @@ sealed class Route(
 
         private const val InternalUri = "app://movie.metropolis"
         fun by(name: String) = when (name) {
-            Cinema() -> Cinema
-            Cinemas() -> Cinemas
-            Home() -> Home
-            Login() -> Login
-            Movie() -> Movie
-            Movies() -> Movies
-            Order() -> Order
-            OrderComplete() -> OrderComplete
-            Settings() -> Settings
-            Setup() -> Setup
-            Tickets() -> Tickets
-            User() -> User
+            Cinema.route -> Cinema
+            Cinemas.route -> Cinemas
+            Home.route -> Home
+            Login.route -> Login
+            Movie.route -> Movie
+            Movies.route -> Movies
+            Order.route -> Order
+            OrderComplete.route -> OrderComplete
+            Settings.route -> Settings
+            Setup.route -> Setup
+            Tickets.route -> Tickets
+            User.route -> User
             else -> throw IllegalArgumentException("Unknown route name $name")
         }
 
     }
 
-    operator fun invoke() = route
-
     open val deepLinks = listOf(
         navDeepLink { uriPattern = "$InternalUri/$route" }
     )
 
-    object Setup : Route("setup") {
-        fun destination() = route
+    data object Setup : Route("setup") {
+        operator fun invoke() = route
     }
 
-    object Home : Route("home?screen={screen}") {
+    data object Home : Route("home?screen={screen}") {
         val arguments = listOf(
             navArgument("screen") {
                 type = NavType.StringType
-                defaultValue = Movies.destination()
+                defaultValue = Movies.route
             }
         )
 
@@ -58,23 +56,23 @@ sealed class Route(
             val screen get() = entry.arguments?.getString("screen").let(::requireNotNull)
         }
 
-        fun destination(screen: String = Movies.destination()) =
+        operator fun invoke(screen: String = Movies.route) =
             route.replace("{screen}", screen)
 
-        fun deepLink(screen: String = Movies.destination()) =
-            "$InternalUri/${destination(screen)}".toUri()
+        fun deepLink(screen: String = Movies.route) =
+            "$InternalUri/${invoke(screen)}".toUri()
 
     }
 
-    object User : Route("users/me") {
-        fun destination() = route
+    data object User : Route("users/me") {
+        operator fun invoke() = route
     }
 
-    object Login : Route("users/new") {
-        fun destination() = route
+    data object Login : Route("users/new") {
+        operator fun invoke() = route
     }
 
-    object Cinema : Route("cinemas/{cinema}") {
+    data object Cinema : Route("cinemas/{cinema}") {
         val arguments = listOf(
             navArgument("cinema") {
                 type = NavType.StringType
@@ -85,14 +83,14 @@ sealed class Route(
             val cinema get() = handle.get<String>("cinema").let(::requireNotNull)
         }
 
-        fun destination(cinema: String) =
+        operator fun invoke(cinema: String) =
             route.replace("{cinema}", cinema)
 
         fun deepLink(cinema: String) =
-            "$InternalUri/${destination(cinema)}".toUri()
+            "$InternalUri/${invoke(cinema)}".toUri()
     }
 
-    object Movie : Route("movies/{movie}?upcoming={upcoming}") {
+    data object Movie : Route("movies/{movie}?upcoming={upcoming}") {
         val arguments = listOf(
             navArgument("movie") {
                 type = NavType.StringType
@@ -107,18 +105,18 @@ sealed class Route(
             val upcoming get() = entry.get<Boolean>("upcoming").let(::requireNotNull)
         }
 
-        fun destination(movie: String, upcoming: Boolean = false) =
+        operator fun invoke(movie: String, upcoming: Boolean = false) =
             route.replace("{movie}", movie).replace("{upcoming}", upcoming.toString())
 
         fun deepLink(movie: String, upcoming: Boolean = false) =
-            "$InternalUri/${destination(movie, upcoming)}".toUri()
+            "$InternalUri/${invoke(movie, upcoming)}".toUri()
     }
 
-    object OrderComplete : Route("orders/success") {
-        fun destination() = route
+    data object OrderComplete : Route("orders/success") {
+        operator fun invoke() = route
     }
 
-    object Order : Route("orders/{url}") {
+    data object Order : Route("orders/{url}") {
         val arguments = listOf(
             navArgument("url") {
                 type = NavType.StringType
@@ -129,28 +127,28 @@ sealed class Route(
             val url get() = entry.get<String>("url").let(::requireNotNull).decodeBase64()
         }
 
-        fun destination(url: String) =
+        operator fun invoke(url: String) =
             route.replace("{url}", url.encodeBase64())
     }
 
-    object Settings : Route("settings") {
-        val index = 4
-        fun destination() = route
+    data object Settings : Route("settings") {
+        const val index = 4
+        operator fun invoke() = route
     }
 
-    object Movies : Route("movies") {
-        val index = 1
-        fun destination() = route
+    data object Movies : Route("movies") {
+        const val index = 1
+        operator fun invoke() = route
     }
 
-    object Tickets : Route("tickets") {
-        val index = 3
-        fun destination() = route
+    data object Tickets : Route("tickets") {
+        const val index = 3
+        operator fun invoke() = route
     }
 
-    object Cinemas : Route("cinemas") {
-        val index = 2
-        fun destination() = route
+    data object Cinemas : Route("cinemas") {
+        const val index = 2
+        operator fun invoke() = route
     }
 
 }
