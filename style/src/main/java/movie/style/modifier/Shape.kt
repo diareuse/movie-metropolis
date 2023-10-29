@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.*
 
 fun Modifier.clipWithGlow(
     shape: Shape,
+    backgroundColor: Color,
     alpha: Float = .2f,
     width: Dp = 2.dp,
     lightSource: LightSource = LightSource.TopLeft
@@ -18,17 +19,19 @@ fun Modifier.clipWithGlow(
     val density = LocalDensity.current
     val color = LocalContentColor.current
     clip(shape).drawWithContent {
-        drawContent()
         val outline = shape.createOutline(size, layoutDirection, density)
         val width = with(density) { width.toPx() }
         val start = lightSource.start
         val end = lightSource.end
-        val strokeColors = listOf(color.copy(alpha = alpha), Color.Transparent)
-        val fillColors = listOf(color.copy(alpha = alpha / 2), Color.Transparent)
+        val strokeColors =
+            listOf(color.copy(alpha = alpha).compositeOver(backgroundColor), backgroundColor)
+        val fillColors =
+            listOf(color.copy(alpha = alpha / 2).compositeOver(backgroundColor), backgroundColor)
         val brush = Brush.linearGradient(strokeColors, start, end)
         val brush2 = Brush.linearGradient(fillColors, start, end)
-        drawOutline(outline, brush, style = Stroke(width))
         drawOutline(outline, brush2, style = Fill)
+        drawContent()
+        drawOutline(outline, brush, style = Stroke(width))
     }
 }
 

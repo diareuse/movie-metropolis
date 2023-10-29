@@ -24,6 +24,8 @@ dependencies {
     implementation libs.androidx.palette
     implementation libs.androidx.startup
 
+    api libs.kotlinx.collections
+
     api libs.google.material
     api libs.google.navigation.animation
     api libs.google.pager

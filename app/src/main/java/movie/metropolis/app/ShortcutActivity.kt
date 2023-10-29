@@ -9,7 +9,7 @@ class ShortcutActivity : Activity() {
 
     private val route
         get() = when (intent.action) {
-            "movie.metropolis.app.ACTION_TICKETS" -> Route.Home.deepLink(Route.Tickets.destination())
+            "movie.metropolis.app.ACTION_TICKETS" -> Route.Home.deepLink(Route.Tickets())
             else -> Route.Home.deepLink()
         }
 
