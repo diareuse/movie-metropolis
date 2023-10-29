@@ -51,7 +51,8 @@ fun CinemaLayout(
                             topStart = CornerSize(0f),
                             topEnd = CornerSize(0f)
                         )
-                    )
+                    ),
+                propagateMinConstraints = true
             ) {
                 image()
             }
