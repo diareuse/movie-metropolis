@@ -1,4 +1,4 @@
-package ui.style.modifier
+package movie.style.modifier
 
 import androidx.compose.material3.*
 import androidx.compose.ui.*
