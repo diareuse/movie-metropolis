@@ -31,18 +31,6 @@ dependencies {
     implementation project(":feature-metadata")
     implementation project(":feature-image-analysis")
 
-    implementation project(":app-ui-booking")
-    implementation project(":app-ui-cinema")
-    implementation project(":app-ui-detail")
-    implementation project(":app-ui-home")
-    implementation project(":app-ui-listing")
-    implementation project(":app-ui-order")
-    implementation project(":app-ui-profile")
-    implementation project(":app-ui-reader")
-    implementation project(":app-ui-settings")
-    implementation project(":app-ui-setup")
-    implementation project(":app-ui-share")
-
     implementation libs.androidx.startup
     implementation libs.androidx.livedata
     implementation libs.androidx.work
