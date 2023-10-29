@@ -75,19 +75,19 @@ fun Navigation(
         popExitTransition = { slideOutHorizontally { it } }
     ) {
         composable(
-            route = Route.Setup(),
+            route = Route.Setup.route,
             deepLinks = Route.Setup.deepLinks
         ) {
             SetupScreen(
                 viewModel = setupViewModel,
                 onNavigateHome = {
-                    controller.popBackStack(Route.Setup(), true)
-                    controller.navigate(Route.Home.destination())
+                    controller.popBackStack(Route.Setup.route, true)
+                    controller.navigate(Route.Home())
                 }
             )
         }
         composable(
-            route = Route.Home(),
+            route = Route.Home.route,
             arguments = Route.Home.arguments,
             deepLinks = Route.Home.deepLinks
         ) {
@@ -106,7 +106,7 @@ fun Navigation(
                     val profileIcon: (@Composable () -> Unit)? = if (email != null) ({
                         ProfileIcon(
                             email = email,
-                            onClick = { controller.navigate(Route.User.destination()) }
+                            onClick = { controller.navigate(Route.User()) }
                         )
                     }) else null
                     val instantApp = rememberInstantApp()
@@ -139,7 +139,7 @@ fun Navigation(
                                     }
                                 },
                                 onClick = { id, upcoming ->
-                                    controller.navigate(Route.Movie.destination(id, upcoming))
+                                    controller.navigate(Route.Movie(id, upcoming))
                                 },
                                 contentPadding = padding,
                                 behavior = listing.behavior,
@@ -152,7 +152,7 @@ fun Navigation(
                                 state = cinemas.list,
                                 viewModel = cinemas.viewModel,
                                 onClickCinema = { id ->
-                                    controller.navigate(Route.Cinema.destination(id))
+                                    controller.navigate(Route.Cinema(id))
                                 },
                                 contentPadding = padding
                             )
@@ -162,7 +162,7 @@ fun Navigation(
                                 behavior = booking.behavior,
                                 viewModel = booking.viewModel,
                                 onMovieClick = { id ->
-                                    controller.navigate(Route.Movie.destination(id, true))
+                                    controller.navigate(Route.Movie(id, true))
                                 },
                                 contentPadding = padding
                             )
@@ -175,7 +175,7 @@ fun Navigation(
                             )
                         },
                         startWith = args.screen,
-                        onClickLogin = { controller.navigate(Route.Login.destination()) },
+                        onClickLogin = { controller.navigate(Route.Login()) },
                         onClickInstall = instantApp::install,
                         controller = homeController,
                         profileIcon = profileIcon
@@ -228,7 +228,7 @@ fun Navigation(
 fun NavGraphBuilder.login(
     controller: NavHostController
 ) = composable(
-    route = Route.Login(),
+    route = Route.Login.route,
     deepLinks = Route.Login.deepLinks
 ) {
     val viewModel = hiltViewModel<LoginViewModel>()
@@ -243,8 +243,8 @@ fun NavGraphBuilder.login(
     val scope = rememberCoroutineScope()
 
     fun navigateHome() {
-        controller.popBackStack(Route.Home(), true)
-        controller.navigate(Route.Home.destination())
+        controller.popBackStack(Route.Home.route, true)
+        controller.navigate(Route.Home())
     }
 
     LaunchedEffect(oneTap) {
@@ -280,7 +280,7 @@ fun NavGraphBuilder.login(
 fun NavGraphBuilder.user(
     controller: NavHostController
 ) = composable(
-    route = Route.User(),
+    route = Route.User.route,
     deepLinks = Route.User.deepLinks
 ) {
     UserScreen(
@@ -291,41 +291,41 @@ fun NavGraphBuilder.user(
 fun NavGraphBuilder.cinema(
     controller: NavHostController
 ) = composable(
-    route = Route.Cinema(),
+    route = Route.Cinema.route,
     arguments = Route.Cinema.arguments,
     deepLinks = Route.Cinema.deepLinks
 ) {
     CinemaScreen(
         onBackClick = controller::navigateUp,
-        onBookingClick = { url -> controller.navigate(Route.Order.destination(url)) }
+        onBookingClick = { url -> controller.navigate(Route.Order(url)) }
     )
 }
 
 fun NavGraphBuilder.movie(
     controller: NavHostController
 ) = composable(
-    route = Route.Movie(),
+    route = Route.Movie.route,
     arguments = Route.Movie.arguments,
     deepLinks = Route.Movie.deepLinks
 ) {
     MovieScreen(
         onBackClick = controller::navigateUp,
-        onBookingClick = { url -> controller.navigate(Route.Order.destination(url)) }
+        onBookingClick = { url -> controller.navigate(Route.Order(url)) }
     )
 }
 
 fun NavGraphBuilder.order(
     controller: NavHostController
 ) = composable(
-    route = Route.Order(),
+    route = Route.Order.route,
     arguments = Route.Order.arguments,
     deepLinks = Route.Order.deepLinks
 ) {
     OrderScreen(
         onBackClick = controller::navigateUp,
         onCompleted = {
-            controller.popBackStack(Route.Order(), true)
-            controller.navigate(Route.OrderComplete.destination())
+            controller.popBackStack(Route.Order.route, true)
+            controller.navigate(Route.OrderComplete())
         }
     )
 }
@@ -333,13 +333,13 @@ fun NavGraphBuilder.order(
 fun NavGraphBuilder.orderComplete(
     controller: NavHostController
 ) = composable(
-    route = Route.OrderComplete(),
+    route = Route.OrderComplete.route,
     deepLinks = Route.OrderComplete.deepLinks
 ) {
     OrderCompleteScreen(
         onBackClick = {
-            controller.popBackStack(Route.Home(), true)
-            controller.navigate(Route.Home.destination(Route.Tickets.destination()))
+            controller.popBackStack(Route.Home.route, true)
+            controller.navigate(Route.Home(Route.Tickets()))
         }
     )
 }
