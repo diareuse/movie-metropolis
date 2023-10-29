@@ -225,7 +225,7 @@ fun Navigation(
     }
 }
 
-fun NavGraphBuilder.login(
+private fun NavGraphBuilder.login(
     controller: NavHostController
 ) = composable(
     route = Route.Login.route,
@@ -277,7 +277,7 @@ fun NavGraphBuilder.login(
     )
 }
 
-fun NavGraphBuilder.user(
+private fun NavGraphBuilder.user(
     controller: NavHostController
 ) = composable(
     route = Route.User.route,
@@ -288,7 +288,7 @@ fun NavGraphBuilder.user(
     )
 }
 
-fun NavGraphBuilder.cinema(
+private fun NavGraphBuilder.cinema(
     controller: NavHostController
 ) = composable(
     route = Route.Cinema.route,
@@ -301,7 +301,7 @@ fun NavGraphBuilder.cinema(
     )
 }
 
-fun NavGraphBuilder.movie(
+private fun NavGraphBuilder.movie(
     controller: NavHostController
 ) = composable(
     route = Route.Movie.route,
@@ -314,7 +314,7 @@ fun NavGraphBuilder.movie(
     )
 }
 
-fun NavGraphBuilder.order(
+private fun NavGraphBuilder.order(
     controller: NavHostController
 ) = composable(
     route = Route.Order.route,
@@ -330,7 +330,7 @@ fun NavGraphBuilder.order(
     )
 }
 
-fun NavGraphBuilder.orderComplete(
+private fun NavGraphBuilder.orderComplete(
     controller: NavHostController
 ) = composable(
     route = Route.OrderComplete.route,

@@ -19,8 +19,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
-import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.Navigation
 import movie.style.LocalWindowSizeClass
 import movie.style.theme.Theme
 import java.io.File
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
                     LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
                 ) {
                     val controller = rememberNavController()
-                    Navigation(controller = controller)
+                    Navigation(controller)
                     LaunchedEffect(Unit) {
                         navigateIfNecessary(controller)
                     }
@@ -93,14 +93,14 @@ class MainActivity : AppCompatActivity() {
     private fun navigateIfNecessary(controller: NavHostController) {
         val intent = intent.action ?: return
         if (intent != Intent.ACTION_APPLICATION_PREFERENCES) return
-        controller.navigate(Route.Settings.destination())
+        controller.navigate(Route.Settings())
     }
 
     companion object {
 
         fun tickets(context: Context) = Intent(context, MainActivity::class.java)
             .setAction(Intent.ACTION_VIEW)
-            .setData(Route.Home.deepLink(Route.Tickets.destination()))
+            .setData(Route.Home.deepLink(Route.Tickets()))
 
     }
 

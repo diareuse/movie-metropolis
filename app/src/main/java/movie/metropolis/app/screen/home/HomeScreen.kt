@@ -109,28 +109,28 @@ private fun HomeScreen(
             AppNavigationBar {
                 AppNavigationBarItem(
                     selected = route,
-                    index = Route.Movies.destination(),
+                    index = Route.Movies.route,
                     label = { Text(stringResource(R.string.movies)) },
                     icon = { Icon(painterResource(R.drawable.ic_movie), null) },
                     onSelected = onRouteChanged
                 )
                 AppNavigationBarItem(
                     selected = route,
-                    index = Route.Cinemas.destination(),
+                    index = Route.Cinemas.route,
                     label = { Text(stringResource(R.string.cinemas)) },
                     icon = { Icon(painterResource(R.drawable.ic_cinema), null) },
                     onSelected = onRouteChanged
                 )
                 AppNavigationBarItem(
                     selected = route,
-                    index = Route.Tickets.destination(),
+                    index = Route.Tickets.route,
                     label = { Text(stringResource(R.string.tickets)) },
                     icon = { Icon(painterResource(R.drawable.ic_ticket), null) },
                     onSelected = onRouteChanged
                 )
                 AppNavigationBarItem(
                     selected = route,
-                    index = Route.Settings.destination(),
+                    index = Route.Settings.route,
                     label = { Text(stringResource(R.string.settings)) },
                     icon = { Icon(painterResource(R.drawable.ic_settings), null) },
                     onSelected = onRouteChanged

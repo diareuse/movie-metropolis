@@ -13,7 +13,7 @@ import movie.style.theme.Theme
 @Composable
 fun PreviewLayout(
     modifier: Modifier = Modifier,
-    padding: PaddingValues = PaddingValues(24.dp),
+    padding: PaddingValues = PaddingValues(0.dp),
     content: @Composable () -> Unit
 ) = Theme {
     BoxWithConstraints(modifier = modifier.padding(padding)) {

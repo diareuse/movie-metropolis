@@ -41,7 +41,7 @@ fun HomeScreenContent(
     NavHost(
         modifier = modifier,
         navController = controller,
-        startDestination = startWith(),
+        startDestination = startWith.route,
         enterTransition = {
             val initial = initialState.getIndex()
             val target = targetState.getIndex()
