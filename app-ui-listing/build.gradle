@@ -12,6 +12,7 @@ android {
 
 dependencies {
 
-    implementation project(":style")
+    implementation project(":app-ui-style")
+    implementation libs.bundles.compose
 
 }
