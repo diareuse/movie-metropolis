@@ -1,6 +1,7 @@
 package movie.style.layout
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
@@ -14,9 +15,16 @@ import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
 import movie.style.state.animate
-import movie.style.state.smartAnimate
 import movie.style.theme.Theme
 import movie.style.theme.contentColorFor
+
+private val DpSize.Companion.VectorConverter
+    get() = DpSizeToVector
+
+private val DpSizeToVector = TwoWayConverter<DpSize, AnimationVector2D>(
+    convertToVector = { AnimationVector2D(it.width.value, it.height.value) },
+    convertFromVector = { DpSize(Dp(it.v1), Dp(it.v2)) }
+)
 
 @Composable
 fun CutoutLayout(
@@ -41,21 +49,22 @@ fun CutoutLayout(
     contentShape: Shape,
     modifier: Modifier = Modifier,
     elevation: Dp = 16.dp,
+    cutoutPadding: Dp = 8.dp,
     overlay: @Composable () -> Unit,
     content: @Composable () -> Unit
 ) {
     Box(
         modifier = modifier
     ) {
-        val (nextWidth, setWidth) = remember(overlay) { mutableStateOf(0.dp) }
-        val (nextHeight, setHeight) = remember(overlay) { mutableStateOf(0.dp) }
-        val width by nextWidth.smartAnimate()
-        val height by nextHeight.smartAnimate()
+        val (nextSize, setSize) = remember(overlay) { mutableStateOf(DpSize.Zero) }
+        val size by animateValueAsState(
+            targetValue = nextSize,
+            typeConverter = DpSize.VectorConverter
+        )
         val color by color.animate()
         val density = LocalDensity.current
         val shape = CompositeShape {
             setBaseline(contentShape)
-            val size = DpSize(width, height) + DpSize(8.dp, 8.dp)
             addShape(
                 shape = CutoutShape(CornerSize(24.dp), CutoutShape.Orientation.TopRight),
                 size = size,
@@ -71,18 +80,22 @@ fun CutoutLayout(
                     shape = shape,
                     elevation = elevation,
                     shadowColor = color
-                )
+                ),
+            propagateMinConstraints = true
         ) {
             content()
         }
         Box(
             modifier = Modifier
+                .padding(start = 16.dp, bottom = 16.dp)
                 .surface(color, cutoutShape, elevation, color)
                 .animateContentSize()
                 .onGloballyPositioned {
                     with(density) {
-                        setWidth(it.size.width.toDp())
-                        setHeight(it.size.height.toDp())
+                        var size = DpSize(it.size.width.toDp(), it.size.height.toDp())
+                        if (size != DpSize.Zero)
+                            size += DpSize(cutoutPadding, cutoutPadding)
+                        setSize(size)
                     }
                 }
                 .align(Alignment.TopEnd)
