@@ -11,9 +11,10 @@ import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
-import movie.style.AppImage
+import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.surface
+import movie.style.rememberImageState
 import movie.style.state.ImmutableList
 import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
@@ -62,7 +63,7 @@ private fun TicketItemPreviewLight(
     TicketItem(
         modifier = Modifier.surface(4.dp),
         cinema = { Text(parameter.cinema) },
-        poster = { AppImage(parameter.poster) },
+        poster = { Image(rememberImageState(url = parameter.poster)) },
         name = { Text(parameter.name) },
         date = { Text(parameter.date) },
         metadata = {
@@ -86,7 +87,7 @@ private fun TicketItemPreviewDark(
     TicketItem(
         modifier = Modifier.surface(4.dp),
         cinema = { Text(parameter.cinema) },
-        poster = { AppImage(parameter.poster) },
+        poster = { Image(rememberImageState(url = parameter.poster)) },
         name = { Text(parameter.name) },
         date = { Text(parameter.date) },
         metadata = {

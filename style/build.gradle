@@ -21,6 +21,7 @@ dependencies {
     api libs.compose.navigation
 
     api libs.androidx.appcompat
+    implementation libs.androidx.palette
     implementation libs.androidx.startup
 
     api libs.google.material

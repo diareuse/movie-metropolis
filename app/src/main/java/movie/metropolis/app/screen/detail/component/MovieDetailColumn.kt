@@ -16,6 +16,7 @@ import movie.style.EllipsisText
 import movie.style.layout.PreviewLayout
 import movie.style.textPlaceholder
 
+@Deprecated("")
 @Composable
 fun MovieDetailColumn(
     detail: Loadable<MovieDetailView>,

@@ -1,27 +1,25 @@
 package movie.metropolis.app.screen.booking.component
 
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material3.*
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.style.AppIconButton
-import movie.style.AppImage
 import movie.style.Barcode
+import movie.style.Image
 import movie.style.OnClickListener
+import movie.style.rememberPaletteImageState
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -47,9 +45,10 @@ fun TicketItemActive(
             )
         }
     ) {
+        val state = rememberPaletteImageState(url = item.movie.poster?.url.orEmpty())
         TicketOverlay(
             cutoutOffset = cutoutOffsetOverride,
-            color = item.movie.poster?.spotColor ?: LocalContentColor.current,
+            color = state.palette.color,
             overlay = {
                 AppIconButton(
                     onClick = { isVisible = !isVisible },
@@ -63,7 +62,7 @@ fun TicketItemActive(
             TicketItem(
                 modifier = if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier,
                 cinema = { Text(item.cinema.name) },
-                poster = { AppImage(item.movie.poster?.url, Modifier.fillMaxSize()) },
+                poster = { Image(state) },
                 name = { Text(item.name) },
                 date = { Text(item.date) },
                 metadata = {

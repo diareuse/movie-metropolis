@@ -11,18 +11,18 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import movie.style.modifier.surface
+import movie.style.shape.CompositeShape
+import movie.style.shape.CutoutShape
 import movie.style.state.animate
 import movie.style.state.smartAnimate
 import movie.style.theme.Theme
 import movie.style.theme.contentColorFor
-import movie.style.theme.extendBy
 
 @Composable
 fun CutoutLayout(
     color: Color,
-    shape: CornerBasedShape,
+    shape: Shape,
     modifier: Modifier = Modifier,
-    cutoutPadding: Dp = 8.dp,
     overlay: @Composable () -> Unit,
     content: @Composable () -> Unit
 ) = CutoutLayout(
@@ -30,7 +30,6 @@ fun CutoutLayout(
     cutoutShape = shape,
     contentShape = shape,
     modifier = modifier,
-    cutoutPadding = cutoutPadding,
     overlay = overlay,
     content = content
 )
@@ -38,10 +37,9 @@ fun CutoutLayout(
 @Composable
 fun CutoutLayout(
     color: Color,
-    cutoutShape: CornerBasedShape,
-    contentShape: CornerBasedShape,
+    cutoutShape: Shape,
+    contentShape: Shape,
     modifier: Modifier = Modifier,
-    cutoutPadding: Dp = 8.dp,
     elevation: Dp = 16.dp,
     overlay: @Composable () -> Unit,
     content: @Composable () -> Unit
@@ -55,14 +53,14 @@ fun CutoutLayout(
         val height by nextHeight.smartAnimate()
         val color by color.animate()
         val density = LocalDensity.current
-        val expandedShape = contentShape.extendBy(cutoutPadding)
-        val containerShape = remember(width, height) {
-            if (width <= 0.dp || height <= 0.dp) contentShape
-            else CutoutShape.from(
-                contentShape,
-                expandedShape,
-                width + cutoutPadding,
-                height + cutoutPadding
+        val shape = CompositeShape {
+            setBaseline(contentShape)
+            val size = DpSize(width, height)
+            addShape(
+                shape = CutoutShape(CornerSize(16.dp), CutoutShape.Orientation.TopRight),
+                size = size,
+                alignment = Alignment.TopEnd,
+                operation = PathOperation.Difference
             )
         }
         Box(
@@ -70,7 +68,7 @@ fun CutoutLayout(
                 .fillMaxSize()
                 .surface(
                     color = Theme.color.container.background,
-                    shape = IntersectShape(contentShape, containerShape),
+                    shape = shape,
                     elevation = elevation,
                     shadowColor = color
                 )

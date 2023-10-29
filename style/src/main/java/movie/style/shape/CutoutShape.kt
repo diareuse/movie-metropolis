@@ -1,4 +1,4 @@
-package ui.style.shape
+package movie.style.shape
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,7 +9,7 @@ import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import ui.style.shape.CutoutShape.Orientation
+import movie.style.shape.CutoutShape.Orientation
 
 class CutoutShape(
     private val cornerSize: CornerSize,

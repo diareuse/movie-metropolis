@@ -1,7 +1,6 @@
 package movie.style.modifier
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -14,7 +13,7 @@ import movie.style.theme.Theme
 
 fun Modifier.stroke(
     color: Color,
-    shape: CornerBasedShape,
+    shape: Shape,
     width: Dp = 4.dp,
     stride: Dp = 4.dp
 ) = composed {

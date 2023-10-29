@@ -6,10 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.*
-import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -18,7 +16,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import movie.style.AppImage
+import movie.style.Image
+import movie.style.rememberImageState
 import movie.style.theme.Theme
 
 @Composable
@@ -39,23 +38,7 @@ private fun MoviePopup(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        AppImage(
-            modifier = Modifier
-                .weight(1f)
-                .layout { measurable, constraints ->
-                    val placeable = if (constraints.maxWidth > constraints.maxHeight) {
-                        val width = (constraints.maxHeight * aspectRatio).toInt()
-                        measurable.measure(constraints.copy(minWidth = width, maxWidth = width))
-                    } else {
-                        measurable.measure(constraints)
-                    }
-                    layout(constraints.maxWidth, constraints.maxHeight) {
-                        placeable.place((constraints.maxWidth - placeable.width) / 2, 0)
-                    }
-                }
-                .clip(Theme.container.card),
-            url = url
-        )
+        Image(rememberImageState(url = url))
         Spacer(Modifier.height(24.dp))
         CompositionLocalProvider(
             LocalContentColor provides Color.White

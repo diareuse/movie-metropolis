@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.listing.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -12,7 +13,9 @@ import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.detail.component.FavoriteButton
 import movie.metropolis.app.screen.listing.MovieViewProvider
+import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.rememberPaletteImageState
 
 @Composable
 fun MovieItemUpcoming(
@@ -22,8 +25,9 @@ fun MovieItemUpcoming(
     onLongPress: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val state = rememberPaletteImageState(url = view.poster?.url.orEmpty())
     MovieItemLayout(
-        shadowColor = view.poster?.spotColor ?: Color.Black,
+        shadowColor = state.palette.color,
         modifier = modifier,
         posterAspectRatio = view.poster?.aspectRatio ?: DefaultPosterAspectRatio,
         textPadding = PaddingValues(top = 8.dp),
@@ -41,10 +45,11 @@ fun MovieItemUpcoming(
             )
         }
     ) {
-        MoviePoster(
-            url = view.poster?.url,
-            onClick = onClick,
-            onLongPress = onLongPress
+        Image(
+            modifier = Modifier
+                .clickable(onClick = onClick)
+                .detectLongPress(onLongPress),
+            state = state
         )
     }
 }

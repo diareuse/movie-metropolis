@@ -12,10 +12,11 @@ import movie.style.theme.Theme
 
 @Composable
 fun PreviewLayout(
+    modifier: Modifier = Modifier,
     padding: PaddingValues = PaddingValues(24.dp),
     content: @Composable () -> Unit
 ) = Theme {
-    BoxWithConstraints(modifier = Modifier.padding(padding)) {
+    BoxWithConstraints(modifier = modifier.padding(padding)) {
         val size = DpSize(maxWidth, maxHeight)
         CompositionLocalProvider(
             LocalWindowSizeClass provides WindowSizeClass.calculateFromSize(size)

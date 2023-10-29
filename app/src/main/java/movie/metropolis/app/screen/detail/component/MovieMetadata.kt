@@ -12,57 +12,117 @@ import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.map
-import movie.metropolis.app.presentation.mapNotNull
 import movie.metropolis.app.presentation.onFailure
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
 import movie.metropolis.app.screen.detail.ImageViewPreview
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
 import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
-import movie.style.AppImage
 import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
+import movie.style.rememberPaletteImageState
 import movie.style.textPlaceholder
 
 @Composable
 fun MovieMetadata(
     detail: Loadable<MovieDetailView>,
-    poster: Loadable<ImageView>,
     modifier: Modifier = Modifier,
+) {
+    detail.onLoading {
+        MovieMetadataLoading(modifier = modifier)
+    }.onSuccess {
+        MovieMetadataLoaded(modifier = modifier, detail = it)
+    }.onFailure {
+        MovieMetadataError(modifier = modifier)
+    }
+}
+
+@Composable
+private fun MovieMetadataLoaded(
+    detail: MovieDetailView,
+    modifier: Modifier = Modifier,
+) {
+    val state = rememberPaletteImageState(url = detail.poster?.url.orEmpty())
+    MovieMetadataLayout(
+        modifier = modifier,
+        aspectRatio = detail.poster?.aspectRatio ?: DefaultPosterAspectRatio,
+        color = state.palette.color,
+        rating = {
+            val r = detail.rating
+            if (r != null) Text(
+                modifier = Modifier.padding(12.dp, 8.dp),
+                text = r
+            )
+        },
+        image = {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .imagePlaceholder()
+            )
+        }
+    ) {
+        MovieDetailLayout(
+            title = { Text(detail.name) },
+            details = {
+                Text(
+                    "%s • %s • %s".format(
+                        detail.duration,
+                        detail.countryOfOrigin,
+                        detail.releasedAt
+                    )
+                )
+            },
+            directors = { detail.directors.joinToString() },
+            cast = { detail.cast.joinToString() }
+        )
+    }
+}
+
+@Composable
+private fun MovieMetadataError(
+    modifier: Modifier = Modifier
 ) {
     MovieMetadataLayout(
         modifier = modifier,
-        aspectRatio = poster.getOrNull()?.aspectRatio ?: DefaultPosterAspectRatio,
-        color = poster.getOrNull()?.spotColor ?: Color.Black,
+        aspectRatio = DefaultPosterAspectRatio,
+        color = Color.Black,
+        rating = {},
+        image = { Box(Modifier) }
+    ) {
+    }
+}
+
+@Composable
+private fun MovieMetadataLoading(
+    modifier: Modifier = Modifier
+) {
+    MovieMetadataLayout(
+        modifier = modifier,
+        aspectRatio = DefaultPosterAspectRatio,
+        color = Color.Black,
         rating = {
-            detail
-                .mapNotNull { it.rating }
-                .onLoading {
-                    Text(
-                        "#".repeat(3),
-                        Modifier
-                            .padding(12.dp, 8.dp)
-                            .textPlaceholder()
-                    )
-                }
-                .onSuccess { Text(it, Modifier.padding(12.dp, 8.dp)) }
+            Text(
+                modifier = Modifier
+                    .padding(12.dp, 8.dp)
+                    .textPlaceholder(),
+                text = "#".repeat(3)
+            )
         },
         image = {
-            poster
-                .map { it.url }
-                .onLoading {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .imagePlaceholder()
-                    )
-                }
-                .onSuccess { AppImage(it, Modifier.fillMaxSize()) }
-                .onFailure { AppImage(null, Modifier.fillMaxSize()) }
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .imagePlaceholder()
+            )
         }
     ) {
-        MovieDetailColumn(detail = detail)
+        MovieDetailLayout(
+            title = { Text("#".repeat(10), Modifier.textPlaceholder()) },
+            details = { Text("#".repeat(22), Modifier.textPlaceholder()) },
+            directors = { Text("#".repeat(13), Modifier.textPlaceholder()) },
+            cast = { Text("#".repeat(28), Modifier.textPlaceholder()) }
+        )
     }
 }
 
@@ -73,7 +133,7 @@ private fun MovieMetadataPreview(
     @PreviewParameter(MovieMetadataParameter::class)
     parameter: MovieMetadataParameter.Data
 ) = PreviewLayout {
-    MovieMetadata(parameter.detail, parameter.poster)
+    MovieMetadata(parameter.detail)
 }
 
 class MovieMetadataParameter : CollectionPreviewParameterProvider<MovieMetadataParameter.Data>(

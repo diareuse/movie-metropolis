@@ -2,14 +2,11 @@ package movie.metropolis.app.screen.profile.component
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.unit.*
 import kotlinx.coroutines.delay
-import movie.style.AppImage
+import movie.style.Image
+import movie.style.rememberImageState
 import kotlin.math.max
 
 @Composable
@@ -24,21 +21,8 @@ fun AnimatedImageBackground(
         targetState = index,
         transitionSpec = { fadeIn() togetherWith fadeOut() }
     ) {
-        val surface = MaterialTheme.colorScheme.surface
-        AppImage(
-            modifier = Modifier
-                .fillMaxSize()
-                .alpha(.2f)
-                .drawWithContent {
-                    val brush = Brush.verticalGradient(
-                        listOf(Color.Transparent, surface)
-                    )
-                    drawContent()
-                    drawRect(brush)
-                }
-                .blur(16.dp),
-            url = urls.getOrNull(it) ?: return@AnimatedContent
-        )
+        val state = rememberImageState(url = urls.getOrNull(it) ?: return@AnimatedContent)
+        Image(state)
     }
     LaunchedEffect(index) {
         delay(5000)

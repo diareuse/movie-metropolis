@@ -29,11 +29,11 @@ fun MovieMetadataLayout(
         horizontalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         CutoutLayout(
+            color = color,
+            shape = Theme.container.poster,
             modifier = Modifier
                 .fillMaxWidth(.3f)
                 .aspectRatio(aspectRatio),
-            color = color,
-            shape = Theme.container.poster,
             overlay = rating
         ) {
             image()

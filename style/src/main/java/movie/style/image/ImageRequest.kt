@@ -11,7 +11,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Composable
-fun rememberImageRequest(url: String): ImageRequest {
+fun rememberImageRequest(url: Any?): ImageRequest {
     val context = LocalContext.current
     val owner = LocalLifecycleOwner.current
     return remember(url) {

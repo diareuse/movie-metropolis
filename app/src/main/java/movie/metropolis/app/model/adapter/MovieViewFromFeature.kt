@@ -1,6 +1,5 @@
 package movie.metropolis.app.model.adapter
 
-import androidx.compose.ui.graphics.*
 import movie.core.model.Media
 import movie.core.model.MoviePreview
 import movie.metropolis.app.model.ImageView
@@ -43,9 +42,9 @@ data class MovieViewFromFeature(
     override val rating: String?
         get() = null
     override val poster: ImageView?
-        get() = images.middleOrNull()?.let { ImageViewFromFeature(it, Color.Black) }
+        get() = images.middleOrNull()?.let { ImageViewFromFeature(it) }
     override val posterLarge: ImageView?
-        get() = images.firstOrNull()?.let { ImageViewFromFeature(it, Color.Black) }
+        get() = images.firstOrNull()?.let { ImageViewFromFeature(it) }
     override val video: VideoView?
         get() = movie.media
             .asSequence()

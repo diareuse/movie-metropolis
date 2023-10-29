@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.detail.plus
 import movie.style.layout.EmptyShapeLayout
-import movie.style.layout.TicketShape
+import movie.style.shape.TicketShape
 import movie.style.theme.Theme
 
 @Composable
@@ -24,10 +24,8 @@ fun TicketItemEmpty(
         modifier = modifier.onGloballyPositioned { height = it.size.height / 4 },
         contentPadding = PaddingValues(24.dp) + PaddingValues(bottom = with(LocalDensity.current) { height.toDp() }),
         shape = TicketShape(
-            cornerSize = Theme.container.card.topStart,
             cutoutSize = 16.dp,
-            bottomOffset = height,
-            density = LocalDensity.current
+            bottomOffset = height
         )
     ) {
         val tint = Theme.color.container.primary

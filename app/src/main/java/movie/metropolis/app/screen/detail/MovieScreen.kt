@@ -13,7 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
@@ -34,7 +33,7 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.presentation.Loadable
-import movie.metropolis.app.presentation.mapNotNull
+import movie.metropolis.app.presentation.map
 import movie.metropolis.app.presentation.onEmpty
 import movie.metropolis.app.presentation.onLoading
 import movie.metropolis.app.presentation.onSuccess
@@ -48,10 +47,11 @@ import movie.metropolis.app.screen.detail.component.MovieScreenAppBar
 import movie.metropolis.app.screen.detail.component.ShowingItem
 import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.style.AppButton
-import movie.style.AppImage
 import movie.style.DatePickerRow
 import movie.style.EllipsisText
+import movie.style.Image
 import movie.style.modifier.overlay
+import movie.style.rememberImageState
 import movie.style.state.ImmutableDate
 import movie.style.state.ImmutableDate.Companion.immutable
 import movie.style.textPlaceholder
@@ -67,8 +67,6 @@ fun MovieScreen(
     viewModel: MovieViewModel = hiltViewModel(),
     actions: ActivityActions = LocalActivityActions.current
 ) {
-    val poster by viewModel.poster.collectAsState(initial = Loadable.loading())
-    val trailer by viewModel.trailer.collectAsState(initial = Loadable.loading())
     val detail by viewModel.detail.collectAsState()
     val startDate by viewModel.startDate.collectAsState()
     val selectedDate by viewModel.selectedDate.collectAsState()
@@ -83,8 +81,6 @@ fun MovieScreen(
     }
     MovieScreen(
         detail = detail,
-        poster = poster.mapNotNull { it },
-        trailer = trailer.mapNotNull { it },
         showings = showings,
         options = options,
         isFavorite = favorite,
@@ -115,8 +111,6 @@ fun MovieScreen(
 @Composable
 private fun MovieScreen(
     detail: Loadable<MovieDetailView>,
-    poster: Loadable<ImageView>,
-    trailer: Loadable<VideoView>,
     showings: Loadable<List<CinemaBookingView>>,
     options: Map<Filter.Type, List<Filter>>,
     isFavorite: Boolean,
@@ -144,13 +138,13 @@ private fun MovieScreen(
             )
         }
     ) { padding ->
-        AppImage(
+        Image(
             modifier = Modifier
                 .fillMaxSize()
                 .blur(16.dp)
                 .alpha(.2f)
                 .overlay(),
-            url = poster.getOrNull()?.url
+            state = rememberImageState(url = detail.map { it.poster?.url }.getOrNull().orEmpty())
         )
         LazyColumn(
             modifier = Modifier
@@ -161,8 +155,7 @@ private fun MovieScreen(
             item(key = "image") {
                 MovieMetadata(
                     modifier = Modifier.padding(horizontal = 24.dp),
-                    detail = detail,
-                    poster = poster
+                    detail = detail
                 )
             }
             item(key = "detail") {
@@ -187,8 +180,8 @@ private fun MovieScreen(
                     onFilterClick = onFilterClick
                 )
             } else {
-                trailer.onSuccess {
-                    item("trailer") {
+                detail.map { it.trailer }.onSuccess {
+                    if (it != null) item("trailer") {
                         AppButton(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -318,8 +311,6 @@ private fun Preview(
     Theme {
         MovieScreen(
             detail = Loadable.success(detail),
-            poster = Loadable.success(ImageViewPreview()),
-            trailer = Loadable.loading(),
             options = emptyMap(),
             selectedDate = Date().immutable(),
             onBackClick = {},
@@ -338,8 +329,7 @@ private fun Preview(
 
 data class ImageViewPreview(
     override val url: String = "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5376O2R-lg.jpg",
-    override val aspectRatio: Float = DefaultPosterAspectRatio,
-    override val spotColor: Color = Color.Yellow
+    override val aspectRatio: Float = DefaultPosterAspectRatio
 ) : ImageView
 
 class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailView>(

@@ -1,4 +1,4 @@
-package ui.style.shape
+package movie.style.shape
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

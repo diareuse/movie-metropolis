@@ -5,10 +5,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.CutoutLayout
-import movie.style.layout.TicketShape
+import movie.style.shape.TicketShape
 import movie.style.theme.Theme
 
 @Composable
@@ -19,17 +18,14 @@ fun TicketOverlay(
     color: Color = LocalContentColor.current,
     content: @Composable BoxScope.() -> Unit
 ) {
-    val density = LocalDensity.current
-    val container = Theme.container
-    val shape = remember(cutoutOffset, density) {
-        TicketShape(container.card.topStart, 16.dp, cutoutOffset, density)
+    val shape = remember(cutoutOffset) {
+        TicketShape(cutoutSize = 16.dp, bottomOffset = cutoutOffset)
     }
     CutoutLayout(
-        modifier = modifier,
         color = color,
         cutoutShape = Theme.container.button,
         contentShape = shape,
-        cutoutPadding = 12.dp,
+        modifier = modifier,
         overlay = overlay
     ) {
         Box {
