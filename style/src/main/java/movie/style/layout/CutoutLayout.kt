@@ -65,6 +65,7 @@ fun CutoutLayout(
         val density = LocalDensity.current
         val shape = CompositeShape {
             setBaseline(contentShape)
+            addShape(RoundedCornerShape(24.dp))
             addShape(
                 shape = CutoutShape(CornerSize(24.dp), CutoutShape.Orientation.TopRight),
                 size = size,

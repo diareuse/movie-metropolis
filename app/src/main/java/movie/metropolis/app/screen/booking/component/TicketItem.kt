@@ -33,7 +33,12 @@ fun TicketItem(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Box(modifier = Modifier.weight(1f)) {
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+            propagateMinConstraints = true
+        ) {
             poster()
         }
         Column(

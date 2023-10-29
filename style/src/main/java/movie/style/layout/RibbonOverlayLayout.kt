@@ -35,15 +35,22 @@ fun RibbonOverlayLayout(
             sqrt(a + b).toDp()
         }
     }
-    Box(modifier.onGloballyPositioned { size = it.size }) {
-        Box(modifier = Modifier.drawWithContent {
-            drawContent()
-            drawRect(Color.Black.copy(alpha = .3f))
-        }) {
+    Box(
+        modifier = modifier.onGloballyPositioned { size = it.size },
+        propagateMinConstraints = true
+    ) {
+        Box(
+            modifier = Modifier.drawWithContent {
+                drawContent()
+                drawRect(Color.Black.copy(alpha = .3f))
+            },
+            propagateMinConstraints = true
+        ) {
             content()
         }
         Box(
             modifier = Modifier
+                .wrapContentHeight()
                 .requiredWidth(maxWidth)
                 .align(Alignment.Center)
                 .rotate(rotation)
