@@ -45,6 +45,7 @@ import movie.style.PaletteImageState
 import movie.style.Tab
 import movie.style.layout.plus
 import movie.style.modifier.overlay
+import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
@@ -82,7 +83,7 @@ fun ListingScreen(
         targetState = background,
         transitionSpec = { fadeIn() togetherWith fadeOut() }
     ) {
-        MoviePoster(url = it)
+        if (it != null) Image(state = rememberImageState(url = it))
     }
     LazyColumn(
         modifier = Modifier
