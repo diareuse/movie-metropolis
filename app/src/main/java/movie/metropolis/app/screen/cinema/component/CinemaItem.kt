@@ -10,9 +10,10 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.CinemaView
-import movie.style.AppImage
+import movie.style.Image
 import movie.style.OnClickListener
 import movie.style.layout.PreviewLayout
+import movie.style.rememberPaletteImageState
 import kotlin.random.Random.Default.nextLong
 
 @Composable
@@ -20,19 +21,22 @@ fun CinemaItem(
     view: CinemaView,
     onClick: OnClickListener,
     modifier: Modifier = Modifier
-) = CinemaLayout(
-    modifier = modifier,
-    image = { AppImage(url = view.image, Modifier.fillMaxSize()) },
-    city = { Text(view.city) },
-    name = { Text(view.name) },
-    address = { Text(view.address) },
-    distance = {
-        val distance = view.distance
-        if (distance != null)
-            Text(distance, modifier = Modifier.padding(16.dp, 8.dp))
-    },
-    onClick = onClick
-)
+) {
+    val state = rememberPaletteImageState(url = view.image.orEmpty())
+    CinemaLayout(
+        modifier = modifier,
+        image = { Image(state) },
+        city = { Text(view.city) },
+        name = { Text(view.name) },
+        address = { Text(view.address) },
+        distance = {
+            val distance = view.distance
+            if (distance != null)
+                Text(distance, modifier = Modifier.padding(16.dp, 8.dp))
+        },
+        onClick = onClick
+    )
+}
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)

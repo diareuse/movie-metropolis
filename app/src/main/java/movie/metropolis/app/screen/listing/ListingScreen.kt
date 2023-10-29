@@ -41,9 +41,12 @@ import movie.metropolis.app.screen.listing.component.PromoCardPager
 import movie.metropolis.app.screen.listing.component.SimpleRow
 import movie.metropolis.app.screen.listing.component.detectLongPress
 import movie.style.CenterAlignedTabRow
+import movie.style.Image
+import movie.style.PaletteImageState
 import movie.style.Tab
 import movie.style.layout.plus
 import movie.style.modifier.overlay
+import movie.style.rememberPaletteImageState
 import movie.style.textPlaceholder
 import movie.style.theme.Theme
 
@@ -108,16 +111,17 @@ fun ListingScreen(
             }
         }
         promotions.onSuccess {
-            ListingLoadedPromo(it, onBackgroundChange = onBackgroundChange) { item ->
+            ListingLoadedPromo(it, onBackgroundChange = onBackgroundChange) { (item, state) ->
                 var showPopup by remember { mutableStateOf(false) }
                 PromoCard(
                     modifier = Modifier.detectLongPress { showPopup = true },
                     label = { Text(item.name) }
                 ) {
-                    MoviePoster(
-                        url = item.poster?.url,
-                        onClick = { onClick(item.id, upcoming) },
-                        onLongPress = { showPopup = it }
+                    Image(
+                        modifier = Modifier
+                            .clickable { onClick(item.id, upcoming) }
+                            .detectLongPress { showPopup = true },
+                        state = state
                     )
                 }
                 MoviePopup(
@@ -196,14 +200,15 @@ fun LazyListScope.ListingErrorPromo() = item {
 fun LazyListScope.ListingLoadedPromo(
     items: List<MovieView>,
     onBackgroundChange: (String?) -> Unit,
-    content: @Composable PagerScope.(MovieView) -> Unit
+    content: @Composable PagerScope.(Pair<MovieView, PaletteImageState>) -> Unit
 ) = item {
+    val items = items.map { it to rememberPaletteImageState(url = it.poster?.url.orEmpty()) }
     val state = rememberPagerState { items.size }
     val currentShadowColor by animateColorAsState(
-        targetValue = items[state.currentPage].poster?.spotColor ?: Color.Black
+        targetValue = items[state.currentPage].second.palette.color
     )
     LaunchedEffect(state.currentPage, items) {
-        onBackgroundChange(items[state.currentPage].poster?.url)
+        onBackgroundChange(items[state.currentPage].first.poster?.url)
     }
     PromoCardPager(
         items = items,

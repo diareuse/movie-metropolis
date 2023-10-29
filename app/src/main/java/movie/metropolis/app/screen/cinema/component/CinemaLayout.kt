@@ -11,12 +11,13 @@ import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
-import movie.style.AppImage
+import movie.style.Image
 import movie.style.OnClickListener
 import movie.style.layout.CutoutLayout
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.optional
 import movie.style.modifier.surface
+import movie.style.rememberImageState
 import movie.style.theme.Theme
 
 @Composable
@@ -30,9 +31,9 @@ fun CinemaLayout(
     onClick: OnClickListener? = null
 ) {
     CutoutLayout(
-        modifier = modifier.wrapContentHeight(unbounded = true),
         color = Theme.color.container.primary,
         shape = Theme.container.card,
+        modifier = modifier.wrapContentHeight(unbounded = true),
         overlay = distance
     ) {
         Column(
@@ -78,7 +79,7 @@ private fun CinemaLayoutPreview(
     @PreviewParameter(CinemaLayoutParameter::class, 2) parameter: CinemaLayoutParameter.Data
 ) = PreviewLayout {
     CinemaLayout(
-        image = { AppImage(parameter.image) },
+        image = { Image(rememberImageState(url = parameter.image)) },
         city = { Text(parameter.city) },
         name = { Text(parameter.name) },
         address = { Text(parameter.address) },

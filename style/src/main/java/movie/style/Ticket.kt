@@ -1,4 +1,4 @@
-package ui.style.widget
+package movie.style
 
 import android.content.res.Configuration
 import androidx.compose.foundation.*
@@ -16,12 +16,9 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import ui.style.PreviewLayout
-import ui.style.modifier.LightSource
-import ui.style.modifier.clipWithGlow
-import ui.style.modifier.square
-import ui.style.shape.CompositeShape
-import ui.style.shape.TicketShape
+import movie.style.layout.PreviewLayout
+import movie.style.shape.CompositeShape
+import movie.style.shape.TicketShape
 
 @Composable
 fun Ticket(
@@ -44,7 +41,7 @@ fun Ticket(
     val density = LocalDensity.current
     Column(
         modifier = Modifier
-            .clipWithGlow(shape)
+            .clip(shape)
             .then(modifier)
     ) {
         Box(
@@ -90,8 +87,7 @@ fun TicketLocationColumn(
     modifier: Modifier = Modifier,
 ) = Column(
     modifier = Modifier
-        .clipWithGlow(CircleShape, lightSource = LightSource.Bottom)
-        .square()
+        .clip(CircleShape)
         .then(modifier)
         .padding(8.dp),
     verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),

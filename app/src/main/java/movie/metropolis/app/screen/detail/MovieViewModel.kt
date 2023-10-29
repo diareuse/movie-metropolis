@@ -20,7 +20,6 @@ import movie.metropolis.app.model.Filter
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
 import movie.metropolis.app.presentation.detail.MovieFacade
-import movie.metropolis.app.presentation.mapLoadable
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import java.util.Date
@@ -65,10 +64,6 @@ class MovieViewModel private constructor(
     val startDate = facade.availability
         .onEach { selectedDate.compareAndSet(null, it) }
         .retainStateIn(viewModelScope, Date(0))
-    val trailer = detail.mapLoadable { it.trailer }
-        .retainStateIn(viewModelScope)
-    val poster = detail.mapLoadable { it.poster }
-        .retainStateIn(viewModelScope)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val showings = combine(

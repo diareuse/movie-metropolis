@@ -1,4 +1,4 @@
-package ui.style.util
+package movie.style.layout
 
 import androidx.compose.ui.graphics.*
 

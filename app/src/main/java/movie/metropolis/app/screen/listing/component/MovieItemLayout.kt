@@ -31,11 +31,11 @@ fun MovieItemLayout(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CutoutLayout(
+                color = shadowColor,
+                shape = Theme.container.poster,
                 modifier = Modifier
                     .fillMaxHeight()
                     .aspectRatio(posterAspectRatio),
-                color = shadowColor,
-                shape = Theme.container.poster,
                 overlay = posterOverlay,
                 content = poster
             )

@@ -1,6 +1,5 @@
 package movie.metropolis.app.screen.listing
 
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import movie.core.model.MoviePreview
 import movie.metropolis.app.model.ImageView
@@ -41,12 +40,6 @@ class MovieViewProvider :
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5219S2R-lg.jpg",
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5228D2R-lg.jpg",
             "https://www.cinemacity.cz/xmedia-cw/repo/feats/posters/5392S2R-lg.jpg"
-        ).random(),
-        override val spotColor: Color = listOf(
-            Color.Magenta,
-            Color.Red,
-            Color.Green,
-            Color.Blue
         ).random()
     ) : ImageView
 

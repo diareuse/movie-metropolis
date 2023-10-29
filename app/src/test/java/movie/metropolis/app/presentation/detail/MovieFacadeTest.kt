@@ -42,7 +42,7 @@ class MovieFacadeTest : FeatureTest() {
 
     override fun prepare() {
         facade =
-            FacadeModule().movie(showings, detail, favorite, analyzer, rating).create("5376O2R")
+            FacadeModule().movie(showings, detail, favorite, rating).create("5376O2R")
     }
 
     @Test

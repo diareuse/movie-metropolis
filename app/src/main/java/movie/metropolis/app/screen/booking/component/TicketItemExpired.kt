@@ -14,10 +14,11 @@ import com.google.zxing.BarcodeFormat
 import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.style.AppIconButton
-import movie.style.AppImage
 import movie.style.Barcode
+import movie.style.Image
 import movie.style.OnClickListener
 import movie.style.layout.RibbonOverlayLayout
+import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
 
 @Composable
@@ -33,10 +34,11 @@ fun TicketItemExpired(
         targetValue = if (isVisible) width else cutoutOffset,
         label = "cutout-offset-override"
     )
+    val state = rememberPaletteImageState(url = item.movie.poster?.url.orEmpty())
     TicketOverlay(
         modifier = modifier.onGloballyPositioned { width = it.size.width },
         cutoutOffset = cutoutOffsetOverride,
-        color = item.movie.poster?.spotColor ?: LocalContentColor.current,
+        color = state.palette.color,
         overlay = {
             AppIconButton(
                 onClick = { isVisible = !isVisible },
@@ -60,7 +62,7 @@ fun TicketItemExpired(
                         )
                     }
                 ) {
-                    AppImage(item.movie.poster?.url, Modifier.fillMaxSize())
+                    Image(state)
                 }
             },
             name = { Text(item.name) },

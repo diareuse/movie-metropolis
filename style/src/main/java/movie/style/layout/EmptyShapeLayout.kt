@@ -1,7 +1,6 @@
 package movie.style.layout
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -15,7 +14,7 @@ import movie.style.theme.Theme
 fun EmptyShapeLayout(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
-    shape: CornerBasedShape = Theme.container.card,
+    shape: Shape = Theme.container.card,
     color: Color = Theme.color.container.surface,
     contentAlignment: Alignment = Alignment.Center,
     content: @Composable () -> Unit

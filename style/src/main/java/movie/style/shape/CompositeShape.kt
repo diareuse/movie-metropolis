@@ -1,4 +1,4 @@
-package ui.style.shape
+package movie.style.shape
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,9 +9,9 @@ import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import ui.style.util.toIntSize
-import ui.style.util.toPath
-import ui.style.util.toSize
+import movie.style.layout.toIntSize
+import movie.style.layout.toPath
+import movie.style.layout.toSize
 
 class CompositeShape private constructor(
     private val builder: Builder

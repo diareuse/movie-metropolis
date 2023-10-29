@@ -25,7 +25,6 @@ import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.booking.BookingFacadeFromFeature
 import movie.metropolis.app.presentation.booking.BookingFacadeRecover
 import movie.metropolis.app.presentation.booking.BookingFacadeWithDetail
-import movie.metropolis.app.presentation.booking.BookingFacadeWithSpotColor
 import movie.metropolis.app.presentation.cinema.CinemaFacade
 import movie.metropolis.app.presentation.cinema.CinemaFacadeFilterable
 import movie.metropolis.app.presentation.cinema.CinemaFacadeFromFeature
@@ -36,7 +35,6 @@ import movie.metropolis.app.presentation.cinema.CinemasFacadeRecover
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.presentation.detail.MovieFacadeFilterable
 import movie.metropolis.app.presentation.detail.MovieFacadeFromFeature
-import movie.metropolis.app.presentation.detail.MovieFacadePoster
 import movie.metropolis.app.presentation.detail.MovieFacadeRating
 import movie.metropolis.app.presentation.detail.MovieFacadeReactive
 import movie.metropolis.app.presentation.detail.MovieFacadeRecover
@@ -80,13 +78,11 @@ class FacadeModule {
     fun booking(
         booking: UserBookingFeature,
         share: TicketShareRegistry,
-        detail: EventDetailFeature,
-        analyzer: ImageAnalyzer
+        detail: EventDetailFeature
     ): BookingFacade {
         var facade: BookingFacade
         facade = BookingFacadeFromFeature(booking, share)
         facade = BookingFacadeWithDetail(facade, detail)
-        facade = BookingFacadeWithSpotColor(facade, analyzer)
         facade = BookingFacadeRecover(facade)
         return facade
     }
@@ -119,12 +115,10 @@ class FacadeModule {
         showings: EventShowingsFeature.Factory,
         detail: EventDetailFeature,
         favorite: FavoriteFeature,
-        analyzer: ImageAnalyzer,
         rating: MetadataProvider
     ): MovieFacade.Factory = MovieFacade.Factory {
         var facade: MovieFacade
         facade = MovieFacadeFromFeature(it, showings, detail, favorite)
-        facade = MovieFacadePoster(facade, analyzer)
         facade = MovieFacadeRating(facade, rating)
         facade = MovieFacadeReactive(facade)
         facade = MovieFacadeRecover(facade)

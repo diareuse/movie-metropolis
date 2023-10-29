@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import movie.style.AppImage
+import movie.style.imagePlaceholder
 import movie.style.textPlaceholder
 
 @Composable
@@ -19,7 +19,7 @@ fun TicketItemLoading(
     ) {
         TicketItem(
             cinema = { Text("#".repeat(24), Modifier.textPlaceholder()) },
-            poster = { AppImage(url = null, Modifier.fillMaxSize()) },
+            poster = { Box(Modifier.imagePlaceholder()) },
             name = { Text("#".repeat(30), Modifier.textPlaceholder()) },
             date = { Text("#".repeat(12), Modifier.textPlaceholder()) },
             metadata = {

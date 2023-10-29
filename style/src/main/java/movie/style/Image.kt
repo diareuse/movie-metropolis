@@ -1,12 +1,16 @@
-package ui.style.widget
+package movie.style
 
 import android.content.Context
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.painter.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.core.graphics.drawable.toBitmap
@@ -16,23 +20,39 @@ import coil.imageLoader
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import ui.style.PreviewLayout
+import movie.style.image.rememberImageRequest
+import movie.style.layout.PreviewLayout
+import movie.style.theme.Theme
 import androidx.palette.graphics.Palette as AndroidPalette
 
 @Composable
 fun Image(
     state: ImageState,
     modifier: Modifier = Modifier,
-    contentDescription: String? = null
+    contentDescription: String? = null,
+    placeholderError: Painter? = painterResource(id = R.drawable.ic_image_error),
+    alignment: Alignment = Alignment.Center
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val loader = remember(context) { state.getLoader(context) }
+    val model: Any = when (state.state) {
+        //LoadState.Failure -> placeholderError
+        else -> state.url
+    }
+    val request = rememberImageRequest(url = model)
+    val filter = when (state.state) {
+        LoadState.Failure -> ColorFilter.tint(LocalContentColor.current)
+        else -> null
+    }
     AsyncImage(
         modifier = modifier,
-        model = state.url,
+        model = request,
         imageLoader = loader,
         contentDescription = contentDescription,
+        contentScale = ContentScale.Crop,
+        alignment = alignment,
+        colorFilter = filter,
         onState = {
             scope.launch {
                 state.processState(it)
@@ -47,8 +67,13 @@ fun rememberImageState(url: String): ImageState {
 }
 
 @Composable
-fun rememberPaletteImageState(url: String): PaletteImageState {
-    return remember(url) { PaletteImageState(url) }
+fun rememberPaletteImageState(
+    url: String,
+    color: Color = Theme.color.container.background
+): PaletteImageState {
+    val contentColor = LocalContentColor.current
+    val defaultPalette = PaletteImageState.Palette(color, contentColor, contentColor)
+    return remember(url, defaultPalette) { PaletteImageState(url, defaultPalette) }
 }
 
 sealed class ImageState {
@@ -62,7 +87,7 @@ sealed class ImageState {
 
     internal open suspend fun processState(state: AsyncImagePainter.State) {
         this.state = when (state) {
-            AsyncImagePainter.State.Empty,
+            AsyncImagePainter.State.Empty -> LoadState.Empty
             is AsyncImagePainter.State.Error -> LoadState.Failure
 
             is AsyncImagePainter.State.Loading -> LoadState.Loading
@@ -77,14 +102,15 @@ data class HardwareImageState(
 ) : ImageState()
 
 data class PaletteImageState(
-    override val url: String
+    override val url: String,
+    private val defaultPalette: Palette
 ) : ImageState() {
 
-    var palette by mutableStateOf(palettes[url])
+    var palette by mutableStateOf(palettes[url] ?: defaultPalette)
         private set
 
     override fun getLoader(context: Context) = super.getLoader(context).newBuilder()
-        .allowHardware(palette != null)
+        .allowHardware(palettes.containsKey(url))
         .build()
 
     override suspend fun processState(state: AsyncImagePainter.State) {
@@ -122,7 +148,7 @@ data class PaletteImageState(
 }
 
 enum class LoadState {
-    Loading, Loaded, Failure
+    Empty, Loading, Loaded, Failure
 }
 
 @Preview(showBackground = true)
@@ -139,7 +165,7 @@ private fun ImagePreview() = PreviewLayout {
 private fun ImagePalettePreview() = PreviewLayout {
     val state =
         rememberPaletteImageState(url = "https://play-lh.googleusercontent.com/Iq5pH4PsEKfG8MXSJWl7380LAO4xtp6b9TZhqI5_92nfCmqO2uJEFzfxqf5YT8Fk3vY=w480-h960")
-    val color = state.palette?.color ?: Color.Black
+    val color = state.palette.color
     Image(
         modifier = Modifier
             .background(color)
