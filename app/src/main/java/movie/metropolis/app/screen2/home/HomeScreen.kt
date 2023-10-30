@@ -2,6 +2,7 @@ package movie.metropolis.app.screen2.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -9,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -20,6 +22,8 @@ import movie.metropolis.app.screen2.home.component.HomeToolbar
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigation
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigationItem
 import movie.style.layout.PreviewLayout
+import movie.style.modifier.VerticalGravity
+import movie.style.modifier.verticalOverlay
 
 @Composable
 fun HomeScreen(
@@ -75,7 +79,17 @@ fun HomeScreen(
             }
         }
     ) { padding ->
+        val overlayModifier = Modifier
+            .verticalOverlay(
+                height = padding.calculateTopPadding() + 32.dp,
+                gravity = VerticalGravity.Top
+            )
+            .verticalOverlay(
+                height = padding.calculateBottomPadding() + 24.dp,
+                gravity = VerticalGravity.Bottom
+            )
         NavHost(
+            modifier = Modifier.fillMaxSize(),
             navController = navController,
             startDestination = HomeState.Listing.name
         ) {
