@@ -3,6 +3,7 @@ package movie.metropolis.app.screen.home.component
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,9 +16,10 @@ import java.security.MessageDigest
 @Composable
 fun ProfileIcon(
     email: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    AppIconButton(onClick = onClick) {
+    AppIconButton(modifier = modifier, onClick = onClick) {
         val image by rememberUserImage(email)
         val state = rememberImageState(url = image)
         Image(state)
