@@ -1,10 +1,14 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package movie.metropolis.app.screen2.listing
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -18,6 +22,8 @@ import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.listing.MovieViewProvider
 import movie.metropolis.app.screen2.listing.component.PosterColumn
+import movie.metropolis.app.screen2.listing.component.PromotionColumn
+import movie.metropolis.app.screen2.listing.component.PromotionHorizontalPager
 import movie.metropolis.app.screen2.listing.component.RatingBox
 import movie.metropolis.app.screen2.setup.component.completelyVisibleItemsInfo
 import movie.style.Image
@@ -28,6 +34,7 @@ import movie.style.rememberPaletteImageState
 
 @Composable
 fun ListingScreen(
+    promotions: ImmutableList<MovieView>,
     movies: ImmutableList<MovieView>,
     state: LazyStaggeredGridState,
     modifier: Modifier = Modifier,
@@ -63,6 +70,29 @@ fun ListingScreen(
         verticalItemSpacing = 12.dp,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        item(span = StaggeredGridItemSpan.FullLine) {
+            val state = rememberPagerState { promotions.size }
+            PromotionHorizontalPager(state = state) {
+                val it = promotions[it]
+                val state = rememberPaletteImageState(it.poster?.url)
+                PromotionColumn(
+                    color = state.palette.color,
+                    contentColor = state.palette.textColor,
+                    name = { Text(it.name) },
+                    rating = {
+                        val rating = it.rating
+                        if (rating != null) RatingBox(
+                            color = state.palette.color,
+                            contentColor = state.palette.textColor,
+                            rating = { Text(rating) },
+                            offset = PaddingValues(start = 4.dp, bottom = 4.dp)
+                        )
+                    },
+                    poster = { Image(state) },
+                    action = { Icon(Icons.Rounded.FavoriteBorder, null) }
+                )
+            }
+        }
         items(movies) {
             val state = rememberPaletteImageState(url = it.poster?.url ?: it.posterLarge?.url)
             PosterColumn(
@@ -88,8 +118,14 @@ fun ListingScreen(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun ListingScreenPreview() = PreviewLayout {
-    val movies = MovieViewProvider().values.toImmutableList()
-    ListingScreen(movies, rememberLazyStaggeredGridState())
+    val content = MovieViewProvider().values
+    val movies = content.toImmutableList()
+    val promotions = content.shuffled().take(3).toImmutableList()
+    ListingScreen(
+        promotions = promotions,
+        movies = movies,
+        state = rememberLazyStaggeredGridState()
+    )
 }
 
 private class ListingScreenParameter : PreviewParameterProvider<ListingScreenParameter.Data> {

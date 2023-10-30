@@ -87,6 +87,7 @@ private fun NavGraphBuilder.home(
     val listing = hiltViewModel<ListingViewModel>()
     val listingState = rememberLazyStaggeredGridState()
     val movies by listing.movies.collectAsState()
+    val promotions by listing.promotions.collectAsState()
     val user by viewModel.user.collectAsState(Loadable.loading())
     HomeScreen(
         user = user.getOrNull(),
@@ -95,7 +96,8 @@ private fun NavGraphBuilder.home(
                 modifier = modifier,
                 contentPadding = padding,
                 state = listingState,
-                movies = movies.toImmutableList()
+                movies = movies.toImmutableList(),
+                promotions = promotions.toImmutableList()
             )
         },
         tickets = { modifier, padding -> },

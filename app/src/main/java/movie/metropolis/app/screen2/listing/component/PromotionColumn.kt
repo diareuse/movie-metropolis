@@ -1,7 +1,5 @@
 package movie.metropolis.app.screen2.listing.component
 
-import android.content.res.Configuration.UI_MODE_NIGHT_NO
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
@@ -14,10 +12,8 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.font.*
-import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.LightSource
 import movie.style.modifier.glow
@@ -27,59 +23,28 @@ import movie.style.shape.CutoutShape
 import movie.style.theme.Theme
 
 @Composable
-fun PosterColumn(
+fun PromotionColumn(
     color: Color,
     contentColor: Color,
-    poster: @Composable () -> Unit,
-    favorite: @Composable () -> Unit,
     name: @Composable () -> Unit,
     rating: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) = Column(
-    modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(8.dp),
-    horizontalAlignment = Alignment.CenterHorizontally
-) {
-    RatedPoster(
-        color = color,
-        contentColor = contentColor,
-        poster = poster,
-        rating = rating,
-        action = favorite
-    )
-    ProvideTextStyle(
-        Theme.textStyle.caption.copy(
-            textAlign = TextAlign.Center,
-            fontSize = 10.sp,
-            lineHeight = 10.sp
-        )
-    ) {
-        name()
-    }
-}
-
-
-@Composable
-private fun RatedPoster(
-    color: Color,
-    contentColor: Color,
     poster: @Composable () -> Unit,
-    rating: @Composable () -> Unit,
     action: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
-    var cutoutSize by remember { mutableStateOf(DpSize.Zero) }
+    var ratingSize by remember { mutableStateOf(DpSize.Zero) }
+    var nameSize by remember { mutableStateOf(DpSize.Zero) }
     val favoriteSize = DpSize(36.dp, 36.dp)
     val shape = CompositeShape {
         setBaseline(Theme.container.poster)
         addShape(
             shape = CutoutShape(
                 Theme.container.poster.topStart,
-                CutoutShape.Orientation.BottomRight
+                CutoutShape.Orientation.TopRight
             ),
-            size = cutoutSize,
-            alignment = Alignment.BottomEnd,
+            size = ratingSize,
+            alignment = Alignment.TopEnd,
             operation = PathOperation.Difference
         )
         addShape(
@@ -91,25 +56,49 @@ private fun RatedPoster(
             alignment = Alignment.TopStart,
             operation = PathOperation.Difference
         )
+        addShape(
+            shape = CutoutShape(
+                Theme.container.poster.topStart,
+                CutoutShape.Orientation.BottomLeft
+            ),
+            size = nameSize,
+            alignment = Alignment.BottomStart,
+            operation = PathOperation.Difference
+        )
     }
     val containerColor = Theme.color.container.background
-    Box(
-        modifier = modifier
-    ) {
+    Box(modifier = modifier) {
         Box(
             modifier = Modifier
+                .matchParentSize()
                 .surface(containerColor, shape, 16.dp, color)
-                .glow(shape)
-                .aspectRatio(DefaultPosterAspectRatio),
+                .glow(shape),
             propagateMinConstraints = true
         ) {
             poster()
         }
         Box(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
                 .onSizeChanged {
-                    cutoutSize = with(density) { DpSize(it.width.toDp(), it.height.toDp()) }
+                    nameSize = with(density) { DpSize(it.width.toDp(), it.height.toDp()) }
+                }
+                .padding(top = 4.dp, end = 4.dp)
+                .align(Alignment.BottomStart)
+                .surface(color, CircleShape, 16.dp, color)
+                .glow(CircleShape, lightSource = LightSource.Top)
+                .padding(8.dp, 4.dp)
+        ) {
+            ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
+                CompositionLocalProvider(LocalContentColor provides contentColor) {
+                    name()
+                }
+            }
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .onSizeChanged {
+                    ratingSize = with(density) { DpSize(it.width.toDp(), it.height.toDp()) }
                 }
         ) {
             rating()
@@ -129,59 +118,38 @@ private fun RatedPoster(
                 .padding(6.dp),
             propagateMinConstraints = true
         ) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                action()
-            }
+            action()
         }
     }
 }
 
+@Preview
 @Composable
-fun RatingBox(
-    color: Color,
-    contentColor: Color,
-    rating: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    offset: PaddingValues = PaddingValues(start = 4.dp, top = 4.dp)
-) = Box(
-    modifier = modifier
-        .padding(offset)
-        .surface(color, CircleShape, 16.dp, color)
-        .glow(CircleShape, contentColor, width = 2.dp)
-        .padding(8.dp, 4.dp)
-) {
-    ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
-            rating()
-        }
-    }
-}
-
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
-@Composable
-private fun PosterColumnPreview() = PreviewLayout(
-    modifier = Modifier
-        .padding(16.dp)
-        .width(100.dp)
-) {
-    PosterColumn(
+private fun PromotionColumnPreview(
+    @PreviewParameter(PromotionColumnParameter::class)
+    parameter: PromotionColumnParameter.Data
+) = PreviewLayout {
+    PromotionColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1.5f),
         color = Color.Green,
         contentColor = Color.Red,
         poster = { Box(Modifier.background(Color.Green)) },
-        favorite = { Icon(Icons.Rounded.Favorite, null) },
+        action = { Icon(Icons.Rounded.Favorite, null) },
         name = { Text("Movie name") },
         rating = {
             RatingBox(
                 color = Color.Green,
                 contentColor = Color.Black,
-                rating = { Text("86%") }
+                rating = { Text("86%") },
+                offset = PaddingValues(start = 4.dp, bottom = 4.dp)
             )
         }
     )
 }
 
-private class PosterColumnParameter : PreviewParameterProvider<PosterColumnParameter.Data> {
+private class PromotionColumnParameter : PreviewParameterProvider<PromotionColumnParameter.Data> {
     override val values = sequence { yield(Data()) }
 
     class Data
