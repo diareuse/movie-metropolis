@@ -10,6 +10,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import kotlin.math.absoluteValue
 
@@ -72,7 +73,7 @@ fun SetupPreviewLayout(
                 modifier = Modifier
                     .fillMaxHeight()
                     .zIndex(zIndex)
-                    .aspectRatio(.7f, true),
+                    .aspectRatio(DefaultPosterAspectRatio, true),
                 propagateMinConstraints = true
             ) {
                 content(it, it == selectedItem)
