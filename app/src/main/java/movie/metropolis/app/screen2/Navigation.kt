@@ -35,28 +35,8 @@ fun Navigation(
         popEnterTransition = { fadeIn() + slideInHorizontally() },
         popExitTransition = { slideOutHorizontally { it } }
     ) {
-        composable(
-            route = Route.Setup.route,
-            deepLinks = Route.Setup.deepLinks
-        ) {
-            val viewModel = hiltViewModel<SetupViewModel>()
-            val state by viewModel.state.collectAsState()
-            val regions by viewModel.regions.collectAsState()
-            val posters = viewModel.posters.toImmutableList()
-            SetupScreen(
-                state = state,
-                regions = regions.getOrNull().orEmpty().toImmutableList(),
-                posters = posters,
-                onStateChange = { viewModel.state.value = it },
-                onRegionClick = viewModel::select
-            )
-        }
-        composable(
-            route = Route.Home.route,
-            arguments = Route.Home.arguments,
-            deepLinks = Route.Home.deepLinks
-        ) {
-        }
+        setup(navController)
+        home(navController)
         login(navController)
         user(navController)
         cinema(navController)
@@ -64,6 +44,39 @@ fun Navigation(
         order(navController)
         orderComplete(navController)
     }
+}
+
+private fun NavGraphBuilder.setup(
+    navController: NavHostController
+) = composable(
+    route = Route.Setup.route,
+    deepLinks = Route.Setup.deepLinks
+) {
+    val viewModel = hiltViewModel<SetupViewModel>()
+    val state by viewModel.state.collectAsState()
+    val regions by viewModel.regions.collectAsState()
+    val posters = viewModel.posters.toImmutableList()
+    LaunchedEffect(viewModel) {
+        viewModel.requiresSetup.collect {
+            if (!it) navController.navigate(Route.Home())
+        }
+    }
+    SetupScreen(
+        state = state,
+        regions = regions.getOrNull().orEmpty().toImmutableList(),
+        posters = posters,
+        onStateChange = { viewModel.state.value = it },
+        onRegionClick = viewModel::select
+    )
+}
+
+private fun NavGraphBuilder.home(
+    navController: NavHostController
+) = composable(
+    route = Route.Home.route,
+    arguments = Route.Home.arguments,
+    deepLinks = Route.Home.deepLinks
+) {
 }
 
 private fun NavGraphBuilder.login(
