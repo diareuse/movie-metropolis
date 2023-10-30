@@ -3,7 +3,6 @@ package movie.metropolis.app.screen2.setup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.presentation.Loadable
@@ -19,7 +18,6 @@ class SetupViewModel @Inject constructor(
 ) : ViewModel() {
 
     val requiresSetup = facade.requiresSetupFlow
-    val state = MutableStateFlow(SetupState.Initial)
     val regions = facade.regionsFlow
         .retainStateIn(viewModelScope, Loadable.loading())
 

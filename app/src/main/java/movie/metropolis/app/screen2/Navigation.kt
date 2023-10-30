@@ -1,7 +1,9 @@
 package movie.metropolis.app.screen2
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -28,6 +30,7 @@ fun Navigation(
         }
     }
     NavHost(
+        modifier = Modifier.fillMaxSize(),
         navController = navController,
         startDestination = Route.Home(),
         enterTransition = { slideInHorizontally { it } },
@@ -53,7 +56,6 @@ private fun NavGraphBuilder.setup(
     deepLinks = Route.Setup.deepLinks
 ) {
     val viewModel = hiltViewModel<SetupViewModel>()
-    val state by viewModel.state.collectAsState()
     val regions by viewModel.regions.collectAsState()
     val posters = viewModel.posters.toImmutableList()
     LaunchedEffect(viewModel) {
@@ -62,10 +64,8 @@ private fun NavGraphBuilder.setup(
         }
     }
     SetupScreen(
-        state = state,
         regions = regions.getOrNull().orEmpty().toImmutableList(),
         posters = posters,
-        onStateChange = { viewModel.state.value = it },
         onRegionClick = viewModel::select
     )
 }
