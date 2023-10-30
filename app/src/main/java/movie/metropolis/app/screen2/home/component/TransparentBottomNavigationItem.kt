@@ -64,9 +64,12 @@ fun TransparentBottomNavigationItem(
                 tween(AnimationDuration)
             )
             CompositionLocalProvider(LocalContentColor provides currentContentColor) {
-                when (selected) {
-                    true -> active()
-                    else -> inactive()
+                val content = when (selected) {
+                    true -> active
+                    else -> inactive
+                }
+                AnimatedContent(content, transitionSpec = { fadeIn() togetherWith fadeOut() }) {
+                    it()
                 }
             }
         }
