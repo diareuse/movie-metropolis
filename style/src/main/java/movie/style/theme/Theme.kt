@@ -74,6 +74,7 @@ object Theme {
 
         val container: Scheme
         val content: Scheme
+        val emphasis: Scheme
 
         @Immutable
         interface Scheme {

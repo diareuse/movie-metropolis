@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.home.HomeScreen
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupViewModel
 
@@ -77,6 +78,7 @@ private fun NavGraphBuilder.home(
     arguments = Route.Home.arguments,
     deepLinks = Route.Home.deepLinks
 ) {
+    HomeScreen()
 }
 
 private fun NavGraphBuilder.login(
