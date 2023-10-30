@@ -78,7 +78,7 @@ private fun NavGraphBuilder.home(
     arguments = Route.Home.arguments,
     deepLinks = Route.Home.deepLinks
 ) {
-    HomeScreen()
+    HomeScreen(null)
 }
 
 private fun NavGraphBuilder.login(

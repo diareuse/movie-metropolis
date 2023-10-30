@@ -2,7 +2,9 @@ package movie.metropolis.app.screen2.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.material.*
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.rounded.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
@@ -11,20 +13,51 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import movie.metropolis.app.R
+import movie.metropolis.app.model.UserView
+import movie.metropolis.app.screen.home.component.ProfileIcon
+import movie.metropolis.app.screen2.home.component.HomeToolbar
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigation
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigationItem
 import movie.style.layout.PreviewLayout
 
 @Composable
 fun HomeScreen(
+    user: UserView?,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
     val entry by navController.currentBackStackEntryAsState()
     val route = entry?.destination?.route
+    val state = HomeState.by(route)
     Scaffold(
         modifier = modifier,
-        topBar = {},
+        topBar = {
+            val title = @Composable { Text(stringResource(state.title)) }
+            val settings = @Composable {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Rounded.Settings, null)
+                }
+            }
+            when (user) {
+                null -> HomeToolbar(
+                    title = title,
+                    settings = settings
+                )
+
+                else -> HomeToolbar(
+                    icon = {
+                        ProfileIcon(
+                            email = user.email,
+                            onClick = {} // todo show user's loyalty card
+                        )
+                    },
+                    name = { Text(stringResource(R.string.home_greeting, user.firstName)) },
+                    title = title,
+                    settings = settings
+                )
+            }
+        },
         bottomBar = {
             TransparentBottomNavigation {
                 for (state in HomeState.entries)
@@ -58,5 +91,5 @@ fun HomeScreen(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun HomeScreenPreview() = PreviewLayout {
-    HomeScreen()
+    HomeScreen(null)
 }

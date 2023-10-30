@@ -114,4 +114,9 @@
     <string name="share_add_ticket">Add a ticket</string>
     <string name="select_content_left">There\'s nothing here yet, select content from the left to display it here</string>
     <string name="install">Install</string>
+    <string name="home_listing_title">Showing movies</string>
+    <string name="home_tickets_title">Your tickets</string>
+    <string name="home_cinemas_title">Cinemas nearby</string>
+    <string name="home_profile_title">Your profile</string>
+    <string name="home_greeting">Hi %s!</string>
 </resources>
