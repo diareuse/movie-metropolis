@@ -27,11 +27,10 @@ fun Theme(
         LocalIndication provides rememberVibrateIndication()
     ) {
         CompositionLocalProvider(
-            LocalTextStyle provides Theme.textStyle.body
+            LocalTextStyle provides Theme.textStyle.body,
+            LocalContentColor provides Theme.color.content.background
         ) {
-            Surface {
-                content()
-            }
+            content()
         }
     }
 }

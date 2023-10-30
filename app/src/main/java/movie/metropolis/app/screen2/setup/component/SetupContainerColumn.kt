@@ -4,13 +4,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.AppButton
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.clipWithGlow
+import movie.style.modifier.glow
 import movie.style.theme.Theme
 
 @Composable
@@ -52,10 +51,7 @@ private fun SetupContainerColumnPreview() = PreviewLayout {
     SetupContainerColumn(
         image = {
             SetupPreviewLayout(count = 10) { index, selected ->
-                Box(
-                    Modifier
-                        .clipWithGlow(Theme.container.poster, Color.Yellow, alpha = .3f)
-                )
+                Box(Modifier.glow(Theme.container.poster, alpha = .3f))
             }
         },
         title = { Text("Welcome back!") },

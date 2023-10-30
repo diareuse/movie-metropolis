@@ -9,24 +9,25 @@ import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 
-fun Modifier.clipWithGlow(
+fun Modifier.glow(
     shape: Shape,
-    backgroundColor: Color,
+    color: Color = Color.Unspecified,
+    lightSource: LightSource = LightSource.TopLeft,
     alpha: Float = .2f,
     width: Dp = 2.dp,
-    lightSource: LightSource = LightSource.TopLeft
 ) = composed {
     val density = LocalDensity.current
-    val color = LocalContentColor.current
-    clip(shape).drawWithContent {
+    val contentColor = LocalContentColor.current
+    drawWithContent {
         val outline = shape.createOutline(size, layoutDirection, density)
         val width = with(density) { width.toPx() }
+        val color = color.takeOrElse { contentColor }
         val start = lightSource.start
         val end = lightSource.end
         val strokeColors =
-            listOf(color.copy(alpha = alpha).compositeOver(backgroundColor), backgroundColor)
+            listOf(color.copy(alpha = alpha), Color.Transparent)
         val fillColors =
-            listOf(color.copy(alpha = alpha / 2).compositeOver(backgroundColor), backgroundColor)
+            listOf(color.copy(alpha = alpha / 2), Color.Transparent)
         val brush = Brush.linearGradient(strokeColors, start, end)
         val brush2 = Brush.linearGradient(fillColors, start, end)
         drawOutline(outline, brush2, style = Fill)

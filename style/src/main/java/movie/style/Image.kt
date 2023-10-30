@@ -36,7 +36,7 @@ fun Image(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val loader = remember(context) { state.getLoader(context) }
-    val model: Any = when (state.state) {
+    val model: Any? = when (state.state) {
         //LoadState.Failure -> placeholderError
         else -> state.url
     }
@@ -62,13 +62,13 @@ fun Image(
 }
 
 @Composable
-fun rememberImageState(url: String): ImageState {
+fun rememberImageState(url: Any?): ImageState {
     return remember(url) { HardwareImageState(url) }
 }
 
 @Composable
 fun rememberPaletteImageState(
-    url: String,
+    url: Any?,
     color: Color = Theme.color.container.background
 ): PaletteImageState {
     val contentColor = LocalContentColor.current
@@ -78,7 +78,7 @@ fun rememberPaletteImageState(
 
 sealed class ImageState {
 
-    abstract val url: String
+    abstract val url: Any?
 
     var state by mutableStateOf(LoadState.Loading)
         private set
@@ -98,11 +98,11 @@ sealed class ImageState {
 }
 
 data class HardwareImageState(
-    override val url: String
+    override val url: Any?
 ) : ImageState()
 
 data class PaletteImageState(
-    override val url: String,
+    override val url: Any?,
     private val defaultPalette: Palette
 ) : ImageState() {
 
@@ -142,7 +142,7 @@ data class PaletteImageState(
 
     companion object {
         private val lock = Mutex()
-        private val palettes = mutableMapOf<String, Palette>()
+        private val palettes = mutableMapOf<Any?, Palette>()
     }
 
 }

@@ -41,11 +41,14 @@ fun Navigation(
         ) {
             val viewModel = hiltViewModel<SetupViewModel>()
             val state by viewModel.state.collectAsState()
+            val regions by viewModel.regions.collectAsState()
             val posters = viewModel.posters.toImmutableList()
             SetupScreen(
                 state = state,
+                regions = regions.getOrNull().orEmpty().toImmutableList(),
                 posters = posters,
-                onStateChange = { viewModel.state.value = it }
+                onStateChange = { viewModel.state.value = it },
+                onRegionClick = viewModel::select
             )
         }
         composable(

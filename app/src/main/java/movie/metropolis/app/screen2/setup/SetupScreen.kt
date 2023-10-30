@@ -7,28 +7,40 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.res.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import movie.core.model.Region
+import movie.metropolis.app.R
+import movie.metropolis.app.model.RegionView
+import movie.metropolis.app.model.adapter.RegionViewFromFeature
+import movie.metropolis.app.screen2.setup.component.RegionRow
 import movie.metropolis.app.screen2.setup.component.SetupContainerColumn
 import movie.metropolis.app.screen2.setup.component.SetupPreviewLayout
 import movie.style.AppButton
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.clipWithGlow
+import movie.style.modifier.glow
+import movie.style.modifier.surface
 import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
+import java.util.Locale
 
 @Composable
 fun SetupScreen(
     state: SetupState,
     posters: ImmutableList<String>,
+    regions: ImmutableList<RegionView>,
     onStateChange: (SetupState) -> Unit,
+    onRegionClick: (RegionView) -> Unit,
     modifier: Modifier = Modifier
 ) = Scaffold(
     modifier = modifier,
@@ -44,7 +56,12 @@ fun SetupScreen(
                 onContinueClick = { onStateChange(SetupState.RegionSelection) }
             )
 
-            SetupState.RegionSelection -> SetupRegionSelectionContent(modifier = modifier)
+            SetupState.RegionSelection -> SetupRegionSelectionContent(
+                modifier = modifier,
+                regions = regions,
+                posters = posters,
+                onRegionClick = onRegionClick
+            )
         }
     }
 }
@@ -73,11 +90,13 @@ private fun SetupInitialContent(
                 Image(
                     modifier = Modifier
                         .scale(scale)
-                        .clipWithGlow(
+                        .surface(
                             shape = Theme.container.poster,
-                            backgroundColor = Theme.color.container.background
+                            color = Theme.color.container.background,
+                            elevation = elevation,
+                            shadowColor = color
                         )
-                        .shadow(elevation, ambientColor = color, spotColor = color),
+                        .glow(Theme.container.poster),
                     state = state
                 )
             }
@@ -103,8 +122,56 @@ private fun SetupInitialContent(
 }
 
 @Composable
-private fun SetupRegionSelectionContent(modifier: Modifier = Modifier) {
-
+private fun SetupRegionSelectionContent(
+    posters: ImmutableList<String>,
+    regions: ImmutableList<RegionView>,
+    onRegionClick: (RegionView) -> Unit,
+    modifier: Modifier = Modifier
+) = Box(modifier = modifier.fillMaxSize(), propagateMinConstraints = true) {
+    SetupPreviewLayout(
+        modifier = Modifier.alpha(.3f),
+        count = posters.size,
+        contentPadding = PaddingValues(24.dp),
+        rowCount = 5
+    ) { it, selected ->
+        val state = rememberPaletteImageState(url = posters[it])
+        val elevation by animateDpAsState(if (selected) 16.dp else 0.dp, tween(700))
+        val scale by animateFloatAsState(if (selected) 1.5f else 1f, tween(700))
+        val color = state.palette.color
+        Image(
+            modifier = Modifier
+                .surface(
+                    shape = Theme.container.poster,
+                    color = Theme.color.container.background,
+                    elevation = elevation,
+                    shadowColor = color
+                )
+                .glow(Theme.container.poster),
+            state = state
+        )
+    }
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        contentPadding = PaddingValues(24.dp)
+    ) {
+        items(regions) {
+            val state = rememberPaletteImageState(url = it.icon)
+            RegionRow(
+                icon = { Image(state = state) },
+                label = { Text(it.name) },
+                onClick = { onRegionClick(it) },
+                color = state.palette.color
+            )
+        }
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+        item {
+            Text(
+                text = stringResource(R.string.select_country_description),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
@@ -114,10 +181,19 @@ private fun SetupScreenPreview(
     @PreviewParameter(SetupScreenParameter::class)
     parameter: SetupScreenParameter.Data
 ) = PreviewLayout {
+    val regions = buildList {
+        this += RegionViewFromFeature(Region.Czechia, Locale("cs", "CZ"))
+        this += RegionViewFromFeature(Region.Slovakia, Locale("sk", "SK"))
+        this += RegionViewFromFeature(Region.Poland, Locale("pl", "PL"))
+        this += RegionViewFromFeature(Region.Hungary, Locale("hu", "HU"))
+        this += RegionViewFromFeature(Region.Romania, Locale("ro", "RO"))
+    }.toImmutableList()
     SetupScreen(
         state = parameter.state,
+        regions = regions,
         posters = List(20) { "" }.toImmutableList(),
-        onStateChange = {}
+        onStateChange = {},
+        onRegionClick = {}
     )
 }
 
