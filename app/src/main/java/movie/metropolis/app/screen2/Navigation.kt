@@ -2,6 +2,7 @@ package movie.metropolis.app.screen2
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,6 +16,8 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.home.HomeScreen
 import movie.metropolis.app.screen2.home.HomeViewModel
+import movie.metropolis.app.screen2.listing.ListingScreen
+import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupViewModel
 
@@ -81,9 +84,23 @@ private fun NavGraphBuilder.home(
     deepLinks = Route.Home.deepLinks
 ) {
     val viewModel = hiltViewModel<HomeViewModel>()
+    val listing = hiltViewModel<ListingViewModel>()
+    val listingState = rememberLazyStaggeredGridState()
+    val movies by listing.movies.collectAsState()
     val user by viewModel.user.collectAsState(Loadable.loading())
     HomeScreen(
-        user = user.getOrNull()
+        user = user.getOrNull(),
+        listing = { modifier, padding ->
+            ListingScreen(
+                modifier = modifier,
+                contentPadding = padding,
+                state = listingState,
+                movies = movies.toImmutableList()
+            )
+        },
+        tickets = { modifier, padding -> },
+        cinemas = { modifier, padding -> },
+        profile = { modifier, padding -> },
     )
 }
 

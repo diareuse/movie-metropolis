@@ -128,11 +128,14 @@ data class PaletteImageState(
         }
     }
 
-    private fun Palette(palette: AndroidPalette) = Palette(
-        color = Color(0xff000000 + (palette.dominantSwatch?.rgb ?: 0)),
-        textColor = Color(0xff000000 + (palette.dominantSwatch?.bodyTextColor ?: 0)),
-        titleColor = Color(0xff000000 + (palette.dominantSwatch?.titleTextColor ?: 0))
-    )
+    private fun Palette(palette: AndroidPalette): Palette {
+        val swatch = palette.vibrantSwatch ?: palette.mutedSwatch ?: palette.dominantSwatch
+        return Palette(
+            color = Color(0xff000000 + (swatch?.rgb ?: 0)),
+            textColor = Color(0xff000000 + (swatch?.bodyTextColor ?: 0)),
+            titleColor = Color(0xff000000 + (swatch?.titleTextColor ?: 0))
+        )
+    }
 
     data class Palette(
         val color: Color,

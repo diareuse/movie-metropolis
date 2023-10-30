@@ -28,6 +28,10 @@ import movie.style.modifier.verticalOverlay
 @Composable
 fun HomeScreen(
     user: UserView?,
+    listing: @Composable (Modifier, PaddingValues) -> Unit,
+    tickets: @Composable (Modifier, PaddingValues) -> Unit,
+    cinemas: @Composable (Modifier, PaddingValues) -> Unit,
+    profile: @Composable (Modifier, PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val navController = rememberNavController()
@@ -85,7 +89,7 @@ fun HomeScreen(
                 gravity = VerticalGravity.Top
             )
             .verticalOverlay(
-                height = padding.calculateBottomPadding() + 24.dp,
+                height = padding.calculateBottomPadding() + 32.dp,
                 gravity = VerticalGravity.Bottom
             )
         NavHost(
@@ -93,10 +97,10 @@ fun HomeScreen(
             navController = navController,
             startDestination = HomeState.Listing.name
         ) {
-            composable(HomeState.Listing.name) {}
-            composable(HomeState.Tickets.name) {}
-            composable(HomeState.Cinemas.name) {}
-            composable(HomeState.Profile.name) {}
+            composable(HomeState.Listing.name) { listing(overlayModifier, padding) }
+            composable(HomeState.Tickets.name) { tickets(overlayModifier, padding) }
+            composable(HomeState.Cinemas.name) { cinemas(overlayModifier, padding) }
+            composable(HomeState.Profile.name) { profile(overlayModifier, padding) }
         }
     }
 }
@@ -105,5 +109,10 @@ fun HomeScreen(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun HomeScreenPreview() = PreviewLayout {
-    HomeScreen(null)
+    HomeScreen(
+        user = null,
+        listing = { _, _ -> },
+        tickets = { _, _ -> },
+        cinemas = { _, _ -> },
+        profile = { _, _ -> })
 }

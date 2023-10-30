@@ -29,13 +29,12 @@ fun Modifier.overlay(
 
 fun Modifier.verticalOverlay(
     height: Dp,
-    color: Color = Color.Unspecified,
     gravity: VerticalGravity = VerticalGravity.Top
 ) = composed {
-    val color = color.takeOrElse { Theme.color.container.background }
-    val colors = listOf(color, Color.Transparent)
+    val color = Color.White
+    val colors = listOf(color, color.copy(alpha = .3f), color.copy(alpha = .1f), Color.Transparent)
     val heightPx = with(LocalDensity.current) { height.toPx() }
-    drawWithContent {
+    graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen).drawWithContent {
         val topLeft = gravity.getOffset(size, heightPx)
         val brushBounds = gravity.getBrushBounds(size, heightPx)
         val size = size.copy(height = heightPx)
@@ -45,7 +44,7 @@ fun Modifier.verticalOverlay(
             startY = brushBounds.start,
             endY = brushBounds.endInclusive
         )
-        drawRect(brush, topLeft, size)
+        drawRect(brush, topLeft, size, blendMode = BlendMode.DstIn)
     }
 }
 
@@ -59,11 +58,11 @@ enum class VerticalGravity {
 
     fun getBrushBounds(size: Size, height: Float): ClosedFloatingPointRange<Float> = when (this) {
         Top -> getOffset(size, height).run {
-            y..y + height
+            y + height..y
         }
 
         Bottom -> getOffset(size, height).run {
-            y + height..y
+            y..y + height
         }
     }
 }
