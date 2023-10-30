@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.*
+import androidx.compose.material3.*
 import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.core.content.FileProvider.getUriForFile
@@ -43,14 +44,16 @@ class MainActivity : AppCompatActivity() {
         setContent {
             PlayRating()
             Theme {
-                CompositionLocalProvider(
-                    LocalActivityActions provides actions,
-                    LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
-                ) {
-                    val controller = rememberNavController()
-                    Navigation(controller)
-                    LaunchedEffect(Unit) {
-                        navigateIfNecessary(controller)
+                Surface {
+                    CompositionLocalProvider(
+                        LocalActivityActions provides actions,
+                        LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
+                    ) {
+                        val controller = rememberNavController()
+                        Navigation(controller)
+                        LaunchedEffect(Unit) {
+                            navigateIfNecessary(controller)
+                        }
                     }
                 }
             }
