@@ -132,7 +132,7 @@ private fun RatedPoster(
                 .size(32.dp)
                 .align(Alignment.TopStart)
                 .surface(color, CircleShape, 16.dp, color)
-                .clickable(onClick = onActionClick)
+                .clickable(onClick = onActionClick, role = Role.Button)
                 .glow(
                     CircleShape,
                     lightSource = LightSource.BottomRight,

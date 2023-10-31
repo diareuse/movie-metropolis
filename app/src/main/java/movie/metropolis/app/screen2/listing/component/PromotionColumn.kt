@@ -13,6 +13,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -77,7 +78,7 @@ fun PromotionColumn(
             modifier = Modifier
                 .matchParentSize()
                 .surface(containerColor, shape, 16.dp, color)
-                .combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
                 .glow(shape),
             propagateMinConstraints = true
         ) {
@@ -114,7 +115,7 @@ fun PromotionColumn(
                 .size(32.dp)
                 .align(Alignment.TopStart)
                 .surface(color, CircleShape, 16.dp, color)
-                .clickable(onClick = onActionClick)
+                .clickable(onClick = onActionClick, role = Role.Button)
                 .glow(
                     CircleShape,
                     lightSource = LightSource.BottomRight,
