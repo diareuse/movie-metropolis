@@ -13,15 +13,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.util.*
+import movie.metropolis.app.util.interpolatePage
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.surface
 import movie.style.theme.Theme
-import kotlin.math.absoluteValue
-import kotlin.math.sign
 
 @Composable
 fun PromotionHorizontalPager(
@@ -74,23 +71,6 @@ private fun PageIndicator(
 
     for (i in 0..<state.pageCount)
         Indicator(i == state.currentPage)
-}
-
-private fun Modifier.interpolatePage(state: PagerState, page: Int) = composed {
-    val offset = with(state) { (currentPage - page) + currentPageOffsetFraction }
-    val pageOffset = offset.absoluteValue
-    val fraction = 1f - pageOffset.coerceIn(0f, 1f)
-    val sign = offset.sign
-    val density = LocalDensity.current
-    val yOffsetPx = with(density) { 16.dp.toPx() }
-    graphicsLayer {
-        rotationZ = lerp(-sign * 15f, 0f, fraction)
-        alpha = lerp(.5f, 1f, fraction)
-        scaleX = lerp(.8f, 1f, fraction)
-        scaleY = scaleX
-        translationY = lerp(yOffsetPx * 2, 0f, fraction)
-        translationX = lerp(sign * yOffsetPx, 0f, fraction)
-    }
 }
 
 @Preview(showBackground = true)
