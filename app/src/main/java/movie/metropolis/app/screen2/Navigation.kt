@@ -97,7 +97,9 @@ private fun NavGraphBuilder.home(
                 contentPadding = padding,
                 state = listingState,
                 movies = movies.toImmutableList(),
-                promotions = promotions.toImmutableList()
+                promotions = promotions.toImmutableList(),
+                onClick = { navController.navigate(Route.Movie(it.id)) },
+                onFavoriteClick = { listing.favorite(it) }
             )
         },
         tickets = { modifier, padding -> },

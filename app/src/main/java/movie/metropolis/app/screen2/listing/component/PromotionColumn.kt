@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package movie.metropolis.app.screen2.listing.component
 
 import androidx.compose.foundation.*
@@ -30,6 +32,9 @@ fun PromotionColumn(
     rating: @Composable () -> Unit,
     poster: @Composable () -> Unit,
     action: @Composable () -> Unit,
+    onClick: () -> Unit,
+    onActionClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -72,6 +77,7 @@ fun PromotionColumn(
             modifier = Modifier
                 .matchParentSize()
                 .surface(containerColor, shape, 16.dp, color)
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick)
                 .glow(shape),
             propagateMinConstraints = true
         ) {
@@ -108,6 +114,7 @@ fun PromotionColumn(
                 .size(32.dp)
                 .align(Alignment.TopStart)
                 .surface(color, CircleShape, 16.dp, color)
+                .clickable(onClick = onActionClick)
                 .glow(
                     CircleShape,
                     lightSource = LightSource.BottomRight,
@@ -145,7 +152,10 @@ private fun PromotionColumnPreview(
                 rating = { Text("86%") },
                 offset = PaddingValues(start = 4.dp, bottom = 4.dp)
             )
-        }
+        },
+        onClick = {},
+        onActionClick = {},
+        onLongClick = {},
     )
 }
 

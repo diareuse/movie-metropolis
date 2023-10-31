@@ -37,6 +37,8 @@ fun ListingScreen(
     promotions: ImmutableList<MovieView>,
     movies: ImmutableList<MovieView>,
     state: LazyStaggeredGridState,
+    onClick: (MovieView) -> Unit,
+    onFavoriteClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues()
 ) = Box(
@@ -89,7 +91,10 @@ fun ListingScreen(
                         )
                     },
                     poster = { Image(state) },
-                    action = { Icon(Icons.Rounded.FavoriteBorder, null) }
+                    action = { Icon(Icons.Rounded.FavoriteBorder, null) },
+                    onClick = { onClick(it) },
+                    onActionClick = { onFavoriteClick(it) },
+                    onLongClick = { /* todo show overlay */ }
                 )
             }
         }
@@ -99,7 +104,13 @@ fun ListingScreen(
                 color = state.palette.color,
                 contentColor = state.palette.textColor,
                 poster = { Image(state) },
-                favorite = { Icon(Icons.Rounded.FavoriteBorder, null) },
+                favorite = {
+                    val icon = when (it.favorite) {
+                        true -> Icons.Rounded.Favorite
+                        else -> Icons.Rounded.FavoriteBorder
+                    }
+                    Icon(icon, null)
+                },
                 name = { Text(it.name) },
                 rating = {
                     val rating = it.rating
@@ -108,7 +119,10 @@ fun ListingScreen(
                         contentColor = state.palette.textColor,
                         rating = { Text(rating) }
                     )
-                }
+                },
+                onClick = { onClick(it) },
+                onActionClick = { onFavoriteClick(it) },
+                onLongClick = { /* todo show overlay */ }
             )
         }
     }
@@ -124,7 +138,9 @@ private fun ListingScreenPreview() = PreviewLayout {
     ListingScreen(
         promotions = promotions,
         movies = movies,
-        state = rememberLazyStaggeredGridState()
+        state = rememberLazyStaggeredGridState(),
+        onClick = {},
+        onFavoriteClick = {}
     )
 }
 
