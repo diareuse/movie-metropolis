@@ -137,11 +137,13 @@ class FacadeModule {
         detail: EventDetailFeature
     ): ListingFacade.Factory {
         return object : ListingFacade.Factory {
-            override fun upcoming(): ListingFacade =
-                create(ListingFacadeUpcoming(preview.upcoming(), favorite, promo, analyzer))
+            override fun upcoming(): ListingFacade = create(
+                ListingFacadeUpcoming(preview.upcoming(), favorite, promo, analyzer)
+            )
 
-            override fun current(): ListingFacade =
-                create(ListingFacadeCurrent(preview.current(), promo, analyzer, rating, detail))
+            override fun current(): ListingFacade = create(
+                ListingFacadeCurrent(preview.current(), promo, analyzer, rating, favorite, detail)
+            )
 
             private fun create(facade: ListingFacade): ListingFacade {
                 var out: ListingFacade = facade
