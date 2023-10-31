@@ -6,6 +6,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.pager.*
@@ -15,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
@@ -25,6 +27,7 @@ import movie.metropolis.app.screen2.listing.component.PosterColumn
 import movie.metropolis.app.screen2.listing.component.PromotionColumn
 import movie.metropolis.app.screen2.listing.component.PromotionHorizontalPager
 import movie.metropolis.app.screen2.listing.component.RatingBox
+import movie.metropolis.app.util.rememberStoreable
 import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.Image
 import movie.style.layout.PreviewLayout
@@ -58,10 +61,16 @@ fun ListingScreen(
             state = it
         )
     }
+    var zoom by rememberStoreable(key = "listing-zoom", default = 100f)
     LazyVerticalStaggeredGrid(
+        modifier = Modifier.pointerInput(Unit) {
+            detectTransformGestures { _, _, zoomFactor, _ ->
+                zoom = (zoom * zoomFactor).coerceIn(75f, 200f)
+            }
+        },
         state = state,
         contentPadding = contentPadding + PaddingValues(24.dp),
-        columns = StaggeredGridCells.Adaptive(100.dp),
+        columns = StaggeredGridCells.Adaptive(zoom.dp),
         verticalItemSpacing = 12.dp,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -91,9 +100,10 @@ fun ListingScreen(
                 )
             }
         }
-        items(movies) {
+        items(movies, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.poster?.url ?: it.posterLarge?.url)
             PosterColumn(
+                modifier = Modifier.animateItemPlacement(),
                 color = state.palette.color,
                 contentColor = state.palette.textColor,
                 poster = { Image(state) },
