@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package movie.metropolis.app.screen2.listing.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
@@ -13,6 +15,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
@@ -34,6 +37,9 @@ fun PosterColumn(
     favorite: @Composable () -> Unit,
     name: @Composable () -> Unit,
     rating: @Composable () -> Unit,
+    onClick: () -> Unit,
+    onActionClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) = Column(
     modifier = modifier,
@@ -45,7 +51,10 @@ fun PosterColumn(
         contentColor = contentColor,
         poster = poster,
         rating = rating,
-        action = favorite
+        action = favorite,
+        onClick = onClick,
+        onActionClick = onActionClick,
+        onLongClick = onLongClick
     )
     ProvideTextStyle(
         Theme.textStyle.caption.copy(
@@ -66,6 +75,9 @@ private fun RatedPoster(
     poster: @Composable () -> Unit,
     rating: @Composable () -> Unit,
     action: @Composable () -> Unit,
+    onClick: () -> Unit,
+    onActionClick: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -99,6 +111,7 @@ private fun RatedPoster(
         Box(
             modifier = Modifier
                 .surface(containerColor, shape, 16.dp, color)
+                .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
                 .glow(shape)
                 .aspectRatio(DefaultPosterAspectRatio),
             propagateMinConstraints = true
@@ -119,6 +132,7 @@ private fun RatedPoster(
                 .size(32.dp)
                 .align(Alignment.TopStart)
                 .surface(color, CircleShape, 16.dp, color)
+                .clickable(onClick = onActionClick)
                 .glow(
                     CircleShape,
                     lightSource = LightSource.BottomRight,
@@ -166,18 +180,21 @@ private fun PosterColumnPreview() = PreviewLayout(
         .width(100.dp)
 ) {
     PosterColumn(
-        color = Color.Green,
-        contentColor = Color.Red,
-        poster = { Box(Modifier.background(Color.Green)) },
+        color = Color.Gray,
+        contentColor = Color.White,
+        poster = { Box(Modifier.background(Color.Gray)) },
         favorite = { Icon(Icons.Rounded.Favorite, null) },
         name = { Text("Movie name") },
         rating = {
             RatingBox(
-                color = Color.Green,
-                contentColor = Color.Black,
+                color = Color.Gray,
+                contentColor = Color.White,
                 rating = { Text("86%") }
             )
-        }
+        },
+        onClick = {},
+        onActionClick = {},
+        onLongClick = {}
     )
 }
 

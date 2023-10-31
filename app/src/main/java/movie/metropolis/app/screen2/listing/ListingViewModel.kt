@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.listing.ListingFacade.Companion.groups
 import movie.metropolis.app.presentation.listing.ListingFacade.Companion.promotions
@@ -26,5 +28,11 @@ class ListingViewModel @Inject constructor(
         .mapLoadable { it.values.flatten().distinctBy { it.id } }
         .map { it.getOrNull().orEmpty() }
         .retainStateIn(viewModelScope, emptyList())
+
+    fun favorite(view: MovieView) {
+        viewModelScope.launch {
+            facade.toggle(view)
+        }
+    }
 
 }
