@@ -72,6 +72,7 @@ google-wearable = { module = "com.google.android.gms:play-services-wearable", ve
 google-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
 google-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
 google-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
+google-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 google-instant = { module = "com.google.android.gms:play-services-instantapps", version.ref = "instant" }
 compose-ui-core = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }

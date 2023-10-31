@@ -1,7 +1,11 @@
+@file:OptIn(ExperimentalPermissionsApi::class)
+
 package movie.metropolis.app.screen2
 
+import android.Manifest
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -11,9 +15,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.collections.immutable.toImmutableList
+import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.cinema.CinemasScreen
+import movie.metropolis.app.screen2.cinema.CinemasViewModel
 import movie.metropolis.app.screen2.home.HomeScreen
 import movie.metropolis.app.screen2.home.HomeViewModel
 import movie.metropolis.app.screen2.listing.ListingScreen
@@ -84,10 +93,13 @@ private fun NavGraphBuilder.home(
     deepLinks = Route.Home.deepLinks
 ) {
     val viewModel = hiltViewModel<HomeViewModel>()
-    val listing = hiltViewModel<ListingViewModel>()
+    val listingVM = hiltViewModel<ListingViewModel>()
+    val cinemasVM = hiltViewModel<CinemasViewModel>()
     val listingState = rememberLazyStaggeredGridState()
-    val movies by listing.movies.collectAsState()
-    val promotions by listing.promotions.collectAsState()
+    val cinemasState = rememberLazyListState()
+    val cinemas by cinemasVM.cinemas.collectAsState()
+    val movies by listingVM.movies.collectAsState()
+    val promotions by listingVM.promotions.collectAsState()
     val user by viewModel.user.collectAsState(Loadable.loading())
     HomeScreen(
         user = user.getOrNull(),
@@ -99,12 +111,32 @@ private fun NavGraphBuilder.home(
                 movies = movies.toImmutableList(),
                 promotions = promotions.toImmutableList(),
                 onClick = { navController.navigate(Route.Movie(it.id)) },
-                onFavoriteClick = { listing.favorite(it) }
+                onFavoriteClick = { listingVM.favorite(it) }
             )
         },
         tickets = { modifier, padding -> },
-        cinemas = { modifier, padding -> },
-        profile = { modifier, padding -> },
+        cinemas = { modifier, padding ->
+            val state = rememberMultiplePermissionsState(
+                listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+            val location by rememberLocation(state)
+            LaunchedEffect(location) {
+                cinemasVM.location.value = location
+            }
+            CinemasScreen(
+                modifier = modifier,
+                contentPadding = padding,
+                cinemas = cinemas.toImmutableList(),
+                permission = state,
+                state = cinemasState,
+                onClick = { navController.navigate(Route.Cinema(it.id)) },
+                onMapClick = { /* todo open maps */ }
+            )
+        },
+        profile = { modifier, padding -> }
     )
 }
 

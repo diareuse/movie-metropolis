@@ -43,6 +43,7 @@ dependencies {
     implementation libs.google.location
     implementation libs.google.auth
     implementation libs.google.instant
+    implementation libs.google.permissions
 
     implementation libs.zxing.embedded
 
