@@ -48,7 +48,7 @@ fun TransparentBottomNavigationItem(
             if (selected) 1.5f else 1f,
             tween(easing = AnticipateOvershootEasing, durationMillis = AnimationDuration)
         )
-        val alpha by animateFloatAsState(if (selected) 1f else .3f, tween(AnimationDuration))
+        val alpha by animateFloatAsState(if (selected) 1f else .7f, tween(AnimationDuration))
         Box(
             modifier = Modifier
                 .size(24.dp)
