@@ -128,7 +128,9 @@ fun CinemaBox(
                 .padding(6.dp),
             propagateMinConstraints = true
         ) {
-            action()
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
+                action()
+            }
         }
     }
 }
