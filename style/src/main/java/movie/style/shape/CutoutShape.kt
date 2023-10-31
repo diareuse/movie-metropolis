@@ -23,7 +23,15 @@ class CutoutShape(
     ): Outline {
         val path = Path()
         val cornerRadius = CornerRadius(cornerSize.toPx(size, density))
-        path.addRoundRect(RoundRect(Rect(Offset.Zero, size), cornerRadius))
+        path.addRoundRect(
+            RoundRect(
+                Rect(Offset.Zero, size),
+                cornerRadius,
+                CornerRadius.Zero,
+                cornerRadius,
+                cornerRadius
+            )
+        )
 
         val topLeft = inverseCorner(cornerRadius)
         path.op(path, topLeft, PathOperation.Union)
