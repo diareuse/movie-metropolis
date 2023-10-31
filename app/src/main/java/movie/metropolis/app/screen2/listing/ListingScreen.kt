@@ -25,7 +25,7 @@ import movie.metropolis.app.screen2.listing.component.PosterColumn
 import movie.metropolis.app.screen2.listing.component.PromotionColumn
 import movie.metropolis.app.screen2.listing.component.PromotionHorizontalPager
 import movie.metropolis.app.screen2.listing.component.RatingBox
-import movie.metropolis.app.screen2.setup.component.completelyVisibleItemsInfo
+import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
@@ -45,14 +45,7 @@ fun ListingScreen(
     modifier = modifier,
     propagateMinConstraints = true
 ) {
-    var selectedItem by remember {
-        mutableIntStateOf(state.layoutInfo.visibleItemsInfo.randomOrNull()?.index ?: 0)
-    }
-    LaunchedEffect(state.layoutInfo.visibleItemsInfo) {
-        val info = state.layoutInfo.completelyVisibleItemsInfo
-        if (selectedItem !in info.map { it.index })
-            selectedItem = info.randomOrNull()?.index ?: 0
-    }
+    val selectedItem by state.rememberVisibleItemAsState()
     val background = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
     AnimatedContent(
         targetState = background,

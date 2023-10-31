@@ -11,14 +11,9 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
+import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.layout.PreviewLayout
 import kotlin.math.absoluteValue
-
-val LazyStaggeredGridLayoutInfo.completelyVisibleItemsInfo: List<LazyStaggeredGridItemInfo>
-    get() {
-        val visibleOffset = viewportStartOffset..viewportEndOffset
-        return visibleItemsInfo.filter { it.offset.x + it.size.width * 2 in visibleOffset }
-    }
 
 @Composable
 fun SetupPreviewLayout(
@@ -29,11 +24,7 @@ fun SetupPreviewLayout(
     content: @Composable (Int, Boolean) -> Unit,
 ) {
     val state = rememberLazyStaggeredGridState()
-    var selectedItem by remember {
-        mutableIntStateOf(
-            state.layoutInfo.visibleItemsInfo.randomOrNull()?.index ?: 0
-        )
-    }
+    val selectedItem by state.rememberVisibleItemAsState()
     LaunchedEffect(state) {
         val width = state.layoutInfo.viewportSize.width.toFloat()
         var direction = 1
@@ -43,11 +34,6 @@ fun SetupPreviewLayout(
                 direction *= -1
             }
         }
-    }
-    LaunchedEffect(state.layoutInfo.visibleItemsInfo) {
-        val info = state.layoutInfo.completelyVisibleItemsInfo
-        if (selectedItem !in info.map { it.index })
-            selectedItem = info.randomOrNull()?.index ?: 0
     }
     LazyHorizontalStaggeredGrid(
         modifier = modifier,
