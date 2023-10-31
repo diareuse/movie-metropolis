@@ -21,6 +21,7 @@ import movie.metropolis.app.screen.home.component.ProfileIcon
 import movie.metropolis.app.screen2.home.component.HomeToolbar
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigation
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigationItem
+import movie.metropolis.app.util.getStoreable
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.VerticalGravity
 import movie.style.modifier.verticalOverlay
@@ -95,7 +96,9 @@ fun HomeScreen(
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
-            startDestination = HomeState.Listing.name
+            startDestination = getStoreable("home-tab", HomeState.Listing.name) {
+                state.name
+            }
         ) {
             composable(HomeState.Listing.name) { listing(overlayModifier, padding) }
             composable(HomeState.Tickets.name) { tickets(overlayModifier, padding) }
