@@ -1,7 +1,9 @@
+@file:OptIn(ExperimentalPermissionsApi::class)
+
 package movie.metropolis.app.feature.location
 
-import android.Manifest.permission.ACCESS_COARSE_LOCATION
-import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.Manifest
+import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import androidx.compose.runtime.Composable
@@ -11,33 +13,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.platform.*
-import androidx.core.app.ActivityCompat.checkSelfPermission
 import androidx.core.os.bundleOf
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.MultiplePermissionsState
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.collectLatest
-import movie.metropolis.app.LocalActivityActions
 
+@SuppressLint("MissingPermission")
 @Composable
-fun rememberLocation(): State<Location?> {
+fun rememberLocation(
+    state: MultiplePermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
+): State<Location?> {
     val context = LocalContext.current
     val provider = remember { LocationServices.getFusedLocationProviderClient(context) }
     val snapshotState = rememberSaveable(key = "location", stateSaver = LocationSaver) {
         mutableStateOf(null as Location?)
     }
-    val actions = LocalActivityActions.current
 
-    suspend fun hasPermissions(): Boolean {
-        if (checkSelfPermission(context, ACCESS_COARSE_LOCATION) != PERMISSION_GRANTED) {
-            if (!actions.requestPermissions(arrayOf(ACCESS_COARSE_LOCATION))) {
-                return false
-            }
+    LaunchedEffect(state.allPermissionsGranted) {
+        if (!state.allPermissionsGranted) return@LaunchedEffect
+        provider.requestLocationUpdates().collectLatest {
+            snapshotState.value = it
         }
-        return true
-    }
-
-    LaunchedEffect(actions) {
-        if (!hasPermissions()) return@LaunchedEffect
-        provider.requestLocationUpdates().collectLatest { snapshotState.value = it }
     }
     return snapshotState
 }
