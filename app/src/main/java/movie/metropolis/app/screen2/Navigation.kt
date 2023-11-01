@@ -21,7 +21,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.feature.location.rememberLocation
-import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.booking.BookingScreen
 import movie.metropolis.app.screen2.booking.BookingViewModel
@@ -107,9 +106,11 @@ private fun NavGraphBuilder.home(
     val cinemas by cinemasVM.cinemas.collectAsState()
     val movies by listingVM.movies.collectAsState()
     val promotions by listingVM.promotions.collectAsState()
-    val user by viewModel.user.collectAsState(Loadable.loading())
+    val user by viewModel.user.collectAsState()
+    val membership by viewModel.membership.collectAsState()
     HomeScreen(
-        user = user.getOrNull(),
+        user = user,
+        membership = membership,
         listing = { modifier, padding ->
             ListingScreen(
                 modifier = modifier,

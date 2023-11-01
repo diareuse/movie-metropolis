@@ -14,7 +14,6 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import movie.style.theme.Theme
 import movie.style.util.findActivity
 
 @Composable
@@ -22,7 +21,7 @@ fun Barcode(
     code: String,
     modifier: Modifier = Modifier,
     format: BarcodeFormat = BarcodeFormat.QR_CODE,
-    color: Color = Theme.color.container.background
+    color: Color = Color.Black
 ) {
     val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
     val image by rememberBarcodeAsState(color = color, size = size, code = code, format = format)
