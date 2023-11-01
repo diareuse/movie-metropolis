@@ -15,6 +15,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.util.interpolatePage
@@ -83,8 +84,16 @@ fun PageIndicator(
     }
     LazyRow(
         modifier = modifier
-            .width(activeItemScale * itemSize + (displayItems - 1) * itemPadding + (displayItems - 1) * itemSize),
-        userScrollEnabled = false,
+            .pointerInput(Unit) {
+                // disallow touch
+                awaitPointerEventScope {
+                    while (true)
+                        awaitPointerEvent(PointerEventPass.Initial).changes.forEach { it.consume() }
+                }
+            }
+            .width(activeItemScale * itemSize + (displayItems - 1) * itemPadding + (displayItems - 1) * itemSize)
+            .height(itemSize * activeItemScale),
+        //userScrollEnabled = false, // does not appear to work
         state = listState,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(itemPadding)
