@@ -107,10 +107,10 @@ fun Booking.asStored() = BookingStored(
     movieId = movieId,
     eventId = eventId,
     cinemaId = cinema.id,
-    hall = (this as? Booking.Active)?.hall
+    hall = hall
 )
 
-fun Booking.Active.Seat.asStored(booking: Booking) = BookingSeatsStored(
+fun Booking.Seat.asStored(booking: Booking) = BookingSeatsStored(
     booking = booking.id,
     row = row,
     seat = seat

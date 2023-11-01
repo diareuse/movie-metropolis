@@ -8,9 +8,9 @@ import movie.metropolis.app.model.MovieDetailView
 import java.text.DateFormat
 import java.util.Date
 
-data class BookingViewActiveFromFeature(
-    internal val booking: Booking.Active
-) : BookingView.Active {
+data class BookingViewFromFeature(
+    internal val booking: Booking
+) : BookingView {
 
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
     private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
@@ -29,14 +29,16 @@ data class BookingViewActiveFromFeature(
         get() = booking.paidAt.before(Date())
     override val cinema: CinemaView
         get() = CinemaViewFromFeature(booking.cinema)
+    override val expired: Boolean
+        get() = booking.expired
     override val hall: String
         get() = booking.hall
-    override val seats: List<BookingView.Active.Seat>
-        get() = booking.seats.map(BookingViewActiveFromFeature::SeatFromFeature)
+    override val seats: List<BookingView.Seat>
+        get() = booking.seats.map(BookingViewFromFeature::SeatFromFeature)
 
     data class SeatFromFeature(
-        private val feature: Booking.Active.Seat
-    ) : BookingView.Active.Seat {
+        private val feature: Booking.Seat
+    ) : BookingView.Seat {
 
         override val row: String
             get() = feature.row

@@ -6,10 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import movie.core.TicketShareRegistry
 import movie.core.UserBookingFeature
-import movie.core.model.Booking
 import movie.metropolis.app.model.BookingView
-import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
-import movie.metropolis.app.model.adapter.BookingViewExpiredFromFeature
+import movie.metropolis.app.model.adapter.BookingViewFromFeature
 import movie.metropolis.app.model.facade.Image
 import movie.metropolis.app.util.prepare
 
@@ -30,17 +28,11 @@ class BookingFacadeFromFeature(
     }
 
     override suspend fun getShareImage(view: BookingView): Image? {
-        if (view !is BookingViewActiveFromFeature) return null
+        if (view !is BookingViewFromFeature) return null
         val shareableText = share.get(view.booking)
         return MultiFormatWriter()
             .prepare(500, 300, BarcodeFormat.PDF_417)
             .getImage(shareableText.decodeToString())
-    }
-
-    @Suppress("FunctionName")
-    private fun BookingViewFromFeature(booking: Booking) = when (booking) {
-        is Booking.Active -> BookingViewActiveFromFeature(booking)
-        is Booking.Expired -> BookingViewExpiredFromFeature(booking)
     }
 
 }

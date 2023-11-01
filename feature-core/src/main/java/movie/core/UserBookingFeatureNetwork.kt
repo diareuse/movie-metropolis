@@ -1,7 +1,6 @@
 package movie.core
 
-import movie.core.adapter.BookingActiveFromResponse
-import movie.core.adapter.BookingExpiredFromResponse
+import movie.core.adapter.BookingFromResponse
 import movie.core.model.Booking
 import movie.core.model.Cinema
 import movie.core.nwk.UserService
@@ -23,8 +22,8 @@ class UserBookingFeatureNetwork(
     // ---
 
     private suspend fun BookingResponse.asBooking(cinemas: Iterable<Cinema>) = when (isExpired()) {
-        true -> BookingExpiredFromResponse(this, cinemas)
-        else -> BookingActiveFromResponse(this, getDetail(this), cinemas)
+        //true -> BookingExpiredFromResponse(this, cinemas)
+        else -> BookingFromResponse(this, getDetail(this), cinemas)
     }
 
     private suspend fun getDetail(booking: BookingResponse) =

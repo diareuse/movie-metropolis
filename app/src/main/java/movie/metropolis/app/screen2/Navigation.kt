@@ -122,6 +122,9 @@ private fun NavGraphBuilder.home(
             )
         },
         tickets = { modifier, padding ->
+            LaunchedEffect(Unit) {
+                bookingVM.refresh()
+            }
             BookingScreen(
                 bookings = tickets.toImmutableList(),
                 state = bookingState,

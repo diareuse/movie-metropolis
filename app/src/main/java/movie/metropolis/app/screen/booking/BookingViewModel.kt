@@ -45,11 +45,11 @@ class BookingViewModel @Inject constructor(
     private val items = facade.bookingsFlow(refreshTokenFlow)
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val expired = items
-        .mapLoadable { it.filterIsInstance<BookingView.Expired>() }
+        .mapLoadable { it.filter { it.expired } }
         .mapLoadable { it.immutable() }
         .retainStateIn(viewModelScope, Loadable.loading())
     val active = items
-        .mapLoadable { it.filterIsInstance<BookingView.Active>() }
+        .mapLoadable { it.filterNot { it.expired } }
         .mapLoadable { it.immutable() }
         .retainStateIn(viewModelScope, Loadable.loading())
 
@@ -63,7 +63,7 @@ class BookingViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveAsFile(booking: BookingView.Active): File {
+    suspend fun saveAsFile(booking: BookingView): File {
         val image = facade.getShareImage(booking)
         val dir = withContext(Dispatchers.IO) { cacheDir }
         return File(dir, "tickets/ticket.png").apply {

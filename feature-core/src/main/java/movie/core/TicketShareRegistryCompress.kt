@@ -20,7 +20,7 @@ class TicketShareRegistryCompress(
         origin.add(unzipped)
     }
 
-    override suspend fun get(booking: Booking.Active): ByteArray {
+    override suspend fun get(booking: Booking): ByteArray {
         val output = ByteArrayOutputStream()
         withContext(Dispatchers.IO) {
             GZIPOutputStream(output, true).use {

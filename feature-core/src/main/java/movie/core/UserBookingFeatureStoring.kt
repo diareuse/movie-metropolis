@@ -23,11 +23,8 @@ class UserBookingFeatureStoring(
     private suspend fun store(bookings: Sequence<Booking>) {
         for (booking in bookings) {
             bookingDao.insertOrUpdate(booking.asStored())
-            when (booking) {
-                is Booking.Expired -> bookingSeatsDao.deleteFor(booking.id)
-                is Booking.Active -> for (seat in booking.seats)
-                    bookingSeatsDao.insertOrUpdate(seat.asStored(booking))
-            }
+            for (seat in booking.seats)
+                bookingSeatsDao.insertOrUpdate(seat.asStored(booking))
         }
     }
 

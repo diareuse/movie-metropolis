@@ -1,6 +1,5 @@
 package movie.core
 
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import movie.core.model.Booking
@@ -16,11 +15,11 @@ class TicketShareRegistryDeserialize(
         store.add(shared)
     }
 
-    override suspend fun get(booking: Booking.Active): ByteArray {
+    override suspend fun get(booking: Booking): ByteArray {
         return json.encodeToString(booking.asTicket()).encodeToByteArray()
     }
 
-    private fun Booking.Active.asTicket() = TicketShared(
+    private fun Booking.asTicket() = TicketShared(
         id = id,
         startsAt = startsAt,
         venue = hall,

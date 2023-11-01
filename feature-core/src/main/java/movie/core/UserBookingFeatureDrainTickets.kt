@@ -1,6 +1,6 @@
 package movie.core
 
-import movie.core.adapter.BookingActiveFromTicket
+import movie.core.adapter.BookingFromTicket
 import movie.core.adapter.MovieFromId
 
 class UserBookingFeatureDrainTickets(
@@ -25,7 +25,7 @@ class UserBookingFeatureDrainTickets(
         val cinema = cinemas?.firstOrNull { it.id == ticket.cinemaId }
             ?: return@mapNotNull null
 
-        BookingActiveFromTicket(
+        BookingFromTicket(
             ticket = ticket,
             movie = movie,
             cinema = cinema

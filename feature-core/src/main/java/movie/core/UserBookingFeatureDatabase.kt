@@ -1,7 +1,6 @@
 package movie.core
 
-import movie.core.adapter.BookingActiveFromDatabase
-import movie.core.adapter.BookingExpiredFromDatabase
+import movie.core.adapter.BookingFromDatabase
 import movie.core.db.dao.BookingDao
 import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.model.BookingSeatsView
@@ -39,10 +38,12 @@ class UserBookingFeatureDatabase(
 
     private suspend fun BookingStored.asBooking(
         cinema: Cinema
-    ) = when (isExpired()) {
-        true -> BookingExpiredFromDatabase(this, cinema)
-        else -> BookingActiveFromDatabase(this, cinema, getSeats(this))
-    }
+    ) = BookingFromDatabase(
+        bookingStored = this,
+        cinema = cinema,
+        seatsStored = getSeats(this),
+        expired = isExpired()
+    )
 
     private suspend fun getSeats(booking: BookingStored): List<BookingSeatsView> {
         return seats.select(booking.id)

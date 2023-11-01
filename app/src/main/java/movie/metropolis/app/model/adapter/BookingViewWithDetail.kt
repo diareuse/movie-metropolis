@@ -4,10 +4,10 @@ import movie.core.model.MovieDetail
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.MovieDetailView
 
-class BookingViewActiveWithDetail(
-    private val origin: BookingView.Active,
+class BookingViewWithDetail(
+    private val origin: BookingView,
     private val detail: MovieDetail
-) : BookingView.Active by origin {
+) : BookingView by origin {
 
     override val movie: MovieDetailView
         get() = MovieDetailViewFromFeature(detail)
