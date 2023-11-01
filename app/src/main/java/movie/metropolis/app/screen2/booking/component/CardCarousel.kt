@@ -111,13 +111,23 @@ fun PageIndicator(
             )
         }
 
-        repeat(itemOffsetCount) { item { Spacer(modifier = Modifier.size(itemSize)) } }
+        repeat(itemOffsetCount) {
+            item(key = it) {
+                Spacer(modifier = Modifier.size(itemSize))
+            }
+        }
 
-        for (i in 0..<state.pageCount) item {
+        for (i in 0..<state.pageCount) item(key = itemOffsetCount + i) {
             Indicator(i == state.currentPage)
         }
 
-        repeat(itemOffsetCount) { item { Spacer(modifier = Modifier.size(itemSize)) } }
+        repeat(itemOffsetCount) {
+            item(key = it + state.pageCount + itemOffsetCount) {
+                Spacer(
+                    modifier = Modifier.size(itemSize)
+                )
+            }
+        }
     }
 }
 
