@@ -4,7 +4,6 @@ package movie.metropolis.app.screen2.cinema
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
@@ -13,7 +12,6 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -27,6 +25,7 @@ import movie.metropolis.app.screen2.cinema.component.CinemaBox
 import movie.metropolis.app.screen2.cinema.component.PermissionBox
 import movie.metropolis.app.screen2.listing.component.RatingBox
 import movie.metropolis.app.util.rememberVisibleItemAsState
+import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
@@ -44,18 +43,9 @@ fun CinemasScreen(
     contentPadding: PaddingValues = PaddingValues()
 ) = Box(modifier = modifier.fillMaxSize(), propagateMinConstraints = true) {
     val selectedItem by state.rememberVisibleItemAsState()
-    val background = rememberImageState(cinemas.getOrNull(selectedItem)?.image)
-    AnimatedContent(
-        targetState = background,
-        transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        Image(
-            modifier = Modifier
-                .blur(16.dp)
-                .alpha(.35f),
-            state = it
-        )
-    }
+    BackgroundImage(
+        state = rememberImageState(cinemas.getOrNull(selectedItem)?.image)
+    )
     LazyColumn(
         state = state,
         verticalArrangement = Arrangement.spacedBy(16.dp),

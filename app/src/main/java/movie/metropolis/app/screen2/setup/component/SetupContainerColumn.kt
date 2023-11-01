@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen2.setup.component
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -50,7 +51,11 @@ fun SetupContainerColumn(
 private fun SetupContainerColumnPreview() = PreviewLayout {
     SetupContainerColumn(
         image = {
-            SetupPreviewLayout(count = 10) { index, selected ->
+            SetupPreviewLayout(
+                count = 10,
+                selectedItem = 0,
+                state = rememberLazyStaggeredGridState()
+            ) {
                 Box(Modifier.glow(Theme.container.poster, alpha = .3f))
             }
         },

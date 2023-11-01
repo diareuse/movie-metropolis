@@ -4,14 +4,12 @@ package movie.metropolis.app.screen2.booking
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
@@ -29,6 +27,7 @@ import movie.metropolis.app.screen2.booking.component.SeatingRow
 import movie.metropolis.app.screen2.booking.component.TicketColumn
 import movie.metropolis.app.screen2.booking.component.TicketMetadata
 import movie.metropolis.app.screen2.booking.component.TicketMetadataColumn
+import movie.style.BackgroundImage
 import movie.style.Barcode
 import movie.style.Image
 import movie.style.layout.PreviewLayout
@@ -48,17 +47,7 @@ fun BookingScreen(
 ) {
     val background =
         rememberPaletteImageState(url = bookings.getOrNull(state.currentPage)?.movie?.poster?.url)
-    AnimatedContent(
-        targetState = background,
-        transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        Image(
-            modifier = Modifier
-                .blur(16.dp)
-                .alpha(.35f),
-            state = it
-        )
-    }
+    BackgroundImage(state = background)
     CardCarousel(
         color = background.palette.color,
         state = state,
