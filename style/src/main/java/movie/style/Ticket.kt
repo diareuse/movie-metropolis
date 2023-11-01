@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
 import movie.style.shape.CompositeShape
 import movie.style.shape.TicketShape
+import movie.style.theme.Theme
 
 @Composable
 fun Ticket(
@@ -40,9 +41,9 @@ fun Ticket(
     val innerShape = RoundedCornerShape(cornerRadius)
     val density = LocalDensity.current
     Column(
-        modifier = Modifier
+        modifier = modifier
             .clip(shape)
-            .then(modifier)
+            .background(Theme.color.container.background, shape)
     ) {
         Box(
             modifier = Modifier

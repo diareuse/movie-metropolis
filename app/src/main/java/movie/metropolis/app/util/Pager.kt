@@ -18,7 +18,8 @@ fun Modifier.interpolatePage(
     page: Int,
     scaleRange: ClosedFloatingPointRange<Float> = .8f..1f,
     alphaRange: ClosedFloatingPointRange<Float> = .5f..1f,
-    rotation: Float = 15f,
+    rotationZ: Float = 15f,
+    rotationY: Float = 0f,
     offset: DpOffset = DpOffset(16.dp, 32.dp),
     blur: Dp = 32.dp
 ) = composed {
@@ -28,11 +29,13 @@ fun Modifier.interpolatePage(
     val density = LocalDensity.current
     val offsetPx = offset.toOffset(density)
     blur(lerp(blur, 0.dp, fraction), BlurredEdgeTreatment.Unbounded).graphicsLayer {
-        rotationZ = lerp(-sign * rotation, 0f, fraction)
+        this.rotationZ = lerp(-sign * rotationZ, 0f, fraction)
+        this.rotationY = lerp(sign * rotationY, 0f, fraction)
         alpha = lerp(alphaRange.start, alphaRange.endInclusive, fraction)
         scaleX = lerp(scaleRange.start, scaleRange.endInclusive, fraction)
         scaleY = scaleX
         translationY = lerp(offsetPx.y, 0f, fraction)
         translationX = lerp(offsetPx.x, 0f, fraction)
+        this.clip = false
     }
 }

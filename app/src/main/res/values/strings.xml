@@ -119,4 +119,5 @@
     <string name="home_cinemas_title">Cinemas nearby</string>
     <string name="home_profile_title">Your profile</string>
     <string name="home_greeting">Hi %s!</string>
+    <string name="hall">Hall</string>
 </resources>
