@@ -2,7 +2,7 @@ package movie.core.model
 
 import java.util.Date
 
-sealed interface Booking {
+interface Booking {
 
     val id: String
     val name: String
@@ -11,19 +11,14 @@ sealed interface Booking {
     val movieId: String
     val eventId: String
     val cinema: Cinema
+    val expired: Boolean
 
-    interface Expired : Booking
+    val hall: String
+    val seats: List<Seat>
 
-    interface Active : Booking {
-
-        val hall: String
-        val seats: List<Seat>
-
-        interface Seat {
-            val row: String
-            val seat: String
-        }
-
+    interface Seat {
+        val row: String
+        val seat: String
     }
 
 }

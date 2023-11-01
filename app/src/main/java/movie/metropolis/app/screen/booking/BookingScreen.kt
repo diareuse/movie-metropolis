@@ -23,10 +23,7 @@ import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.fold
 import movie.metropolis.app.screen.booking.component.ReaderDialog
 import movie.metropolis.app.screen.booking.component.TicketItemActive
-import movie.metropolis.app.screen.booking.component.TicketItemEmpty
-import movie.metropolis.app.screen.booking.component.TicketItemError
 import movie.metropolis.app.screen.booking.component.TicketItemExpired
-import movie.metropolis.app.screen.booking.component.TicketItemLoading
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.style.AppButton
 import movie.style.state.ImmutableList
@@ -69,12 +66,12 @@ fun BookingScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 private fun BookingScreenContent(
-    active: Loadable<ImmutableList<BookingView.Active>>,
-    expired: Loadable<ImmutableList<BookingView.Expired>>,
+    active: Loadable<ImmutableList<BookingView>>,
+    expired: Loadable<ImmutableList<BookingView>>,
     behavior: TopAppBarScrollBehavior,
     onRefreshClick: () -> Unit = {},
     onMovieClick: (String) -> Unit = {},
-    onShareClick: (BookingView.Active) -> Unit = {},
+    onShareClick: (BookingView) -> Unit = {},
     onCameraClick: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(),
 ) = Scaffold(
@@ -115,14 +112,14 @@ private fun BookingScreenContent(
         }
         val items = remember(active, expired) {
             val itemsActive = active.fold(
-                onSuccess = { it.ifEmpty { listOf(BookingView.Empty) } },
-                onLoading = { listOf(BookingView.Loading) },
-                onFailure = { listOf(BookingView.Error) }
+                onSuccess = { it },
+                onLoading = { emptyList() },
+                onFailure = { emptyList() }
             )
             val itemsExpired = expired.fold(
                 onSuccess = { it },
-                onLoading = { listOf(BookingView.Loading) },
-                onFailure = { listOf(BookingView.Error) }
+                onLoading = { emptyList() },
+                onFailure = { emptyList() }
             )
             itemsActive + itemsExpired
         }
@@ -133,30 +130,19 @@ private fun BookingScreenContent(
             contentPadding = PaddingValues(horizontal = 64.dp, vertical = 16.dp),
             pageSpacing = 32.dp
         ) {
-            when (val item = items[it]) {
-                is BookingView.Active -> TicketItemActive(
+            val item = items[it]
+            when {
+                item.expired -> TicketItemExpired(
+                    modifier = Modifier.fillMaxHeight(),
+                    item = item,
+                    onClick = { onMovieClick(item.movie.id) }
+                )
+
+                else -> TicketItemActive(
                     modifier = Modifier.fillMaxHeight(),
                     item = item,
                     onShare = { onShareClick(item) },
                     onClick = { onMovieClick(item.movie.id) }
-                )
-
-                is BookingView.Expired -> TicketItemExpired(
-                    modifier = Modifier.fillMaxHeight(),
-                    item = item,
-                    onClick = { onMovieClick(item.movie.id) }
-                )
-
-                BookingView.Error -> TicketItemError(
-                    modifier = Modifier.fillMaxHeight()
-                )
-
-                BookingView.Loading -> TicketItemLoading(
-                    modifier = Modifier.fillMaxHeight()
-                )
-
-                BookingView.Empty -> TicketItemEmpty(
-                    modifier = Modifier.fillMaxHeight()
                 )
             }
         }

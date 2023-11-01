@@ -23,7 +23,7 @@ import movie.style.rememberPaletteImageState
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TicketItemActive(
-    item: BookingView.Active,
+    item: BookingView,
     onShare: () -> Unit,
     modifier: Modifier = Modifier,
     onClick: OnClickListener? = null

@@ -97,9 +97,7 @@ fun TicketMetadata(
     cinema: @Composable () -> Unit,
     date: @Composable () -> Unit,
     time: @Composable () -> Unit,
-    hall: @Composable () -> Unit,
-    row: @Composable () -> Unit,
-    seat: @Composable () -> Unit,
+    seating: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -129,31 +127,39 @@ fun TicketMetadata(
                     text = { time() }
                 )
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.Top
-            ) {
-                hall()
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .align(Alignment.CenterVertically)
-                        .alpha(.4f),
-                    color = LocalContentColor.current
-                )
-                row()
-                VerticalDivider(
-                    modifier = Modifier
-                        .height(8.dp)
-                        .align(Alignment.CenterVertically)
-                        .alpha(.4f),
-                    color = LocalContentColor.current
-                )
-                seat()
-            }
+            seating()
         }
     }
+}
+
+@Composable
+fun SeatingRow(
+    hall: @Composable () -> Unit,
+    row: @Composable () -> Unit,
+    seat: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) = Row(
+    modifier = modifier.fillMaxWidth(),
+    horizontalArrangement = Arrangement.SpaceAround,
+    verticalAlignment = Alignment.Top
+) {
+    hall()
+    VerticalDivider(
+        modifier = Modifier
+            .height(8.dp)
+            .align(Alignment.CenterVertically)
+            .alpha(.4f),
+        color = LocalContentColor.current
+    )
+    row()
+    VerticalDivider(
+        modifier = Modifier
+            .height(8.dp)
+            .align(Alignment.CenterVertically)
+            .alpha(.4f),
+        color = LocalContentColor.current
+    )
+    seat()
 }
 
 @Composable
@@ -212,9 +218,13 @@ private fun TicketColumnPreview() = PreviewLayout(
                 cinema = { Text("Cinema") },
                 date = { Text("Feb 25") },
                 time = { Text("12:30") },
-                hall = { TicketMetadataColumn({ Text("Hall") }) { Text("5") } },
-                row = { TicketMetadataColumn({ Text("Row") }) { Text("16") } },
-                seat = { TicketMetadataColumn({ Text("Seat") }) { Text("28") } }
+                seating = {
+                    SeatingRow(
+                        hall = { TicketMetadataColumn({ Text("Hall") }) { Text("5") } },
+                        row = { TicketMetadataColumn({ Text("Row") }) { Text("16") } },
+                        seat = { TicketMetadataColumn({ Text("Seat") }) { Text("28") } }
+                    )
+                }
             )
         },
         code = { Box(Modifier.background(Color.Blue)) }

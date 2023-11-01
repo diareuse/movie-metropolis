@@ -6,11 +6,11 @@ import movie.core.model.Movie
 import movie.core.model.Ticket
 import java.util.Date
 
-data class BookingActiveFromTicket(
+data class BookingFromTicket(
     private val ticket: Ticket,
     private val movie: Movie,
     override val cinema: Cinema
-) : Booking.Active {
+) : Booking {
 
     override val id: String
         get() = ticket.id
@@ -26,12 +26,13 @@ data class BookingActiveFromTicket(
         get() = ticket.movieId
     override val hall: String
         get() = ticket.venue
-    override val seats: List<Booking.Active.Seat>
-        get() = ticket.seats.map(BookingActiveFromTicket::BookingSeatFromTicket)
+    override val seats: List<Booking.Seat>
+        get() = ticket.seats.map(BookingFromTicket::BookingSeatFromTicket)
+    override val expired: Boolean = false
 
     data class BookingSeatFromTicket(
         private val ticketSeat: Ticket.Seat
-    ) : Booking.Active.Seat {
+    ) : Booking.Seat {
 
         override val row: String
             get() = ticketSeat.row

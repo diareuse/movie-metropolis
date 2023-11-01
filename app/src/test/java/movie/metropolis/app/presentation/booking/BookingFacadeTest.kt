@@ -14,7 +14,7 @@ import movie.image.Swatch
 import movie.image.SwatchColor
 import movie.metropolis.app.di.FacadeModule
 import movie.metropolis.app.model.BookingView
-import movie.metropolis.app.model.adapter.BookingViewActiveFromFeature
+import movie.metropolis.app.model.adapter.BookingViewFromFeature
 import movie.metropolis.app.presentation.FeatureTest
 import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
@@ -89,7 +89,7 @@ class BookingFacadeTest : FeatureTest() {
 
     @Test
     fun getImage_returns_data() = runTest {
-        val view = BookingViewActiveFromFeature(mock())
+        val view = BookingViewFromFeature(mock())
         val image = facade.getShareImage(view)
         assertNotNull(image)
     }

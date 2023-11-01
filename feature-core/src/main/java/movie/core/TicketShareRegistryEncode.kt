@@ -10,7 +10,7 @@ class TicketShareRegistryEncode(
         origin.add(ticket.base91Decode())
     }
 
-    override suspend fun get(booking: Booking.Active): ByteArray {
+    override suspend fun get(booking: Booking): ByteArray {
         return origin.get(booking).base91Encode()
     }
 

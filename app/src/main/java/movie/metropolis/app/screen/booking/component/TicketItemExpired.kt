@@ -23,7 +23,7 @@ import movie.style.theme.Theme
 
 @Composable
 fun TicketItemExpired(
-    item: BookingView.Expired,
+    item: BookingView,
     modifier: Modifier = Modifier,
     onClick: OnClickListener? = null
 ) {

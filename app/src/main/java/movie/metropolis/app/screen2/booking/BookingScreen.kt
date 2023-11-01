@@ -25,6 +25,7 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
 import movie.metropolis.app.screen2.booking.component.CardCarousel
+import movie.metropolis.app.screen2.booking.component.SeatingRow
 import movie.metropolis.app.screen2.booking.component.TicketColumn
 import movie.metropolis.app.screen2.booking.component.TicketMetadata
 import movie.metropolis.app.screen2.booking.component.TicketMetadataColumn
@@ -76,20 +77,32 @@ fun BookingScreen(
                     cinema = { Text(it.cinema.name) },
                     date = { Text(it.date) },
                     time = { Text(it.time) },
-                    hall = {
-                        TicketMetadataColumn(
-                            title = { Text(stringResource(R.string.hall)) }
-                        ) { Text("5") } // fixme add a real value
-                    },
-                    row = {
-                        TicketMetadataColumn(
-                            title = { Text(stringResource(R.string.row)) }
-                        ) { Text("12") } // fixme add a real value
-                    },
-                    seat = {
-                        TicketMetadataColumn(
-                            title = { Text(stringResource(R.string.seat)) }
-                        ) { Text("22") } // fixme add a real value
+                    seating = {
+                        if (it.seats.isNotEmpty()) SeatingRow(
+                            hall = {
+                                TicketMetadataColumn(
+                                    title = { Text(stringResource(R.string.hall)) }
+                                ) {
+                                    Text(it.hall)
+                                }
+                            },
+                            row = {
+                                TicketMetadataColumn(
+                                    title = { Text(stringResource(R.string.row)) }
+                                ) {
+                                    for (seat in it.seats)
+                                        Text(seat.row)
+                                }
+                            },
+                            seat = {
+                                TicketMetadataColumn(
+                                    title = { Text(stringResource(R.string.seat)) }
+                                ) {
+                                    for (seat in it.seats)
+                                        Text(seat.seat)
+                                }
+                            }
+                        )
                     }
                 )
             },
@@ -112,7 +125,8 @@ private fun BookingScreenPreview() = PreviewLayout {
     BookingScreen(items, state)
 }
 
-private class BookingParameter(override val count: Int) : PreviewParameterProvider<BookingView> {
+private class BookingParameter(override val count: Int) :
+    PreviewParameterProvider<BookingView> {
     constructor() : this(5)
 
     override val values: Sequence<BookingView> = sequence { repeat(count) { yield(Data()) } }
@@ -126,12 +140,13 @@ private class BookingParameter(override val count: Int) : PreviewParameterProvid
         override val movie: MovieDetailView = MovieDetailViewProvider().values.first(),
         override val cinema: CinemaView = CinemaViewParameter().values.first(),
         override val hall: String = "5",
-        override val seats: List<BookingView.Active.Seat> = listOf(Seat())
-    ) : BookingView.Active
+        override val seats: List<BookingView.Seat> = listOf(Seat()),
+        override val expired: Boolean = false
+    ) : BookingView
 
     private data class Seat(
         override val row: String = "12",
         override val seat: String = "22"
-    ) : BookingView.Active.Seat
+    ) : BookingView.Seat
 
 }

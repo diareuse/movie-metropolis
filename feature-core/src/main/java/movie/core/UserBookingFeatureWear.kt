@@ -37,14 +37,8 @@ class UserBookingFeatureWear(
 
     override suspend fun get() = origin.get().onSuccess {
         scope.launch {
-            val active = mutableListOf<Booking.Active>()
-            val expired = mutableListOf<Booking.Expired>()
-            for (booking in it) when (booking) {
-                is Booking.Active -> active += booking
-                is Booking.Expired -> expired += booking
-            }
-            update("/bookings/active", active.asDataMap())
-            update("/bookings/expired", expired.asDataMap())
+            val active = mutableListOf<Booking>()
+            update("/bookings", active.asDataMap())
         }
     }
 
@@ -57,26 +51,12 @@ class UserBookingFeatureWear(
 
     // ---
 
-    @JvmName("expiredAsDataMap")
-    private fun List<Booking.Expired>.asDataMap() = DataMap().also { map ->
+    private fun List<Booking>.asDataMap() = DataMap().also { map ->
         if (isNotEmpty())
             map.putDataMapArrayList("bookings", map { it.asDataMap() }.let(::ArrayList))
     }
 
-    @JvmName("activeAsDataMap")
-    private fun List<Booking.Active>.asDataMap() = DataMap().also { map ->
-        if (isNotEmpty())
-            map.putDataMapArrayList("bookings", map { it.asDataMap() }.let(::ArrayList))
-    }
-
-    private fun Booking.Expired.asDataMap() = DataMap().also { map ->
-        map.putString("id", id)
-        map.putString("cinema", cinema.name)
-        map.putLong("starts_at", startsAt.time)
-        map.putString("name", name)
-    }
-
-    private fun Booking.Active.asDataMap() = DataMap().also { map ->
+    private fun Booking.asDataMap() = DataMap().also { map ->
         map.putString("id", id)
         map.putString("cinema", cinema.name)
         map.putLong("starts_at", startsAt.time)
@@ -85,10 +65,10 @@ class UserBookingFeatureWear(
         map.putString("name", name)
     }
 
-    private fun List<Booking.Active.Seat>.asDataMap() = map { it.asDataMap() }
+    private fun List<Booking.Seat>.asDataMap() = map { it.asDataMap() }
         .let(::ArrayList)
 
-    private fun Booking.Active.Seat.asDataMap() = DataMap().also { map ->
+    private fun Booking.Seat.asDataMap() = DataMap().also { map ->
         map.putString("row", row)
         map.putString("seat", seat)
     }
