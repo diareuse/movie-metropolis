@@ -2,8 +2,10 @@ package movie.metropolis.app.screen.home.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.shape.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.tooling.preview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,7 +24,7 @@ fun ProfileIcon(
     AppIconButton(modifier = modifier, onClick = onClick) {
         val image by rememberUserImage(email)
         val state = rememberImageState(url = image)
-        Image(state)
+        Image(modifier = Modifier.clip(CircleShape), state = state)
     }
 }
 
