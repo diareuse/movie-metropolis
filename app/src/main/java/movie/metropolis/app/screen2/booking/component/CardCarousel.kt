@@ -58,15 +58,16 @@ fun CardCarousel(
             content(it)
         }
     }
-    PageIndicator(
+    /*PageIndicator(
         modifier = Modifier.offset(y = -contentPadding.calculateBottomPadding() + 16.dp),
         state = state,
         color = color
-    )
+    )*/
 }
 
 fun DpOffset.toOffset(density: Density) = with(density) { Offset(x.toPx(), y.toPx()) }
 
+// fixme the use of lazy row causes crashes for whatever reason
 @Composable
 fun PageIndicator(
     state: PagerState,
