@@ -1,12 +1,14 @@
-@file:OptIn(ExperimentalPermissionsApi::class)
+@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class)
 
 package movie.metropolis.app.screen2
 
 import android.Manifest
 import androidx.compose.animation.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,6 +23,8 @@ import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.booking.BookingScreen
+import movie.metropolis.app.screen2.booking.BookingViewModel
 import movie.metropolis.app.screen2.cinema.CinemasScreen
 import movie.metropolis.app.screen2.cinema.CinemasViewModel
 import movie.metropolis.app.screen2.home.HomeScreen
@@ -95,8 +99,11 @@ private fun NavGraphBuilder.home(
     val viewModel = hiltViewModel<HomeViewModel>()
     val listingVM = hiltViewModel<ListingViewModel>()
     val cinemasVM = hiltViewModel<CinemasViewModel>()
+    val bookingVM = hiltViewModel<BookingViewModel>()
     val listingState = rememberLazyStaggeredGridState()
     val cinemasState = rememberLazyListState()
+    val tickets by bookingVM.tickets.collectAsState()
+    val bookingState = rememberPagerState { tickets.size }
     val cinemas by cinemasVM.cinemas.collectAsState()
     val movies by listingVM.movies.collectAsState()
     val promotions by listingVM.promotions.collectAsState()
@@ -114,7 +121,14 @@ private fun NavGraphBuilder.home(
                 onFavoriteClick = { listingVM.favorite(it) }
             )
         },
-        tickets = { modifier, padding -> },
+        tickets = { modifier, padding ->
+            BookingScreen(
+                bookings = tickets.toImmutableList(),
+                state = bookingState,
+                modifier = modifier,
+                contentPadding = padding
+            )
+        },
         cinemas = { modifier, padding ->
             val state = rememberMultiplePermissionsState(
                 listOf(
