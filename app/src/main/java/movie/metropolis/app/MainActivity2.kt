@@ -20,8 +20,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
-import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.Navigation
 import movie.style.LocalWindowSizeClass
 import movie.style.theme.Theme
 import java.io.File
@@ -29,7 +29,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity2 : AppCompatActivity() {
 
     private val actions = ActivityActions(
         requestPermissions = ::requestPermissions,
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
 
-        fun tickets(context: Context) = Intent(context, MainActivity::class.java)
+        fun tickets(context: Context) = Intent(context, MainActivity2::class.java)
             .setAction(Intent.ACTION_VIEW)
             .setData(Route.Home.deepLink(Route.Tickets()))
 
