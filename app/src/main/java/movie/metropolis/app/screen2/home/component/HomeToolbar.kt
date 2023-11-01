@@ -21,7 +21,7 @@ fun HomeToolbar(
 ) = Row(
     modifier = modifier
         .statusBarsPadding()
-        .padding(horizontal = 24.dp),
+        .padding(horizontal = 16.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(8.dp)
 ) {
