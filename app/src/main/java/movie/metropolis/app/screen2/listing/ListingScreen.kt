@@ -4,7 +4,6 @@ package movie.metropolis.app.screen2.listing
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -29,6 +27,7 @@ import movie.metropolis.app.screen2.listing.component.PromotionHorizontalPager
 import movie.metropolis.app.screen2.listing.component.RatingBox
 import movie.metropolis.app.util.rememberStoreable
 import movie.metropolis.app.util.rememberVisibleItemAsState
+import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
@@ -49,18 +48,9 @@ fun ListingScreen(
     propagateMinConstraints = true
 ) {
     val selectedItem by state.rememberVisibleItemAsState()
-    val background = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
-    AnimatedContent(
-        targetState = background,
-        transitionSpec = { fadeIn() togetherWith fadeOut() }
-    ) {
-        Image(
-            modifier = Modifier
-                .blur(16.dp)
-                .alpha(.35f),
-            state = it
-        )
-    }
+    BackgroundImage(
+        state = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
+    )
     var zoom by rememberStoreable(key = "listing-zoom", default = 100f)
     LazyVerticalStaggeredGrid(
         modifier = Modifier.pointerInput(Unit) {

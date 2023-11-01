@@ -11,20 +11,19 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
-import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.layout.PreviewLayout
 import kotlin.math.absoluteValue
 
 @Composable
 fun SetupPreviewLayout(
     count: Int,
+    selectedItem: Int,
+    state: LazyStaggeredGridState,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
     rowCount: Int = 3,
-    content: @Composable (Int, Boolean) -> Unit,
+    content: @Composable (Int) -> Unit,
 ) {
-    val state = rememberLazyStaggeredGridState()
-    val selectedItem by state.rememberVisibleItemAsState()
     LaunchedEffect(state) {
         val width = state.layoutInfo.viewportSize.width.toFloat()
         var direction = 1
@@ -62,7 +61,7 @@ fun SetupPreviewLayout(
                     .aspectRatio(DefaultPosterAspectRatio, true),
                 propagateMinConstraints = true
             ) {
-                content(it, it == selectedItem)
+                content(it)
             }
         }
     }
@@ -74,7 +73,12 @@ private fun SetupPreviewLayoutPreview(
     @PreviewParameter(SetupPreviewLayoutParameter::class)
     parameter: SetupPreviewLayoutParameter.Data
 ) = PreviewLayout {
-    SetupPreviewLayout(modifier = Modifier, count = 20) { index, selected ->
+    SetupPreviewLayout(
+        modifier = Modifier,
+        count = 20,
+        state = rememberLazyStaggeredGridState(),
+        selectedItem = 0
+    ) {
         Box(Modifier.background(Color.Blue))
     }
 }
