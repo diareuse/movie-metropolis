@@ -15,6 +15,7 @@ import movie.style.theme.Theme
 fun CardContentFront(
     logo: @Composable () -> Unit,
     name: @Composable () -> Unit,
+    cardholder: @Composable ColumnScope.() -> Unit,
     modifier: Modifier = Modifier,
     background: @Composable () -> Unit = { CardBackgroundFront() },
 ) = Box(modifier = modifier) {
@@ -33,13 +34,30 @@ fun CardContentFront(
     ) {
         logo()
     }
-    Box(
+    Row(
         modifier = Modifier
-            .padding(16.dp)
-            .align(Alignment.BottomEnd)
+            .fillMaxWidth()
+            .align(Alignment.BottomCenter),
+        verticalAlignment = Alignment.Bottom
     ) {
-        ProvideTextStyle(Theme.textStyle.title.copy(fontSize = 32.sp)) {
-            name()
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            ProvideTextStyle(Theme.textStyle.body) {
+                cardholder()
+            }
+        }
+        Spacer(
+            modifier = Modifier
+                .padding(horizontal = 8.dp)
+                .weight(1f)
+        )
+        Box(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            ProvideTextStyle(Theme.textStyle.title.copy(fontSize = 32.sp)) {
+                name()
+            }
         }
     }
 }
@@ -103,7 +121,11 @@ private fun CardContentFrontPreview() = PreviewLayout {
                     .background(Color.Yellow)
             )
         },
-        name = { Text("Club".uppercase()) }
+        name = { Text("Club".uppercase()) },
+        cardholder = {
+            Text("10 points")
+            Text("Name Surname")
+        }
     )
 }
 

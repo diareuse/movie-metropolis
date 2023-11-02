@@ -2,7 +2,6 @@ package movie.metropolis.app.screen2.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.rounded.*
@@ -50,9 +49,6 @@ fun HomeScreen(
     val state = HomeState.by(route)
     val cardState = remember { CardScreenState() }
     var showProfile by remember { mutableStateOf(false) }
-    BackHandler(showProfile) {
-        showProfile = false
-    }
     LaunchedEffect(showProfile) {
         if (showProfile) cardState.open()
         else cardState.close()
@@ -124,9 +120,15 @@ fun HomeScreen(
             composable(HomeState.Profile.name) { profile(overlayModifier, padding) }
         }
     }
-    if (membership != null && (showProfile || cardState.isOpen)) CardScreen(
+    if (
+        membership != null &&
+        user != null &&
+        (showProfile || cardState.isOpen)
+    ) CardScreen(
+        user = user,
         membership = membership,
-        state = cardState
+        state = cardState,
+        onCloseRequest = { showProfile = false }
     )
 }
 
