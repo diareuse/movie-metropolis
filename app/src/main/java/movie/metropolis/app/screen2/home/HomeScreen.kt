@@ -70,10 +70,9 @@ fun HomeScreen(
 
                 else -> HomeToolbar(
                     icon = {
-                        ProfileIcon(
-                            email = user.email,
-                            onClick = { showProfile = true }
-                        )
+                        IconButton(onClick = { showProfile = true }) {
+                            ProfileIcon(email = user.email)
+                        }
                     },
                     name = { Text(stringResource(R.string.home_greeting, user.firstName)) },
                     title = title,

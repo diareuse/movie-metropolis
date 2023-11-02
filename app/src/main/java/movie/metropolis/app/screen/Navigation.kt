@@ -104,10 +104,9 @@ fun Navigation(
                     val booking = rememberScreenState<BookingViewModel>()
                     val settings = rememberScreenState<SettingsViewModel>()
                     val profileIcon: (@Composable () -> Unit)? = if (email != null) ({
-                        ProfileIcon(
-                            email = email,
-                            onClick = { controller.navigate(Route.User()) }
-                        )
+                        IconButton(onClick = { controller.navigate(Route.User()) }) {
+                            ProfileIcon(email = email)
+                        }
                     }) else null
                     val instantApp = rememberInstantApp()
                     HomeScreen(

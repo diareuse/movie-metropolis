@@ -9,7 +9,6 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.tooling.preview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import movie.style.AppIconButton
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.rememberImageState
@@ -18,14 +17,11 @@ import java.security.MessageDigest
 @Composable
 fun ProfileIcon(
     email: String,
-    onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    AppIconButton(modifier = modifier, onClick = onClick) {
-        val image by rememberUserImage(email)
-        val state = rememberImageState(url = image)
-        Image(modifier = Modifier.clip(CircleShape), state = state)
-    }
+    val image by rememberUserImage(email)
+    val state = rememberImageState(url = image)
+    Image(modifier = modifier.clip(CircleShape), state = state)
 }
 
 @Composable
@@ -46,5 +42,5 @@ fun rememberUserImage(email: String): State<String> {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun ProfileIconPreview() = PreviewLayout {
-    ProfileIcon("example@exampl.org", {})
+    ProfileIcon("example@exampl.org")
 }
