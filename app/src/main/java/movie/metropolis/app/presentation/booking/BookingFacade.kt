@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.facade.Image
-import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.asLoadable
 
 interface BookingFacade {
@@ -22,7 +21,6 @@ interface BookingFacade {
         fun BookingFacade.bookingsFlow(refresh: Flow<suspend () -> Unit>) = flow {
             emitAll(bookings.map { it.asLoadable() })
             refresh.collect {
-                emit(Loadable.loading())
                 it()
                 emitAll(bookings.map { it.asLoadable() })
             }
