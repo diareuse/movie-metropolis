@@ -3,8 +3,6 @@ package movie.metropolis.app.screen2.home
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -34,49 +32,43 @@ import movie.style.modifier.verticalOverlay
 fun HomeScreen(
     user: UserView?,
     membership: MembershipView?,
+    showProfile: Boolean,
+    onShowProfileChange: (Boolean) -> Unit,
     listing: @Composable (Modifier, PaddingValues) -> Unit,
     tickets: @Composable (Modifier, PaddingValues) -> Unit,
     cinemas: @Composable (Modifier, PaddingValues) -> Unit,
     profile: @Composable (Modifier, PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
-) = Box(
-    modifier = Modifier.fillMaxSize(),
-    propagateMinConstraints = true
-) {
+) = CardOverlay(
+    user = user,
+    membership = membership,
+    showProfile = showProfile,
+    onCloseRequest = { onShowProfileChange(false) },
+    modifier = modifier
+) { modifier ->
     val navController = rememberNavController()
     val entry by navController.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     val state = HomeState.by(route)
-    val cardState = remember { CardScreenState() }
-    var showProfile by remember { mutableStateOf(false) }
-    LaunchedEffect(showProfile) {
-        if (showProfile) cardState.open()
-        else cardState.close()
-    }
     Scaffold(
-        modifier = modifier.blur(cardState.blur),
+        modifier = modifier,
         topBar = {
             val title = @Composable { Text(stringResource(state.title)) }
-            val settings = @Composable {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Rounded.Settings, null)
-                }
-            }
             when (user) {
                 null -> HomeToolbar(
-                    title = title,
-                    settings = settings
+                    title = title
                 )
 
                 else -> HomeToolbar(
                     icon = {
-                        IconButton(onClick = { showProfile = true }) {
+                        if (state != HomeState.Profile) IconButton(
+                            onClick = { onShowProfileChange(true) }
+                        ) {
                             ProfileIcon(email = user.email)
                         }
                     },
                     name = { Text(stringResource(R.string.home_greeting, user.firstName)) },
-                    title = title,
-                    settings = settings
+                    title = title
                 )
             }
         },
@@ -119,6 +111,23 @@ fun HomeScreen(
             composable(HomeState.Profile.name) { profile(overlayModifier, padding) }
         }
     }
+}
+
+@Composable
+fun CardOverlay(
+    user: UserView?,
+    membership: MembershipView?,
+    showProfile: Boolean,
+    onCloseRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable (Modifier) -> Unit,
+) = Box(modifier = modifier, propagateMinConstraints = true) {
+    val cardState = remember { CardScreenState() }
+    LaunchedEffect(showProfile) {
+        if (showProfile) cardState.open()
+        else cardState.close()
+    }
+    content(Modifier.blur(cardState.blur))
     if (
         membership != null &&
         user != null &&
@@ -127,7 +136,7 @@ fun HomeScreen(
         user = user,
         membership = membership,
         state = cardState,
-        onCloseRequest = { showProfile = false }
+        onCloseRequest = onCloseRequest
     )
 }
 
@@ -138,6 +147,8 @@ private fun HomeScreenPreview() = PreviewLayout {
     HomeScreen(
         user = null,
         membership = null,
+        showProfile = false,
+        onShowProfileChange = {},
         listing = { _, _ -> },
         tickets = { _, _ -> },
         cinemas = { _, _ -> },

@@ -30,6 +30,7 @@ import movie.metropolis.app.screen2.home.HomeScreen
 import movie.metropolis.app.screen2.home.HomeViewModel
 import movie.metropolis.app.screen2.listing.ListingScreen
 import movie.metropolis.app.screen2.listing.ListingViewModel
+import movie.metropolis.app.screen2.profile.ProfileScreen
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupViewModel
 
@@ -103,15 +104,17 @@ private fun NavGraphBuilder.home(
     val cinemasState = rememberLazyListState()
     val tickets by bookingVM.tickets.collectAsState()
     val bookingState = rememberPagerState { tickets.size }
-    val cinemas by cinemasVM.cinemas.collectAsState()
-    val movies by listingVM.movies.collectAsState()
-    val promotions by listingVM.promotions.collectAsState()
     val user by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
+    var showCard by remember { mutableStateOf(false) }
     HomeScreen(
         user = user,
         membership = membership,
+        showProfile = showCard,
+        onShowProfileChange = { showCard = it },
         listing = { modifier, padding ->
+            val promotions by listingVM.promotions.collectAsState()
+            val movies by listingVM.movies.collectAsState()
             ListingScreen(
                 modifier = modifier,
                 contentPadding = padding,
@@ -141,6 +144,7 @@ private fun NavGraphBuilder.home(
                 )
             )
             val location by rememberLocation(state)
+            val cinemas by cinemasVM.cinemas.collectAsState()
             LaunchedEffect(location) {
                 cinemasVM.location.value = location
             }
@@ -154,7 +158,17 @@ private fun NavGraphBuilder.home(
                 onMapClick = { /* todo open maps */ }
             )
         },
-        profile = { modifier, padding -> }
+        profile = { modifier, padding ->
+            ProfileScreen(
+                user = user,
+                modifier = modifier,
+                contentPadding = padding,
+                onClickCard = { showCard = true },
+                onClickEdit = {},
+                onClickFavorite = {},
+                onClickSettings = {}
+            )
+        }
     )
 }
 

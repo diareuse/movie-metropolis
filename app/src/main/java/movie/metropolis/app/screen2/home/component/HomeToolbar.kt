@@ -16,7 +16,6 @@ fun HomeToolbar(
     icon: @Composable () -> Unit,
     name: @Composable () -> Unit,
     title: @Composable () -> Unit,
-    settings: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) = Row(
     modifier = modifier
@@ -43,18 +42,12 @@ fun HomeToolbar(
             title()
         }
     }
-    Box(
-        modifier = Modifier.minimumInteractiveComponentSize(),
-        propagateMinConstraints = true
-    ) {
-        settings()
-    }
+    Spacer(modifier = Modifier.minimumInteractiveComponentSize())
 }
 
 @Composable
 fun HomeToolbar(
     title: @Composable () -> Unit,
-    settings: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) = Row(
     modifier = modifier
@@ -72,12 +65,7 @@ fun HomeToolbar(
             title()
         }
     }
-    Box(
-        modifier = Modifier.minimumInteractiveComponentSize(),
-        propagateMinConstraints = true
-    ) {
-        settings()
-    }
+    Spacer(modifier = Modifier.minimumInteractiveComponentSize())
 }
 
 @Preview(showBackground = true)
@@ -86,8 +74,7 @@ private fun HomeToolbarPreview() = PreviewLayout {
     HomeToolbar(
         icon = { Icon(Icons.Rounded.Person, null) },
         name = { Text("Hi John!") },
-        title = { Text("Your tickets") },
-        settings = { Icon(Icons.Rounded.Settings, null) }
+        title = { Text("Your tickets") }
     )
 }
 
@@ -95,7 +82,6 @@ private fun HomeToolbarPreview() = PreviewLayout {
 @Composable
 private fun HomeToolbarEmptyPreview() = PreviewLayout {
     HomeToolbar(
-        title = { Text("Your tickets") },
-        settings = { Icon(Icons.Rounded.Settings, null) }
+        title = { Text("Your tickets") }
     )
 }
