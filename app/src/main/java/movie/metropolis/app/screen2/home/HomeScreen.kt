@@ -80,7 +80,7 @@ fun HomeScreen(
                         active = { Icon(painterResource(state.active), null) },
                         inactive = { Icon(painterResource(state.inactive), null) },
                         onClick = {
-                            while (navController.navigateUp()) {
+                            while (navController.popBackStack()) {
                                 /* no-op */
                             }
                             navController.navigate(state.name)
