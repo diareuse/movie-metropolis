@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.map
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.membershipFlow
@@ -17,6 +18,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val user = profile.userFlow(emptyFlow()).map { it.getOrNull() }
+        .filterNot { it?.email.isNullOrBlank() }
         .retainStateIn(viewModelScope, null)
     val membership = profile.membershipFlow.map { it.getOrNull() }
         .retainStateIn(viewModelScope, null)
