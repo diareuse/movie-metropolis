@@ -11,11 +11,13 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.util.*
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.glow
+import movie.style.modifier.overlay
 import movie.style.modifier.surface
 import movie.style.modifier.vertical
 import movie.style.theme.Theme
 
 private const val CardAspectRatio = 1.5857725f
+private const val AxisZRotation = 25f
 
 @Composable
 fun FlippableCard(
@@ -31,20 +33,28 @@ fun FlippableCard(
     propagateMinConstraints = true
 ) {
     val rotation = rotation % 361
-    val rotationY = lerp(0f, 30f, (rotation % 90) / 90f)
+    val fraction = (rotation % 90) / 90f
+    val rotationZFront = lerp(0f, AxisZRotation, fraction)
+    val rotationZBack = lerp(-AxisZRotation, 0f, fraction)
     if (rotation in 0f..<90f || rotation in 270f..360f) key(key, "front") {
         Box(
             modifier = Modifier.graphicsLayer(
                 rotationX = rotation % 360f,
-                rotationY =
-                if (rotation % 360 < 180f) lerp(0f, 30f, (rotation % 90) / 90f)
-                else lerp(30f, 0f, (rotation % 90) / 90f),
+                rotationZ = if (rotation % 360 < 180f) rotationZFront else rotationZBack,
                 cameraDistance = 1000f
             ),
             propagateMinConstraints = true
         ) {
             container {
-                front()
+                val overlay =
+                    if (rotation % 360 < 180f) Color.Transparent
+                    else lerp(Color.Black.copy(.5f), Color.Transparent, fraction)
+                Box(
+                    modifier = Modifier.overlay(overlay, overlay),
+                    propagateMinConstraints = true
+                ) {
+                    front()
+                }
             }
         }
     }
@@ -52,15 +62,21 @@ fun FlippableCard(
         Box(
             modifier = Modifier.graphicsLayer(
                 rotationX = (rotation + 180f) % 360f,
-                rotationY =
-                if (rotation >= 180f) -lerp(0f, 30f, (rotation % 90) / 90f)
-                else -lerp(30f, 0f, (rotation % 90) / 90f),
+                rotationZ = if (rotation >= 180f) rotationZFront else rotationZBack,
                 cameraDistance = 1000f
             ),
             propagateMinConstraints = true
         ) {
             container {
-                back()
+                val overlay =
+                    if (rotation >= 180f) Color.Transparent
+                    else lerp(Color.Black.copy(.5f), Color.Transparent, fraction)
+                Box(
+                    modifier = Modifier.overlay(overlay, overlay),
+                    propagateMinConstraints = true
+                ) {
+                    back()
+                }
             }
         }
     }
