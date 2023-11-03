@@ -7,6 +7,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.util.decodeBase64
 import movie.metropolis.app.util.encodeBase64
 
@@ -40,8 +41,9 @@ sealed class Route(
         navDeepLink { uriPattern = "$InternalUri/$route" }
     )
 
-    data object Setup : Route("setup") {
-        operator fun invoke() = route
+    data object Setup : Route("setup?startWith={startWith}") {
+        operator fun invoke(startWith: SetupState = SetupState.Initial) =
+            route.replace("{startWith}", startWith.name)
     }
 
     data object Home : Route("home?screen={screen}") {

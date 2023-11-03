@@ -32,6 +32,7 @@ import movie.metropolis.app.screen2.listing.ListingScreen
 import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
 import movie.metropolis.app.screen2.setup.SetupScreen
+import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
 
 @Composable
@@ -77,15 +78,17 @@ private fun NavGraphBuilder.setup(
     val viewModel = hiltViewModel<SetupViewModel>()
     val regions by viewModel.regions.collectAsState()
     val posters = viewModel.posters.toImmutableList()
-    LaunchedEffect(viewModel) {
-        viewModel.requiresSetup.collect {
-            if (!it) navController.navigate(Route.Home())
-        }
-    }
+    val requiresSetup by viewModel.requiresSetup.collectAsState(initial = true)
     SetupScreen(
+        startWith = it.arguments?.getString("startWith")?.let(SetupState::valueOf)
+            ?: SetupState.Initial,
         regions = regions.getOrNull().orEmpty().toImmutableList(),
         posters = posters,
-        onRegionClick = viewModel::select
+        regionSelected = !requiresSetup,
+        onRegionClick = viewModel::select,
+        onSetupComplete = {
+            navController.navigate(Route.Home())
+        }
     )
 }
 
@@ -112,6 +115,7 @@ private fun NavGraphBuilder.home(
         membership = membership,
         showProfile = showCard,
         onShowProfileChange = { showCard = it },
+        onNavigateToLogin = { navController.navigate(Route.Setup(SetupState.Login)) },
         listing = { modifier, padding ->
             val promotions by listingVM.promotions.collectAsState()
             val movies by listingVM.movies.collectAsState()

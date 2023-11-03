@@ -34,6 +34,7 @@ fun HomeScreen(
     membership: MembershipView?,
     showProfile: Boolean,
     onShowProfileChange: (Boolean) -> Unit,
+    onNavigateToLogin: () -> Unit,
     listing: @Composable (Modifier, PaddingValues) -> Unit,
     tickets: @Composable (Modifier, PaddingValues) -> Unit,
     cinemas: @Composable (Modifier, PaddingValues) -> Unit,
@@ -50,6 +51,20 @@ fun HomeScreen(
     val entry by navController.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     val state = HomeState.by(route)
+    LaunchedEffect(entry) {
+        val entry = entry ?: return@LaunchedEffect
+        val destination = entry.destination
+        when (destination.route) {
+            HomeState.Tickets.name,
+            HomeState.Profile.name -> {
+                onNavigateToLogin()
+                while (navController.popBackStack()) {
+                    /* no-op */
+                }
+                navController.navigate(HomeState.Listing.name)
+            }
+        }
+    }
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -149,6 +164,7 @@ private fun HomeScreenPreview() = PreviewLayout {
         membership = null,
         showProfile = false,
         onShowProfileChange = {},
+        onNavigateToLogin = {},
         listing = { _, _ -> },
         tickets = { _, _ -> },
         cinemas = { _, _ -> },
