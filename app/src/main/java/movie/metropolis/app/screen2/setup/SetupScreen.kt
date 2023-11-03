@@ -29,7 +29,8 @@ fun SetupScreen(
 ) = Scaffold(
     modifier = modifier,
     topBar = {},
-    bottomBar = {}
+    bottomBar = {},
+    contentWindowInsets = WindowInsets(0)
 ) { padding ->
     val navController = rememberNavController()
     NavHost(

@@ -21,7 +21,9 @@ fun SetupContainerColumn(
     cta: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) = Column(
-    modifier = modifier,
+    modifier = modifier
+        .statusBarsPadding()
+        .navigationBarsPadding(),
     horizontalAlignment = Alignment.CenterHorizontally,
     verticalArrangement = Arrangement.spacedBy(16.dp)
 ) {
