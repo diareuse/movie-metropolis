@@ -30,6 +30,7 @@ import movie.style.modifier.verticalOverlay
 
 @Composable
 fun HomeScreen(
+    loggedIn: Boolean,
     user: UserView?,
     membership: MembershipView?,
     showProfile: Boolean,
@@ -51,7 +52,7 @@ fun HomeScreen(
     val entry by navController.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     val state = HomeState.by(route)
-    LaunchedEffect(entry) {
+    if (!loggedIn) LaunchedEffect(entry) {
         val entry = entry ?: return@LaunchedEffect
         val destination = entry.destination
         when (destination.route) {
@@ -160,6 +161,7 @@ fun CardOverlay(
 @Composable
 private fun HomeScreenPreview() = PreviewLayout {
     HomeScreen(
+        loggedIn = false,
         user = null,
         membership = null,
         showProfile = false,

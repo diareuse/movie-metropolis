@@ -21,8 +21,11 @@ import movie.style.layout.PreviewLayout
 fun SetupScreen(
     posters: ImmutableList<String>,
     regions: ImmutableList<RegionView>,
+    loginState: LoginState,
+    onLoginStateChange: (LoginState) -> Unit,
+    onLoginClick: () -> Unit,
+    onLoginSkip: () -> Unit,
     regionSelected: Boolean,
-    onSetupComplete: () -> Unit,
     onRegionClick: (RegionView) -> Unit,
     modifier: Modifier = Modifier,
     startWith: SetupState = SetupState.Initial
@@ -67,7 +70,13 @@ fun SetupScreen(
             )
         }
         composable(SetupState.Login.name) {
-            SetupLoginContent()
+            SetupLoginContent(
+                posters = posters,
+                state = loginState,
+                onStateChange = onLoginStateChange,
+                onLoginClick = onLoginClick,
+                onLoginSkip = onLoginSkip
+            )
         }
     }
 }
@@ -77,10 +86,13 @@ fun SetupScreen(
 @Composable
 private fun SetupScreenPreview() = PreviewLayout {
     SetupScreen(
-        regions = persistentListOf<RegionView>().toImmutableList(),
         posters = List(20) { "" }.toImmutableList(),
+        regions = persistentListOf<RegionView>().toImmutableList(),
+        loginState = LoginState(),
+        onLoginStateChange = {},
+        onLoginClick = { /*TODO*/ },
         regionSelected = false,
         onRegionClick = {},
-        onSetupComplete = {}
+        onLoginSkip = {}
     )
 }
