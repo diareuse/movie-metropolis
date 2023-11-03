@@ -25,12 +25,10 @@ import movie.metropolis.app.model.adapter.RegionViewFromFeature
 import movie.metropolis.app.screen2.setup.component.RegionRow
 import movie.metropolis.app.screen2.setup.component.SetupPreviewLayout
 import movie.metropolis.app.util.rememberVisibleItemAsState
-import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.glow
 import movie.style.modifier.surface
-import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
 import java.util.Locale
@@ -47,9 +45,6 @@ fun SetupRegionSelectionContent(
 ) {
     val state = rememberLazyStaggeredGridState()
     val selectedItem by state.rememberVisibleItemAsState()
-    BackgroundImage(
-        state = rememberImageState(url = posters.getOrNull(selectedItem))
-    )
     SetupPreviewLayout(
         modifier = Modifier.alpha(.3f),
         count = posters.size,
