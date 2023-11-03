@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.launch
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.booking.BookingScreen
@@ -79,6 +80,15 @@ private fun NavGraphBuilder.setup(
     val regions by viewModel.regions.collectAsState()
     val posters = viewModel.posters.toImmutableList()
     val requiresSetup by viewModel.requiresSetup.collectAsState(initial = true)
+    val loginState by viewModel.loginState.collectAsState()
+    val scope = rememberCoroutineScope()
+    val navigateHome = {
+        navController.navigate(Route.Home()) {
+            popUpTo(Route.Setup.route) {
+                inclusive = true
+            }
+        }
+    }
     SetupScreen(
         startWith = it.arguments?.getString("startWith")?.let(SetupState::valueOf)
             ?: SetupState.Initial,
@@ -86,9 +96,16 @@ private fun NavGraphBuilder.setup(
         posters = posters,
         regionSelected = !requiresSetup,
         onRegionClick = viewModel::select,
-        onSetupComplete = {
-            navController.navigate(Route.Home())
-        }
+        loginState = loginState,
+        onLoginStateChange = { viewModel.loginState.value = it },
+        onLoginClick = {
+            scope.launch {
+                viewModel.login().onSuccess {
+                    navigateHome()
+                }
+            }
+        },
+        onLoginSkip = navigateHome
     )
 }
 
@@ -111,6 +128,7 @@ private fun NavGraphBuilder.home(
     val membership by viewModel.membership.collectAsState()
     var showCard by remember { mutableStateOf(false) }
     HomeScreen(
+        loggedIn = viewModel.isLoggedIn,
         user = user,
         membership = membership,
         showProfile = showCard,

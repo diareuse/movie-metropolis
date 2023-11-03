@@ -76,6 +76,8 @@
         <activity
             android:name="movie.metropolis.app.MainActivity2"
             android:exported="true"
+            android:configChanges="keyboard|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.MovieMetropolis" />
 
         <activity

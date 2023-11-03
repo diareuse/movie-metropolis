@@ -3,9 +3,11 @@ package movie.metropolis.app.screen2.setup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.login.LoginFacade
 import movie.metropolis.app.presentation.setup.SetupFacade
 import movie.metropolis.app.presentation.setup.SetupFacade.Companion.regionsFlow
 import movie.metropolis.app.presentation.setup.SetupFacade.Companion.requiresSetupFlow
@@ -14,12 +16,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SetupViewModel @Inject constructor(
-    private val facade: SetupFacade
+    private val facade: SetupFacade,
+    private val login: LoginFacade
 ) : ViewModel() {
 
     val requiresSetup = facade.requiresSetupFlow
     val regions = facade.regionsFlow
         .retainStateIn(viewModelScope, Loadable.loading())
+
+    val loginState = MutableStateFlow(LoginState())
 
     val posters = listOf(
         "https://www.themoviedb.org/t/p/w1280/lPsD10PP4rgUGiGR4CCXA6iY0QQ.jpg",
@@ -73,6 +78,11 @@ class SetupViewModel @Inject constructor(
         viewModelScope.launch {
             facade.select(view)
         }
+    }
+
+    suspend fun login(): Result<Unit> {
+        val state = loginState.value
+        return login.login(state.email, state.password)
     }
 
 }
