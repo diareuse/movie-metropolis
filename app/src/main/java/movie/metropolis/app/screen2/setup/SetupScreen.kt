@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,8 +21,11 @@ import movie.style.layout.PreviewLayout
 fun SetupScreen(
     posters: ImmutableList<String>,
     regions: ImmutableList<RegionView>,
+    regionSelected: Boolean,
+    onSetupComplete: () -> Unit,
     onRegionClick: (RegionView) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    startWith: SetupState = SetupState.Initial
 ) = Scaffold(
     modifier = modifier,
     topBar = {},
@@ -33,20 +37,36 @@ fun SetupScreen(
             .fillMaxSize()
             .padding(padding),
         navController = navController,
-        startDestination = SetupState.Initial.name
+        startDestination = startWith.name
     ) {
         composable(SetupState.Initial.name) {
             SetupInitialContent(
                 posters = posters,
-                onContinueClick = { navController.navigate(SetupState.RegionSelection.name) }
+                onContinueClick = {
+                    val builder: NavOptionsBuilder.() -> Unit = {
+                        popUpTo(SetupState.Initial.name) {
+                            inclusive = true
+                        }
+                    }
+                    when (regionSelected) {
+                        true -> navController.navigate(SetupState.Login.name, builder)
+                        else -> navController.navigate(SetupState.RegionSelection.name, builder)
+                    }
+                }
             )
         }
         composable(SetupState.RegionSelection.name) {
+            LaunchedEffect(regionSelected) {
+                if (regionSelected) navController.navigate(SetupState.Login.name)
+            }
             SetupRegionSelectionContent(
                 regions = regions,
                 posters = posters,
                 onRegionClick = onRegionClick
             )
+        }
+        composable(SetupState.Login.name) {
+            SetupLoginContent()
         }
     }
 }
@@ -58,6 +78,8 @@ private fun SetupScreenPreview() = PreviewLayout {
     SetupScreen(
         regions = persistentListOf<RegionView>().toImmutableList(),
         posters = List(20) { "" }.toImmutableList(),
-        onRegionClick = {}
+        regionSelected = false,
+        onRegionClick = {},
+        onSetupComplete = {}
     )
 }
