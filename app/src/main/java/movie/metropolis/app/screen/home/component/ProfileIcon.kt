@@ -2,10 +2,14 @@ package movie.metropolis.app.screen.home.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.shape.*
+import androidx.compose.material.ripple.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.tooling.preview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -18,10 +22,28 @@ import java.security.MessageDigest
 fun ProfileIcon(
     email: String,
     modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null
 ) {
     val image by rememberUserImage(email)
     val state = rememberImageState(url = image)
-    Image(modifier = modifier.clip(CircleShape), state = state)
+    Image(
+        modifier = modifier
+            .let {
+                if (onClick == null) it
+                else {
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val indication = rememberRipple(bounded = false)
+                    it.clickable(
+                        onClick = onClick,
+                        role = Role.Image,
+                        interactionSource = interactionSource,
+                        indication = indication
+                    )
+                }
+            }
+            .clip(CircleShape),
+        state = state
+    )
 }
 
 @Composable
@@ -33,7 +55,7 @@ fun rememberUserImage(email: String): State<String> {
                 .digest(email.lowercase().encodeToByteArray())
                 .joinToString("") { "%02x".format(it) }
         }
-        url.value = "https://www.gravatar.com/avatar/$digest"
+        url.value = "https://www.gravatar.com/avatar/$digest?s=256&d=404"
     }
     return url
 }

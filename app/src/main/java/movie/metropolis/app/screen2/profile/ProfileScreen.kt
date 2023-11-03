@@ -17,6 +17,7 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import androidx.core.text.htmlEncode
 import com.google.accompanist.placeholder.placeholder
 import movie.metropolis.app.R
 import movie.metropolis.app.model.UserView
@@ -26,6 +27,7 @@ import movie.metropolis.app.screen2.card.UserViewParameter
 import movie.metropolis.app.screen2.profile.component.ProfileItem
 import movie.metropolis.app.screen2.profile.component.VersionColumn
 import movie.style.BackgroundImage
+import movie.style.action.actionView
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.glow
 import movie.style.modifier.surface
@@ -69,7 +71,8 @@ fun ProfileScreen(
                         color = LocalContentColor.current.copy(.1f),
                         visible = user == null
                     ),
-                email = user?.email.orEmpty()
+                email = user?.email.orEmpty(),
+                onClick = actionView { "https://gravatar.com/connect/?user_email=${user?.email?.htmlEncode()}" }
             )
             Text(
                 modifier = Modifier.textPlaceholder(user == null),
@@ -124,6 +127,7 @@ fun ProfileScreen(
                 onClick = onClickFavorite
             )
             ProfileItem(
+                enabled = user != null,
                 icon = { Icon(painterResource(id = R.drawable.ic_card), null) },
                 title = { Text("Loyalty card") },
                 onClick = onClickCard
