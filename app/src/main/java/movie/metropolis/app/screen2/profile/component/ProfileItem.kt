@@ -23,11 +23,12 @@ fun ProfileItem(
     title: @Composable () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true
 ) = Row(
     modifier = modifier
         .clip(Theme.container.button)
         .glow(Theme.container.button)
-        .clickable(role = Role.Button, onClick = onClick)
+        .clickable(role = Role.Button, onClick = onClick, enabled = enabled)
         .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     verticalAlignment = Alignment.CenterVertically
