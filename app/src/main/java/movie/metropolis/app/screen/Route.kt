@@ -70,6 +70,7 @@ sealed class Route(
         operator fun invoke() = route
     }
 
+    @Deprecated("")
     data object Login : Route("users/new") {
         operator fun invoke() = route
     }
