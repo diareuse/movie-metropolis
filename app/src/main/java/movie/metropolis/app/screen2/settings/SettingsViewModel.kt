@@ -3,10 +3,14 @@ package movie.metropolis.app.screen2.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.launch
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.presentation.settings.SettingsFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.addToCalendarFlow
@@ -25,7 +29,8 @@ class SettingsViewModel @Inject constructor(
 
     private val refreshKey = Channel<Unit>()
 
-    val calendars = refreshKey.consumeAsFlow().flatMapLatest { facade.calendarFlow }
+    val calendars = refreshKey.consumeAsFlow()
+        .flatMapLatest { facade.calendarFlow }
         .retainStateIn(viewModelScope, Calendars())
     val state = combine(
         facade.filterSeenFlow,
@@ -51,7 +56,22 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun refreshCalendars() {
-        refreshKey.trySend(Unit)
+        viewModelScope.launch out@{
+            refreshKey.send(Unit)
+            launch {
+                calendars.collectLatest {
+                    if (it.isNotEmpty()) {
+                        this@out.cancel()
+                    }
+                }
+            }
+            launch {
+                while (true) {
+                    delay(100)
+                    refreshKey.send(Unit)
+                }
+            }
+        }
     }
 
 }

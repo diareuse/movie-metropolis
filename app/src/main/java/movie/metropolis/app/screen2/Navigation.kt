@@ -231,14 +231,14 @@ private fun NavGraphBuilder.settings(
         onShowCalendarsRequest = { showCalendars = true }
     )
     if (showCalendars) {
-        LaunchedEffect(permission) {
+        LaunchedEffect(permission.allPermissionsGranted) {
             if (!permission.allPermissionsGranted) {
                 permission.launchMultiplePermissionRequest()
             } else {
                 viewModel.refreshCalendars()
             }
         }
-        CalendarDialog(
+        if (permission.allPermissionsGranted) CalendarDialog(
             onDismissRequest = {
                 showCalendars = false
                 viewModel.updateState(state.copy(selectedCalendar = null))
