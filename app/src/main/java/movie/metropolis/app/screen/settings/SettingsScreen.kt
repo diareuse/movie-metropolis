@@ -8,30 +8,27 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.text.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentHashMapOf
+import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
 import movie.metropolis.app.R
+import movie.metropolis.app.model.CalendarView
 import movie.metropolis.app.screen.detail.plus
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.style.AppDialog
 import movie.style.AppSettings
 import movie.style.InputField
-import movie.style.state.ImmutableMap
-import movie.style.state.ImmutableMap.Companion.immutableMapOf
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,7 +53,7 @@ fun SettingsScreen(
         onClipRadiusChanged = viewModel::updateClipRadius,
         onlyMovies = onlyMovies,
         onOnlyMoviesChanged = viewModel::updateOnlyMovies,
-        calendars = calendars,
+        calendars = calendars.toImmutableMap(),
         contentPadding = contentPadding
     )
 }
@@ -73,7 +70,7 @@ private fun SettingsScreen(
     onClipRadiusChanged: (Int) -> Unit = {},
     onlyMovies: Boolean = false,
     onOnlyMoviesChanged: (Boolean) -> Unit = {},
-    calendars: ImmutableMap<String, String> = immutableMapOf(),
+    calendars: ImmutableMap<String, List<CalendarView>> = persistentHashMapOf(),
     contentPadding: PaddingValues = PaddingValues()
 ) = Scaffold(
     topBar = {
@@ -180,7 +177,7 @@ fun LazyItemScope.OnlyMovies(
 @Composable
 fun LazyItemScope.Calendar(
     checked: Boolean,
-    calendars: ImmutableMap<String, String>,
+    calendars: ImmutableMap<String, List<CalendarView>>,
     onSelected: (String?) -> Unit,
     actions: ActivityActions = LocalActivityActions.current
 ) {
@@ -234,17 +231,22 @@ fun LazyItemScope.Calendar(
                         HorizontalDivider()
                     }
                 }
-                items(calendars.toList(), key = { (id) -> id }) { (id, name) ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                onSelected(id)
-                                isVisible = false
-                            }
-                            .padding(vertical = 8.dp)
-                    ) {
-                        Text(text = name)
+                for ((key, items) in calendars.entries) {
+                    item {
+                        Text(key)
+                    }
+                    items(items, key = { it.id }) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onSelected(it.id)
+                                    isVisible = false
+                                }
+                                .padding(vertical = 8.dp)
+                        ) {
+                            Text(text = it.name)
+                        }
                     }
                 }
             }

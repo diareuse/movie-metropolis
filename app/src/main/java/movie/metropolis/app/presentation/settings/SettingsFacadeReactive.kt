@@ -7,28 +7,38 @@ class SettingsFacadeReactive(
     override var filterSeen: Boolean
         get() = origin.filterSeen
         set(value) {
+            val prev = filterSeen
             origin.filterSeen = value
-            notifyListeners()
+            if (prev != filterSeen)
+                notifyListeners()
         }
 
     override var onlyMovies: Boolean
         get() = origin.onlyMovies
         set(value) {
+            val prev = onlyMovies
             origin.onlyMovies = value
-            notifyListeners()
+            if (prev != onlyMovies)
+                notifyListeners()
         }
 
     override var clipRadius: Int
         get() = origin.clipRadius
         set(value) {
+            val prev = clipRadius
             origin.clipRadius = value
-            notifyListeners()
+            if (prev != clipRadius)
+                notifyListeners()
         }
 
-    override fun selectCalendar(id: String?) {
-        origin.selectCalendar(id)
-        notifyListeners()
-    }
+    override var selectedCalendar: String?
+        get() = origin.selectedCalendar
+        set(value) {
+            val prev = selectedCalendar
+            origin.selectedCalendar = value
+            if (prev != selectedCalendar)
+                notifyListeners()
+        }
 
     private fun notifyListeners() = synchronized(origin.listeners) {
         for (listener in origin.listeners)

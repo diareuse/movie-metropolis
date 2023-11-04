@@ -2,6 +2,8 @@ package movie.metropolis.app.presentation.settings
 
 import movie.calendar.CalendarList
 import movie.core.preference.EventPreference
+import movie.metropolis.app.model.Calendars
+import movie.metropolis.app.model.adapter.CalendarViewFromFeature
 import movie.metropolis.app.presentation.OnChangedListener
 import java.util.Collections
 import kotlin.math.absoluteValue
@@ -35,12 +37,14 @@ class SettingsFacadeFromFeature(
             prefs.distanceKms = value.absoluteValue.coerceAtMost(20037)
         }
 
-    override suspend fun getCalendars(): Map<String, String> {
-        return calendars.query().associate { it.id to it.name }
-    }
+    override var selectedCalendar: String?
+        get() = prefs.calendarId
+        set(value) {
+            prefs.calendarId = value
+        }
 
-    override fun selectCalendar(id: String?) {
-        prefs.calendarId = id
+    override suspend fun getCalendars(): Calendars {
+        return calendars.query().map(::CalendarViewFromFeature).let(::Calendars)
     }
 
     override fun addListener(listener: OnChangedListener): OnChangedListener {
