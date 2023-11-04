@@ -4,7 +4,6 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.map
 import movie.metropolis.app.presentation.settings.SettingsFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.addToCalendarFlow
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.calendarFlow
@@ -12,8 +11,6 @@ import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.clipR
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.filterSeenFlow
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.onlyMoviesFlow
 import movie.metropolis.app.util.retainStateIn
-import movie.style.state.ImmutableMap.Companion.immutable
-import movie.style.state.ImmutableMap.Companion.immutableMapOf
 import javax.inject.Inject
 
 @Stable
@@ -29,8 +26,7 @@ class SettingsViewModel @Inject constructor(
         .retainStateIn(viewModelScope, false)
 
     val calendars = facade.calendarFlow
-        .map { it.immutable() }
-        .retainStateIn(viewModelScope, immutableMapOf())
+        .retainStateIn(viewModelScope, mapOf())
 
     val clipRadius = facade.clipRadiusFlow
         .retainStateIn(viewModelScope, 0)
@@ -43,7 +39,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun updateCalendar(id: String?) {
-        facade.selectCalendar(id)
+        facade.selectedCalendar = id
     }
 
     fun updateClipRadius(value: Int) {

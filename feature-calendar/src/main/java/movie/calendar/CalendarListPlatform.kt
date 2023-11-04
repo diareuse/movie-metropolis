@@ -27,7 +27,7 @@ internal class CalendarListPlatform(
                 val account = it.getString(projection.indexOf(Calendars.ACCOUNT_NAME))
                 val name = it.getString(projection.indexOf(Calendars.NAME))
                 val id = it.getString(projection.indexOf(Calendars._ID))
-                accounts += CalendarMetadata(id, "$name ($account)")
+                accounts += CalendarMetadata(id, name, account)
             }
         }
         return accounts

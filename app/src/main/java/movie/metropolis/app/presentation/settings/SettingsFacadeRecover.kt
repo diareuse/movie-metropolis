@@ -1,6 +1,7 @@
 package movie.metropolis.app.presentation.settings
 
 import movie.log.logSevere
+import movie.metropolis.app.model.Calendars
 
 class SettingsFacadeRecover(
     private val origin: SettingsFacade
@@ -27,13 +28,15 @@ class SettingsFacadeRecover(
             origin.runCatching { clipRadius = value }.logSevere()
         }
 
-    override suspend fun getCalendars(): Map<String, String> = origin
+    override var selectedCalendar: String?
+        get() = origin.runCatching { selectedCalendar }.logSevere().getOrNull()
+        set(value) {
+            origin.runCatching { selectedCalendar = value }.logSevere()
+        }
+
+    override suspend fun getCalendars() = origin
         .runCatching { getCalendars() }
         .logSevere()
-        .getOrDefault(emptyMap())
-
-    override fun selectCalendar(id: String?) {
-        origin.runCatching { selectCalendar(id) }.logSevere()
-    }
+        .getOrDefault(Calendars(emptyList()))
 
 }

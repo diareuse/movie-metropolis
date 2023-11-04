@@ -4,6 +4,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.presentation.OnChangedListener
 
 interface SettingsFacade {
@@ -12,9 +13,9 @@ interface SettingsFacade {
     var onlyMovies: Boolean
     val addToCalendar: Boolean
     var clipRadius: Int
+    var selectedCalendar: String?
 
-    suspend fun getCalendars(): Map<String, String>
-    fun selectCalendar(id: String?)
+    suspend fun getCalendars(): Calendars
 
     fun addListener(listener: OnChangedListener): OnChangedListener
     fun removeListener(listener: OnChangedListener)
@@ -46,6 +47,9 @@ interface SettingsFacade {
 
         val SettingsFacade.clipRadiusFlow
             get() = listenerFlow.map { clipRadius }.distinctUntilChanged()
+
+        val SettingsFacade.selectedCalendarFlow
+            get() = listenerFlow.map { selectedCalendar }.distinctUntilChanged()
 
     }
 
