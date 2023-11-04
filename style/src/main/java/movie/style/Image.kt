@@ -36,11 +36,7 @@ fun Image(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val loader = remember(context) { state.getLoader(context) }
-    val model: Any? = when (state.state) {
-        //LoadState.Failure -> placeholderError
-        else -> state.url
-    }
-    val request = rememberImageRequest(url = model)
+    val request = rememberImageRequest(url = state.url)
     val filter = when (state.state) {
         LoadState.Failure -> ColorFilter.tint(LocalContentColor.current)
         else -> null
@@ -53,6 +49,14 @@ fun Image(
         contentScale = ContentScale.Crop,
         alignment = alignment,
         colorFilter = filter,
+        transform = {
+            when (it) {
+                AsyncImagePainter.State.Empty -> it
+                is AsyncImagePainter.State.Error -> it.copy(painter = placeholderError)
+                is AsyncImagePainter.State.Loading -> it
+                is AsyncImagePainter.State.Success -> it
+            }
+        },
         onState = {
             scope.launch {
                 state.processState(it)
