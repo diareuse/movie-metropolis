@@ -1,16 +1,23 @@
-@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package movie.metropolis.app.screen2
 
 import android.Manifest
 import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.pager.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -22,6 +29,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import movie.metropolis.app.feature.location.rememberLocation
+import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.booking.BookingScreen
 import movie.metropolis.app.screen2.booking.BookingViewModel
@@ -32,6 +40,10 @@ import movie.metropolis.app.screen2.home.HomeViewModel
 import movie.metropolis.app.screen2.listing.ListingScreen
 import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
+import movie.metropolis.app.screen2.settings.SettingsScreen
+import movie.metropolis.app.screen2.settings.SettingsViewModel
+import movie.metropolis.app.screen2.settings.component.CalendarColumn
+import movie.metropolis.app.screen2.settings.component.CalendarDialog
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
@@ -61,7 +73,7 @@ fun Navigation(
     ) {
         setup(navController)
         home(navController)
-        login(navController)
+        settings(navController)
         user(navController)
         cinema(navController)
         movie(navController)
@@ -188,18 +200,60 @@ private fun NavGraphBuilder.home(
                 onClickCard = { showCard = true },
                 onClickEdit = {},
                 onClickFavorite = {},
-                onClickSettings = {}
+                onClickSettings = { navController.navigate(Route.Settings()) }
             )
         }
     )
 }
 
-private fun NavGraphBuilder.login(
+private fun NavGraphBuilder.settings(
     navController: NavHostController
 ) = composable(
-    route = Route.Login.route,
-    deepLinks = Route.Login.deepLinks
+    route = Route.Settings.route,
+    deepLinks = Route.Settings.deepLinks
 ) {
+    val viewModel = hiltViewModel<SettingsViewModel>()
+    val state by viewModel.state.collectAsState()
+    val calendars by viewModel.calendars.collectAsState(Calendars())
+    var showCalendars by remember { mutableStateOf(false) }
+    val permission = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.READ_CALENDAR,
+            Manifest.permission.WRITE_CALENDAR
+        )
+    )
+    val blur by animateDpAsState(targetValue = if (showCalendars) 32.dp else 0.dp)
+    SettingsScreen(
+        modifier = Modifier.blur(blur),
+        state = state,
+        onStateChange = viewModel::updateState,
+        onClickBack = navController::navigateUp,
+        onShowCalendarsRequest = { showCalendars = true }
+    )
+    if (showCalendars) {
+        LaunchedEffect(permission) {
+            if (!permission.allPermissionsGranted) {
+                permission.launchMultiplePermissionRequest()
+            } else {
+                viewModel.refreshCalendars()
+            }
+        }
+        CalendarDialog(
+            onDismissRequest = {
+                showCalendars = false
+                viewModel.updateState(state.copy(selectedCalendar = null))
+            }
+        ) {
+            CalendarColumn(
+                modifier = Modifier.fillMaxWidth(),
+                calendars = calendars,
+                onCalendarSelect = {
+                    showCalendars = false
+                    viewModel.updateState(state.copy(selectedCalendar = it))
+                }
+            )
+        }
+    }
 }
 
 private fun NavGraphBuilder.user(
