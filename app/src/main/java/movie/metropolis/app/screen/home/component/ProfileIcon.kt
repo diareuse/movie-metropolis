@@ -9,10 +9,12 @@ import androidx.compose.material.ripple.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.tooling.preview.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import movie.metropolis.app.R
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.rememberImageState
@@ -42,7 +44,8 @@ fun ProfileIcon(
                 }
             }
             .clip(CircleShape),
-        state = state
+        state = state,
+        placeholderError = painterResource(id = R.drawable.ic_user)
     )
 }
 
