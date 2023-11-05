@@ -40,6 +40,8 @@ import movie.metropolis.app.screen2.home.HomeScreen
 import movie.metropolis.app.screen2.home.HomeViewModel
 import movie.metropolis.app.screen2.listing.ListingScreen
 import movie.metropolis.app.screen2.listing.ListingViewModel
+import movie.metropolis.app.screen2.movie.MovieScreen
+import movie.metropolis.app.screen2.movie.MovieViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
 import movie.metropolis.app.screen2.settings.SettingsScreen
 import movie.metropolis.app.screen2.settings.SettingsViewModel
@@ -76,7 +78,6 @@ fun Navigation(
         setup(navController)
         home(navController)
         settings(navController)
-        user(navController)
         cinema(navController)
         movie(navController)
         order(navController)
@@ -258,14 +259,6 @@ private fun NavGraphBuilder.settings(
     }
 }
 
-private fun NavGraphBuilder.user(
-    navController: NavHostController
-) = composable(
-    route = Route.User.route,
-    deepLinks = Route.User.deepLinks
-) {
-}
-
 private fun NavGraphBuilder.cinema(
     navController: NavHostController
 ) = composable(
@@ -282,6 +275,9 @@ private fun NavGraphBuilder.movie(
     arguments = Route.Movie.arguments,
     deepLinks = Route.Movie.deepLinks
 ) {
+    val viewModel = hiltViewModel<MovieViewModel>()
+    val movie by viewModel.movie.collectAsState()
+    MovieScreen(movie = movie, onBackClick = navController::navigateUp)
 }
 
 private fun NavGraphBuilder.order(

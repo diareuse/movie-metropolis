@@ -66,6 +66,7 @@ sealed class Route(
 
     }
 
+    @Deprecated("")
     data object User : Route("users/me") {
         operator fun invoke() = route
     }
