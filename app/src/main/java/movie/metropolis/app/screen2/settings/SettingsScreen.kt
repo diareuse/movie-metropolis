@@ -7,6 +7,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -27,6 +29,7 @@ import movie.metropolis.app.screen2.settings.component.SettingsItemRow
 import movie.metropolis.app.screen2.settings.component.SettingsSection
 import movie.metropolis.app.screen2.settings.component.SettingsTextField
 import movie.style.CollapsingTopAppBar
+import movie.style.action.clearFocus
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
 
@@ -129,7 +132,12 @@ fun SettingsScreen(
                         value = state.nearbyCinemas,
                         onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
                         leadingIcon = { Icon(Icons.Rounded.LocationOn, null) },
-                        visualTransformation = LengthVisualTransformation
+                        visualTransformation = LengthVisualTransformation,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(onDone = clearFocus())
                     )
                 }
             )
