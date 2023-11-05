@@ -45,7 +45,10 @@ fun CollapsingTopAppBar(
     contentPadding: PaddingValues = PaddingValues(12.dp),
     expandedTitlePadding: PaddingValues = PaddingValues(start = 12.dp, top = 24.dp),
     titleStyle: TextStyle = Theme.textStyle.title,
-    expandedTextStyle: TextStyle = titleStyle.copy(fontSize = titleStyle.fontSize * 2)
+    expandedTextStyle: TextStyle = titleStyle.copy(
+        fontSize = titleStyle.fontSize * 2,
+        lineHeight = titleStyle.fontSize * 2
+    )
 ) {
     val alignment = Alignment.CenterVertically
     val density = LocalDensity.current
