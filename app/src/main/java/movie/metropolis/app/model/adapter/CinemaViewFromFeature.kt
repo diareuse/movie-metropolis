@@ -1,5 +1,6 @@
 package movie.metropolis.app.model.adapter
 
+import android.net.Uri
 import movie.core.model.Cinema
 import movie.metropolis.app.model.CinemaView
 
@@ -24,4 +25,6 @@ data class CinemaViewFromFeature(
         }
     override val image: String?
         get() = cinema.image
+    override val uri: String
+        get() = "geo:${cinema.location.latitude},${cinema.location.longitude}?q=" + Uri.encode(name)
 }

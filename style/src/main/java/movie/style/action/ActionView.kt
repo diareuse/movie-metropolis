@@ -15,3 +15,14 @@ fun actionView(link: () -> String): () -> Unit {
         context.startActivity(intent)
     }
 }
+
+@Composable
+fun <T> actionView(link: (T) -> String): (T) -> Unit {
+    val context = LocalContext.current
+    return {
+        val intent = Intent(Intent.ACTION_VIEW)
+            .setData(link(it).toUri())
+            .let { Intent.createChooser(it, "") }
+        context.startActivity(intent)
+    }
+}
