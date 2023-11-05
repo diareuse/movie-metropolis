@@ -30,6 +30,7 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.Calendars
+import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.booking.BookingScreen
 import movie.metropolis.app.screen2.booking.BookingViewModel
@@ -47,6 +48,7 @@ import movie.metropolis.app.screen2.settings.component.CalendarDialog
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
+import movie.style.action.actionView
 
 @Composable
 fun Navigation(
@@ -189,7 +191,7 @@ private fun NavGraphBuilder.home(
                 permission = state,
                 state = cinemasState,
                 onClick = { navController.navigate(Route.Cinema(it.id)) },
-                onMapClick = { /* todo open maps */ }
+                onMapClick = actionView<CinemaView> { it.uri }
             )
         },
         profile = { modifier, padding ->
