@@ -76,6 +76,7 @@ sealed class Route(
         operator fun invoke() = route
     }
 
+    @Deprecated("")
     data object Cinema : Route("cinemas/{cinema}") {
         val arguments = listOf(
             navArgument("cinema") {
@@ -114,6 +115,49 @@ sealed class Route(
 
         fun deepLink(movie: String, upcoming: Boolean = false) =
             "$InternalUri/${invoke(movie, upcoming)}".toUri()
+    }
+
+    sealed class Booking(route: String) : Route(route) {
+
+        data object Movie : Booking("movies/{movie}/booking") {
+
+            val arguments = listOf(
+                navArgument("movie") {
+                    type = NavType.StringType
+                }
+            )
+
+            class Arguments(private val entry: SavedStateHandle) {
+                val movie get() = entry.get<String>("movie").let(::requireNotNull)
+            }
+
+            operator fun invoke(movie: String) =
+                route.replace("{movie}", movie)
+
+            fun deepLink(movie: String) =
+                "$InternalUri/${invoke(movie)}".toUri()
+
+        }
+
+        data object Cinema : Booking("cinemas/{cinema}/booking") {
+
+            val arguments = listOf(
+                navArgument("cinema") {
+                    type = NavType.StringType
+                }
+            )
+
+            class Arguments(private val entry: SavedStateHandle) {
+                val cinema get() = entry.get<String>("cinema").let(::requireNotNull)
+            }
+
+            operator fun invoke(cinema: String) =
+                route.replace("{cinema}", cinema)
+
+            fun deepLink(cinema: String) =
+                "$InternalUri/${invoke(cinema)}".toUri()
+
+        }
     }
 
     data object OrderComplete : Route("orders/success") {
