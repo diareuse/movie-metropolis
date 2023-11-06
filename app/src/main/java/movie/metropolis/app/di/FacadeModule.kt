@@ -18,9 +18,11 @@ import movie.core.TicketShareRegistry
 import movie.core.UserBookingFeature
 import movie.core.UserCredentialFeature
 import movie.core.UserDataFeature
+import movie.core.adapter.MovieFromId
 import movie.core.preference.EventPreference
 import movie.image.ImageAnalyzer
 import movie.metropolis.app.feature.billing.BillingFacade
+import movie.metropolis.app.model.adapter.CinemaFromId
 import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.booking.BookingFacadeFromFeature
 import movie.metropolis.app.presentation.booking.BookingFacadeRecover
@@ -67,6 +69,9 @@ import movie.metropolis.app.presentation.share.ShareFacadeImageConvert
 import movie.metropolis.app.presentation.share.ShareFacadeRecover
 import movie.metropolis.app.presentation.share.ShareFacadeRefresh
 import movie.metropolis.app.presentation.share.ShareFacadeText
+import movie.metropolis.app.presentation.ticket.TicketFacade
+import movie.metropolis.app.presentation.ticket.TicketFacadeCinemaFromFeature
+import movie.metropolis.app.presentation.ticket.TicketFacadeMovieFromFeature
 import movie.rating.MetadataProvider
 
 @Module
@@ -241,6 +246,29 @@ class FacadeModule {
         facade: BillingFacade
     ): OrderCompleteFacade {
         return OrderCompleteFacadeFromFeature(facade)
+    }
+
+    @Provides
+    @Reusable
+    fun ticket(
+        detail: EventDetailFeature,
+        showings: EventShowingsFeature.Factory
+    ) = object : TicketFacade.Factory {
+        override fun movie(id: String): TicketFacade.LocationFactory {
+            return TicketFacade.LocationFactory { location ->
+                TicketFacadeMovieFromFeature(
+                    id,
+                    detail,
+                    showings.movie(MovieFromId(id), location)
+                )
+            }
+        }
+
+        override fun cinema(id: String): TicketFacade.LocationFactory {
+            return TicketFacade.LocationFactory { _ ->
+                TicketFacadeCinemaFromFeature(showings.cinema(CinemaFromId(id)))
+            }
+        }
     }
 
 }
