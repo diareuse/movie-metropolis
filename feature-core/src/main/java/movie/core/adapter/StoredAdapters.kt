@@ -83,7 +83,8 @@ fun Showing.asStored(movie: Movie) = ShowingStored(
     bookingUrl = bookingUrl,
     isEnabled = isEnabled,
     auditorium = auditorium,
-    language = language,
+    language = language.language,
+    subtitles = subtitles?.language,
     types = types.toList(),
     movie = movie.id
 )

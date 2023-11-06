@@ -62,6 +62,7 @@ import movie.style.theme.Theme
 import java.util.Date
 import kotlin.random.Random.Default.nextBytes
 import kotlin.random.Random.Default.nextInt
+import kotlin.random.Random.Default.nextLong
 
 @Composable
 fun MovieScreen(
@@ -342,7 +343,7 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
 ) {
 
     private data class MovieDetailViewPreview(
-        override val id: String = "id",
+        override val id: String = nextLong().toString(),
         override val name: String = listOf(
             "Black Adam",
             "Black Panther: Wakanda Forever",

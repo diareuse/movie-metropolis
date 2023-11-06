@@ -7,7 +7,7 @@ data class LanguageAndTypeFromFeature(
     private val item: Showing
 ) : AvailabilityView.Type {
 
-    override val language get() = item.language
+    override val language get() = item.language.displayLanguage
     override val types get() = item.types.toList()
 
     override fun equals(other: Any?): Boolean {

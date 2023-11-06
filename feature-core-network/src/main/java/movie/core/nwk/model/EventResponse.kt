@@ -19,11 +19,20 @@ data class EventResponse(
     @SerialName("auditorium") val auditorium: String
 ) {
 
-    val language: String
+    val dubbing: Locale
         get() = when {
-            DubbedTag in tags -> labelDubbed
-            SubbedTag in tags -> labelSubbed
-            else -> "-"
+            DubbedTag in tags -> tags.firstAround(Dubbing, "-").orEmpty()
+                .let(::Locale)
+
+            else -> Locale.ROOT
+        }
+
+    val subtitles: Locale?
+        get() = when {
+            SubbedTag in tags -> tags.firstAround(Subbed, "-").orEmpty()
+                .let(::Locale)
+
+            else -> null
         }
 
     val types
@@ -36,24 +45,6 @@ data class EventResponse(
             if (ScreeningTypeVIP in tags) add("VIP")
             if (ScreeningTypeRemaster in tags) add("Remaster")
             if (ScreeningTypeHighFrameRate in tags) add("High Frame Rate")
-        }
-
-    private val labelDubbed
-        get() = tags.firstAround(Dubbing, "-").orEmpty()
-            .let(::Locale).let {
-                it.displayName.ifEmpty { it.language.uppercase() }
-            }
-
-    private val labelSubbed
-        get() = buildString {
-            val original = tags.firstAround(Original, "-").orEmpty()
-                .let(::Locale)
-            append(original.displayName.ifEmpty { original.language.uppercase() })
-            append(" (")
-            val subs = tags.firstAround(Subbed, "-").orEmpty()
-                .let(::Locale)
-            append(subs.displayName.ifEmpty { subs.language.uppercase() })
-            append(")")
         }
 
     private fun List<String>.firstAround(start: String, end: String) =
