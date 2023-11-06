@@ -43,6 +43,8 @@ import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.movie.MovieScreen
 import movie.metropolis.app.screen2.movie.MovieViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
+import movie.metropolis.app.screen2.purchase.TimeScreen
+import movie.metropolis.app.screen2.purchase.TimeViewModel
 import movie.metropolis.app.screen2.settings.SettingsScreen
 import movie.metropolis.app.screen2.settings.SettingsViewModel
 import movie.metropolis.app.screen2.settings.component.CalendarColumn
@@ -51,6 +53,7 @@ import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
 import movie.style.action.actionView
+import java.net.URL
 
 @Composable
 fun Navigation(
@@ -78,10 +81,10 @@ fun Navigation(
         setup(navController)
         home(navController)
         settings(navController)
-        cinema(navController)
         movie(navController)
         order(navController)
         orderComplete(navController)
+        booking(navController)
     }
 }
 
@@ -191,7 +194,7 @@ private fun NavGraphBuilder.home(
                 cinemas = cinemas.toImmutableList(),
                 permission = state,
                 state = cinemasState,
-                onClick = { navController.navigate(Route.Cinema(it.id)) },
+                onClick = { navController.navigate(Route.Booking.Cinema(it.id)) },
                 onMapClick = actionView<CinemaView> { it.uri }
             )
         },
@@ -259,15 +262,6 @@ private fun NavGraphBuilder.settings(
     }
 }
 
-private fun NavGraphBuilder.cinema(
-    navController: NavHostController
-) = composable(
-    route = Route.Cinema.route,
-    arguments = Route.Cinema.arguments,
-    deepLinks = Route.Cinema.deepLinks
-) {
-}
-
 private fun NavGraphBuilder.movie(
     navController: NavHostController
 ) = composable(
@@ -277,7 +271,15 @@ private fun NavGraphBuilder.movie(
 ) {
     val viewModel = hiltViewModel<MovieViewModel>()
     val movie by viewModel.movie.collectAsState()
-    MovieScreen(movie = movie, onBackClick = navController::navigateUp)
+    MovieScreen(movie = movie, onBackClick = navController::navigateUp, onBookClick = {
+        val m = movie
+        if (m != null)
+            navController.navigate(Route.Booking.Movie(m.id))
+    })
+}
+
+fun a() {
+    URL("").openStream()
 }
 
 private fun NavGraphBuilder.order(
@@ -295,4 +297,25 @@ private fun NavGraphBuilder.orderComplete(
     route = Route.OrderComplete.route,
     deepLinks = Route.OrderComplete.deepLinks
 ) {
+}
+
+private fun NavGraphBuilder.booking(
+    navController: NavHostController
+) {
+    composable(
+        route = Route.Booking.Movie.route,
+        deepLinks = Route.Booking.Movie.deepLinks
+    ) {
+        val viewModel = hiltViewModel<TimeViewModel>()
+        val times by viewModel.times.collectAsState()
+        TimeScreen(times.toImmutableList())
+    }
+    composable(
+        route = Route.Booking.Cinema.route,
+        deepLinks = Route.Booking.Cinema.deepLinks
+    ) {
+        val viewModel = hiltViewModel<TimeViewModel>()
+        val times by viewModel.times.collectAsState()
+        TimeScreen(times.toImmutableList())
+    }
 }

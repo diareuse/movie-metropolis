@@ -31,6 +31,7 @@ import movie.style.theme.Theme
 fun MovieScreen(
     movie: MovieDetailView?,
     onBackClick: () -> Unit,
+    onBookClick: () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) = Scaffold(
@@ -63,6 +64,9 @@ fun MovieScreen(
             .padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Button(onClick = onBookClick) {
+            Text("Book")
+        }
         Image(
             modifier = Modifier
                 .fillMaxWidth()
@@ -107,13 +111,6 @@ fun MovieScreen(
                 textAlign = TextAlign.Justify
             )
         }
-        // poster - fillmaxheight .4f
-        // name
-        // time - country - year
-        // director / cast
-        // description
-        // ---
-        // showings
     }
 }
 
@@ -122,5 +119,5 @@ fun MovieScreen(
 @Composable
 private fun MovieScreenPreview() = PreviewLayout {
     val movie = MovieDetailViewProvider().values.first()
-    MovieScreen(movie, {})
+    MovieScreen(movie, {}, {})
 }
