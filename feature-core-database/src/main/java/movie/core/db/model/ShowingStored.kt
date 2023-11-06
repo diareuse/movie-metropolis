@@ -42,6 +42,8 @@ data class ShowingStored(
     val auditorium: String,
     @ColumnInfo("language")
     val language: String,
+    @ColumnInfo("subtitles")
+    val subtitles: String?,
     @ColumnInfo("type")
     val types: List<String>,
     @ColumnInfo("movie")
