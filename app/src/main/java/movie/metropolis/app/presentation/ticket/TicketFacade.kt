@@ -7,6 +7,7 @@ import movie.metropolis.app.model.LazyTimeView
 interface TicketFacade {
 
     val times: Flow<List<LazyTimeView>>
+    val poster: Flow<String?>
 
     fun interface LocationFactory {
         fun create(location: Location): TicketFacade

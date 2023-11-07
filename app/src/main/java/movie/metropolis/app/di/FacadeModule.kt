@@ -252,6 +252,7 @@ class FacadeModule {
     @Reusable
     fun ticket(
         detail: EventDetailFeature,
+        cinemas: EventCinemaFeature,
         showings: EventShowingsFeature.Factory
     ) = object : TicketFacade.Factory {
         override fun movie(id: String): TicketFacade.LocationFactory {
@@ -266,7 +267,7 @@ class FacadeModule {
 
         override fun cinema(id: String): TicketFacade.LocationFactory {
             return TicketFacade.LocationFactory { _ ->
-                TicketFacadeCinemaFromFeature(showings.cinema(CinemaFromId(id)))
+                TicketFacadeCinemaFromFeature(id, cinemas, showings.cinema(CinemaFromId(id)))
             }
         }
     }
