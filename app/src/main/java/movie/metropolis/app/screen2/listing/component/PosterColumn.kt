@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.semantics.*
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
@@ -156,15 +157,18 @@ fun RatingBox(
     contentColor: Color,
     rating: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    offset: PaddingValues = PaddingValues(start = 4.dp, top = 4.dp)
+    textStyle: TextStyle = Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium),
+    offset: PaddingValues = PaddingValues(start = 4.dp, top = 4.dp),
+    padding: PaddingValues = PaddingValues(8.dp, 4.dp),
+    shape: Shape = CircleShape
 ) = Box(
     modifier = modifier
         .padding(offset)
-        .surface(color, CircleShape, 16.dp, color)
-        .glow(CircleShape, contentColor, width = 2.dp)
-        .padding(8.dp, 4.dp)
+        .surface(color, shape, 16.dp, color)
+        .glow(shape, contentColor, width = 2.dp)
+        .padding(padding)
 ) {
-    ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
+    ProvideTextStyle(textStyle) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
             rating()
         }
