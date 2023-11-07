@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen2.purchase
+package movie.metropolis.app.screen2.booking
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalLayoutApi::class)
 
-package movie.metropolis.app.screen2.purchase.component
+package movie.metropolis.app.screen2.booking.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*

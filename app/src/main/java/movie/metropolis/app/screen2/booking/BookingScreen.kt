@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package movie.metropolis.app.screen2.purchase
+package movie.metropolis.app.screen2.booking
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -26,11 +26,11 @@ import movie.metropolis.app.model.SpecificTimeView
 import movie.metropolis.app.model.TimeView
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.listing.MovieViewProvider
-import movie.metropolis.app.screen2.purchase.component.CinemaTimeContainer
-import movie.metropolis.app.screen2.purchase.component.MovieTimeContainer
-import movie.metropolis.app.screen2.purchase.component.ProjectionTypeRow
-import movie.metropolis.app.screen2.purchase.component.ProjectionTypeRowDefaults
-import movie.metropolis.app.screen2.purchase.component.TimeButton
+import movie.metropolis.app.screen2.booking.component.CinemaTimeContainer
+import movie.metropolis.app.screen2.booking.component.MovieTimeContainer
+import movie.metropolis.app.screen2.booking.component.ProjectionTypeRow
+import movie.metropolis.app.screen2.booking.component.ProjectionTypeRowDefaults
+import movie.metropolis.app.screen2.booking.component.TimeButton
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
@@ -41,7 +41,7 @@ import java.util.Locale
 import kotlin.random.Random.Default.nextInt
 
 @Composable
-fun TimeScreen(
+fun BookingScreen(
     items: ImmutableList<LazyTimeView>,
     modifier: Modifier = Modifier,
 ) = Scaffold(
@@ -140,7 +140,7 @@ private fun TimeScreenPreview(
     @PreviewParameter(LazyTimeViewProvider::class)
     time: LazyTimeView
 ) = PreviewLayout {
-    TimeScreen(persistentListOf(time))
+    BookingScreen(persistentListOf(time))
 }
 
 class LazyTimeViewProvider : PreviewParameterProvider<LazyTimeView> {
