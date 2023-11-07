@@ -1,30 +1,42 @@
 package movie.metropolis.app.presentation.ticket
 
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import movie.core.EventDetailFeature
 import movie.core.EventShowingsFeature
 import movie.core.adapter.MovieFromId
 import movie.metropolis.app.model.LazyTimeView
+import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
 import java.util.Date
 import kotlin.math.max
 import kotlin.time.Duration.Companion.days
 
 class TicketFacadeMovieFromFeature(
-    private val movie: String,
+    private val id: String,
     private val detail: EventDetailFeature,
     private val showings: EventShowingsFeature.Movie,
 ) : TicketFacade {
 
-    override val times: Flow<List<LazyTimeView>> = flow {
-        val detail = detail.get(MovieFromId(movie)).getOrThrow()
+    private val movie = flow {
+        val detail = detail.get(MovieFromId(id)).getOrThrow()
+        emit(detail)
+    }.shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+
+    override val times: Flow<List<LazyTimeView>> = movie.map { detail ->
         val startTime = max(Date().time, detail.screeningFrom.time)
         val day = 1.days
-        val items = List(14) {
+        List(14) {
             val offset = (day * it).inWholeMilliseconds
             LazyTimeViewMovie(Date(startTime + offset), showings)
         }
-        emit(items)
+    }
+
+    override val poster: Flow<String?> = movie.map {
+        MovieDetailViewFromFeature(it).poster?.url
     }
 
 }

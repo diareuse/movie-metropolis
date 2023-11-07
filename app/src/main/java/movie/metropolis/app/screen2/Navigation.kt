@@ -53,7 +53,6 @@ import movie.metropolis.app.screen2.setup.SetupViewModel
 import movie.metropolis.app.screen2.ticket.TicketScreen
 import movie.metropolis.app.screen2.ticket.TicketViewModel
 import movie.style.action.actionView
-import java.net.URL
 
 @Composable
 fun Navigation(
@@ -278,10 +277,6 @@ private fun NavGraphBuilder.movie(
     })
 }
 
-fun a() {
-    URL("").openStream()
-}
-
 private fun NavGraphBuilder.order(
     navController: NavHostController
 ) = composable(
@@ -308,7 +303,8 @@ private fun NavGraphBuilder.booking(
     ) {
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
-        BookingScreen(times.toImmutableList())
+        val poster by viewModel.poster.collectAsState()
+        BookingScreen(poster, times.toImmutableList())
     }
     composable(
         route = Route.Booking.Cinema.route,
@@ -316,6 +312,7 @@ private fun NavGraphBuilder.booking(
     ) {
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
-        BookingScreen(times.toImmutableList())
+        val poster by viewModel.poster.collectAsState()
+        BookingScreen(poster, times.toImmutableList())
     }
 }
