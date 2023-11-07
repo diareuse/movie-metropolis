@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen2.purchase.component
+package movie.metropolis.app.screen2.booking.component
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.layout.*

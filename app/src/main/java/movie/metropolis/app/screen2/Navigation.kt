@@ -32,6 +32,8 @@ import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.booking.BookingScreen
+import movie.metropolis.app.screen2.booking.TimeViewModel
 import movie.metropolis.app.screen2.cinema.CinemasScreen
 import movie.metropolis.app.screen2.cinema.CinemasViewModel
 import movie.metropolis.app.screen2.home.HomeScreen
@@ -41,8 +43,6 @@ import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.movie.MovieScreen
 import movie.metropolis.app.screen2.movie.MovieViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
-import movie.metropolis.app.screen2.purchase.TimeScreen
-import movie.metropolis.app.screen2.purchase.TimeViewModel
 import movie.metropolis.app.screen2.settings.SettingsScreen
 import movie.metropolis.app.screen2.settings.SettingsViewModel
 import movie.metropolis.app.screen2.settings.component.CalendarColumn
@@ -308,7 +308,7 @@ private fun NavGraphBuilder.booking(
     ) {
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
-        TimeScreen(times.toImmutableList())
+        BookingScreen(times.toImmutableList())
     }
     composable(
         route = Route.Booking.Cinema.route,
@@ -316,6 +316,6 @@ private fun NavGraphBuilder.booking(
     ) {
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
-        TimeScreen(times.toImmutableList())
+        BookingScreen(times.toImmutableList())
     }
 }
