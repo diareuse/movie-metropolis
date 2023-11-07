@@ -86,9 +86,7 @@ fun BookingScreen(
         }
     }
     BackgroundImage(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalOverlay(.5f, VerticalGravity.Bottom),
+        modifier = Modifier.fillMaxSize(),
         state = rememberImageState(url = poster)
     )
     Column(
