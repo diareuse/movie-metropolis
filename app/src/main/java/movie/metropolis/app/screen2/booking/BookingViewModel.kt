@@ -36,9 +36,13 @@ class TimeViewModel private constructor(
     private val facade = location
         .map { it?.toLocation() ?: Location.Zero }
         .map { factory.create(it) }
-        .shareIn(viewModelScope, SharingStarted.WhileSubscribed())
-    val poster = facade.flatMapLatest { it.poster }
+        .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
+    val poster = facade
+        .flatMapLatest { it.poster }
         .retainStateIn(viewModelScope, null)
+    val title = facade
+        .flatMapLatest { it.name }
+        .retainStateIn(viewModelScope, "")
     val times = facade
         .flatMapLatest { it.times }
         .retainStateIn(viewModelScope, emptyList())
