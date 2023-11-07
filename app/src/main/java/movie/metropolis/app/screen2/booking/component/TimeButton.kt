@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen2.booking.component
 
+import android.content.res.Configuration
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -9,6 +10,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -32,6 +34,7 @@ fun TimeButton(
     time: Long,
     modifier: Modifier = Modifier,
     dayRange: IntRange = 7..17,
+    onClick: () -> Unit,
     colors: TimeButtonColors = TimeButtonDefaults.colors(),
     content: @Composable () -> Unit,
 ) {
@@ -47,6 +50,7 @@ fun TimeButton(
     Box(
         modifier = modifier
             .clip(Theme.container.button)
+            .clickable(role = Role.Button, onClick = onClick)
             .drawBehind {
                 val timeAngle = time % 86400000f / 86400000f * 360f + 270f
                 // sun & moon
@@ -118,7 +122,7 @@ private fun TimeButtonAnimationPreview() = PreviewLayout {
         animationSpec = infiniteRepeatable(tween(5000))
     )
     val format = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
-    TimeButton(modifier = Modifier.width(90.dp), time = time.toLong()) {
+    TimeButton(modifier = Modifier.width(90.dp), time = time.toLong(), onClick = {}) {
         Text(format.format(Date(time.toLong())))
     }
 }

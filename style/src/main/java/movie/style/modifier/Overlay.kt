@@ -4,7 +4,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import movie.style.theme.Theme
 
@@ -33,19 +32,34 @@ fun Modifier.verticalOverlay(
 ) = composed {
     val color = Color.White
     val colors = listOf(color, color.copy(alpha = .3f), color.copy(alpha = .1f), Color.Transparent)
-    val heightPx = with(LocalDensity.current) { height.toPx() }
-    graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen).drawWithContent {
-        val topLeft = gravity.getOffset(size, heightPx)
-        val brushBounds = gravity.getBrushBounds(size, heightPx)
-        val size = size.copy(height = heightPx)
-        drawContent()
-        val brush = Brush.verticalGradient(
-            colors = colors,
-            startY = brushBounds.start,
-            endY = brushBounds.endInclusive
-        )
-        drawRect(brush, topLeft, size, blendMode = BlendMode.DstIn)
-    }
+    verticalOverlay(colors, gravity) { height.toPx() }
+}
+
+fun Modifier.verticalOverlay(
+    percent: Float,
+    gravity: VerticalGravity = VerticalGravity.Top
+) = composed {
+    val color = Color.White
+    val colors = listOf(color, color.copy(alpha = .3f), color.copy(alpha = .1f), Color.Transparent)
+    verticalOverlay(colors, gravity) { it.height * percent }
+}
+
+fun Modifier.verticalOverlay(
+    colors: List<Color>,
+    gravity: VerticalGravity,
+    height: Density.(Size) -> Float
+) = graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen).drawWithContent {
+    val heightPx = height(size)
+    val topLeft = gravity.getOffset(size, heightPx)
+    val brushBounds = gravity.getBrushBounds(size, heightPx)
+    val size = size.copy(height = heightPx)
+    drawContent()
+    val brush = Brush.verticalGradient(
+        colors = colors,
+        startY = brushBounds.start,
+        endY = brushBounds.endInclusive
+    )
+    drawRect(brush, topLeft, size, blendMode = BlendMode.DstIn)
 }
 
 enum class VerticalGravity {
