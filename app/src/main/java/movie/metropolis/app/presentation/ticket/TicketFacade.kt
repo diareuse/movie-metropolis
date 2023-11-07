@@ -8,6 +8,7 @@ interface TicketFacade {
 
     val times: Flow<List<LazyTimeView>>
     val poster: Flow<String?>
+    val name: Flow<String>
 
     fun interface LocationFactory {
         fun create(location: Location): TicketFacade
