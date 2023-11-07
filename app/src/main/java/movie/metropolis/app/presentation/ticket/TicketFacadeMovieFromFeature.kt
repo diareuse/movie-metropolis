@@ -24,7 +24,7 @@ class TicketFacadeMovieFromFeature(
     private val movie = flow {
         val detail = detail.get(MovieFromId(id)).getOrThrow()
         emit(detail)
-    }.shareIn(GlobalScope, SharingStarted.WhileSubscribed())
+    }.shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 
     override val times: Flow<List<LazyTimeView>> = movie.map { detail ->
         val startTime = max(Date().time, detail.screeningFrom.time)
