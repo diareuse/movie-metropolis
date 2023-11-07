@@ -20,8 +20,11 @@ data class EventResponse(
 ) {
 
     val dubbing: Locale
-        get() = when {
-            DubbedTag in tags -> tags.firstAround(Dubbing, "-").orEmpty()
+        get() = when (DubbedTag) {
+            in tags -> tags.firstAround(Dubbing, "-").orEmpty()
+                .let(::Locale)
+
+            !in tags -> tags.firstAround(Original, "-").orEmpty()
                 .let(::Locale)
 
             else -> Locale.ROOT
@@ -50,6 +53,7 @@ data class EventResponse(
     private fun List<String>.firstAround(start: String, end: String) =
         firstOrNull { it.startsWith(start) }
             ?.around(start, end)
+            ?.replace("-", "_")
 
     private fun String.around(start: String, end: String) = substringAfter(start)
         .substringBefore(end)
