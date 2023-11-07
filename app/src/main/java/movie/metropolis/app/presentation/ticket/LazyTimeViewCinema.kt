@@ -20,7 +20,7 @@ class LazyTimeViewCinema(
             TimeViewMovieFromFeature(movie, showings)
         }
         emit(showings)
-    }.shareIn(GlobalScope, SharingStarted.Lazily)
+    }.shareIn(GlobalScope, SharingStarted.Lazily, 1)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
