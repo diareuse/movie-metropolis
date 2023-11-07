@@ -8,6 +8,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -17,16 +18,13 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
-import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
+import movie.metropolis.app.screen2.movie.component.LargeMoviePoster
+import movie.metropolis.app.screen2.movie.component.LargeRatingBox
 import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.VerticalGravity
-import movie.style.modifier.glow
-import movie.style.modifier.surface
-import movie.style.modifier.verticalOverlay
-import movie.style.rememberImageState
+import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
 
 @Composable
@@ -56,11 +54,9 @@ fun MovieScreen(
         )
     }
 ) { padding ->
-    val poster = rememberImageState(url = movie?.poster?.url)
+    val poster = rememberPaletteImageState(url = movie?.poster?.url)
     BackgroundImage(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalOverlay(.5f, VerticalGravity.Bottom),
+        modifier = Modifier.fillMaxSize(),
         state = poster
     )
     Column(
@@ -71,19 +67,28 @@ fun MovieScreen(
             .padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(onClick = onBookClick) {
-            Text("Book")
-        }
-        Image(
+        LargeMoviePoster(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(DefaultPosterAspectRatio)
                 .padding(horizontal = 24.dp)
-                .padding(top = 24.dp)
-                .surface(1.dp, Theme.container.poster)
-                .glow(Theme.container.poster),
-            state = poster
-        )
+                .padding(top = 24.dp),
+            color = poster.palette.color,
+            contentColor = poster.palette.textColor,
+            order = { Icon(Icons.Rounded.ShoppingCart, null) },
+            rating = {
+                if (movie?.rating != null) LargeRatingBox(
+                    color = poster.palette.color,
+                    contentColor = poster.palette.textColor
+                ) {
+                    Text(movie.rating.orEmpty())
+                }
+            },
+            onOrderClick = onBookClick
+        ) {
+            Image(
+                modifier = Modifier.fillMaxWidth(),
+                state = poster
+            )
+        }
         if (movie != null) Column(
             modifier = Modifier
                 .padding(24.dp),
