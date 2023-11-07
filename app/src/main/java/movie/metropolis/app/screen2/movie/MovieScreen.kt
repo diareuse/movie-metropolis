@@ -22,8 +22,10 @@ import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.modifier.VerticalGravity
 import movie.style.modifier.glow
 import movie.style.modifier.surface
+import movie.style.modifier.verticalOverlay
 import movie.style.rememberImageState
 import movie.style.theme.Theme
 
@@ -55,7 +57,12 @@ fun MovieScreen(
     }
 ) { padding ->
     val poster = rememberImageState(url = movie?.poster?.url)
-    BackgroundImage(modifier = Modifier.fillMaxSize(), state = poster)
+    BackgroundImage(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalOverlay(.5f, VerticalGravity.Bottom),
+        state = poster
+    )
     Column(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
