@@ -51,44 +51,46 @@ fun TimeButton(
         modifier = modifier
             .clip(Theme.container.button)
             .clickable(role = Role.Button, onClick = onClick)
-            .drawBehind {
-                val timeAngle = time % 86400000f / 86400000f * 360f + 270f
-                // sun & moon
-                val sunRadius = 16.dp.toPx() / 2
-                val radius = (size.width / 2) / 1.5f
-                val sunAngleOffset = 270f
-                val moonAngleOffset = 90f
-                val sunAngle = sunAngleOffset - timeAngle
-                val moonAngle = moonAngleOffset - timeAngle
-                val sunCenter =
-                    Offset(radius * sin(radians(sunAngle)), radius * cos(radians(sunAngle)))
-                val moonCenter =
-                    Offset(radius * sin(radians(moonAngle)), radius * cos(radians(moonAngle)))
-                drawRect(containerColor)
-                drawRect(colors.sky, alpha = .5f)
-                drawCircle(
-                    colors.sun,
-                    radius = sunRadius,
-                    center = sunCenter + Offset(size.width / 2, size.height)
-                )
-                drawCircle(
-                    colors.moon,
-                    radius = sunRadius,
-                    center = moonCenter + Offset(size.width / 2, size.height)
-                )
-
-                // terrain
-                val terrain = Path().apply {
-                    moveTo(0f, size.height * 2 / 3)
-                    cubicTo(
-                        size.width / 3, 0f,
-                        size.width / 3, size.height,
-                        size.width, size.height * 2 / 3
+            .drawWithCache {
+                onDrawBehind {
+                    val timeAngle = time % 86400000f / 86400000f * 360f + 270f
+                    // sun & moon
+                    val sunRadius = 16.dp.toPx() / 2
+                    val radius = (size.width / 2) / 1.5f
+                    val sunAngleOffset = 270f
+                    val moonAngleOffset = 90f
+                    val sunAngle = sunAngleOffset - timeAngle
+                    val moonAngle = moonAngleOffset - timeAngle
+                    val sunCenter =
+                        Offset(radius * sin(radians(sunAngle)), radius * cos(radians(sunAngle)))
+                    val moonCenter =
+                        Offset(radius * sin(radians(moonAngle)), radius * cos(radians(moonAngle)))
+                    drawRect(containerColor)
+                    drawRect(colors.sky, alpha = .5f)
+                    drawCircle(
+                        colors.sun,
+                        radius = sunRadius,
+                        center = sunCenter + Offset(size.width / 2, size.height)
                     )
-                    lineTo(size.width, size.height)
-                    lineTo(0f, size.height)
+                    drawCircle(
+                        colors.moon,
+                        radius = sunRadius,
+                        center = moonCenter + Offset(size.width / 2, size.height)
+                    )
+
+                    // terrain
+                    val terrain = Path().apply {
+                        moveTo(0f, size.height * 2 / 3)
+                        cubicTo(
+                            size.width / 3, 0f,
+                            size.width / 3, size.height,
+                            size.width, size.height * 2 / 3
+                        )
+                        lineTo(size.width, size.height)
+                        lineTo(0f, size.height)
+                    }
+                    drawPath(path = terrain, brush = colors.grass)
                 }
-                drawPath(path = terrain, brush = colors.grass)
             }
             .background(Theme.color.container.background.copy(.5f))
             .padding(12.dp, 6.dp),
@@ -100,19 +102,8 @@ fun TimeButton(
     }
 }
 
-@Preview
-@Composable
-private fun TimeButtonPreview(
-    @PreviewParameter(TimeButtonParameter::class)
-    parameter: Long
-) = PreviewLayout {
-    val format = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
-    TimeButton(parameter) {
-        Text(format.format(Date(parameter)))
-    }
-}
-
-@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 private fun TimeButtonAnimationPreview() = PreviewLayout {
     val transition = rememberInfiniteTransition()
@@ -124,15 +115,6 @@ private fun TimeButtonAnimationPreview() = PreviewLayout {
     val format = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
     TimeButton(modifier = Modifier.width(90.dp), time = time.toLong(), onClick = {}) {
         Text(format.format(Date(time.toLong())))
-    }
-}
-
-private class TimeButtonParameter : PreviewParameterProvider<Long> {
-    override val values = sequence {
-        yield(1672560000000)
-        yield(1672570800000)
-        yield(1672588800000)
-        yield(1672599600000)
     }
 }
 
