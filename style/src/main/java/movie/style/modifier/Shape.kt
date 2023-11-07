@@ -18,21 +18,23 @@ fun Modifier.glow(
 ) = composed {
     val density = LocalDensity.current
     val contentColor = LocalContentColor.current
-    drawWithContent {
-        val outline = shape.createOutline(size, layoutDirection, density)
-        val width = with(density) { width.toPx() }
-        val color = color.takeOrElse { contentColor }
-        val start = lightSource.start
-        val end = lightSource.end
-        val strokeColors =
-            listOf(color.copy(alpha = alpha), Color.Transparent)
-        val fillColors =
-            listOf(color.copy(alpha = alpha / 2), Color.Transparent)
-        val brush = Brush.linearGradient(strokeColors, start, end)
-        val brush2 = Brush.linearGradient(fillColors, start, end)
-        drawOutline(outline, brush2, style = Fill)
-        drawContent()
-        drawOutline(outline, brush, style = Stroke(width))
+    drawWithCache {
+        onDrawWithContent {
+            val outline = shape.createOutline(size, layoutDirection, density)
+            val width = with(density) { width.toPx() }
+            val color = color.takeOrElse { contentColor }
+            val start = lightSource.start
+            val end = lightSource.end
+            val strokeColors =
+                listOf(color.copy(alpha = alpha), Color.Transparent)
+            val fillColors =
+                listOf(color.copy(alpha = alpha / 2), Color.Transparent)
+            val brush = Brush.linearGradient(strokeColors, start, end)
+            val brush2 = Brush.linearGradient(fillColors, start, end)
+            drawContent()
+            drawOutline(outline, brush2, style = Fill)
+            drawOutline(outline, brush, style = Stroke(width))
+        }
     }
 }
 
