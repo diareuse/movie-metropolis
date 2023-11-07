@@ -29,7 +29,7 @@ class TicketFacadeMovieFromFeature(
     override val times: Flow<List<LazyTimeView>> = movie.map { detail ->
         val startTime = max(Date().time, detail.screeningFrom.time)
         val day = 1.days
-        List(14) {
+        List(7) {
             val offset = (day * it).inWholeMilliseconds
             LazyTimeViewMovie(Date(startTime + offset), showings)
         }
@@ -38,5 +38,6 @@ class TicketFacadeMovieFromFeature(
     override val poster: Flow<String?> = movie.map {
         MovieDetailViewFromFeature(it).poster?.url
     }
+    override val name: Flow<String> = movie.map { it.name }
 
 }
