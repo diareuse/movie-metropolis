@@ -131,11 +131,12 @@ object ProjectionTypeRowDefaults {
         modifier: Modifier = Modifier,
         shape: Shape = RoundedCornerShape(4.dp)
     ) = ProjectionTypeBadge(
-        modifier = modifier.drawBehind {
-            val outline = shape.createOutline(size, layoutDirection, this)
-            val offset = 3.dp.toPx()
-            scale(1.2f, 1.4f) {
-                drawOutline(outline, Color(0x80377CCB))
+        modifier = modifier.drawWithCache {
+            onDrawBehind {
+                val outline = shape.createOutline(size, layoutDirection, this)
+                scale(1.2f, 1.4f) {
+                    drawOutline(outline, Color(0x80377CCB))
+                }
             }
         },
         color = Color(0xFF377CCB),
@@ -160,14 +161,16 @@ object ProjectionTypeRowDefaults {
         modifier: Modifier = Modifier,
         shape: Shape = RoundedCornerShape(4.dp)
     ) = ProjectionTypeBadge(
-        modifier = modifier.drawBehind {
-            val outline = shape.createOutline(size, layoutDirection, this)
-            val offset = 3.dp.toPx()
-            translate(left = -offset, top = -offset) {
-                drawOutline(outline, Color.Red)
-            }
-            translate(left = offset, top = offset) {
-                drawOutline(outline, Color.Blue)
+        modifier = modifier.drawWithCache {
+            onDrawBehind {
+                val outline = shape.createOutline(size, layoutDirection, this)
+                val offset = 3.dp.toPx()
+                translate(left = -offset, top = -offset) {
+                    drawOutline(outline, Color.Red)
+                }
+                translate(left = offset, top = offset) {
+                    drawOutline(outline, Color.Blue)
+                }
             }
         },
         shape = shape,
@@ -182,14 +185,16 @@ object ProjectionTypeRowDefaults {
         modifier: Modifier = Modifier,
         shape: Shape = RoundedCornerShape(4.dp)
     ) = ProjectionTypeBadge(
-        modifier = modifier.drawBehind {
-            val outline = shape.createOutline(size, layoutDirection, this)
-            val rotation = 20f
-            rotate(rotation) {
-                drawOutline(outline, Color(0x80FF6E40))
-            }
-            rotate(-rotation) {
-                drawOutline(outline, Color(0x80FF6E40))
+        modifier = modifier.drawWithCache {
+            onDrawBehind {
+                val outline = shape.createOutline(size, layoutDirection, this)
+                val rotation = 20f
+                rotate(rotation) {
+                    drawOutline(outline, Color(0x80FF6E40))
+                }
+                rotate(-rotation) {
+                    drawOutline(outline, Color(0x80FF6E40))
+                }
             }
         },
         shape = shape,
@@ -204,21 +209,24 @@ object ProjectionTypeRowDefaults {
         modifier: Modifier = Modifier,
         shape: RoundedCornerShape = RoundedCornerShape(4.dp)
     ) = ProjectionTypeBadge(
-        modifier = modifier.drawBehind {
-            val offset = 2.dp.toPx()
-            val outline = shape.copy(CornerSize(6.dp)).createOutline(size, layoutDirection, this)
-            val colors = listOf(Color(0xFF3D4FF2), Color.Transparent)
-            val end = Offset(size.width / 2, size.height / 2)
-            val style = Stroke(2.dp.toPx())
-            translate(left = -offset, top = -offset) {
-                drawOutline(outline, Brush.linearGradient(colors, end = end), style = style)
-            }
-            translate(left = offset, top = offset) {
-                drawOutline(
-                    outline,
-                    Brush.linearGradient(colors, start = Offset.Infinite, end = end),
-                    style = style
-                )
+        modifier = modifier.drawWithCache {
+            onDrawBehind {
+                val offset = 2.dp.toPx()
+                val outline =
+                    shape.copy(CornerSize(6.dp)).createOutline(size, layoutDirection, this)
+                val colors = listOf(Color(0xFF3D4FF2), Color.Transparent)
+                val end = Offset(size.width / 2, size.height / 2)
+                val style = Stroke(2.dp.toPx())
+                translate(left = -offset, top = -offset) {
+                    drawOutline(outline, Brush.linearGradient(colors, end = end), style = style)
+                }
+                translate(left = offset, top = offset) {
+                    drawOutline(
+                        outline,
+                        Brush.linearGradient(colors, start = Offset.Infinite, end = end),
+                        style = style
+                    )
+                }
             }
         },
         color = Color(0xFF3D4FF2),
@@ -238,14 +246,16 @@ object ProjectionTypeRowDefaults {
         modifier: Modifier = Modifier,
         shape: Shape = RoundedCornerShape(4.dp)
     ) = ProjectionTypeBadge(
-        modifier = modifier.drawBehind {
-            val outline = shape.createOutline(size, layoutDirection, this)
-            val offset = 2.dp.toPx()
-            translate(offset, -offset) {
-                drawOutline(outline, Color(0x803D4FF2))
-            }
-            translate(offset * 2, -offset * 2) {
-                drawOutline(outline, Color(0x803D4FF2))
+        modifier = modifier.drawWithCache {
+            onDrawBehind {
+                val outline = shape.createOutline(size, layoutDirection, this)
+                val offset = 2.dp.toPx()
+                translate(offset, -offset) {
+                    drawOutline(outline, Color(0x803D4FF2))
+                }
+                translate(offset * 2, -offset * 2) {
+                    drawOutline(outline, Color(0x803D4FF2))
+                }
             }
         },
         color = Color(0xFF3D4FF2),
@@ -258,21 +268,23 @@ object ProjectionTypeRowDefaults {
     fun VIP(
         modifier: Modifier = Modifier
     ) = ProjectionTypeBadge(
-        modifier = modifier.drawBehind {
-            val crownSize = Size(14.dp.toPx(), 6.dp.toPx())
-            val path = Path().apply {
-                moveTo(size.width / 2 - crownSize.width / 2, 0f)
-                relativeLineTo(0f, -crownSize.height)
-                relativeLineTo(crownSize.width / 2, crownSize.height / 2)
-                relativeLineTo(crownSize.width / 2, -crownSize.height / 2)
-                relativeLineTo(0f, crownSize.height)
+        modifier = modifier.drawWithCache {
+            onDrawBehind {
+                val crownSize = Size(14.dp.toPx(), 6.dp.toPx())
+                val path = Path().apply {
+                    moveTo(size.width / 2 - crownSize.width / 2, 0f)
+                    relativeLineTo(0f, -crownSize.height)
+                    relativeLineTo(crownSize.width / 2, crownSize.height / 2)
+                    relativeLineTo(crownSize.width / 2, -crownSize.height / 2)
+                    relativeLineTo(0f, crownSize.height)
+                }
+                drawPath(path, Color(0xffffd700))
+                drawPath(
+                    path,
+                    Color.Black.copy(alpha = .3f),
+                    style = Stroke(1.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Bevel)
+                )
             }
-            drawPath(path, Color(0xffffd700))
-            drawPath(
-                path,
-                Color.Black.copy(alpha = .3f),
-                style = Stroke(1.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Bevel)
-            )
         },
         color = Color(0xffffd700),
         contentColor = Color.Black,
