@@ -51,7 +51,8 @@ fun BookingScreen(
     HorizontalPager(
         state = rememberPagerState { items.size },
         contentPadding = padding + PaddingValues(24.dp),
-        pageSpacing = 32.dp
+        pageSpacing = 32.dp,
+        beyondBoundsPageCount = 1
     ) {
         val page by items[it].content.collectAsState(emptyList())
         LazyVerticalStaggeredGrid(
@@ -60,6 +61,7 @@ fun BookingScreen(
             verticalItemSpacing = 16.dp
         ) {
             for (view in page) {
+                if (view.times.isEmpty()) continue
                 when (view) {
                     is TimeView.Cinema -> item(
                         key = view.cinema.id,
