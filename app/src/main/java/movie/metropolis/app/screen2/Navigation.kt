@@ -304,7 +304,14 @@ private fun NavGraphBuilder.booking(
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
         val poster by viewModel.poster.collectAsState()
-        BookingScreen(poster, times.toImmutableList())
+        val title by viewModel.title.collectAsState()
+        BookingScreen(
+            poster = poster,
+            title = title,
+            items = times.toImmutableList(),
+            onBackClick = navController::navigateUp,
+            onTimeClick = { navController.navigate(Route.Order(it.url)) }
+        )
     }
     composable(
         route = Route.Booking.Cinema.route,
@@ -313,6 +320,13 @@ private fun NavGraphBuilder.booking(
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
         val poster by viewModel.poster.collectAsState()
-        BookingScreen(poster, times.toImmutableList())
+        val title by viewModel.title.collectAsState()
+        BookingScreen(
+            poster = poster,
+            title = title,
+            items = times.toImmutableList(),
+            onBackClick = navController::navigateUp,
+            onTimeClick = { navController.navigate(Route.Order(it.url)) }
+        )
     }
 }
