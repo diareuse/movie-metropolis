@@ -60,18 +60,8 @@ fun TimeButton(
                     Offset(radius * sin(radians(sunAngle)), radius * cos(radians(sunAngle)))
                 val moonCenter =
                     Offset(radius * sin(radians(moonAngle)), radius * cos(radians(moonAngle)))
-                drawRect(
-                    Brush.verticalGradient(
-                        listOf(
-                            colors.sky
-                                .copy(alpha = .5f)
-                                .compositeOver(containerColor),
-                            colors.sky
-                                .copy(alpha = .5f)
-                                .compositeOver(containerColor)
-                        )
-                    )
-                )
+                drawRect(containerColor)
+                drawRect(colors.sky, alpha = .5f)
                 drawCircle(
                     colors.sun,
                     radius = sunRadius,
@@ -94,12 +84,7 @@ fun TimeButton(
                     lineTo(size.width, size.height)
                     lineTo(0f, size.height)
                 }
-                drawPath(
-                    terrain,
-                    colors.grass
-                        .copy(alpha = .5f)
-                        .compositeOver(containerColor)
-                )
+                drawPath(path = terrain, brush = colors.grass)
             }
             .padding(12.dp, 6.dp),
         contentAlignment = Alignment.Center
@@ -134,7 +119,7 @@ private fun TimeButtonAnimationPreview() = PreviewLayout {
         animationSpec = infiniteRepeatable(tween(5000))
     )
     val format = remember { DateFormat.getTimeInstance(DateFormat.SHORT) }
-    TimeButton(time.toLong()) {
+    TimeButton(modifier = Modifier.width(90.dp), time = time.toLong()) {
         Text(format.format(Date(time.toLong())))
     }
 }
@@ -156,8 +141,8 @@ object TimeButtonDefaults {
 data class TimeButtonColors(
     val day: Color = Color.White,
     val night: Color = Color.Black,
-    val grass: Color = Color(0xFF2ADA16),
-    val sun: Color = Color(0xFFF0D807),
-    val moon: Color = Color(0xFFDFDFDF),
-    val sky: Color = Color(0xff99ccff)
+    val grass: Brush = Brush.verticalGradient(listOf(Color(0xFF084401), Color(0xFF2ADA16))),
+    val sun: Brush = Brush.verticalGradient(listOf(Color(0xFFF0D807), Color(0xFFE9A700))),
+    val moon: Brush = Brush.verticalGradient(listOf(Color(0xFFDFDFDF), Color(0xFF838383))),
+    val sky: Brush = Brush.verticalGradient(listOf(Color(0xFF005FBD), Color(0xFF99CCFF)))
 )
