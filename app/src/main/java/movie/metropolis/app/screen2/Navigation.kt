@@ -32,8 +32,6 @@ import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Route
-import movie.metropolis.app.screen2.booking.BookingScreen
-import movie.metropolis.app.screen2.booking.BookingViewModel
 import movie.metropolis.app.screen2.cinema.CinemasScreen
 import movie.metropolis.app.screen2.cinema.CinemasViewModel
 import movie.metropolis.app.screen2.home.HomeScreen
@@ -52,6 +50,8 @@ import movie.metropolis.app.screen2.settings.component.CalendarDialog
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
+import movie.metropolis.app.screen2.ticket.TicketScreen
+import movie.metropolis.app.screen2.ticket.TicketViewModel
 import movie.style.action.actionView
 import java.net.URL
 
@@ -137,7 +137,7 @@ private fun NavGraphBuilder.home(
     val viewModel = hiltViewModel<HomeViewModel>()
     val listingVM = hiltViewModel<ListingViewModel>()
     val cinemasVM = hiltViewModel<CinemasViewModel>()
-    val bookingVM = hiltViewModel<BookingViewModel>()
+    val bookingVM = hiltViewModel<TicketViewModel>()
     val listingState = rememberLazyStaggeredGridState()
     val cinemasState = rememberLazyListState()
     val tickets by bookingVM.tickets.collectAsState()
@@ -169,7 +169,7 @@ private fun NavGraphBuilder.home(
             LaunchedEffect(Unit) {
                 bookingVM.refresh()
             }
-            BookingScreen(
+            TicketScreen(
                 bookings = tickets.toImmutableList(),
                 state = bookingState,
                 modifier = modifier,

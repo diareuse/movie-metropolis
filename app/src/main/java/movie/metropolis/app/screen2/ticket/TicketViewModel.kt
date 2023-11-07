@@ -1,4 +1,4 @@
-package movie.metropolis.app.screen2.booking
+package movie.metropolis.app.screen2.ticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +12,7 @@ import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class BookingViewModel @Inject constructor(
+class TicketViewModel @Inject constructor(
     facade: BookingFacade
 ) : ViewModel() {
 

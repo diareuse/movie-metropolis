@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package movie.metropolis.app.screen2.booking.component
+package movie.metropolis.app.screen2.ticket.component
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*

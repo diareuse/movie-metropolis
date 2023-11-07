@@ -8,7 +8,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.util.*
-import movie.metropolis.app.screen2.booking.component.toOffset
+import movie.metropolis.app.screen2.ticket.component.toOffset
 import kotlin.math.absoluteValue
 import kotlin.math.sign
 
