@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalFoundationApi::class)
 
-package movie.metropolis.app.screen2.booking
+package movie.metropolis.app.screen2.ticket
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
@@ -22,11 +22,11 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
-import movie.metropolis.app.screen2.booking.component.CardCarousel
-import movie.metropolis.app.screen2.booking.component.SeatingRow
-import movie.metropolis.app.screen2.booking.component.TicketColumn
-import movie.metropolis.app.screen2.booking.component.TicketMetadata
-import movie.metropolis.app.screen2.booking.component.TicketMetadataColumn
+import movie.metropolis.app.screen2.ticket.component.CardCarousel
+import movie.metropolis.app.screen2.ticket.component.SeatingRow
+import movie.metropolis.app.screen2.ticket.component.TicketColumn
+import movie.metropolis.app.screen2.ticket.component.TicketMetadata
+import movie.metropolis.app.screen2.ticket.component.TicketMetadataColumn
 import movie.style.BackgroundImage
 import movie.style.Barcode
 import movie.style.Image
@@ -36,7 +36,7 @@ import movie.style.rememberPaletteImageState
 import kotlin.random.Random.Default.nextInt
 
 @Composable
-fun BookingScreen(
+fun TicketScreen(
     bookings: ImmutableList<BookingView>,
     state: PagerState,
     modifier: Modifier = Modifier,
@@ -111,7 +111,7 @@ fun BookingScreen(
 private fun BookingScreenPreview() = PreviewLayout {
     val items = BookingParameter().values.toImmutableList()
     val state = rememberPagerState { items.size }
-    BookingScreen(items, state)
+    TicketScreen(items, state)
 }
 
 private class BookingParameter(override val count: Int) :
