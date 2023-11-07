@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen2.booking.component
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -43,7 +44,6 @@ fun TimeButton(
     }
     val hourOfDay = calendar.get(Calendar.HOUR_OF_DAY)
     val containerColor = if (hourOfDay in dayRange) colors.day else colors.night
-    val contentColor = if (hourOfDay !in dayRange) colors.day else colors.night
     Box(
         modifier = modifier
             .clip(Theme.container.button)
@@ -86,13 +86,12 @@ fun TimeButton(
                 }
                 drawPath(path = terrain, brush = colors.grass)
             }
+            .background(Theme.color.container.background.copy(.5f))
             .padding(12.dp, 6.dp),
         contentAlignment = Alignment.Center
     ) {
         ProvideTextStyle(Theme.textStyle.body.copy(fontWeight = FontWeight.Medium)) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                content()
-            }
+            content()
         }
     }
 }
