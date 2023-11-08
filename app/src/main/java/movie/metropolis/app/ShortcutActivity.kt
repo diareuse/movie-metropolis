@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.home.HomeState
 
 class ShortcutActivity : Activity() {
 
     private val route
         get() = when (intent.action) {
-            "movie.metropolis.app.ACTION_TICKETS" -> Route.Home.deepLink(Route.Tickets())
+            "movie.metropolis.app.ACTION_TICKETS" -> Route.Home.deepLink(HomeState.Tickets)
             else -> Route.Home.deepLink()
         }
 

@@ -7,6 +7,7 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import movie.metropolis.app.screen2.home.HomeState
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.util.decodeBase64
 import movie.metropolis.app.util.encodeBase64
@@ -55,13 +56,15 @@ sealed class Route(
         )
 
         class Arguments(private val entry: NavBackStackEntry) {
-            val screen get() = entry.arguments?.getString("screen").let(::requireNotNull)
+            val screen get() = entry.arguments?.getString("screen")
         }
 
-        operator fun invoke(screen: String = Movies.route) =
-            route.replace("{screen}", screen)
+        operator fun invoke(screen: HomeState? = null) = route.let {
+            if (screen != null) it.replace("{screen}", screen.name) else
+                it.replace("screen={screen}", "")
+        }
 
-        fun deepLink(screen: String = Movies.route) =
+        fun deepLink(screen: HomeState = HomeState.Listing) =
             "$InternalUri/${invoke(screen)}".toUri()
 
     }
