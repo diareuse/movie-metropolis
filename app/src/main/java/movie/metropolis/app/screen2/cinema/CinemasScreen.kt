@@ -64,6 +64,7 @@ fun CinemasScreen(
             val state = rememberPaletteImageState(url = it.image)
             CinemaBox(
                 modifier = Modifier
+                    .animateItemPlacement()
                     .fillMaxWidth()
                     .heightIn(min = 128.dp),
                 color = state.palette.color,

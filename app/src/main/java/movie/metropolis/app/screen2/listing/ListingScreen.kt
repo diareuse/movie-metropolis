@@ -66,7 +66,10 @@ fun ListingScreen(
     ) {
         item(span = StaggeredGridItemSpan.FullLine) {
             val state = rememberPagerState { promotions.size }
-            PromotionHorizontalPager(state = state) {
+            PromotionHorizontalPager(
+                modifier = Modifier.animateItemPlacement(),
+                state = state
+            ) {
                 val it = promotions[it]
                 val state = rememberPaletteImageState(it.poster?.url)
                 PromotionColumn(
