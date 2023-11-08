@@ -1,10 +1,11 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+@file:OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 
 package movie.metropolis.app.screen2.setup
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
@@ -77,6 +78,7 @@ fun SetupRegionSelectionContent(
         items(regions) {
             val state = rememberPaletteImageState(url = it.icon)
             RegionRow(
+                modifier = Modifier.animateItemPlacement(),
                 icon = { Image(state = state) },
                 label = { Text(it.name) },
                 onClick = { onRegionClick(it) },

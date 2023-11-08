@@ -153,6 +153,7 @@ fun BookingScreen(
                         ) {
                             val state = rememberPaletteImageState(url = view.cinema.image)
                             CinemaTimeContainer(
+                                modifier = Modifier.animateItemPlacement(),
                                 color = state.palette.color,
                                 contentColor = state.palette.textColor,
                                 name = { Text(view.cinema.name) }
@@ -164,6 +165,7 @@ fun BookingScreen(
                         is TimeView.Movie -> item(key = view.movie.id) {
                             val state = rememberPaletteImageState(url = view.movie.poster?.url)
                             MovieTimeContainer(
+                                modifier = Modifier.animateItemPlacement(),
                                 color = state.palette.color,
                                 contentColor = state.palette.textColor,
                                 name = { Text(view.movie.name) }
@@ -178,6 +180,7 @@ fun BookingScreen(
                     }
                     for ((type, times) in view.times) item(key = "$id-${type.hashCode()}") {
                         Column(
+                            modifier = Modifier.animateItemPlacement(),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             ProjectionTypeRow(
