@@ -12,6 +12,7 @@ import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 
+@Deprecated("Use DialogBox.Container")
 @Composable
 fun CalendarDialog(
     onDismissRequest: () -> Unit,
