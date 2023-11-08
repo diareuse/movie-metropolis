@@ -34,6 +34,7 @@ import movie.metropolis.app.screen2.booking.component.MovieTimeContainer
 import movie.metropolis.app.screen2.booking.component.ProjectionTypeRow
 import movie.metropolis.app.screen2.booking.component.ProjectionTypeRowDefaults
 import movie.metropolis.app.screen2.booking.component.TimeButton
+import movie.metropolis.app.screen2.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.util.interpolatePage
 import movie.style.AppIconButton
 import movie.style.BackgroundImage
@@ -76,14 +77,8 @@ fun BookingScreen(
     }
 ) { padding ->
     val locale = remember { Locale.getDefault() }
-    val stateDate = rememberPagerState { items.size }
-    val statePage = rememberPagerState { items.size }
-    LaunchedEffect(statePage.currentPage, statePage.currentPageOffsetFraction) {
-        stateDate.scroll {
-            stateDate.apply {
-                updateCurrentPage(statePage.currentPage, statePage.currentPageOffsetFraction)
-            }
-        }
+    val (statePage, stateDate) = rememberMultiChildPagerState(childCount = 1) {
+        items.size
     }
     BackgroundImage(
         modifier = Modifier.fillMaxSize(),
