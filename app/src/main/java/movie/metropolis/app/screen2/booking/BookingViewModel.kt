@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import movie.core.model.Location
+import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.presentation.ticket.TicketFacade
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
@@ -46,6 +47,9 @@ class TimeViewModel private constructor(
     val times = facade
         .flatMapLatest { it.times }
         .retainStateIn(viewModelScope, emptyList())
+    val filters = facade
+        .flatMapLatest { it.filters }
+        .retainStateIn(viewModelScope, DataFiltersView())
 
 }
 

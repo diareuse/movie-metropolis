@@ -71,6 +71,7 @@ import movie.metropolis.app.presentation.share.ShareFacadeRefresh
 import movie.metropolis.app.presentation.share.ShareFacadeText
 import movie.metropolis.app.presentation.ticket.TicketFacade
 import movie.metropolis.app.presentation.ticket.TicketFacadeCinemaFromFeature
+import movie.metropolis.app.presentation.ticket.TicketFacadeFilter
 import movie.metropolis.app.presentation.ticket.TicketFacadeMovieFromFeature
 import movie.rating.MetadataProvider
 
@@ -257,17 +258,23 @@ class FacadeModule {
     ) = object : TicketFacade.Factory {
         override fun movie(id: String): TicketFacade.LocationFactory {
             return TicketFacade.LocationFactory { location ->
-                TicketFacadeMovieFromFeature(
+                var out: TicketFacade
+                out = TicketFacadeMovieFromFeature(
                     id,
                     detail,
                     showings.movie(MovieFromId(id), location)
                 )
+                out = TicketFacadeFilter(out)
+                out
             }
         }
 
         override fun cinema(id: String): TicketFacade.LocationFactory {
             return TicketFacade.LocationFactory { _ ->
-                TicketFacadeCinemaFromFeature(id, cinemas, showings.cinema(CinemaFromId(id)))
+                var out: TicketFacade
+                out = TicketFacadeCinemaFromFeature(id, cinemas, showings.cinema(CinemaFromId(id)))
+                out = TicketFacadeFilter(out)
+                out
             }
         }
     }

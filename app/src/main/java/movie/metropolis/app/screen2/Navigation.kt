@@ -381,6 +381,7 @@ private fun NavGraphBuilder.booking(
         val times by viewModel.times.collectAsState()
         val poster by viewModel.poster.collectAsState()
         val title by viewModel.title.collectAsState()
+        val filters by viewModel.filters.collectAsState()
         BookingScreen(
             poster = poster,
             title = title,
@@ -397,6 +398,7 @@ private fun NavGraphBuilder.booking(
         val times by viewModel.times.collectAsState()
         val poster by viewModel.poster.collectAsState()
         val title by viewModel.title.collectAsState()
+        val filters by viewModel.filters.collectAsState()
         BookingScreen(
             poster = poster,
             title = title,
