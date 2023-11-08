@@ -43,6 +43,8 @@ import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.movie.MovieScreen
 import movie.metropolis.app.screen2.movie.MovieViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
+import movie.metropolis.app.screen2.purchase.PurchaseCompleteScreen
+import movie.metropolis.app.screen2.purchase.PurchaseCompleteViewModel
 import movie.metropolis.app.screen2.purchase.PurchaseScreen
 import movie.metropolis.app.screen2.purchase.PurchaseViewModel
 import movie.metropolis.app.screen2.settings.SettingsScreen
@@ -290,7 +292,7 @@ private fun NavGraphBuilder.order(
     val request by viewModel.request.collectAsState()
     val isCompleted by viewModel.isCompleted.collectAsState()
     LaunchedEffect(isCompleted) {
-        if (!isCompleted) return@LaunchedEffect
+        if (!isCompleted && false) return@LaunchedEffect
         navController.navigate(Route.OrderComplete())
     }
     PurchaseScreen(
@@ -306,6 +308,18 @@ private fun NavGraphBuilder.orderComplete(
     route = Route.OrderComplete.route,
     deepLinks = Route.OrderComplete.deepLinks
 ) {
+    val viewModel = hiltViewModel<PurchaseCompleteViewModel>()
+    val products by viewModel.products.collectAsState()
+    PurchaseCompleteScreen(
+        products = products,
+        onBackClick = {
+            navController.navigate(Route.Home(Route.Tickets())) {
+                popUpTo(Route.Home.route) {
+                    inclusive = true
+                }
+            }
+        }
+    )
 }
 
 private fun NavGraphBuilder.booking(
