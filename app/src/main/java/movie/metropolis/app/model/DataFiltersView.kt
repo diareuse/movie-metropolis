@@ -13,8 +13,8 @@ data class DataFiltersView(
         return other != null && languages.any { it.selected && it.locale == other }
     }
 
-    override operator fun contains(other: ProjectionType): Boolean {
-        return types.any { it.selected && it.type == other }
+    override operator fun contains(other: List<ProjectionType>): Boolean {
+        return types.filter { it.selected }.all { it.type in other }
     }
 
 }
