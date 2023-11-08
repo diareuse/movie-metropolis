@@ -13,12 +13,14 @@ import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.LazyTimeView
 import movie.metropolis.app.model.MovieView
@@ -36,7 +38,6 @@ import movie.metropolis.app.screen2.booking.component.ProjectionTypeRowDefaults
 import movie.metropolis.app.screen2.booking.component.TimeButton
 import movie.metropolis.app.screen2.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.util.interpolatePage
-import movie.style.AppIconButton
 import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
@@ -58,6 +59,7 @@ fun BookingScreen(
     title: String,
     items: ImmutableList<LazyTimeView>,
     onBackClick: () -> Unit,
+    onActionClick: () -> Unit,
     onTimeClick: (SpecificTimeView) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -69,8 +71,13 @@ fun BookingScreen(
             scrollBehavior = scrollBehavior,
             title = { Text(title) },
             navigationIcon = {
-                AppIconButton(onClick = onBackClick) {
+                IconButton(onClick = onBackClick) {
                     Icon(Icons.AutoMirrored.Rounded.ArrowBack, null)
+                }
+            },
+            actions = {
+                IconButton(onClick = onActionClick) {
+                    Icon(painterResource(R.drawable.ic_filter), null)
                 }
             }
         )
@@ -240,7 +247,8 @@ private fun TimeScreenPreview(
         title = "",
         items = persistentListOf(time, time),
         onBackClick = {},
-        onTimeClick = {}
+        onTimeClick = {},
+        onActionClick = {}
     )
 }
 

@@ -1,6 +1,6 @@
 @file:OptIn(
     ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class
 )
 
 package movie.metropolis.app.screen2
@@ -17,6 +17,7 @@ import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.res.*
@@ -36,6 +37,7 @@ import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen2.booking.BookingFiltersDialog
 import movie.metropolis.app.screen2.booking.BookingScreen
 import movie.metropolis.app.screen2.booking.TimeViewModel
 import movie.metropolis.app.screen2.cinema.CinemasScreen
@@ -63,6 +65,8 @@ import movie.metropolis.app.screen2.setup.SetupViewModel
 import movie.metropolis.app.screen2.ticket.TicketScreen
 import movie.metropolis.app.screen2.ticket.TicketViewModel
 import movie.style.CollapsingTopAppBar
+import movie.style.Container
+import movie.style.DialogBox
 import movie.style.action.actionView
 
 @Composable
@@ -382,13 +386,31 @@ private fun NavGraphBuilder.booking(
         val poster by viewModel.poster.collectAsState()
         val title by viewModel.title.collectAsState()
         val filters by viewModel.filters.collectAsState()
-        BookingScreen(
-            poster = poster,
-            title = title,
-            items = times.toImmutableList(),
-            onBackClick = navController::navigateUp,
-            onTimeClick = { navController.navigate(Route.Order(it.url)) }
-        )
+        var filtersVisible by rememberSaveable { mutableStateOf(false) }
+        DialogBox(
+            visible = filtersVisible,
+            dialog = {
+                Container(
+                    modifier = Modifier.fillMaxWidth(),
+                    onDismissRequest = { filtersVisible = false }
+                ) {
+                    BookingFiltersDialog(
+                        filters = filters,
+                        onLanguageClick = viewModel::toggle,
+                        onTypeClick = viewModel::toggle
+                    )
+                }
+            }
+        ) {
+            BookingScreen(
+                poster = poster,
+                title = title,
+                items = times.toImmutableList(),
+                onBackClick = navController::navigateUp,
+                onTimeClick = { navController.navigate(Route.Order(it.url)) },
+                onActionClick = { filtersVisible = true }
+            )
+        }
     }
     composable(
         route = Route.Booking.Cinema.route,
@@ -399,12 +421,30 @@ private fun NavGraphBuilder.booking(
         val poster by viewModel.poster.collectAsState()
         val title by viewModel.title.collectAsState()
         val filters by viewModel.filters.collectAsState()
-        BookingScreen(
-            poster = poster,
-            title = title,
-            items = times.toImmutableList(),
-            onBackClick = navController::navigateUp,
-            onTimeClick = { navController.navigate(Route.Order(it.url)) }
-        )
+        var filtersVisible by rememberSaveable { mutableStateOf(false) }
+        DialogBox(
+            visible = filtersVisible,
+            dialog = {
+                Container(
+                    modifier = Modifier.fillMaxWidth(),
+                    onDismissRequest = { filtersVisible = false }
+                ) {
+                    BookingFiltersDialog(
+                        filters = filters,
+                        onLanguageClick = viewModel::toggle,
+                        onTypeClick = viewModel::toggle
+                    )
+                }
+            }
+        ) {
+            BookingScreen(
+                poster = poster,
+                title = title,
+                items = times.toImmutableList(),
+                onBackClick = navController::navigateUp,
+                onTimeClick = { navController.navigate(Route.Order(it.url)) },
+                onActionClick = {}
+            )
+        }
     }
 }
