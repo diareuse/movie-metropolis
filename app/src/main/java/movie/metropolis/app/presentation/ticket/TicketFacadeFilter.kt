@@ -49,11 +49,10 @@ class TicketFacadeFilter(
     ) : TimeView.Cinema by origin {
         override val times: Map<ShowingTag, List<SpecificTimeView>>
             get() = origin.times.filterKeys { t ->
-                var contained = false
-                contained = contained or (t.language in filter)
-                contained = contained or (t.subtitles in filter)
-                contained = contained or t.projection.any { it in filter }
-                contained or filter.isEmpty
+                var hasLanguage = filter.languages.none { it.selected }
+                hasLanguage = hasLanguage or (t.language in filter)
+                hasLanguage = hasLanguage or (t.subtitles in filter)
+                hasLanguage && t.projection in filter
             }
     }
 
@@ -63,11 +62,10 @@ class TicketFacadeFilter(
     ) : TimeView.Movie by origin {
         override val times: Map<ShowingTag, List<SpecificTimeView>>
             get() = origin.times.filterKeys { t ->
-                var contained = false
-                contained = contained or (t.language in filter)
-                contained = contained or (t.subtitles in filter)
-                contained = contained or t.projection.any { it in filter }
-                contained or filter.isEmpty
+                var hasLanguage = filter.languages.none { it.selected }
+                hasLanguage = hasLanguage or (t.language in filter)
+                hasLanguage = hasLanguage or (t.subtitles in filter)
+                hasLanguage && t.projection in filter
             }
     }
 

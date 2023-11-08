@@ -8,7 +8,7 @@ interface FiltersView {
     val types: List<Type>
     val isEmpty: Boolean
 
-    operator fun contains(other: ProjectionType): Boolean
+    operator fun contains(other: List<ProjectionType>): Boolean
     operator fun contains(other: Locale?): Boolean
 
     data class Language(
