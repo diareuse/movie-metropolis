@@ -13,10 +13,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.pager.*
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -28,6 +31,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
@@ -58,6 +62,7 @@ import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
 import movie.metropolis.app.screen2.ticket.TicketScreen
 import movie.metropolis.app.screen2.ticket.TicketViewModel
+import movie.style.CollapsingTopAppBar
 import movie.style.action.actionView
 
 @Composable
@@ -90,6 +95,42 @@ fun Navigation(
         order(navController)
         orderComplete(navController)
         booking(navController)
+        upcoming(navController)
+    }
+}
+
+fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
+    route = Route.Upcoming.route,
+    deepLinks = Route.Upcoming.deepLinks
+) {
+    val listingVM = hiltViewModel<ListingViewModel>()
+    val promotions by listingVM.promotions.collectAsState()
+    val movies by listingVM.movies.collectAsState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Scaffold(
+        topBar = {
+            CollapsingTopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = { Text(stringResource(R.string.upcoming)) },
+                navigationIcon = {
+                    IconButton(onClick = navController::navigateUp) {
+                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, null)
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        ListingScreen(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = padding,
+            state = rememberLazyStaggeredGridState(),
+            movies = movies.toImmutableList(),
+            promotions = promotions.toImmutableList(),
+            onClick = { navController.navigate(Route.Movie(it.id)) },
+            onFavoriteClick = { listingVM.favorite(it) },
+            onMoreClick = null,
+            connection = scrollBehavior.nestedScrollConnection
+        )
     }
 }
 
@@ -169,7 +210,8 @@ private fun NavGraphBuilder.home(
                 movies = movies.toImmutableList(),
                 promotions = promotions.toImmutableList(),
                 onClick = { navController.navigate(Route.Movie(it.id)) },
-                onFavoriteClick = { listingVM.favorite(it) }
+                onFavoriteClick = { listingVM.favorite(it) },
+                onMoreClick = { navController.navigate(Route.Upcoming()) }
             )
         },
         tickets = { modifier, padding ->

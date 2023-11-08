@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -42,7 +43,9 @@ fun ListingScreen(
     onClick: (MovieView) -> Unit,
     onFavoriteClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
+    onMoreClick: (() -> Unit)? = null,
+    connection: NestedScrollConnection? = null
 ) = Box(
     modifier = modifier,
     propagateMinConstraints = true
@@ -52,8 +55,9 @@ fun ListingScreen(
         state = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
     )
     var zoom by rememberStoreable(key = "listing-zoom", default = 100f)
+    val gridModifier = if (connection != null) Modifier.nestedScroll(connection) else Modifier
     LazyVerticalStaggeredGrid(
-        modifier = Modifier.pointerInput(Unit) {
+        modifier = gridModifier.pointerInput(Unit) {
             detectTransformGestures { _, _, zoomFactor, _ ->
                 zoom = (zoom * zoomFactor).coerceIn(75f, 200f)
             }
@@ -120,6 +124,16 @@ fun ListingScreen(
                 onActionClick = { onFavoriteClick(it) },
                 onLongClick = { /* todo show overlay */ }
             )
+        }
+        if (onMoreClick != null && movies.isNotEmpty()) item(
+            span = StaggeredGridItemSpan.FullLine
+        ) {
+            TextButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = onMoreClick
+            ) {
+                Text("View upcoming")
+            }
         }
     }
 }

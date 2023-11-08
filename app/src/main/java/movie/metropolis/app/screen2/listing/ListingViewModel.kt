@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen2.listing
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,10 +16,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListingViewModel @Inject constructor(
+    handle: SavedStateHandle,
     factory: ListingFacade.Factory
 ) : ViewModel() {
 
-    private val facade = factory.current()
+    private val facade = when (handle.contains("type")) {
+        true -> factory.upcoming()
+        else -> factory.current()
+    }
 
     val promotions = facade.promotions
         .map { it.getOrNull().orEmpty() }
