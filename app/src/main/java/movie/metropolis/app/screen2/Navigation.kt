@@ -43,6 +43,8 @@ import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.movie.MovieScreen
 import movie.metropolis.app.screen2.movie.MovieViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
+import movie.metropolis.app.screen2.purchase.PurchaseScreen
+import movie.metropolis.app.screen2.purchase.PurchaseViewModel
 import movie.metropolis.app.screen2.settings.SettingsScreen
 import movie.metropolis.app.screen2.settings.SettingsViewModel
 import movie.metropolis.app.screen2.settings.component.CalendarColumn
@@ -284,6 +286,18 @@ private fun NavGraphBuilder.order(
     arguments = Route.Order.arguments,
     deepLinks = Route.Order.deepLinks
 ) {
+    val viewModel = hiltViewModel<PurchaseViewModel>()
+    val request by viewModel.request.collectAsState()
+    val isCompleted by viewModel.isCompleted.collectAsState()
+    LaunchedEffect(isCompleted) {
+        if (!isCompleted) return@LaunchedEffect
+        navController.navigate(Route.OrderComplete())
+    }
+    PurchaseScreen(
+        request = request,
+        onUrlChanged = viewModel::updateUrl,
+        onBackClick = navController::navigateUp
+    )
 }
 
 private fun NavGraphBuilder.orderComplete(

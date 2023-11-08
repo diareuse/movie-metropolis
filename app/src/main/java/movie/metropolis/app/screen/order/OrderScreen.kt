@@ -13,7 +13,6 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
@@ -79,10 +78,12 @@ fun OrderScreen(
                 exit = slideOutVertically()
             ) {
                 LinearProgressIndicator(
+                    progress = {
+                        progress / 100f
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp),
-                    progress = progress / 100f
                 )
             }
             request.onSuccess { request ->
@@ -114,9 +115,9 @@ private val state = Bundle()
 @Composable
 fun WebView(
     request: RequestView,
-    modifier: Modifier = Modifier,
     onProgressChanged: (Int) -> Unit,
-    onUrlChanged: (String?) -> Unit
+    onUrlChanged: (String?) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val backPress = LocalOnBackPressedDispatcherOwner.current
     val backgroundColor = Theme.color.container.background.toArgb()
