@@ -52,4 +52,6 @@ dependencies {
 
     implementation libs.android.billing
 
+    implementation libs.konfetti
+
 }
