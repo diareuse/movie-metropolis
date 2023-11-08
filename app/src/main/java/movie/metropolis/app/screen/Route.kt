@@ -47,6 +47,10 @@ sealed class Route(
             route.replace("{startWith}", startWith.name)
     }
 
+    data object Upcoming : Route("listing/{type}") {
+        operator fun invoke() = route.replace("{type}", "upcoming")
+    }
+
     data object Home : Route("home?screen={screen}") {
         val arguments = listOf(
             navArgument("screen") {
