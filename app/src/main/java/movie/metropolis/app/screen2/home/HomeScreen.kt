@@ -36,6 +36,7 @@ fun HomeScreen(
     showProfile: Boolean,
     onShowProfileChange: (Boolean) -> Unit,
     onNavigateToLogin: () -> Unit,
+    startWith: HomeState?,
     listing: @Composable (Modifier, PaddingValues) -> Unit,
     tickets: @Composable (Modifier, PaddingValues) -> Unit,
     cinemas: @Composable (Modifier, PaddingValues) -> Unit,
@@ -51,7 +52,7 @@ fun HomeScreen(
     val navController = rememberNavController()
     val entry by navController.currentBackStackEntryAsState()
     val route = entry?.destination?.route
-    val state = HomeState.by(route)
+    val currentState = HomeState.by(route)
     if (!loggedIn) LaunchedEffect(entry) {
         val entry = entry ?: return@LaunchedEffect
         val destination = entry.destination
@@ -69,7 +70,7 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            val title = @Composable { Text(stringResource(state.title)) }
+            val title = @Composable { Text(stringResource(currentState.title)) }
             when (user) {
                 null -> HomeToolbar(
                     title = title
@@ -77,7 +78,7 @@ fun HomeScreen(
 
                 else -> HomeToolbar(
                     icon = {
-                        if (state != HomeState.Profile) IconButton(
+                        if (currentState != HomeState.Profile) IconButton(
                             onClick = { onShowProfileChange(true) }
                         ) {
                             ProfileIcon(email = user.email)
@@ -117,8 +118,8 @@ fun HomeScreen(
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
-            startDestination = getStoreable("home-tab", HomeState.Listing.name) {
-                state.name
+            startDestination = startWith?.name ?: getStoreable("home-tab", HomeState.Listing.name) {
+                currentState.name
             }
         ) {
             composable(HomeState.Listing.name) { listing(overlayModifier, padding) }
@@ -167,6 +168,7 @@ private fun HomeScreenPreview() = PreviewLayout {
         showProfile = false,
         onShowProfileChange = {},
         onNavigateToLogin = {},
+        startWith = HomeState.Listing,
         listing = { _, _ -> },
         tickets = { _, _ -> },
         cinemas = { _, _ -> },

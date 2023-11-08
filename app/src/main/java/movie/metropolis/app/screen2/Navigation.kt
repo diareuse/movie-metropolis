@@ -37,6 +37,7 @@ import movie.metropolis.app.screen2.booking.TimeViewModel
 import movie.metropolis.app.screen2.cinema.CinemasScreen
 import movie.metropolis.app.screen2.cinema.CinemasViewModel
 import movie.metropolis.app.screen2.home.HomeScreen
+import movie.metropolis.app.screen2.home.HomeState
 import movie.metropolis.app.screen2.home.HomeViewModel
 import movie.metropolis.app.screen2.listing.ListingScreen
 import movie.metropolis.app.screen2.listing.ListingViewModel
@@ -138,6 +139,7 @@ private fun NavGraphBuilder.home(
     arguments = Route.Home.arguments,
     deepLinks = Route.Home.deepLinks
 ) {
+    val args = remember(it) { Route.Home.Arguments(it) }
     val viewModel = hiltViewModel<HomeViewModel>()
     val listingVM = hiltViewModel<ListingViewModel>()
     val cinemasVM = hiltViewModel<CinemasViewModel>()
@@ -153,6 +155,7 @@ private fun NavGraphBuilder.home(
         loggedIn = viewModel.isLoggedIn,
         user = user,
         membership = membership,
+        startWith = args.screen?.let(HomeState.Companion::by),
         showProfile = showCard,
         onShowProfileChange = { showCard = it },
         onNavigateToLogin = { navController.navigate(Route.Setup(SetupState.Login)) },
@@ -315,7 +318,7 @@ private fun NavGraphBuilder.orderComplete(
         PurchaseCompleteScreen(
             products = products,
             onBackClick = {
-                navController.navigate(Route.Home(Route.Tickets())) {
+                navController.navigate(Route.Home(HomeState.Tickets)) {
                     popUpTo(Route.Home.route) {
                         inclusive = true
                     }

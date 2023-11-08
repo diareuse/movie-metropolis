@@ -22,6 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.Navigation
+import movie.metropolis.app.screen2.home.HomeState
 import movie.style.LocalWindowSizeClass
 import movie.style.theme.Theme
 import java.io.File
@@ -103,7 +104,7 @@ class MainActivity2 : AppCompatActivity() {
 
         fun tickets(context: Context) = Intent(context, MainActivity2::class.java)
             .setAction(Intent.ACTION_VIEW)
-            .setData(Route.Home.deepLink(Route.Tickets()))
+            .setData(Route.Home.deepLink(HomeState.Tickets))
 
     }
 

@@ -49,6 +49,7 @@ import movie.metropolis.app.screen.settings.SettingsScreen
 import movie.metropolis.app.screen.settings.SettingsViewModel
 import movie.metropolis.app.screen.setup.SetupScreen
 import movie.metropolis.app.screen.setup.SetupViewModel
+import movie.metropolis.app.screen2.home.HomeState
 import movie.style.TwoPaneSurface
 import movie.style.theme.Theme
 
@@ -173,7 +174,7 @@ fun Navigation(
                                 contentPadding = padding
                             )
                         },
-                        startWith = args.screen,
+                        startWith = args.screen ?: "home",
                         onClickLogin = { controller.navigate(Route.Login()) },
                         onClickInstall = instantApp::install,
                         controller = homeController,
@@ -338,7 +339,7 @@ private fun NavGraphBuilder.orderComplete(
     OrderCompleteScreen(
         onBackClick = {
             controller.popBackStack(Route.Home.route, true)
-            controller.navigate(Route.Home(Route.Tickets()))
+            controller.navigate(Route.Home(HomeState.Tickets))
         }
     )
 }
