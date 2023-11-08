@@ -30,6 +30,10 @@
 -keepclassmembernames class androidx.compose.ui.hapticfeedback.HapticFeedbackType {
     int value;
 }
+-keepclassmembernames class androidx.compose.foundation.pager.PagerState {
+    int getPageAvailableSpace();
+    void snapToItem$foundation_release(...);
+}
 
 -keep class kotlin.Metadata
 -keepattributes RuntimeVisibleAnnotations,AnnotationDefault
