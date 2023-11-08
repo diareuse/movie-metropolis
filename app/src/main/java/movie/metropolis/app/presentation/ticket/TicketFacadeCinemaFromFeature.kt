@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.shareIn
 import movie.core.EventCinemaFeature
 import movie.core.EventShowingsFeature
 import movie.metropolis.app.model.LazyTimeView
+import movie.metropolis.app.model.adapter.CinemaViewFromFeature
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 
@@ -33,6 +34,6 @@ class TicketFacadeCinemaFromFeature(
         emit(items)
     }
     override val poster: Flow<String?> = cinema.map { it.image }
-    override val name: Flow<String> = cinema.map { it.name }
+    override val name: Flow<String> = cinema.map { CinemaViewFromFeature(it).name }
 
 }
