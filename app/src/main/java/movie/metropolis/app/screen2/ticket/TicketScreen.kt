@@ -23,6 +23,7 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
 import movie.metropolis.app.screen2.ticket.component.CardCarousel
+import movie.metropolis.app.screen2.ticket.component.PageIndicator
 import movie.metropolis.app.screen2.ticket.component.SeatingRow
 import movie.metropolis.app.screen2.ticket.component.TicketColumn
 import movie.metropolis.app.screen2.ticket.component.TicketMetadata
@@ -31,7 +32,6 @@ import movie.style.BackgroundImage
 import movie.style.Barcode
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.layout.plus
 import movie.style.modifier.screenBrightness
 import movie.style.rememberPaletteImageState
 import kotlin.random.Random.Default.nextInt
@@ -40,6 +40,7 @@ import kotlin.random.Random.Default.nextInt
 fun TicketScreen(
     bookings: ImmutableList<BookingView>,
     state: PagerState,
+    indicatorState: PagerState,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
 ) = Box(
@@ -50,63 +51,76 @@ fun TicketScreen(
         rememberPaletteImageState(url = bookings.getOrNull(state.currentPage)?.movie?.poster?.url)
     BackgroundImage(state = background)
     var fullBrightness by remember { mutableStateOf(false) }
-    CardCarousel(
-        modifier = Modifier.screenBrightness(full = fullBrightness),
-        color = background.palette.color,
-        state = state,
-        key = { bookings.getOrNull(it)?.id ?: "" },
-        contentPadding = contentPadding + PaddingValues(vertical = 32.dp)
+    Column(
+        modifier = Modifier
+            .padding(contentPadding)
+            .padding(vertical = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        val it = bookings[it]
-        val state = rememberPaletteImageState(url = it.movie.poster?.url)
-        TicketColumn(
-            color = state.palette.color,
-            contentColor = state.palette.textColor,
-            note = null,
-            poster = { Image(state) },
-            metadata = {
-                TicketMetadata(
-                    cinema = { Text(it.cinema.name) },
-                    date = { Text(it.date) },
-                    time = { Text(it.time) },
-                    seating = {
-                        if (it.seats.isNotEmpty()) SeatingRow(
-                            hall = {
-                                TicketMetadataColumn(
-                                    title = { Text(stringResource(R.string.hall)) }
-                                ) {
-                                    Text(it.hall)
-                                }
-                            },
-                            row = {
-                                TicketMetadataColumn(
-                                    title = { Text(stringResource(R.string.row)) }
-                                ) {
-                                    for (seat in it.seats)
-                                        Text(seat.row)
-                                }
-                            },
-                            seat = {
-                                TicketMetadataColumn(
-                                    title = { Text(stringResource(R.string.seat)) }
-                                ) {
-                                    for (seat in it.seats)
-                                        Text(seat.seat)
-                                }
-                            }
-                        )
-                    }
-                )
-            },
-            code = {
-                Barcode(
-                    modifier = Modifier
-                        .background(Color.White)
-                        .clickable { fullBrightness = !fullBrightness },
-                    code = it.id
-                )
-            }
+        PageIndicator(
+            state = indicatorState,
+            color = background.palette.color
         )
+        CardCarousel(
+            modifier = Modifier
+                .weight(1f)
+                .screenBrightness(full = fullBrightness),
+            state = state,
+            key = { bookings.getOrNull(it)?.id ?: "" },
+            contentPadding = PaddingValues(bottom = 24.dp, top = 8.dp)
+        ) {
+            val it = bookings[it]
+            val state = rememberPaletteImageState(url = it.movie.poster?.url)
+            TicketColumn(
+                color = state.palette.color,
+                contentColor = state.palette.textColor,
+                note = null,
+                poster = { Image(state) },
+                metadata = {
+                    TicketMetadata(
+                        cinema = { Text(it.cinema.name) },
+                        date = { Text(it.date) },
+                        time = { Text(it.time) },
+                        seating = {
+                            if (it.seats.isNotEmpty()) SeatingRow(
+                                hall = {
+                                    TicketMetadataColumn(
+                                        title = { Text(stringResource(R.string.hall)) }
+                                    ) {
+                                        Text(it.hall)
+                                    }
+                                },
+                                row = {
+                                    TicketMetadataColumn(
+                                        title = { Text(stringResource(R.string.row)) }
+                                    ) {
+                                        for (seat in it.seats)
+                                            Text(seat.row)
+                                    }
+                                },
+                                seat = {
+                                    TicketMetadataColumn(
+                                        title = { Text(stringResource(R.string.seat)) }
+                                    ) {
+                                        for (seat in it.seats)
+                                            Text(seat.seat)
+                                    }
+                                }
+                            )
+                        }
+                    )
+                },
+                code = {
+                    Barcode(
+                        modifier = Modifier
+                            .background(Color.White)
+                            .clickable { fullBrightness = !fullBrightness },
+                        code = it.id
+                    )
+                }
+            )
+        }
     }
 }
 
@@ -116,7 +130,7 @@ fun TicketScreen(
 private fun BookingScreenPreview() = PreviewLayout {
     val items = BookingParameter().values.toImmutableList()
     val state = rememberPagerState { items.size }
-    TicketScreen(items, state)
+    TicketScreen(items, state, state)
 }
 
 private class BookingParameter(override val count: Int) :
