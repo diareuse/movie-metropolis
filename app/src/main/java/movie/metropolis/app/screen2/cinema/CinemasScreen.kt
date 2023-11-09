@@ -51,7 +51,7 @@ fun CinemasScreen(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding + PaddingValues(24.dp)
     ) {
-        if (!permission.allPermissionsGranted) item {
+        if (!permission.allPermissionsGranted) item(key = "permission") {
             PermissionBox(
                 modifier = Modifier.animateItemPlacement(),
                 icon = { Icon(Icons.Rounded.LocationOn, null) },
@@ -60,7 +60,7 @@ fun CinemasScreen(
                 onClick = permission::launchMultiplePermissionRequest
             )
         }
-        items(cinemas) {
+        items(cinemas, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.image)
             CinemaBox(
                 modifier = Modifier

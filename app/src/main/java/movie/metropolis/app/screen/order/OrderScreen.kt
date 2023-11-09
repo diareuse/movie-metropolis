@@ -78,9 +78,7 @@ fun OrderScreen(
                 exit = slideOutVertically()
             ) {
                 LinearProgressIndicator(
-                    progress = {
-                        progress / 100f
-                    },
+                    progress = progress / 100f,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(4.dp),
