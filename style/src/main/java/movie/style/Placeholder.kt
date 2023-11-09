@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package movie.style
 
 import androidx.compose.foundation.layout.*
@@ -5,6 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.shimmer
 import com.google.accompanist.placeholder.placeholder
 import movie.style.theme.Theme
 
@@ -24,7 +28,8 @@ fun Modifier.imagePlaceholder(
     placeholder(
         visible = visible,
         color = Theme.color.container.background,
-        shape = shape
+        shape = shape,
+        highlight = PlaceholderHighlight.shimmer()
     )
 }
 
