@@ -32,6 +32,7 @@ import movie.style.Barcode
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
+import movie.style.modifier.screenBrightness
 import movie.style.rememberPaletteImageState
 import kotlin.random.Random.Default.nextInt
 
@@ -48,7 +49,9 @@ fun TicketScreen(
     val background =
         rememberPaletteImageState(url = bookings.getOrNull(state.currentPage)?.movie?.poster?.url)
     BackgroundImage(state = background)
+    var fullBrightness by remember { mutableStateOf(false) }
     CardCarousel(
+        modifier = Modifier.screenBrightness(full = fullBrightness),
         color = background.palette.color,
         state = state,
         key = { bookings.getOrNull(it)?.id ?: "" },
@@ -97,7 +100,9 @@ fun TicketScreen(
             },
             code = {
                 Barcode(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier
+                        .background(Color.White)
+                        .clickable { fullBrightness = !fullBrightness },
                     code = it.id
                 )
             }
