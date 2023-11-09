@@ -2,6 +2,15 @@ name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      track:
+        description: 'Release Track'
+        required: true
+        type: choice
+        default: production
+        options:
+          - production
+          - internal
   push:
     branches:
       - master
@@ -24,9 +33,15 @@ jobs:
           echo "MM_CAPTCHA=${{ secrets.CAPTCHA }}" >> secrets.properties
           echo "MM_TMDB=${{ secrets.TMDB }}" >> secrets.properties
 
+      - uses: lukasa1993/android-version-code-update@v2.0.5
+        id: nextVersionCode
+        with:
+          serviceAccountJson: ./service-account.json
+          packageName: movie.metropolis.app
+
       - run: |
-          versionNumber=${{github.run_number}}
-          versionNumber=$(($versionNumber+107))
+          versionNumber=${{steps.nextVersionCode.outputs.version}}
+          versionNumber=$(($versionNumber / 10 + 1))
           sed -i "s/versionCode 1/versionCode $versionNumber/" buildSrc/src/main/groovy/application-conventions.gradle
 
       - name: Set up JDK
@@ -72,12 +87,17 @@ jobs:
       - run: |
           echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
 
+      - id: track
+        run: |
+          TARGET_TRACK=${{ github.event.inputs.track }}
+          echo "track=${TARGET_TRACK:-"production"}" >> "$GITHUB_OUTPUT"
+
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service-account.json
           packageName: movie.metropolis.app
           releaseFiles: build/outputs/bundle/release/*.aab
-          track: wear:production
+          track: wear:${{ steps.track.outputs.track }}
           status: completed
           inAppUpdatePriority: 3
           changesNotSentForReview: true
@@ -96,12 +116,17 @@ jobs:
       - run: |
           echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" | base64 --decode > service-account.json
 
+      - id: track
+        run: |
+          TARGET_TRACK=${{ github.event.inputs.track }}
+          echo "track=${TARGET_TRACK:-"production"}" >> "$GITHUB_OUTPUT"
+
       - uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJson: service-account.json
           packageName: movie.metropolis.app
           releaseFiles: build/outputs/bundle/release/*.aab
-          track: production
+          track: ${{ steps.track.outputs.track }}
           status: completed
           inAppUpdatePriority: 3
           changesNotSentForReview: true
