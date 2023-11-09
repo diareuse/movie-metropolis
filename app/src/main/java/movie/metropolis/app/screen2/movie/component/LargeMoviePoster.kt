@@ -29,7 +29,7 @@ fun LargeMoviePoster(
     contentColor: Color,
     order: @Composable () -> Unit,
     rating: @Composable () -> Unit,
-    onOrderClick: () -> Unit,
+    onOrderClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {
@@ -47,7 +47,7 @@ fun LargeMoviePoster(
             alignment = Alignment.BottomEnd,
             operation = PathOperation.Difference
         )
-        addShape(
+        if (onOrderClick != null) addShape(
             shape = CutoutShape(
                 Theme.container.poster.topStart,
                 CutoutShape.Orientation.TopLeft
@@ -79,7 +79,7 @@ fun LargeMoviePoster(
         ) {
             rating()
         }
-        Box(
+        if (onOrderClick != null) Box(
             modifier = Modifier
                 .size(48.dp)
                 .align(Alignment.TopStart)

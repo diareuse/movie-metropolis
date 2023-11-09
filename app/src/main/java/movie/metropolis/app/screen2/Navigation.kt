@@ -130,7 +130,7 @@ fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
             state = rememberLazyStaggeredGridState(),
             movies = movies.toImmutableList(),
             promotions = promotions.toImmutableList(),
-            onClick = { navController.navigate(Route.Movie(it.id)) },
+            onClick = { navController.navigate(Route.Movie(it.id, true)) },
             onFavoriteClick = { listingVM.favorite(it) },
             onMoreClick = null,
             connection = scrollBehavior.nestedScrollConnection
@@ -322,13 +322,19 @@ private fun NavGraphBuilder.movie(
     arguments = Route.Movie.arguments,
     deepLinks = Route.Movie.deepLinks
 ) {
+    val args = remember(it) { Route.Movie.Arguments(it) }
     val viewModel = hiltViewModel<MovieViewModel>()
     val movie by viewModel.movie.collectAsState()
-    MovieScreen(movie = movie, onBackClick = navController::navigateUp, onBookClick = {
+    val onBookClick = if (args.upcoming) null else ({
         val m = movie
         if (m != null)
             navController.navigate(Route.Booking.Movie(m.id))
     })
+    MovieScreen(
+        movie = movie,
+        onBackClick = navController::navigateUp,
+        onBookClick = onBookClick
+    )
 }
 
 private fun NavGraphBuilder.order(

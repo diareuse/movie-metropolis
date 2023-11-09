@@ -31,7 +31,7 @@ import movie.style.theme.Theme
 fun MovieScreen(
     movie: MovieDetailView?,
     onBackClick: () -> Unit,
-    onBookClick: () -> Unit,
+    onBookClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) = Scaffold(
