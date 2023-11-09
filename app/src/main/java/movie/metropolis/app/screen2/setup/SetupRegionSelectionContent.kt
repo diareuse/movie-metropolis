@@ -75,7 +75,7 @@ fun SetupRegionSelectionContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(24.dp)
     ) {
-        items(regions) {
+        items(regions, { it.name }) {
             val state = rememberPaletteImageState(url = it.icon)
             RegionRow(
                 modifier = Modifier.animateItemPlacement(),

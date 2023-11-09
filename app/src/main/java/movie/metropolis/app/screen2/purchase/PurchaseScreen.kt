@@ -56,9 +56,7 @@ fun PurchaseScreen(
             if (progress == 0) LinearProgressIndicator(modifier = modifier)
             else LinearProgressIndicator(
                 modifier = modifier,
-                progress = {
-                    progress / 100f
-                }
+                progress = progress / 100f
             )
         }
         if (request != null) WebView(
