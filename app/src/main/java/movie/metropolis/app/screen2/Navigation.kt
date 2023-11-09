@@ -393,6 +393,10 @@ private fun NavGraphBuilder.booking(
         val title by viewModel.title.collectAsState()
         val filters by viewModel.filters.collectAsState()
         var filtersVisible by rememberSaveable { mutableStateOf(false) }
+        val location by rememberLocation()
+        LaunchedEffect(location) {
+            viewModel.location.value = location
+        }
         DialogBox(
             visible = filtersVisible,
             dialog = {
