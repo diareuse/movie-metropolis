@@ -68,7 +68,7 @@ import movie.core.db.model.ShowingStored
         AutoMigration(6, 7),
         AutoMigration(8, 9),
         AutoMigration(9, 10),
-        AutoMigration(11, 12, Migration11to12::class),
+        AutoMigration(11, 12, Migration11to12::class)
     ]
 )
 @TypeConverters(
@@ -131,5 +131,12 @@ internal abstract class MovieDatabase : RoomDatabase() {
         )
     )
     class Migration11to12 : AutoMigrationSpec
+
+    class Migration12to13 : Migration(12, 13) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("delete from `showings`")
+            db.execSQL("alter table `showings` add column `subtitles` text")
+        }
+    }
 
 }

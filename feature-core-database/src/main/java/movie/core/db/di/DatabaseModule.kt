@@ -75,6 +75,7 @@ class DatabaseModule {
             .addMigrations(MovieDatabase.Migration2to3())
             .addMigrations(MovieDatabase.Migration7to8())
             .addMigrations(MovieDatabase.Migration10to11())
+            .addMigrations(MovieDatabase.Migration12to13())
             .build()
     }
 
