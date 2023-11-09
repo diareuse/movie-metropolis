@@ -14,8 +14,9 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.core.graphics.drawable.toBitmap
-import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -36,31 +37,34 @@ fun Image(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val loader = remember(context) { state.getLoader(context) }
-    val request = rememberImageRequest(url = state.url)
-    val filter = when (state.state) {
-        LoadState.Failure -> ColorFilter.tint(LocalContentColor.current)
-        else -> null
-    }
-    AsyncImage(
+    val request = if (state.url != null) rememberImageRequest(url = state.url) else null
+    SubcomposeAsyncImage(
         modifier = modifier,
         model = request,
-        imageLoader = loader,
         contentDescription = contentDescription,
-        contentScale = ContentScale.Crop,
+        imageLoader = loader,
         alignment = alignment,
-        colorFilter = filter,
-        transform = {
-            when (it) {
-                AsyncImagePainter.State.Empty -> it
-                is AsyncImagePainter.State.Error -> it.copy(painter = placeholderError)
-                is AsyncImagePainter.State.Loading -> it
-                is AsyncImagePainter.State.Success -> it
-            }
+        contentScale = ContentScale.Crop,
+        onLoading = { scope.launch { state.processState(it) } },
+        onSuccess = { scope.launch { state.processState(it) } },
+        onError = { scope.launch { state.processState(it) } },
+        loading = {
+            Box(
+                modifier = Modifier.imagePlaceholder(RectangleShape)
+            )
         },
-        onState = {
-            scope.launch {
-                state.processState(it)
+        error = {
+            if (request == null) Box(
+                modifier = Modifier.imagePlaceholder(RectangleShape)
+            )
+            else if (placeholderError != null) Box(contentAlignment = Alignment.Center) {
+                Image(
+                    painter = placeholderError,
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(LocalContentColor.current)
+                )
             }
+            else SubcomposeAsyncImageContent()
         }
     )
 }
@@ -84,20 +88,9 @@ sealed class ImageState {
 
     abstract val url: Any?
 
-    var state by mutableStateOf(LoadState.Loading)
-        private set
-
     open fun getLoader(context: Context) = context.imageLoader
 
-    internal open suspend fun processState(state: AsyncImagePainter.State) {
-        this.state = when (state) {
-            AsyncImagePainter.State.Empty -> LoadState.Empty
-            is AsyncImagePainter.State.Error -> LoadState.Failure
-
-            is AsyncImagePainter.State.Loading -> LoadState.Loading
-            is AsyncImagePainter.State.Success -> LoadState.Loaded
-        }
-    }
+    internal open suspend fun processState(state: AsyncImagePainter.State) = Unit
 
 }
 
