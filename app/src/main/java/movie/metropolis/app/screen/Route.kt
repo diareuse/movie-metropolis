@@ -55,7 +55,6 @@ sealed class Route(
         val arguments = listOf(
             navArgument("screen") {
                 type = NavType.StringType
-                defaultValue = Movies.route
             }
         )
 
@@ -66,6 +65,8 @@ sealed class Route(
         operator fun invoke(screen: HomeState? = null) = route.let {
             if (screen != null) it.replace("{screen}", screen.name) else
                 it.replace("screen={screen}", "")
+        }.let {
+            if (it.endsWith("?")) it.substringBeforeLast('?') else it
         }
 
         fun deepLink(screen: HomeState = HomeState.Listing) =

@@ -77,7 +77,7 @@ fun Navigation(
     LaunchedEffect(setupViewModel) {
         setupViewModel.requiresSetup.collect {
             if (it) navController.navigate(Route.Setup()) {
-                popUpTo(Route.Home()) {
+                popUpTo(Route.Home.route) {
                     inclusive = true
                 }
             }
@@ -86,7 +86,7 @@ fun Navigation(
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = Route.Home(),
+        startDestination = Route.Home.route,
         enterTransition = { slideInHorizontally { it } },
         exitTransition = { fadeOut() + slideOutHorizontally() },
         popEnterTransition = { fadeIn() + slideInHorizontally() },
