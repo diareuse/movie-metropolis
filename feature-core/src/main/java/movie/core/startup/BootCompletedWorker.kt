@@ -3,33 +3,25 @@ package movie.core.startup
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import movie.core.FavoriteFeature
+import movie.core.di.BootCompletedWorkerEntryPoint
 import movie.core.model.MoviePreview
 import movie.core.pulse.ExactPulseNotificationMovie
 import movie.pulse.ExactPulseRequest
-import movie.pulse.ExactPulseScheduler
-import javax.inject.Inject
 
-@AndroidEntryPoint
 class BootCompletedWorker : BroadcastReceiver() {
-
-    @Inject
-    lateinit var favorite: FavoriteFeature
-
-    @Inject
-    lateinit var scheduler: ExactPulseScheduler
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if (context == null || intent == null) return
-        val scope = CoroutineScope(SupervisorJob())
+        val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        val entry = BootCompletedWorkerEntryPoint(context)
         scope.launch {
-            favorite.getAll().onSuccess {
+            entry.favorite().getAll().onSuccess {
                 for (movie in it.map(::asRequest))
-                    scheduler.schedule(movie)
+                    entry.scheduler().schedule(movie)
             }
         }
     }
