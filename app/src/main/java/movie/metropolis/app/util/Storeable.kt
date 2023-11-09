@@ -1,11 +1,9 @@
 package movie.metropolis.app.util
 
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
-import androidx.compose.ui.platform.*
 import androidx.core.content.edit
+import movie.style.util.rememberSharedPrefs
 
 private const val UiStore = "ui-store"
 
@@ -47,10 +45,4 @@ fun getStoreable(key: String, default: String, value: () -> String): String {
         prefs.edit { putString(key, newValue) }
     }
     return remember(prefs, key) { prefs.getString(key, default) ?: default }
-}
-
-@Composable
-fun rememberSharedPrefs(name: String): SharedPreferences {
-    val context = LocalContext.current
-    return remember(context, name) { context.getSharedPreferences(name, Context.MODE_PRIVATE) }
 }
