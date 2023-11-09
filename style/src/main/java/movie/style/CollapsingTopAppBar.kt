@@ -67,8 +67,7 @@ fun CollapsingTopAppBar(
     val minHeight = with(density) { minHeight.roundToPx() }
     Layout(
         modifier = modifier
-            .padding(contentPadding)
-        /*.statusBarsPadding()*/,
+            .padding(contentPadding),
         content = {
             Box(
                 Modifier
@@ -98,7 +97,8 @@ fun CollapsingTopAppBar(
         val actions = measurables.first { it.layoutId == Actions }.measure(cs)
         cs = cs.minusWidth(actions.width).fixedWidth()
         val title = measurables.first { it.layoutId == Title }.measure(cs)
-        val expandedTitle = measurables.first { it.layoutId == ExpandedTitle }.measure(constraints)
+        val expandedCS = lerp(constraints, cs, expandFraction)
+        val expandedTitle = measurables.first { it.layoutId == ExpandedTitle }.measure(expandedCS)
 
         // Stage 2: Arrange
         val pinnedHeight = maxOf(navigationIcon.height, actions.height, title.height, minHeight)
@@ -145,18 +145,27 @@ fun CollapsingTopAppBar(
     }
 }
 
+fun lerp(start: Constraints, end: Constraints, fraction: Float): Constraints {
+    return start.copy(
+        minWidth = lerp(start.minWidth, end.minWidth, fraction),
+        minHeight = lerp(start.minHeight, end.minHeight, fraction),
+        maxWidth = lerp(start.maxWidth, end.maxWidth, fraction),
+        maxHeight = lerp(start.maxHeight, end.maxHeight, fraction)
+    )
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun CollapsingTopAppBarPreview() = PreviewLayout(padding = PaddingValues()) {
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     SideEffect {
-        behavior.state.heightOffset = -170f
+        behavior.state.heightOffset = -280f
     }
     Scaffold(
         topBar = {
             CollapsingTopAppBar(
                 scrollBehavior = behavior,
-                title = { Text("I'm title") },
+                title = { Text("I'm title title title title title title title title title") },
                 navigationIcon = {
                     IconButton(onClick = { /*TODO*/ }) {
                         Icon(Icons.AutoMirrored.Default.ArrowBack, null)
