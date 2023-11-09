@@ -112,9 +112,19 @@ sealed class Route(
             }
         )
 
-        class Arguments(private val entry: SavedStateHandle) {
-            val movie get() = entry.get<String>("movie").let(::requireNotNull)
-            val upcoming get() = entry.get<Boolean>("upcoming").let(::requireNotNull)
+        class Arguments(
+            val movie: String,
+            val upcoming: Boolean
+        ) {
+            constructor(entry: NavBackStackEntry) : this(
+                entry.arguments?.getString("movie", null).let(::requireNotNull),
+                entry.arguments?.getBoolean("upcoming", false).let(::requireNotNull)
+            )
+
+            constructor(handle: SavedStateHandle) : this(
+                handle.get<String>("movie").let(::requireNotNull),
+                handle.get<Boolean>("upcoming").let(::requireNotNull)
+            )
         }
 
         operator fun invoke(movie: String, upcoming: Boolean = false) =
