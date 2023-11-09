@@ -12,7 +12,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
-import androidx.compose.foundation.pager.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material3.*
@@ -40,6 +39,7 @@ import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.booking.BookingFiltersDialog
 import movie.metropolis.app.screen2.booking.BookingScreen
 import movie.metropolis.app.screen2.booking.TimeViewModel
+import movie.metropolis.app.screen2.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.screen2.cinema.CinemasScreen
 import movie.metropolis.app.screen2.cinema.CinemasViewModel
 import movie.metropolis.app.screen2.home.HomeScreen
@@ -192,7 +192,7 @@ private fun NavGraphBuilder.home(
     val listingState = rememberLazyStaggeredGridState()
     val cinemasState = rememberLazyListState()
     val tickets by bookingVM.tickets.collectAsState()
-    val bookingState = rememberPagerState { tickets.size }
+    val (bookingState, bookingIndicatorState) = rememberMultiChildPagerState(childCount = 1) { tickets.size }
     val user by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
     var showCard by remember { mutableStateOf(false) }
@@ -225,6 +225,7 @@ private fun NavGraphBuilder.home(
             TicketScreen(
                 bookings = tickets.toImmutableList(),
                 state = bookingState,
+                indicatorState = bookingIndicatorState,
                 modifier = modifier,
                 contentPadding = padding
             )
