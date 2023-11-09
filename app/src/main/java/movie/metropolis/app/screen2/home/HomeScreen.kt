@@ -115,12 +115,13 @@ fun HomeScreen(
                 height = padding.calculateBottomPadding() + 32.dp,
                 gravity = VerticalGravity.Bottom
             )
+        val destinationTab = getStoreable("home-tab", HomeState.Listing.name) {
+            currentState.name
+        }
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
-            startDestination = startWith?.name ?: getStoreable("home-tab", HomeState.Listing.name) {
-                currentState.name
-            }
+            startDestination = startWith?.name ?: destinationTab
         ) {
             composable(HomeState.Listing.name) { listing(overlayModifier, padding) }
             composable(HomeState.Tickets.name) { tickets(overlayModifier, padding) }
