@@ -27,6 +27,7 @@ import movie.metropolis.app.screen2.card.component.CardContentFront
 import movie.metropolis.app.screen2.card.component.FlippableCard
 import movie.style.Barcode
 import movie.style.layout.PreviewLayout
+import movie.style.modifier.screenBrightness
 import movie.style.modifier.surface
 import movie.style.modifier.vertical
 import movie.style.theme.Theme
@@ -127,10 +128,13 @@ fun CardScreen(
             },
             back = {
                 CardContentBack(logo = logo, name = name, code = {
+                    var fullBrightness by remember { mutableStateOf(false) }
                     Barcode(
                         modifier = Modifier
                             .surface(Color.White, Theme.container.poster)
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = 8.dp)
+                            .screenBrightness(full = fullBrightness)
+                            .clickable { fullBrightness = !fullBrightness },
                         code = membership.cardNumber,
                         format = BarcodeFormat.CODE_128
                     )

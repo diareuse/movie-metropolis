@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.zxing.BarcodeFormat
 import movie.style.Barcode
+import movie.style.modifier.screenBrightness
 import movie.style.util.findActivity
 
 @Composable
@@ -32,7 +33,8 @@ fun BookingScreen(
     Barcode(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White),
+            .background(Color.White)
+            .screenBrightness(true),
         code = viewModel.id,
         format = BarcodeFormat.QR_CODE,
         color = Color.Black
