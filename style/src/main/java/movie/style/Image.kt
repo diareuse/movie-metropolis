@@ -13,17 +13,20 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import androidx.core.content.edit
 import androidx.core.graphics.drawable.toBitmap
 import coil.compose.AsyncImagePainter
 import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import coil.imageLoader
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import movie.style.image.rememberImageRequest
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
+import movie.style.theme.contentColorFor
+import movie.style.util.getLongArray
+import movie.style.util.putLongArray
+import movie.style.util.rememberSharedPrefs
 import androidx.palette.graphics.Palette as AndroidPalette
 
 @Composable
@@ -74,14 +77,40 @@ fun rememberImageState(url: Any?): ImageState {
     return remember(url) { HardwareImageState(url) }
 }
 
+fun Any?.hashString() = "%08x".format(hashCode())
+
+private const val ImageRetentionStore = "image-retention-store"
+
 @Composable
 fun rememberPaletteImageState(
     url: Any?,
-    color: Color = Theme.color.container.background
+    color: Color = Theme.color.container.background,
+    contentColor: Color = Theme.color.contentColorFor(color)
 ): PaletteImageState {
-    val contentColor = LocalContentColor.current
-    val defaultPalette = PaletteImageState.Palette(color, contentColor, contentColor)
-    return remember(url, defaultPalette) { PaletteImageState(url, defaultPalette) }
+    val prefs = rememberSharedPrefs(name = ImageRetentionStore)
+    val key = remember(url) { url.hashString() }
+    val default = remember(color, contentColor) {
+        longArrayOf(
+            color.value.toLong(),
+            contentColor.value.toLong(),
+            contentColor.value.toLong()
+        )
+    }
+    val imageState = remember(url, default) {
+        val storedColors = prefs.getLongArray(key, default)
+        val defaultPalette = PaletteImageState.Palette(storedColors)
+        PaletteImageState(
+            url = url,
+            defaultPalette = defaultPalette,
+            resolvePalette = url != null && storedColors.contentEquals(default)
+        )
+    }
+    LaunchedEffect(imageState.palette) {
+        if (imageState.hasNewPalette) prefs.edit(commit = true) {
+            putLongArray(key, imageState.palette.toLongArray())
+        }
+    }
+    return imageState
 }
 
 sealed class ImageState {
@@ -100,29 +129,26 @@ data class HardwareImageState(
 
 data class PaletteImageState(
     override val url: Any?,
-    private val defaultPalette: Palette
+    private val defaultPalette: Palette,
+    private val resolvePalette: Boolean
 ) : ImageState() {
 
-    var palette by mutableStateOf(palettes[url] ?: defaultPalette)
+    val hasNewPalette by derivedStateOf { defaultPalette != palette }
+
+    var palette by mutableStateOf(defaultPalette)
         private set
 
     override fun getLoader(context: Context) = super.getLoader(context).newBuilder()
-        .allowHardware(palettes.containsKey(url))
+        .allowHardware(!resolvePalette)
         .build()
 
     override suspend fun processState(state: AsyncImagePainter.State) {
         super.processState(state)
-        if (state !is AsyncImagePainter.State.Success) return
-        palette = palettes[url] ?: lock.withLock {
-            palettes[url] ?: AndroidPalette.from(state.result.drawable.toBitmap())
-                .resizeBitmapArea(200)
-                .generate()
-                .let(::Palette)
-                .also {
-                    palettes[url] = it
-                    palette = it
-                }
-        }
+        if (state !is AsyncImagePainter.State.Success || !resolvePalette) return
+        palette = AndroidPalette.from(state.result.drawable.toBitmap())
+            .resizeBitmapArea(200)
+            .generate()
+            .let(::Palette)
     }
 
     private fun Palette(palette: AndroidPalette): Palette {
@@ -138,17 +164,22 @@ data class PaletteImageState(
         val color: Color,
         val textColor: Color,
         val titleColor: Color
-    )
+    ) {
 
-    companion object {
-        private val lock = Mutex()
-        private val palettes = mutableMapOf<Any?, Palette>()
+        fun toLongArray() = longArrayOf(
+            color.value.toLong(),
+            textColor.value.toLong(),
+            titleColor.value.toLong()
+        )
+
+        constructor(packed: LongArray) : this(
+            color = Color(packed[0].toULong()),
+            textColor = Color(packed[1].toULong()),
+            titleColor = Color(packed[2].toULong())
+        )
+
     }
 
-}
-
-enum class LoadState {
-    Empty, Loading, Loaded, Failure
 }
 
 @Preview(showBackground = true)
