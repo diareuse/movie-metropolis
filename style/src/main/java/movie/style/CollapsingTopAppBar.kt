@@ -121,14 +121,16 @@ fun CollapsingTopAppBar(
 
         // Stage 3: Modify scroll behavior
         val statusBarOffset = statusBar.height
-        val height = max(pinnedHeight, expandedY + expandedTitle.height) + statusBarOffset
-        if (scrollBehavior.state.heightOffsetLimit != -height.toFloat()) {
-            scrollBehavior.state.heightOffsetLimit = -height.toFloat()
+        val height = max(pinnedHeight, expandedY + expandedTitle.height) +
+                statusBarOffset + contentPadding.calculateTopPadding().toPx() +
+                contentPadding.calculateBottomPadding().toPx()
+        if (scrollBehavior.state.heightOffsetLimit != -height) {
+            scrollBehavior.state.heightOffsetLimit = -height
         }
 
         // Stage 4: Layout
         val offset = (height * hideFraction).toInt().coerceAtLeast(0)
-        layout(constraints.maxWidth, height - offset) {
+        layout(constraints.maxWidth, (height - offset).toInt()) {
             navigationIcon.placeRelative(
                 x = offsetNavigationIcon,
                 y = alignment.align(navigationIcon.height, pinnedHeight) - offset + statusBarOffset
