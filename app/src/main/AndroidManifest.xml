@@ -53,6 +53,13 @@
         <activity
             android:name="movie.metropolis.app.MainActivity"
             android:exported="true"
+            android:theme="@style/Theme.MovieMetropolis" />
+
+        <activity
+            android:name="movie.metropolis.app.MainActivity2"
+            android:exported="true"
+            android:configChanges="keyboard|keyboardHidden"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.MovieMetropolis">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -72,13 +79,6 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-
-        <activity
-            android:name="movie.metropolis.app.MainActivity2"
-            android:exported="true"
-            android:configChanges="keyboard|keyboardHidden"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MovieMetropolis" />
 
         <activity
             android:name=".ShortcutActivity"
