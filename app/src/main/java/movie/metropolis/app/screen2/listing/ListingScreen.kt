@@ -8,7 +8,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
-import androidx.compose.foundation.pager.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
@@ -22,6 +21,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.listing.MovieViewProvider
+import movie.metropolis.app.screen2.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.screen2.listing.component.PosterColumn
 import movie.metropolis.app.screen2.listing.component.PromotionColumn
 import movie.metropolis.app.screen2.listing.component.PromotionHorizontalPager
@@ -69,10 +69,11 @@ fun ListingScreen(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item(span = StaggeredGridItemSpan.FullLine) {
-            val state = rememberPagerState { promotions.size }
+            val (state, indicator) = rememberMultiChildPagerState(childCount = 1) { promotions.size }
             PromotionHorizontalPager(
                 modifier = Modifier.animateItemPlacement(),
-                state = state
+                state = state,
+                indicatorState = indicator
             ) {
                 val it = promotions[it]
                 val state = rememberPaletteImageState(it.poster?.url)

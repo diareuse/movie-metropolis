@@ -56,8 +56,8 @@ fun PageIndicator(
     state: PagerState,
     modifier: Modifier = Modifier,
     color: Color = Theme.color.emphasis.secondary,
-    itemSize: Dp = 10.dp,
-    itemPadding: Dp = 6.dp,
+    itemSize: Dp = 9.dp,
+    itemPadding: Dp = 4.dp,
     displayItems: Int = 5
 ) {
     HorizontalPager(
