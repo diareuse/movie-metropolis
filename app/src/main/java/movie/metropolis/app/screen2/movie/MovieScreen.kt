@@ -64,7 +64,7 @@ fun MovieScreen(
         modifier = Modifier.fillMaxSize(),
         contentPadding = padding,
         connection = scrollBehavior.nestedScrollConnection,
-        primaryWeight = .75f,
+        primaryWeight = .5f,
         primary = {
             LargeMoviePoster(
                 modifier = Modifier
