@@ -74,9 +74,10 @@ fun PageIndicator(
                     it,
                     rotationZ = 0f,
                     rotationY = 0f,
-                    blur = 2.dp,
+                    blur = 0.dp,
                     offset = DpOffset.Zero,
-                    scaleRange = .6f..1f
+                    scaleRange = .6f..1f,
+                    alphaRange = .5f..1f
                 )
                 .size(itemSize)
                 .background(color, CircleShape)
