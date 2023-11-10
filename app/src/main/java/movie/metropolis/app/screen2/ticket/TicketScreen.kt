@@ -54,9 +54,8 @@ fun TicketScreen(
     Column(
         modifier = Modifier
             .padding(contentPadding)
-            .padding(vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .padding(bottom = 16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PageIndicator(
             state = indicatorState,
@@ -68,17 +67,21 @@ fun TicketScreen(
                 .screenBrightness(full = fullBrightness),
             state = state,
             key = { bookings.getOrNull(it)?.id ?: "" },
-            contentPadding = PaddingValues(bottom = 24.dp, top = 8.dp)
+            contentPadding = PaddingValues(vertical = 8.dp)
         ) {
             val it = bookings[it]
             val state = rememberPaletteImageState(url = it.movie.poster?.url)
+            val note: (@Composable () -> Unit)? =
+                if (it.expired) ({ Text(stringResource(id = R.string.expired)) })
+                else null
             TicketColumn(
                 color = state.palette.color,
                 contentColor = state.palette.textColor,
-                note = null,
-                poster = { Image(state) },
+                note = note,
+                poster = { Image(state, alignment = Alignment.BottomCenter) },
                 metadata = {
                     TicketMetadata(
+                        name = { Text(it.movie.name) },
                         cinema = { Text(it.cinema.name) },
                         date = { Text(it.date) },
                         time = { Text(it.time) },

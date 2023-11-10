@@ -3,6 +3,8 @@ package movie.metropolis.app.screen2.ticket.component
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -11,6 +13,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
@@ -94,6 +97,7 @@ fun TicketColumn(
 
 @Composable
 fun TicketMetadata(
+    name: @Composable () -> Unit,
     cinema: @Composable () -> Unit,
     date: @Composable () -> Unit,
     time: @Composable () -> Unit,
@@ -103,10 +107,18 @@ fun TicketMetadata(
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         ProvideTextStyle(Theme.textStyle.caption) {
-            cinema()
+            ProvideTextStyle(
+                Theme.textStyle.emphasis.copy(
+                    fontWeight = FontWeight.Medium,
+                    textAlign = TextAlign.Center
+                )
+            ) {
+                name()
+            }
+            Spacer(Modifier)
             Row(
                 modifier = Modifier.height(IntrinsicSize.Min),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -127,6 +139,11 @@ fun TicketMetadata(
                     text = { time() }
                 )
             }
+            IconRow(
+                icon = { Icon(Icons.Rounded.Place, null) },
+                text = { cinema() }
+            )
+            Spacer(Modifier)
             seating()
         }
     }
@@ -193,7 +210,7 @@ fun TicketMetadataColumn(
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
     CompositionLocalProvider(LocalContentColor provides LocalContentColor.current.copy(alpha = .4f)) {
-        ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Light)) {
+        ProvideTextStyle(Theme.textStyle.body.copy(fontWeight = FontWeight.Light)) {
             title()
         }
     }
@@ -215,6 +232,7 @@ private fun TicketColumnPreview() = PreviewLayout(
         poster = { Box(Modifier.background(Color.Gray)) },
         metadata = {
             TicketMetadata(
+                name = { Text("Paw Patrol") },
                 cinema = { Text("Cinema") },
                 date = { Text("Feb 25") },
                 time = { Text("12:30") },
