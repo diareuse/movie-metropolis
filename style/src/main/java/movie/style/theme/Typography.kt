@@ -30,7 +30,7 @@ internal val ThemeTypography = Typography(
     ),
     displaySmall = TextStyle(
         fontFamily = LexendDeca,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 36.sp,
         lineHeight = 36.sp,
         letterSpacing = 0.sp,

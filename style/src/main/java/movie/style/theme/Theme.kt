@@ -58,6 +58,7 @@ object Theme {
         val body: TextStyle
         val emphasis: TextStyle
         val title: TextStyle
+        val display: TextStyle
         val headline: TextStyle
     }
 
