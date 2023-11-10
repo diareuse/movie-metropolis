@@ -25,6 +25,7 @@ import movie.metropolis.app.screen2.home.component.TransparentBottomNavigation
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigationItem
 import movie.metropolis.app.util.getStoreable
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.VerticalGravity
 import movie.style.modifier.verticalOverlay
 
@@ -73,7 +74,9 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            TransparentBottomNavigation {
+            TransparentBottomNavigation(
+                modifier = Modifier.alignForLargeScreen()
+            ) {
                 for (state in HomeState.entries)
                     TransparentBottomNavigationItem(
                         selected = route == state.name,
@@ -101,7 +104,8 @@ fun HomeScreen(
             currentState.name
         }
         NavHost(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize(),
             navController = navController,
             startDestination = startWith?.name ?: destinationTab,
             enterTransition = {

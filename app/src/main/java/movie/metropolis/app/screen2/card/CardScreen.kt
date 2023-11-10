@@ -27,6 +27,7 @@ import movie.metropolis.app.screen2.card.component.CardContentFront
 import movie.metropolis.app.screen2.card.component.FlippableCard
 import movie.style.Barcode
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.screenBrightness
 import movie.style.modifier.surface
 import movie.style.modifier.vertical
@@ -88,6 +89,7 @@ fun CardScreen(
             modifier = Modifier
                 .offset(y = state.offset)
                 .fillMaxWidth()
+                .alignForLargeScreen(400.dp)
                 .vertical(),
             rotation = state.rotation,
             key = membership.cardNumber,

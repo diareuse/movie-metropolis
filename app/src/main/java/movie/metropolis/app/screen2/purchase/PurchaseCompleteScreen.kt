@@ -27,6 +27,7 @@ import movie.metropolis.app.screen2.purchase.component.InAppColumn
 import movie.metropolis.app.util.interpolatePage
 import movie.style.CollapsingTopAppBar
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.theme.Theme
 import movie.style.util.findActivity
 
@@ -39,6 +40,7 @@ fun PurchaseCompleteScreen(
     modifier = modifier,
     topBar = {
         CollapsingTopAppBar(
+            modifier = Modifier.alignForLargeScreen(),
             title = { Text(stringResource(R.string.order_complete_title)) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {

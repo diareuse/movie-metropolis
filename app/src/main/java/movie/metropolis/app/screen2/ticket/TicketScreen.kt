@@ -32,6 +32,8 @@ import movie.style.Barcode
 import movie.style.Image
 import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
+import movie.style.layout.largeScreenPadding
+import movie.style.layout.plus
 import movie.style.modifier.screenBrightness
 import movie.style.rememberPaletteImageState
 import movie.style.textPlaceholder
@@ -54,10 +56,12 @@ fun TicketScreen(
         )
     BackgroundImage(state = background)
     var fullBrightness by remember { mutableStateOf(false) }
+    var largeScreenPadding by remember { mutableStateOf(PaddingValues(0.dp)) }
     Column(
         modifier = Modifier
             .padding(contentPadding)
-            .padding(bottom = 16.dp),
+            .padding(bottom = 16.dp)
+            .largeScreenPadding(widthAtMost = 350.dp) { largeScreenPadding = it },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PageIndicator(
@@ -70,7 +74,7 @@ fun TicketScreen(
                 .screenBrightness(full = fullBrightness),
             state = state,
             key = { bookings.asSuccess()?.getOrNull(it)?.id ?: "" },
-            contentPadding = PaddingValues(vertical = 8.dp)
+            contentPadding = PaddingValues(vertical = 8.dp) + largeScreenPadding
         ) {
             val items = bookings.asSuccess()
             if (items != null) {

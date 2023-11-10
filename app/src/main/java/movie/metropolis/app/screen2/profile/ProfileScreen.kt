@@ -29,6 +29,7 @@ import movie.metropolis.app.screen2.profile.component.VersionColumn
 import movie.style.BackgroundImage
 import movie.style.action.actionView
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberImageState
@@ -54,6 +55,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
+            .alignForLargeScreen()
     ) {
         Column(
             modifier = Modifier
@@ -105,7 +107,7 @@ fun ProfileScreen(
                     color = Theme.color.container.background,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
-                .glow(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                .glow(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), alpha = .1f)
                 .padding(24.dp)
                 .padding(bottom = contentPadding.calculateBottomPadding())
                 .weight(1f),

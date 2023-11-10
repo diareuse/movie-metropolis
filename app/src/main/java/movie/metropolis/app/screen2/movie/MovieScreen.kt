@@ -24,6 +24,7 @@ import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
 
@@ -38,6 +39,7 @@ fun MovieScreen(
     modifier = modifier,
     topBar = {
         CollapsingTopAppBar(
+            modifier = Modifier.alignForLargeScreen(),
             title = {
                 if (movie != null) Text(
                     "Detail",
@@ -59,12 +61,14 @@ fun MovieScreen(
         modifier = Modifier.fillMaxSize(),
         state = poster
     )
+    // fixme this column could use a content shifting strategy based on screen size
     Column(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection)
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(padding),
+            .padding(padding)
+            .alignForLargeScreen(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LargeMoviePoster(

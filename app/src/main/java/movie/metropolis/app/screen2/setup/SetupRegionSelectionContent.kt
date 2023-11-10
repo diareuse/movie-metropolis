@@ -28,6 +28,7 @@ import movie.metropolis.app.screen2.setup.component.SetupPreviewLayout
 import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberPaletteImageState
@@ -71,6 +72,7 @@ fun SetupRegionSelectionContent(
         )
     }
     LazyColumn(
+        modifier = Modifier.alignForLargeScreen(),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(24.dp)

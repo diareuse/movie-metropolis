@@ -28,6 +28,7 @@ import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.layout.plus
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
@@ -47,6 +48,7 @@ fun CinemasScreen(
         state = rememberImageState(cinemas.getOrNull(selectedItem)?.image)
     )
     LazyColumn(
+        modifier = Modifier.alignForLargeScreen(),
         state = state,
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = contentPadding + PaddingValues(24.dp)

@@ -27,6 +27,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.screen2.setup.component.rememberRandomItemAsState
 import movie.style.BackgroundImage
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberImageState
@@ -47,7 +48,7 @@ fun SetupLoginContent(
     val poster by posters.rememberRandomItemAsState()
     BackgroundImage(state = rememberImageState(url = poster))
     Column(
-        modifier = Modifier,
+        modifier = Modifier.alignForLargeScreen(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.weight(1f))

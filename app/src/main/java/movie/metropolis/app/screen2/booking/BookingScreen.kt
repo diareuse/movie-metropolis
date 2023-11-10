@@ -42,6 +42,8 @@ import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
+import movie.style.layout.largeScreenPadding
 import movie.style.layout.plus
 import movie.style.modifier.VerticalGravity
 import movie.style.modifier.verticalOverlay
@@ -68,6 +70,7 @@ fun BookingScreen(
     contentWindowInsets = WindowInsets(0),
     topBar = {
         CollapsingTopAppBar(
+            modifier = Modifier.alignForLargeScreen(),
             scrollBehavior = scrollBehavior,
             title = { Text(title) },
             navigationIcon = {
@@ -91,16 +94,18 @@ fun BookingScreen(
         modifier = Modifier.fillMaxSize(),
         state = rememberImageState(url = poster)
     )
+    var largeScreenPadding by remember { mutableStateOf(PaddingValues(0.dp)) }
     Column(
         modifier = Modifier
             .statusBarsPadding()
-            .padding(top = padding.calculateTopPadding()),
+            .padding(top = padding.calculateTopPadding())
+            .largeScreenPadding(widthAtMost = 350.dp) { largeScreenPadding = it },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
             state = stateDate,
-            contentPadding = PaddingValues(horizontal = 128.dp),
+            contentPadding = PaddingValues(horizontal = 128.dp) + largeScreenPadding,
             pageSpacing = 16.dp,
             userScrollEnabled = false
         ) {
@@ -131,7 +136,8 @@ fun BookingScreen(
             pageSpacing = 32.dp,
             beyondBoundsPageCount = 1,
             pageNestedScrollConnection = scrollBehavior.nestedScrollConnection,
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Alignment.Top,
+            contentPadding = largeScreenPadding
         ) {
             val page by items[it].content.collectAsState(emptyList())
             val bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
