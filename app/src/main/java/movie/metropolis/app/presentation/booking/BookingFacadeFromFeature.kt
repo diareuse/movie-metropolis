@@ -16,10 +16,10 @@ class BookingFacadeFromFeature(
     private val share: TicketShareRegistry
 ) : BookingFacade {
 
-    override val bookings: Flow<Result<List<BookingView>>> = flow {
-        val items = booking.get().map { items ->
-            items.map(::BookingViewFromFeature).toList()
-        }
+    override val bookings: Flow<List<BookingView>> = flow {
+        val items = booking.get().getOrThrow()
+            .map(::BookingViewFromFeature)
+            .toList()
         emit(items)
     }
 
