@@ -7,23 +7,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.model.BookingView
-import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.booking.BookingFacade.Companion.bookingsFlow
-import movie.metropolis.app.presentation.mapLoadable
 import movie.metropolis.app.presentation.share.ShareFacade
 import movie.metropolis.app.presentation.share.TicketRepresentation
 import movie.metropolis.app.util.retainStateIn
 import movie.metropolis.app.util.writeTo
-import movie.style.state.ImmutableList.Companion.immutable
 import java.io.File
 import javax.inject.Inject
 
@@ -45,13 +45,13 @@ class BookingViewModel @Inject constructor(
     private val items = facade.bookingsFlow(refreshTokenFlow)
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
     val expired = items
-        .mapLoadable { it.filter { it.expired } }
-        .mapLoadable { it.immutable() }
-        .retainStateIn(viewModelScope, Loadable.loading())
+        .map { it.filter { it.expired } }
+        .map { it.toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
     val active = items
-        .mapLoadable { it.filterNot { it.expired } }
-        .mapLoadable { it.immutable() }
-        .retainStateIn(viewModelScope, Loadable.loading())
+        .map { it.filterNot { it.expired } }
+        .map { it.toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
 
     fun refresh() {
         refreshToken.trySend(facade::refresh)

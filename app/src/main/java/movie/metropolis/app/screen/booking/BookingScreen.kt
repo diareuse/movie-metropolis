@@ -14,6 +14,7 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.launch
 import movie.metropolis.app.ActivityActions
 import movie.metropolis.app.LocalActivityActions
@@ -26,7 +27,6 @@ import movie.metropolis.app.screen.booking.component.TicketItemActive
 import movie.metropolis.app.screen.booking.component.TicketItemExpired
 import movie.metropolis.app.screen.home.component.HomeScreenToolbar
 import movie.style.AppButton
-import movie.style.state.ImmutableList
 import movie.style.theme.Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,8 +43,8 @@ fun BookingScreen(
     val scope = rememberCoroutineScope()
     var isReaderActive by rememberSaveable { mutableStateOf(false) }
     BookingScreenContent(
-        active = active,
-        expired = expired,
+        active = Loadable.success(active),
+        expired = Loadable.success(expired),
         behavior = behavior,
         onRefreshClick = viewModel::refresh,
         onMovieClick = onMovieClick,

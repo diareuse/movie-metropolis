@@ -11,8 +11,8 @@ import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.DefaultDecoderFactory
 import com.journeyapps.barcodescanner.camera.CenterCropStrategy
-import movie.style.state.ImmutableList
-import movie.style.state.ImmutableList.Companion.immutable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import android.graphics.Color as AndroidColor
 
 @RequiresPermission(Manifest.permission.CAMERA)
@@ -22,7 +22,7 @@ fun BarcodeReader(
     onBarcodeRead: (String) -> Unit,
     modifier: Modifier = Modifier
 ) = BarcodeReader(
-    formats = listOf(format).immutable(),
+    formats = persistentListOf(format),
     onBarcodeRead = onBarcodeRead,
     modifier = modifier
 )
