@@ -12,6 +12,7 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,10 +60,13 @@ fun HomeScreen(
             HomeState.Tickets.name,
             HomeState.Profile.name -> {
                 onNavigateToLogin()
-                while (navController.popBackStack()) {
-                    /* no-op */
+                navController.navigate(HomeState.Listing.name) {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
                 }
-                navController.navigate(HomeState.Listing.name)
             }
         }
     }
@@ -76,10 +80,13 @@ fun HomeScreen(
                         active = { Icon(painterResource(state.active), null) },
                         inactive = { Icon(painterResource(state.inactive), null) },
                         onClick = {
-                            while (navController.popBackStack()) {
-                                /* no-op */
+                            navController.navigate(state.name) {
+                                popUpTo(navController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            navController.navigate(state.name)
                         }
                     )
             }
