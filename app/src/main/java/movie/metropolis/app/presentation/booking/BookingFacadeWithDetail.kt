@@ -1,39 +1,46 @@
 package movie.metropolis.app.presentation.booking
 
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.core.EventDetailFeature
 import movie.core.adapter.MovieFromId
+import movie.core.model.MovieDetail
 import movie.log.logSevere
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewWithDetail
-import movie.metropolis.app.util.flatMapResult
 
 class BookingFacadeWithDetail(
     private val origin: BookingFacade,
     private val detail: EventDetailFeature
 ) : BookingFacade by origin {
 
-    override val bookings = origin.bookings.flatMapResult { movies ->
-        withDetail(movies).map(Result.Companion::success)
+    private val movieCache = mutableMapOf<String, MovieDetail>()
+    private val movieCacheLock = Mutex()
+    override val bookings = origin.bookings.flatMapLatest { movies ->
+        withDetail(movies)
     }
 
     private fun withDetail(movies: List<BookingView>) = channelFlow {
+        if (movieCache.isEmpty()) send(movies)
         val output = movies.toMutableList()
-        send(output)
-        val locks = mutableMapOf<String, Mutex>()
+        val outputLock = Mutex()
         for ((index, booking) in output.withIndex()) launch {
             val movie = booking.movie
-            locks.getOrPut(movie.id) { Mutex() }.withLock {
-                val detail = detail.get(MovieFromId(movie.id)).logSevere().getOrNull()
-                    ?: return@launch
-                val view = BookingViewWithDetail(booking, detail)
+            val view = BookingViewWithDetail(booking, getDetail(movie.id) ?: return@launch)
+            val o = outputLock.withLock {
                 output[index] = view
-                send(output.toList())
+                output.toList()
             }
+            send(o)
+        }
+    }
+
+    private suspend fun getDetail(id: String): MovieDetail? = movieCacheLock.withLock {
+        return movieCache.getOrPut(id) {
+            detail.get(MovieFromId(id)).logSevere().getOrNull() ?: return@getDetail null
         }
     }
 
