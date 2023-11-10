@@ -14,13 +14,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import movie.metropolis.app.R
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
-import movie.metropolis.app.screen.home.component.ProfileIcon
 import movie.metropolis.app.screen2.card.CardScreen
 import movie.metropolis.app.screen2.card.CardScreenState
-import movie.metropolis.app.screen2.home.component.HomeToolbar
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigation
 import movie.metropolis.app.screen2.home.component.TransparentBottomNavigationItem
 import movie.metropolis.app.util.getStoreable
@@ -69,26 +66,6 @@ fun HomeScreen(
     }
     Scaffold(
         modifier = modifier,
-        topBar = {
-            val title = @Composable { Text(stringResource(currentState.title)) }
-            when (user) {
-                null -> HomeToolbar(
-                    title = title
-                )
-
-                else -> HomeToolbar(
-                    icon = {
-                        if (currentState != HomeState.Profile) IconButton(
-                            onClick = { onShowProfileChange(true) }
-                        ) {
-                            ProfileIcon(email = user.email)
-                        }
-                    },
-                    name = { Text(stringResource(R.string.home_greeting, user.firstName)) },
-                    title = title
-                )
-            }
-        },
         bottomBar = {
             TransparentBottomNavigation {
                 for (state in HomeState.entries)
@@ -107,10 +84,6 @@ fun HomeScreen(
         }
     ) { padding ->
         val overlayModifier = Modifier
-            .verticalOverlay(
-                height = padding.calculateTopPadding() + 32.dp,
-                gravity = VerticalGravity.Top
-            )
             .verticalOverlay(
                 height = padding.calculateBottomPadding() + 32.dp,
                 gravity = VerticalGravity.Bottom
