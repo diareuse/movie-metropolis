@@ -13,7 +13,7 @@ fun Modifier.glow(
     shape: Shape,
     color: Color = Color.Unspecified,
     lightSource: LightSource = LightSource.TopLeft,
-    alpha: Float = .2f,
+    alpha: Float = .4f,
     width: Dp = 2.dp,
 ) = composed {
     val density = LocalDensity.current
