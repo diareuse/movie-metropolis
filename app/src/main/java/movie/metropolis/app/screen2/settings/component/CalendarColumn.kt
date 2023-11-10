@@ -40,7 +40,7 @@ fun CalendarColumn(
 ) {
     for ((account, views) in calendars) {
         stickyHeader {
-            AccountHeader(account)
+            AccountHeader(account, modifier = Modifier.padding(top = 16.dp))
         }
         items(views, key = { it.id }) {
             CalendarRow(
