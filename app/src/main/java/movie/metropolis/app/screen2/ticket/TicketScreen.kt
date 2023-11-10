@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
@@ -31,14 +30,16 @@ import movie.metropolis.app.screen2.ticket.component.TicketMetadataColumn
 import movie.style.BackgroundImage
 import movie.style.Barcode
 import movie.style.Image
+import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.screenBrightness
 import movie.style.rememberPaletteImageState
+import movie.style.textPlaceholder
 import kotlin.random.Random.Default.nextInt
 
 @Composable
 fun TicketScreen(
-    bookings: ImmutableList<BookingView>,
+    bookings: TicketContentState,
     state: PagerState,
     indicatorState: PagerState,
     modifier: Modifier = Modifier,
@@ -48,7 +49,9 @@ fun TicketScreen(
     propagateMinConstraints = true
 ) {
     val background =
-        rememberPaletteImageState(url = bookings.getOrNull(state.currentPage)?.movie?.poster?.url)
+        rememberPaletteImageState(
+            url = bookings.asSuccess()?.getOrNull(state.currentPage)?.movie?.poster?.url
+        )
     BackgroundImage(state = background)
     var fullBrightness by remember { mutableStateOf(false) }
     Column(
@@ -66,63 +69,112 @@ fun TicketScreen(
                 .weight(1f)
                 .screenBrightness(full = fullBrightness),
             state = state,
-            key = { bookings.getOrNull(it)?.id ?: "" },
+            key = { bookings.asSuccess()?.getOrNull(it)?.id ?: "" },
             contentPadding = PaddingValues(vertical = 8.dp)
         ) {
-            val it = bookings[it]
-            val state = rememberPaletteImageState(url = it.movie.poster?.url)
-            val note: (@Composable () -> Unit)? =
-                if (it.expired) ({ Text(stringResource(id = R.string.expired)) })
-                else null
-            TicketColumn(
-                color = state.palette.color,
-                contentColor = state.palette.textColor,
-                note = note,
-                poster = { Image(state, alignment = Alignment.BottomCenter) },
-                metadata = {
-                    TicketMetadata(
-                        name = { Text(it.movie.name) },
-                        cinema = { Text(it.cinema.name) },
-                        date = { Text(it.date) },
-                        time = { Text(it.time) },
-                        seating = {
-                            if (it.seats.isNotEmpty()) SeatingRow(
-                                hall = {
-                                    TicketMetadataColumn(
-                                        title = { Text(stringResource(R.string.hall)) }
-                                    ) {
-                                        Text(it.hall)
+            val items = bookings.asSuccess()
+            if (items != null) {
+                val it = items[it]
+                val state = rememberPaletteImageState(url = it.movie.poster?.url)
+                val note: (@Composable () -> Unit)? =
+                    if (it.expired) ({ Text(stringResource(id = R.string.expired)) })
+                    else null
+                TicketColumn(
+                    color = state.palette.color,
+                    contentColor = state.palette.textColor,
+                    note = note,
+                    poster = { Image(state, alignment = Alignment.BottomCenter) },
+                    metadata = {
+                        TicketMetadata(
+                            name = { Text(it.movie.name) },
+                            cinema = { Text(it.cinema.name) },
+                            date = { Text(it.date) },
+                            time = { Text(it.time) },
+                            seating = {
+                                if (it.seats.isNotEmpty()) SeatingRow(
+                                    hall = {
+                                        TicketMetadataColumn(
+                                            title = { Text(stringResource(R.string.hall)) }
+                                        ) {
+                                            Text(it.hall)
+                                        }
+                                    },
+                                    row = {
+                                        TicketMetadataColumn(
+                                            title = { Text(stringResource(R.string.row)) }
+                                        ) {
+                                            for (seat in it.seats)
+                                                Text(seat.row)
+                                        }
+                                    },
+                                    seat = {
+                                        TicketMetadataColumn(
+                                            title = { Text(stringResource(R.string.seat)) }
+                                        ) {
+                                            for (seat in it.seats)
+                                                Text(seat.seat)
+                                        }
                                     }
-                                },
-                                row = {
-                                    TicketMetadataColumn(
-                                        title = { Text(stringResource(R.string.row)) }
-                                    ) {
-                                        for (seat in it.seats)
-                                            Text(seat.row)
+                                )
+                            }
+                        )
+                    },
+                    code = {
+                        Barcode(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .clickable { fullBrightness = !fullBrightness },
+                            code = it.id
+                        )
+                    }
+                )
+            } else if (bookings.isLoading) {
+                TicketColumn(
+                    note = null,
+                    poster = { Box(Modifier.imagePlaceholder(RectangleShape)) },
+                    metadata = {
+                        val placeholder = Modifier.textPlaceholder()
+                        TicketMetadata(
+                            name = { Text("#".repeat(10), modifier = placeholder) },
+                            cinema = { Text("#".repeat(10), modifier = placeholder) },
+                            date = { Text("#".repeat(12), modifier = placeholder) },
+                            time = { Text("#".repeat(5), modifier = placeholder) },
+                            seating = {
+                                SeatingRow(
+                                    hall = {
+                                        TicketMetadataColumn(
+                                            title = { Text(stringResource(R.string.hall)) }
+                                        ) {
+                                            Text("#".repeat(6), modifier = placeholder)
+                                        }
+                                    },
+                                    row = {
+                                        TicketMetadataColumn(
+                                            title = { Text(stringResource(R.string.row)) }
+                                        ) {
+                                            Text("#".repeat(2), modifier = placeholder)
+                                        }
+                                    },
+                                    seat = {
+                                        TicketMetadataColumn(
+                                            title = { Text(stringResource(R.string.seat)) }
+                                        ) {
+                                            Text("#".repeat(2), modifier = placeholder)
+                                        }
                                     }
-                                },
-                                seat = {
-                                    TicketMetadataColumn(
-                                        title = { Text(stringResource(R.string.seat)) }
-                                    ) {
-                                        for (seat in it.seats)
-                                            Text(seat.seat)
-                                    }
-                                }
-                            )
-                        }
-                    )
-                },
-                code = {
-                    Barcode(
-                        modifier = Modifier
-                            .background(Color.White)
-                            .clickable { fullBrightness = !fullBrightness },
-                        code = it.id
-                    )
-                }
-            )
+                                )
+                            }
+                        )
+                    },
+                    code = {
+                        Box(
+                            modifier = Modifier
+                                .background(Color.White)
+                                .imagePlaceholder(RectangleShape)
+                        )
+                    }
+                )
+            }
         }
     }
 }
@@ -133,7 +185,16 @@ fun TicketScreen(
 private fun BookingScreenPreview() = PreviewLayout {
     val items = BookingParameter().values.toImmutableList()
     val state = rememberPagerState { items.size }
-    TicketScreen(items, state, state)
+    TicketScreen(TicketContentState.Success(items), state, state)
+}
+
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+@Composable
+private fun BookingScreenLoadingPreview() = PreviewLayout {
+    val items = BookingParameter().values.toImmutableList()
+    val state = rememberPagerState { 1 }
+    TicketScreen(TicketContentState.Loading, state, state)
 }
 
 private class BookingParameter(override val count: Int) :

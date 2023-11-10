@@ -62,6 +62,7 @@ import movie.metropolis.app.screen2.settings.component.CalendarDialog
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
+import movie.metropolis.app.screen2.ticket.TicketContentState
 import movie.metropolis.app.screen2.ticket.TicketScreen
 import movie.metropolis.app.screen2.ticket.TicketViewModel
 import movie.style.CollapsingTopAppBar
@@ -192,7 +193,13 @@ private fun NavGraphBuilder.home(
     val listingState = rememberLazyStaggeredGridState()
     val cinemasState = rememberLazyListState()
     val tickets by bookingVM.tickets.collectAsState()
-    val (bookingState, bookingIndicatorState) = rememberMultiChildPagerState(childCount = 1) { tickets.size }
+    val (bookingState, bookingIndicatorState) = rememberMultiChildPagerState(childCount = 1) {
+        when (val t = tickets) {
+            is TicketContentState.Failure -> 0
+            is TicketContentState.Success -> t.size
+            TicketContentState.Loading -> 1
+        }
+    }
     val user by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
     var showCard by remember { mutableStateOf(false) }
@@ -223,7 +230,7 @@ private fun NavGraphBuilder.home(
                 bookingVM.refresh()
             }
             TicketScreen(
-                bookings = tickets.toImmutableList(),
+                bookings = tickets,
                 state = bookingState,
                 indicatorState = bookingIndicatorState,
                 modifier = modifier,

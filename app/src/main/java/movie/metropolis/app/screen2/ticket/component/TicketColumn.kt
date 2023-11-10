@@ -27,13 +27,13 @@ import movie.style.theme.Theme
 
 @Composable
 fun TicketColumn(
-    color: Color,
-    contentColor: Color,
     note: (@Composable () -> Unit)?,
     poster: @Composable () -> Unit,
     metadata: @Composable () -> Unit,
     code: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    color: Color = Theme.color.container.background,
+    contentColor: Color = Theme.color.content.background,
 ) {
     var codeSize by remember { mutableStateOf(IntSize.Zero) }
     val baselineShape = RoundedCornerShape(32.dp)
