@@ -61,7 +61,7 @@ fun TicketScreen(
         modifier = Modifier
             .padding(contentPadding)
             .padding(bottom = 16.dp)
-            .largeScreenPadding(widthAtMost = 350.dp) { largeScreenPadding = it },
+            .largeScreenPadding(widthAtMost = 400.dp) { largeScreenPadding = it },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         PageIndicator(
