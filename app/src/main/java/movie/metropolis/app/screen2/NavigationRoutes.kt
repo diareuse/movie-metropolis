@@ -110,8 +110,8 @@ fun NavGraphBuilder.setup(
     val requiresSetup by viewModel.requiresSetup.collectAsState(initial = true)
     val loginState by viewModel.loginState.collectAsState()
     val scope = rememberCoroutineScope()
-    val navigateHome = {
-        navController.navigate(Route.Home()) {
+    val navigateHome = { route: HomeState ->
+        navController.navigate(Route.Home(route)) {
             popUpTo(Route.Setup.route) {
                 inclusive = true
             }
@@ -129,11 +129,11 @@ fun NavGraphBuilder.setup(
         onLoginClick = {
             scope.launch {
                 viewModel.login().onSuccess {
-                    navigateHome()
+                    navigateHome(HomeState.Profile)
                 }
             }
         },
-        onLoginSkip = navigateHome
+        onLoginSkip = { navigateHome(HomeState.Listing) }
     )
 }
 

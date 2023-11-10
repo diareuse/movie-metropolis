@@ -55,6 +55,7 @@ sealed class Route(
         val arguments = listOf(
             navArgument("screen") {
                 type = NavType.StringType
+                nullable = true
             }
         )
 
