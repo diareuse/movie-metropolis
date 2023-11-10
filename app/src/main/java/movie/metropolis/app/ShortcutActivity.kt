@@ -17,7 +17,7 @@ class ShortcutActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, MainActivity2::class.java)
             .setAction(Intent.ACTION_VIEW)
             .setData(route)
             .setPackage(packageName)

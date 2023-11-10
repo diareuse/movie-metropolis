@@ -8,7 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import movie.metropolis.app.MainActivity
+import movie.metropolis.app.MainActivity2
 import movie.metropolis.app.presentation.share.ShareFacade
 import movie.metropolis.app.presentation.share.TicketRepresentation
 import movie.metropolis.app.util.toBitmap
@@ -33,7 +33,7 @@ abstract class AbstractShareActivity : AppCompatActivity() {
         lifecycleScope.launch {
             facade.putTicket(ticket)
             window.setWindowAnimations(0)
-            startActivity(MainActivity.tickets(context))
+            startActivity(MainActivity2.tickets(context))
             finish()
         }
     }

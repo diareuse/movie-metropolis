@@ -9,7 +9,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
 import movie.core.model.Movie
 import movie.core.notification.NotificationInfoProvider
-import movie.metropolis.app.MainActivity
+import movie.metropolis.app.MainActivity2
 import movie.metropolis.app.R
 import movie.metropolis.app.screen.Route
 
@@ -24,7 +24,7 @@ class NotificationInfoProviderCompound(
     }
 
     override fun getDeepLink(movie: Movie): PendingIntent {
-        val intent = Intent(context, MainActivity::class.java)
+        val intent = Intent(context, MainActivity2::class.java)
             .setAction(Intent.ACTION_VIEW)
             .setData(Route.Movie.deepLink(movie.id))
         return TaskStackBuilder.create(context)
