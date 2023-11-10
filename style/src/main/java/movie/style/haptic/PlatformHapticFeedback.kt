@@ -1,8 +1,10 @@
 package movie.style.haptic
 
 import android.view.View
+import androidx.compose.runtime.*
 import androidx.compose.ui.hapticfeedback.*
 
+@Immutable
 class PlatformHapticFeedback(
     private val view: View
 ) : HapticFeedback {

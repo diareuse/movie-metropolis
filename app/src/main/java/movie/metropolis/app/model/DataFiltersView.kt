@@ -1,10 +1,12 @@
 package movie.metropolis.app.model
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import java.util.Locale
 
 data class DataFiltersView(
-    override val languages: List<FiltersView.Language> = emptyList(),
-    override val types: List<FiltersView.Type> = emptyList()
+    override val languages: ImmutableList<FiltersView.Language> = persistentListOf(),
+    override val types: ImmutableList<FiltersView.Type> = persistentListOf()
 ) : FiltersView {
 
     override val isEmpty get() = languages.none { it.selected } && types.none { it.selected }

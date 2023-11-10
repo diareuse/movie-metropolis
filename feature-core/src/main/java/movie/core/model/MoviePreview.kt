@@ -1,7 +1,9 @@
 package movie.core.model
 
+import androidx.compose.runtime.*
 import java.util.Date
 
+@Immutable
 interface MoviePreview : Movie {
     val screeningFrom: Date
     val media: Iterable<Media>

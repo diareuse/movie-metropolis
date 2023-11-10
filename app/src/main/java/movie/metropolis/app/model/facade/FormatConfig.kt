@@ -1,12 +1,14 @@
 package movie.metropolis.app.model.facade
 
+import androidx.compose.runtime.*
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.nio.IntBuffer
 
-class FormatConfig(
+@Stable
+data class FormatConfig(
     private val writer: MultiFormatWriter,
     private val width: Int,
     private val height: Int,

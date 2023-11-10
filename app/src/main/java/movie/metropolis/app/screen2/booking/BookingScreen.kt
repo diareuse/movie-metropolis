@@ -18,6 +18,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import movie.metropolis.app.R
@@ -294,7 +295,7 @@ class LazyTimeViewProvider : PreviewParameterProvider<LazyTimeView> {
                     ProjectionType.Plane3D,
                     ProjectionType.Plane2D,
                     ProjectionType.Other("Foo")
-                ).shuffled().take(nextInt(1, 3))
+                ).shuffled().take(nextInt(1, 3)).toImmutableList()
             ) to listOf(
                 FormattedTimeView(1672560000000),
                 FormattedTimeView(1672570800000),
@@ -326,7 +327,7 @@ class LazyTimeViewProvider : PreviewParameterProvider<LazyTimeView> {
                     ProjectionType.Plane3D,
                     ProjectionType.Plane2D,
                     ProjectionType.Other("Foo")
-                ).shuffled().take(nextInt(1, 3))
+                ).shuffled().take(nextInt(1, 3)).toImmutableList()
             ) to listOf(
                 FormattedTimeView(1672560000000),
                 FormattedTimeView(1672570800000),

@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ProductDetailView
@@ -33,7 +35,7 @@ import movie.style.util.findActivity
 
 @Composable
 fun PurchaseCompleteScreen(
-    products: List<ProductDetailView>,
+    products: ImmutableList<ProductDetailView>,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) = Scaffold(
@@ -127,7 +129,7 @@ fun PurchaseCompleteScreen(
 private fun PurchaseCompleteScreenPreview() = PreviewLayout {
     val products = ProductDetailViewPreview().values.toList()
     PurchaseCompleteScreen(
-        products = products,
+        products = products.toImmutableList(),
         onBackClick = {}
     )
 }
