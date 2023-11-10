@@ -15,6 +15,8 @@ internal class ThemeTextMaterial3(
         get() = typography.bodyLarge
     override val title: TextStyle
         get() = typography.titleLarge
+    override val display: TextStyle
+        get() = typography.displaySmall
     override val headline: TextStyle
         get() = typography.titleMedium
 
