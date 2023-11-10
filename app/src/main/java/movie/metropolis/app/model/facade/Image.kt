@@ -1,7 +1,9 @@
 package movie.metropolis.app.model.facade
 
+import androidx.compose.runtime.*
 import java.nio.IntBuffer
 
+@Immutable
 class Image(
     val width: Int,
     val height: Int,

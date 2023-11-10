@@ -1,5 +1,8 @@
 package movie.metropolis.app.model
 
+import androidx.compose.runtime.*
+
+@Immutable
 sealed interface TimeView {
 
     val times: Map<ShowingTag, List<SpecificTimeView>>

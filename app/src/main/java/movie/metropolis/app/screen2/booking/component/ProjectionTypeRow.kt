@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import kotlinx.collections.immutable.persistentListOf
 import movie.metropolis.app.R
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.model.ShowingTag
@@ -85,20 +86,26 @@ class ShowingTagParameter : PreviewParameterProvider<ShowingTag> {
     override val values = sequence {
         val lang = Locale.FRENCH
         val sub = Locale.ENGLISH
-        yield(ShowingTag(lang, sub, listOf(ProjectionType.Imax, ProjectionType.Plane2D)))
-        yield(ShowingTag(lang, sub, listOf(ProjectionType.Plane3D, ProjectionType.Plane4DX)))
+        yield(ShowingTag(lang, sub, persistentListOf(ProjectionType.Imax, ProjectionType.Plane2D)))
         yield(
             ShowingTag(
                 lang,
                 sub,
-                listOf(ProjectionType.DolbyAtmos, ProjectionType.HighFrameRate)
+                persistentListOf(ProjectionType.Plane3D, ProjectionType.Plane4DX)
             )
         )
         yield(
             ShowingTag(
                 lang,
                 sub,
-                listOf(ProjectionType.VIP, ProjectionType.Other("Blowjob & Fun"))
+                persistentListOf(ProjectionType.DolbyAtmos, ProjectionType.HighFrameRate)
+            )
+        )
+        yield(
+            ShowingTag(
+                lang,
+                sub,
+                persistentListOf(ProjectionType.VIP, ProjectionType.Other("Blowjob & Fun"))
             )
         )
     }

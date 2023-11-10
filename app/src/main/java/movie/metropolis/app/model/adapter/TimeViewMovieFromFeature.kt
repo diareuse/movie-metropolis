@@ -1,5 +1,6 @@
 package movie.metropolis.app.model.adapter
 
+import kotlinx.collections.immutable.toImmutableList
 import movie.core.model.MovieReference
 import movie.core.model.Showing
 import movie.metropolis.app.model.MovieView
@@ -16,7 +17,11 @@ data class TimeViewMovieFromFeature(
         get() = MovieViewFromReference(ref)
     override val times: Map<ShowingTag, List<SpecificTimeView>>
         get() = showings.groupBy {
-            ShowingTag(it.language, it.subtitles, it.types.map { ProjectionType(it) })
+            ShowingTag(
+                it.language,
+                it.subtitles,
+                it.types.map { ProjectionType(it) }.toImmutableList()
+            )
         }.mapValues { (_, items) ->
             items.map(::SpecificTimeViewFromFeature)
         }

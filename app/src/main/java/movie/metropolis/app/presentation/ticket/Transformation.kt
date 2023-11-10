@@ -1,5 +1,6 @@
 package movie.metropolis.app.presentation.ticket
 
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -21,7 +22,7 @@ fun List<TimeView>.toFiltersView(): DataFiltersView {
             filterTypes += tag.projection.map { FiltersView.Type(it) }
         }
     }
-    return DataFiltersView(filterLanguages.toList(), filterTypes.toList())
+    return DataFiltersView(filterLanguages.toImmutableList(), filterTypes.toImmutableList())
 }
 
 fun Flow<DataFiltersView>.activate(
@@ -29,8 +30,9 @@ fun Flow<DataFiltersView>.activate(
     types: Flow<Set<ProjectionType>>
 ) = combine(this, languages, types) { filters, languages, types ->
     filters.copy(
-        languages = filters.languages.map { it.copy(selected = it.locale in languages) },
-        types = filters.types.map { it.copy(selected = it.type in types) }
+        languages = filters.languages.map { it.copy(selected = it.locale in languages) }
+            .toImmutableList(),
+        types = filters.types.map { it.copy(selected = it.type in types) }.toImmutableList()
     )
 }
 

@@ -1,8 +1,10 @@
 package movie.metropolis.app.screen2.ticket
 
+import androidx.compose.runtime.*
 import kotlinx.collections.immutable.ImmutableList
 import movie.metropolis.app.model.BookingView
 
+@Immutable
 sealed class TicketContentState {
 
     val isSuccess get() = this is Success

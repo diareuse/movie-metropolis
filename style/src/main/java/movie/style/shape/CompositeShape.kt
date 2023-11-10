@@ -9,13 +9,23 @@ import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import movie.style.layout.toIntSize
 import movie.style.layout.toPath
 import movie.style.layout.toSize
 
 class CompositeShape private constructor(
-    private val builder: Builder
+    private val baseline: Shape,
+    private val shapes: ImmutableList<ShapeDefinition>
 ) : Shape {
+
+    constructor(
+        builder: Builder
+    ) : this(
+        builder.baseline,
+        builder.shapes.toImmutableList()
+    )
 
     override fun createOutline(
         size: Size,
@@ -23,8 +33,8 @@ class CompositeShape private constructor(
         density: Density
     ): Outline {
         val path = Path()
-        path.addOutline(builder.baseline.createOutline(size, layoutDirection, density))
-        for ((shape, preferredSize, alignment, operation) in builder.shapes) {
+        path.addOutline(baseline.createOutline(size, layoutDirection, density))
+        for ((shape, preferredSize, alignment, operation) in shapes) {
             val childSize = preferredSize.takeIf { it.isSpecified }?.toSize(density) ?: size
             val childPath = shape.createOutline(childSize, layoutDirection, density).toPath()
             val offset = alignment.align(childSize.toIntSize(), size.toIntSize(), layoutDirection)

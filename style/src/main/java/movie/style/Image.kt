@@ -113,8 +113,10 @@ fun rememberPaletteImageState(
     return imageState
 }
 
+@Stable
 sealed class ImageState {
 
+    @Stable
     abstract val url: Any?
 
     open fun getLoader(context: Context) = context.imageLoader
@@ -123,11 +125,15 @@ sealed class ImageState {
 
 }
 
+@Stable
 data class HardwareImageState(
+    @Stable
     override val url: Any?
 ) : ImageState()
 
+@Stable
 data class PaletteImageState(
+    @Stable
     override val url: Any?,
     private val defaultPalette: Palette,
     private val resolvePalette: Boolean
