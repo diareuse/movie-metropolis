@@ -6,6 +6,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.pager.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.*
 
 class MultiChildPagerState(
     initialPage: Int,
@@ -81,7 +82,7 @@ fun rememberMultiChildPagerState(
     val children = Array(childCount) {
         rememberPagerState(pageCount = pageCount)
     }
-    return remember {
+    return rememberSaveable(saver = rememberMultiChildPagerStateSaver(children)) {
         MultiChildPagerState(
             initialPage = initialPage,
             initialPageOffsetFraction = initialPageOffsetFraction,
@@ -91,4 +92,25 @@ fun rememberMultiChildPagerState(
     }.apply {
         pageCountState.value = pageCount
     }
+}
+
+@Composable
+fun rememberMultiChildPagerStateSaver(children: Array<out PagerState>) = remember(children) {
+    listSaver(
+        save = {
+            listOf(
+                it.currentPage,
+                it.currentPageOffsetFraction,
+                it.pageCount
+            )
+        },
+        restore = {
+            MultiChildPagerState(
+                initialPage = it[0] as Int,
+                initialPageOffsetFraction = it[1] as Float,
+                updatedPageCount = { it[2] },
+                children = children
+            )
+        }
+    )
 }
