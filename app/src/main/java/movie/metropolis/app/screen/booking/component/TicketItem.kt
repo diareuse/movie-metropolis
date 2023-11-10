@@ -11,12 +11,12 @@ import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.surface
 import movie.style.rememberImageState
-import movie.style.state.ImmutableList
-import movie.style.state.ImmutableList.Companion.immutable
 import movie.style.theme.Theme
 
 @Composable
@@ -117,7 +117,7 @@ private class TicketItemParameter :
         val date: String = "15. 1. 2022",
         val time: String = "14:15",
         val hall: String = "IMAX",
-        val seats: ImmutableList<Pair<String, String>> = listOf("13" to "10").immutable(),
+        val seats: ImmutableList<Pair<String, String>> = listOf("13" to "10").toImmutableList(),
         val barcode: String = "123456789"
     )
 }
