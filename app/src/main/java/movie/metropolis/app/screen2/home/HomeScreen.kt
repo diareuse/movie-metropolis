@@ -2,6 +2,7 @@ package movie.metropolis.app.screen2.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -10,6 +11,7 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -94,7 +96,25 @@ fun HomeScreen(
         NavHost(
             modifier = Modifier.fillMaxSize(),
             navController = navController,
-            startDestination = startWith?.name ?: destinationTab
+            startDestination = startWith?.name ?: destinationTab,
+            enterTransition = {
+                val initial = initialState.getIndex()
+                val target = targetState.getIndex()
+                if (initial < target) {
+                    fadeIn() + slideInHorizontally { it / 2 }
+                } else {
+                    fadeIn() + slideInHorizontally { -it / 2 }
+                }
+            },
+            exitTransition = {
+                val initial = initialState.getIndex()
+                val target = targetState.getIndex()
+                if (initial < target) {
+                    fadeOut() + slideOutHorizontally { -it / 2 }
+                } else {
+                    fadeOut() + slideOutHorizontally { it / 2 }
+                }
+            }
         ) {
             composable(HomeState.Listing.name) { listing(overlayModifier, padding) }
             composable(HomeState.Tickets.name) { tickets(overlayModifier, padding) }
@@ -102,6 +122,14 @@ fun HomeScreen(
             composable(HomeState.Profile.name) { profile(overlayModifier, padding) }
         }
     }
+}
+
+private fun NavBackStackEntry.getIndex() = when (destination.route) {
+    HomeState.Listing.name -> HomeState.Listing.ordinal
+    HomeState.Tickets.name -> HomeState.Tickets.ordinal
+    HomeState.Cinemas.name -> HomeState.Cinemas.ordinal
+    HomeState.Profile.name -> HomeState.Profile.ordinal
+    else -> 0
 }
 
 @Composable
