@@ -8,6 +8,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
 
+@Deprecated("")
 @Composable
 fun AppScaffold(
     navigationBar: @Composable () -> Unit,
@@ -108,6 +109,7 @@ private fun AppScaffoldMedium(
     }
 }
 
+@Deprecated("")
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 val LocalWindowSizeClass = staticCompositionLocalOf {
     WindowSizeClass.calculateFromSize(DpSize(400.dp, 800.dp))
