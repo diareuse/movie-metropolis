@@ -31,6 +31,7 @@ import movie.metropolis.app.screen2.settings.component.SettingsTextField
 import movie.style.CollapsingTopAppBar
 import movie.style.action.clearFocus
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.theme.Theme
 
 @Composable
@@ -45,6 +46,7 @@ fun SettingsScreen(
     modifier = modifier,
     topBar = {
         CollapsingTopAppBar(
+            modifier = Modifier.alignForLargeScreen(),
             title = { Text("Settings") },
             navigationIcon = {
                 IconButton(onClick = onClickBack) {
@@ -83,7 +85,8 @@ fun SettingsScreen(
             .padding(padding)
             .padding(24.dp)
             .imePadding()
-            .navigationBarsPadding(),
+            .navigationBarsPadding()
+            .alignForLargeScreen(),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         SettingsSection(title = { Text(stringResource(id = R.string.movies)) }) {

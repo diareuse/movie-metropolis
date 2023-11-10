@@ -145,10 +145,13 @@ data class PaletteImageState(
     override suspend fun processState(state: AsyncImagePainter.State) {
         super.processState(state)
         if (state !is AsyncImagePainter.State.Success || !resolvePalette) return
-        palette = AndroidPalette.from(state.result.drawable.toBitmap())
-            .resizeBitmapArea(200)
-            .generate()
-            .let(::Palette)
+        try {
+            palette = AndroidPalette.from(state.result.drawable.toBitmap())
+                .resizeBitmapArea(200)
+                .generate()
+                .let(::Palette)
+        } catch (ignore: IllegalStateException) {
+        }
     }
 
     private fun Palette(palette: AndroidPalette): Palette {

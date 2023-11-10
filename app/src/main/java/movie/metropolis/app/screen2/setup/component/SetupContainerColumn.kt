@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.AppButton
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
 import movie.style.theme.Theme
 
@@ -34,17 +35,23 @@ fun SetupContainerColumn(
     ) {
         image()
     }
-    ProvideTextStyle(Theme.textStyle.title.copy(textAlign = TextAlign.Center)) {
-        title()
-    }
-    ProvideTextStyle(Theme.textStyle.body.copy(textAlign = TextAlign.Center)) {
-        description()
-    }
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        propagateMinConstraints = true
+    Column(
+        modifier = Modifier.alignForLargeScreen(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        cta()
+        ProvideTextStyle(Theme.textStyle.title.copy(textAlign = TextAlign.Center)) {
+            title()
+        }
+        ProvideTextStyle(Theme.textStyle.body.copy(textAlign = TextAlign.Center)) {
+            description()
+        }
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            propagateMinConstraints = true
+        ) {
+            cta()
+        }
     }
 }
 

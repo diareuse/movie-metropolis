@@ -31,6 +31,7 @@ import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.layout.plus
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
@@ -57,11 +58,13 @@ fun ListingScreen(
     var zoom by rememberStoreable(key = "listing-zoom", default = 100f)
     val gridModifier = if (connection != null) Modifier.nestedScroll(connection) else Modifier
     LazyVerticalStaggeredGrid(
-        modifier = gridModifier.pointerInput(Unit) {
-            detectTransformGestures { _, _, zoomFactor, _ ->
-                zoom = (zoom * zoomFactor).coerceIn(75f, 200f)
-            }
-        },
+        modifier = gridModifier
+            .alignForLargeScreen()
+            .pointerInput(Unit) {
+                detectTransformGestures { _, _, zoomFactor, _ ->
+                    zoom = (zoom * zoomFactor).coerceIn(75f, 200f)
+                }
+            },
         state = state,
         contentPadding = contentPadding + PaddingValues(24.dp),
         columns = StaggeredGridCells.Adaptive(zoom.dp),

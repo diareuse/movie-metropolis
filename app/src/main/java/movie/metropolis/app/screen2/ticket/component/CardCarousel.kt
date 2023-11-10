@@ -41,7 +41,8 @@ fun CardCarousel(
                 rotationZ = 2.5f,
                 rotationY = 10f,
                 offset = DpOffset.Zero,
-                blur = 32.dp
+                blur = 32.dp,
+                alphaRange = 1f..1f
             ),
         propagateMinConstraints = true
     ) {
