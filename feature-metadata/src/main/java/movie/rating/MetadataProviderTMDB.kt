@@ -15,13 +15,13 @@ class MetadataProviderTMDB(
         val data = client.getOrCreate().search(descriptor) ?: return null
         return MovieMetadata(
             rating = (data.rating * 10).toInt().toByte(),
-            posterImageUrl = data.posterPath?.let { ImageUrl + it }.orEmpty(),
-            overlayImageUrl = data.backdropPath?.let { ImageUrl + it }.orEmpty()
+            posterImageUrl = data.posterPath?.let(TMDB::image).orEmpty(),
+            overlayImageUrl = data.backdropPath?.let(TMDB::image).orEmpty()
         )
     }
 
     private suspend fun HttpClient.search(descriptor: MovieDescriptor): SearchData? {
-        val result = get("$Url/search/movie") {
+        val result = get(TMDB.url("/search/movie")) {
             url.parameters.apply {
                 append("query", descriptor.name)
                 append("include_adult", "false")
@@ -29,11 +29,6 @@ class MetadataProviderTMDB(
             }
         }
         return result.body<ListResponse<SearchData>>().results.firstOrNull()
-    }
-
-    companion object {
-        private const val Url = "https://api.themoviedb.org/3"
-        private const val ImageUrl = "https://image.tmdb.org/t/p/w1280"
     }
 
 }
