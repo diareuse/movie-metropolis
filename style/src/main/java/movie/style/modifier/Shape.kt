@@ -14,6 +14,7 @@ fun Modifier.glow(
     color: Color = Color.Unspecified,
     lightSource: LightSource = LightSource.TopLeft,
     alpha: Float = .4f,
+    fillAlpha: Float = alpha / 2f,
     width: Dp = 2.dp,
 ) = composed {
     val density = LocalDensity.current
@@ -25,15 +26,19 @@ fun Modifier.glow(
             val color = color.takeOrElse { contentColor }
             val start = lightSource.start
             val end = lightSource.end
-            val strokeColors =
-                listOf(color.copy(alpha = alpha), Color.Transparent)
-            val fillColors =
-                listOf(color.copy(alpha = alpha / 2), Color.Transparent)
-            val brush = Brush.linearGradient(strokeColors, start, end)
-            val brush2 = Brush.linearGradient(fillColors, start, end)
             drawContent()
-            drawOutline(outline, brush2, style = Fill)
-            drawOutline(outline, brush, style = Stroke(width))
+            if (fillAlpha > 0) {
+                val fillColors =
+                    listOf(color.copy(alpha = fillAlpha), Color.Transparent)
+                val brush2 = Brush.linearGradient(fillColors, start, end)
+                drawOutline(outline, brush2, style = Fill)
+            }
+            if (width > 0) {
+                val strokeColors =
+                    listOf(color.copy(alpha = alpha), Color.Transparent)
+                val brush = Brush.linearGradient(strokeColors, start, end)
+                drawOutline(outline, brush, style = Stroke(width))
+            }
         }
     }
 }

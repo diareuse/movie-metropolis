@@ -20,6 +20,15 @@ fun Modifier.surface(
     .background(color, shape)
 
 fun Modifier.surface(
+    brush: Brush,
+    shape: Shape = RectangleShape,
+    elevation: Dp = 0.dp,
+    shadowColor: Color = Color.Black
+) = shadow(elevation, shape, false, shadowColor, shadowColor)
+    .clip(shape)
+    .background(brush, shape)
+
+fun Modifier.surface(
     tonalElevation: Dp,
     shape: Shape = RectangleShape,
     elevation: Dp = 0.dp,
