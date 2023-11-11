@@ -8,7 +8,7 @@ import java.util.Date
 
 interface MovieFacade {
 
-    val movie: Flow<Result<MovieDetailView>>
+    val movie: Flow<MovieDetailView>
     val favorite: Flow<Boolean>
     val availability: Flow<Date>
 

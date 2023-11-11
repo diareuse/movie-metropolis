@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.mapNotNull
 import movie.core.UserDataFeature
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.screen.Route
@@ -39,7 +38,7 @@ class MovieViewModel private constructor(
         args.upcoming
     )
 
-    val movie = facade.movie.mapNotNull { it.getOrNull() }
+    val movie = facade.movie
         .retainStateIn(viewModelScope, null)
 
 }

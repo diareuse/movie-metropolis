@@ -33,7 +33,6 @@ fun ActorRow(
     movieCount: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = Theme.color.container.background,
-    contentColor: Color = Theme.color.content.background,
     imageOffset: PaddingValues = PaddingValues(16.dp),
     imageSize: DpSize = DpSize(64.dp, 64.dp),
     imagePadding: Dp = 8.dp,
@@ -123,7 +122,7 @@ fun ActorRow(
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(4.dp)
                     ) {
-                        Text("Known for")
+                        Text("No. of movies")
                         ProvideTextStyle(LocalTextStyle.current.copy(fontWeight = FontWeight.Bold)) {
                             CompositionLocalProvider(LocalContentColor provides colorVariant.copy(1f)) {
                                 movieCount()
@@ -203,7 +202,7 @@ private fun ActorRowPreview() = PreviewLayout {
         },
         name = { Text("Brie Larson") },
         popularity = { Text("139") },
-        movieCount = { Text("4 movies") },
+        movieCount = { Text("4") },
         color = Color.Magenta
     )
 }

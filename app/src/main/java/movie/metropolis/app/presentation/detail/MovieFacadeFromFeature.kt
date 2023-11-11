@@ -1,6 +1,7 @@
 package movie.metropolis.app.presentation.detail
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -25,18 +26,14 @@ class MovieFacadeFromFeature(
 
     private val model = MovieFromId(id)
     private val detailFlow = flow {
-        emit(detail.get(model))
+        emit(detail.get(model).getOrThrow())
     }
 
-    override val movie: Flow<Result<MovieDetailView>> = detailFlow.map {
-        it.map(::MovieDetailViewFromFeature)
-    }
+    override val movie: Flow<MovieDetailView> = detailFlow.map(::MovieDetailViewFromFeature)
     override val favorite = flow {
         emit(favorites.isFavorite(model).getOrDefault(false))
     }
-    override val availability = detailFlow.map { result ->
-        result.fold({ it.screeningFrom }, { Date() }).coerceAtLeast(Date())
-    }
+    override val availability = detailFlow.map { it.screeningFrom }.catch { emit(Date()) }
 
     override fun showings(
         date: Date,
@@ -54,7 +51,7 @@ class MovieFacadeFromFeature(
     }
 
     override suspend fun toggleFavorite() {
-        val detail = detailFlow.first().getOrNull() ?: return
+        val detail = detailFlow.first()
         val preview = MoviePreviewFromDetail(detail)
         favorites.toggle(preview)
     }

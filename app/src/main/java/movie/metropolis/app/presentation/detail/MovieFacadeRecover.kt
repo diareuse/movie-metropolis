@@ -4,15 +4,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import movie.log.logSevere
 import movie.metropolis.app.model.CinemaBookingView
-import movie.metropolis.app.model.MovieDetailView
 import java.util.Date
 
 class MovieFacadeRecover(
     private val origin: MovieFacade
 ) : MovieFacade by origin {
 
-    override val movie: Flow<Result<MovieDetailView>> = origin.movie
-        .catch { emit(Result.failure(it)) }
     override val favorite: Flow<Boolean> = origin.favorite
         .catch { emit(false) }
     override val availability: Flow<Date> = origin.availability

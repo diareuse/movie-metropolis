@@ -11,8 +11,8 @@ interface MovieDetailView {
     val releasedAt: String
     val duration: String
     val countryOfOrigin: String
-    val cast: List<String>
-    val directors: List<String>
+    val cast: List<PersonView>
+    val directors: List<PersonView>
     val description: String
     val availableFrom: String
     val poster: ImageView?
