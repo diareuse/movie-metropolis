@@ -26,54 +26,54 @@ fun MovieMetadataRow(
     modifier = modifier,
     horizontalArrangement = Arrangement.spacedBy(-(16).dp, Alignment.CenterHorizontally)
 ) {
-    CompositionLocalProvider(LocalContentColor provides contentColor) {
-        ProvideTextStyle(Theme.textStyle.title.copy(textAlign = TextAlign.Center)) {
-            val shape = Theme.container.card
-            val background = Theme.color.container.background
-            Box(
-                modifier = Modifier
-                    .rotate(-10f)
-                    .scale(.9f)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .surface(
-                        color
-                            .copy(.2f)
-                            .compositeOver(background), shape, 16.dp
-                    )
-                    .glow(shape, contentColor),
-                contentAlignment = Alignment.Center
-            ) {
-                time()
-            }
-            Box(
-                modifier = Modifier
-                    .rotate(5f)
-                    .zIndex(1f)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .surface(color, shape, 16.dp)
-                    .glow(shape, contentColor),
-                contentAlignment = Alignment.Center
-            ) {
+    ProvideTextStyle(Theme.textStyle.title.copy(textAlign = TextAlign.Center)) {
+        val shape = Theme.container.card
+        val background = Theme.color.container.background
+        Box(
+            modifier = Modifier
+                .rotate(-10f)
+                .scale(.9f)
+                .fillMaxHeight()
+                .aspectRatio(1f)
+                .surface(
+                    color
+                        .copy(.2f)
+                        .compositeOver(background), shape, 16.dp
+                )
+                .glow(shape, contentColor),
+            contentAlignment = Alignment.Center
+        ) {
+            time()
+        }
+        Box(
+            modifier = Modifier
+                .rotate(5f)
+                .zIndex(1f)
+                .fillMaxHeight()
+                .aspectRatio(1f)
+                .surface(color, shape, 16.dp)
+                .glow(shape, contentColor),
+            contentAlignment = Alignment.Center
+        ) {
+            CompositionLocalProvider(LocalContentColor provides contentColor) {
                 country()
             }
-            Box(
-                modifier = Modifier
-                    .rotate(15f)
-                    .scale(.9f)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .surface(
-                        color
-                            .copy(.2f)
-                            .compositeOver(background), shape, 16.dp
-                    )
-                    .glow(shape, contentColor),
-                contentAlignment = Alignment.Center
-            ) {
-                year()
-            }
+        }
+        Box(
+            modifier = Modifier
+                .rotate(15f)
+                .scale(.9f)
+                .fillMaxHeight()
+                .aspectRatio(1f)
+                .surface(
+                    color
+                        .copy(.2f)
+                        .compositeOver(background), shape, 16.dp
+                )
+                .glow(shape, contentColor),
+            contentAlignment = Alignment.Center
+        ) {
+            year()
         }
     }
 }
