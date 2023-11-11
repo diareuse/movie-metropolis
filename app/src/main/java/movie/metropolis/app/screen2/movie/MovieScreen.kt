@@ -18,6 +18,7 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
 import movie.metropolis.app.screen2.movie.component.LargeMoviePoster
 import movie.metropolis.app.screen2.movie.component.LargeRatingBox
+import movie.metropolis.app.screen2.movie.component.MovieMetadataRow
 import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
@@ -102,13 +103,13 @@ fun MovieScreen(
                     style = Theme.textStyle.title,
                     textAlign = TextAlign.Center
                 )
-                Text(
-                    text = "%s • %s • %s".format(
-                        movie.duration,
-                        movie.countryOfOrigin,
-                        movie.releasedAt
-                    ),
-                    textAlign = TextAlign.Center
+                MovieMetadataRow(
+                    modifier = Modifier.height(90.dp),
+                    time = { Text(movie.duration.replace(" ", "\n")) },
+                    country = { Text(movie.countryOfOrigin.replace("/", "\n")) },
+                    year = { Text(movie.releasedAt) },
+                    color = poster.palette.color,
+                    contentColor = poster.palette.textColor
                 )
                 if (movie.directors.isNotEmpty()) Text(
                     text = movie.directors.joinToString(),
