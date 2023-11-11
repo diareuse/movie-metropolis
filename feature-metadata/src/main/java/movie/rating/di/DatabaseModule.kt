@@ -8,27 +8,47 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import movie.rating.database.ActorDao
+import movie.rating.database.ActorReferenceConnectionDao
+import movie.rating.database.ActorReferenceDao
+import movie.rating.database.MetadataDatabase
 import movie.rating.database.RatingDao
-import movie.rating.database.RatingDatabase
+import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
 internal class DatabaseModule {
 
     @Provides
-    @Reusable
+    @Singleton
     fun database(
         @ApplicationContext
         context: Context
-    ): RatingDatabase {
+    ): MetadataDatabase {
         val name = context.packageName + ".rating"
-        return Room.databaseBuilder(context, RatingDatabase::class.java, name)
+        return Room.databaseBuilder(context, MetadataDatabase::class.java, name)
             .fallbackToDestructiveMigration()
             .build()
     }
 
     @Provides
     @Reusable
-    fun dao(database: RatingDatabase): RatingDao = database.rating()
+    fun rating(database: MetadataDatabase): RatingDao =
+        database.rating()
+
+    @Provides
+    @Reusable
+    fun actor(database: MetadataDatabase): ActorDao =
+        database.actor()
+
+    @Provides
+    @Reusable
+    fun actorReferenceConnection(database: MetadataDatabase): ActorReferenceConnectionDao =
+        database.actorReferenceConnection()
+
+    @Provides
+    @Reusable
+    fun actorReference(database: MetadataDatabase): ActorReferenceDao =
+        database.actorReference()
 
 }
