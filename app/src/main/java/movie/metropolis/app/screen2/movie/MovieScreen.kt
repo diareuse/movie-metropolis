@@ -131,14 +131,13 @@ fun MovieScreen(
                         flingBehavior = rememberSnapFlingBehavior(state)
                     ) {
                         items(movie.directors) {
-                            val state =
-                                rememberPaletteImageState(url = "https://image.tmdb.org/t/p/w500/80DH2zWgZiXHehH7TLe6HKDldyl.jpg")
+                            val state = rememberPaletteImageState(url = it.image)
                             ActorRow(
-                                color = state.palette.color,
                                 image = { Image(state) },
-                                name = { Text(it) },
-                                popularity = { Text("n/a") },
-                                movieCount = { Text("n/a") }
+                                name = { Text(it.name) },
+                                popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
+                                movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
+                                color = state.palette.color
                             )
                         }
                     }
@@ -162,14 +161,13 @@ fun MovieScreen(
                         flingBehavior = rememberSnapFlingBehavior(state)
                     ) {
                         items(movie.cast) {
-                            val state =
-                                rememberPaletteImageState(url = "https://image.tmdb.org/t/p/w500/80DH2zWgZiXHehH7TLe6HKDldyl.jpg")
+                            val state = rememberPaletteImageState(url = it.image)
                             ActorRow(
-                                color = state.palette.color,
                                 image = { Image(state) },
-                                name = { Text(it) },
-                                popularity = { Text("n/a") },
-                                movieCount = { Text("n/a") }
+                                name = { Text(it.name) },
+                                popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
+                                movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
+                                color = state.palette.color
                             )
                         }
                     }

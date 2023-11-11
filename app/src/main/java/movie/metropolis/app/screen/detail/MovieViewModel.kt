@@ -59,7 +59,8 @@ class MovieViewModel private constructor(
     val location = MutableStateFlow(null as AndroidLocation?)
 
     val detail = facade.movie
-        .map { it.asLoadable() }
+        .map { Loadable.success(it) }
+        .onStart { emit(Loadable.loading()) }
         .retainStateIn(viewModelScope)
     val startDate = facade.availability
         .onEach { selectedDate.compareAndSet(null, it) }
