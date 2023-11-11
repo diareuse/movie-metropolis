@@ -74,8 +74,7 @@ fun MovieScreen(
             LargeMoviePoster(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 24.dp),
+                    .padding(horizontal = 24.dp),
                 color = poster.palette.color,
                 contentColor = poster.palette.textColor,
                 order = { Icon(Icons.Rounded.ShoppingCart, null) },
@@ -94,11 +93,12 @@ fun MovieScreen(
                     state = poster
                 )
             }
+            Spacer(Modifier.height(24.dp))
         },
         secondary = {
             if (movie != null) Column(
                 modifier = Modifier
-                    .padding(vertical = 24.dp),
+                    .padding(bottom = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
