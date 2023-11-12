@@ -5,6 +5,7 @@ import movie.core.model.MovieDetail
 import movie.core.nwk.model.MovieDetailResponse
 import java.util.Date
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 internal data class MovieDetailFromResponse(
     private val response: MovieDetailResponse
@@ -19,7 +20,7 @@ internal data class MovieDetailFromResponse(
     override val releasedAt: Date
         get() = response.releasedAt
     override val duration: Duration
-        get() = response.duration
+        get() = response.duration ?: 0.seconds
     override val originalName: String
         get() = response.nameOriginal
     override val countryOfOrigin: String?
