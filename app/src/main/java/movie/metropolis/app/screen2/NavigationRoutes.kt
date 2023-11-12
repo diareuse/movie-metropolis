@@ -420,7 +420,7 @@ fun NavGraphBuilder.booking(
                 items = times.toImmutableList(),
                 onBackClick = navController::navigateUp,
                 onTimeClick = { navController.navigate(Route.Order(it.url)) },
-                onActionClick = {}
+                onActionClick = { filtersVisible = true }
             )
         }
     }
