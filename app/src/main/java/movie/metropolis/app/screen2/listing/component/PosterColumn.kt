@@ -109,7 +109,7 @@ private fun RatedPoster(
             modifier = Modifier
                 .surface(containerColor, shape, 16.dp, color)
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
-                .glow(shape)
+                .glow(shape, color)
                 .aspectRatio(DefaultPosterAspectRatio),
             propagateMinConstraints = true
         ) {
@@ -130,13 +130,7 @@ private fun RatedPoster(
                 .align(Alignment.TopStart)
                 .surface(color, CircleShape, 16.dp, color)
                 .clickable(onClick = onActionClick, role = Role.Button)
-                .glow(
-                    CircleShape,
-                    lightSource = LightSource.BottomRight,
-                    color = contentColor,
-                    width = 2.dp,
-                    alpha = .4f
-                )
+                .glow(CircleShape, contentColor, lightSource = LightSource.BottomRight)
                 .padding(6.dp),
             propagateMinConstraints = true
         ) {

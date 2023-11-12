@@ -28,6 +28,7 @@ import movie.metropolis.app.screen2.card.component.FlippableCard
 import movie.style.Barcode
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
+import movie.style.modifier.glow
 import movie.style.modifier.screenBrightness
 import movie.style.modifier.surface
 import movie.style.modifier.vertical
@@ -94,13 +95,16 @@ fun CardScreen(
             rotation = state.rotation,
             key = membership.cardNumber,
             container = {
+                val shape = RoundedCornerShape(16.dp)
                 Box(
-                    modifier = Modifier.surface(
-                        color = Color.Black,
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = 16.dp,
-                        shadowColor = CinemaCityColor
-                    ),
+                    modifier = Modifier
+                        .surface(
+                            color = Color.Black,
+                            shape = shape,
+                            elevation = 16.dp,
+                            shadowColor = CinemaCityColor
+                        )
+                        .glow(shape, Color.Black),
                     propagateMinConstraints = true
                 ) {
                     CompositionLocalProvider(LocalContentColor provides Color.White) {

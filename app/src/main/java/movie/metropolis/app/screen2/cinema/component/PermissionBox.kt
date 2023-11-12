@@ -56,11 +56,7 @@ fun PermissionBox(
                     Theme.color.emphasis.error
                 )
                 .clickable(onClick = onClick, role = Role.Button)
-                .glow(
-                    CircleShape,
-                    lightSource = LightSource.BottomLeft,
-                    color = Theme.color.content.error
-                )
+                .glow(CircleShape, Theme.color.emphasis.error, lightSource = LightSource.BottomLeft)
                 .padding(8.dp),
             propagateMinConstraints = true
         ) {
@@ -70,7 +66,7 @@ fun PermissionBox(
             modifier = Modifier
                 .surface(Theme.color.container.error, shape, 16.dp, Theme.color.emphasis.error)
                 .clickable(onClick = onClick, role = Role.Button)
-                .glow(shape)
+                .glow(shape, Theme.color.emphasis.error)
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.spacedBy(16.dp)

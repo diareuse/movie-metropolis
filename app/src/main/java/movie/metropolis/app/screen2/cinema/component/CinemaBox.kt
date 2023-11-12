@@ -74,7 +74,7 @@ fun CinemaBox(
                 .matchParentSize()
                 .surface(containerColor, shape, 16.dp, color)
                 .clickable(onClick = onClick, role = Role.Image)
-                .glow(shape),
+                .glow(shape, color),
             propagateMinConstraints = true
         ) {
             poster()
@@ -87,7 +87,7 @@ fun CinemaBox(
                 .padding(top = 4.dp, end = 4.dp)
                 .align(Alignment.BottomStart)
                 .surface(color, CircleShape, 16.dp, color)
-                .glow(CircleShape, lightSource = LightSource.Top)
+                .glow(CircleShape, color, lightSource = LightSource.Top)
                 .padding(8.dp, 4.dp)
         ) {
             ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
