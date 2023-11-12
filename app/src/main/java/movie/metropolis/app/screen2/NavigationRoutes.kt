@@ -10,8 +10,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
@@ -77,7 +75,7 @@ fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
                 title = { Text(stringResource(R.string.upcoming)) },
                 navigationIcon = {
                     IconButton(onClick = navController::navigateUp) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, null)
+                        Icon(painterResource(R.drawable.ic_back), null)
                     }
                 }
             )
