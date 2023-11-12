@@ -13,6 +13,7 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.graphics.vector.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
@@ -132,9 +133,18 @@ fun MovieScreen(
                         flingBehavior = rememberSnapFlingBehavior(state)
                     ) {
                         items(movie.directors) {
-                            val state = rememberPaletteImageState(url = it.image)
+                            val state = rememberPaletteImageState(
+                                url = it.image,
+                                color = poster.palette.color,
+                                contentColor = poster.palette.textColor
+                            )
                             ActorRow(
-                                image = { Image(state) },
+                                image = {
+                                    Image(
+                                        state = state,
+                                        placeholderError = rememberVectorPainter(Icons.Rounded.Person)
+                                    )
+                                },
                                 name = { Text(it.name) },
                                 popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
                                 movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
@@ -162,9 +172,18 @@ fun MovieScreen(
                         flingBehavior = rememberSnapFlingBehavior(state)
                     ) {
                         items(movie.cast) {
-                            val state = rememberPaletteImageState(url = it.image)
+                            val state = rememberPaletteImageState(
+                                url = it.image,
+                                color = poster.palette.color,
+                                contentColor = poster.palette.textColor
+                            )
                             ActorRow(
-                                image = { Image(state) },
+                                image = {
+                                    Image(
+                                        state = state,
+                                        placeholderError = rememberVectorPainter(Icons.Rounded.Person)
+                                    )
+                                },
                                 name = { Text(it.name) },
                                 popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
                                 movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
