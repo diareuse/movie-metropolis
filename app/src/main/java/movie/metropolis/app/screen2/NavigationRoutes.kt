@@ -23,7 +23,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
@@ -88,8 +87,8 @@ fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
             modifier = Modifier.fillMaxSize(),
             contentPadding = padding,
             state = rememberLazyStaggeredGridState(),
-            movies = movies.toImmutableList(),
-            promotions = promotions.toImmutableList(),
+            movies = movies,
+            promotions = promotions,
             onClick = { navController.navigate(Route.Movie(it.id, true)) },
             onFavoriteClick = { listingVM.favorite(it) },
             onMoreClick = null,
@@ -106,7 +105,7 @@ fun NavGraphBuilder.setup(
 ) {
     val viewModel = hiltViewModel<SetupViewModel>()
     val regions by viewModel.regions.collectAsState()
-    val posters = viewModel.posters.toImmutableList()
+    val posters = viewModel.posters
     val requiresSetup by viewModel.requiresSetup.collectAsState(initial = true)
     val loginState by viewModel.loginState.collectAsState()
     val scope = rememberCoroutineScope()
@@ -120,7 +119,7 @@ fun NavGraphBuilder.setup(
     SetupScreen(
         startWith = it.arguments?.getString("startWith")?.let(SetupState::valueOf)
             ?: SetupState.Initial,
-        regions = regions.getOrNull().orEmpty().toImmutableList(),
+        regions = regions,
         posters = posters,
         regionSelected = !requiresSetup,
         onRegionClick = viewModel::select,
@@ -165,8 +164,8 @@ fun NavGraphBuilder.home(
                 modifier = modifier,
                 contentPadding = padding,
                 state = rememberLazyStaggeredGridState(),
-                movies = movies.toImmutableList(),
-                promotions = promotions.toImmutableList(),
+                movies = movies,
+                promotions = promotions,
                 onClick = { navController.navigate(Route.Movie(it.id)) },
                 onFavoriteClick = { listingVM.favorite(it) },
                 onMoreClick = { navController.navigate(Route.Upcoming()) }
@@ -209,7 +208,7 @@ fun NavGraphBuilder.home(
             CinemasScreen(
                 modifier = modifier,
                 contentPadding = padding,
-                cinemas = cinemas.toImmutableList(),
+                cinemas = cinemas,
                 permission = state,
                 state = rememberLazyListState(),
                 onClick = { navController.navigate(Route.Booking.Cinema(it.id)) },
@@ -382,7 +381,7 @@ fun NavGraphBuilder.booking(
             BookingScreen(
                 poster = poster,
                 title = title,
-                items = times.toImmutableList(),
+                items = times,
                 onBackClick = navController::navigateUp,
                 onTimeClick = { navController.navigate(Route.Order(it.url)) },
                 onActionClick = { filtersVisible = true }
@@ -417,7 +416,7 @@ fun NavGraphBuilder.booking(
             BookingScreen(
                 poster = poster,
                 title = title,
-                items = times.toImmutableList(),
+                items = times,
                 onBackClick = navController::navigateUp,
                 onTimeClick = { navController.navigate(Route.Order(it.url)) },
                 onActionClick = { filtersVisible = true }

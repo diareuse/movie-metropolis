@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
@@ -26,13 +28,13 @@ class ListingViewModel @Inject constructor(
     }
 
     val promotions = facade.promotions
-        .map { it.getOrNull().orEmpty() }
-        .retainStateIn(viewModelScope, emptyList())
+        .map { it.getOrNull().orEmpty().toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
 
     val movies = facade.groups
         .mapLoadable { it.values.flatten().distinctBy { it.id } }
-        .map { it.getOrNull().orEmpty() }
-        .retainStateIn(viewModelScope, emptyList())
+        .map { it.getOrNull().orEmpty().toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
 
     fun favorite(view: MovieView) {
         viewModelScope.launch {

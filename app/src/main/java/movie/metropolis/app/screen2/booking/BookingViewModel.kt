@@ -4,6 +4,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filterNotNull
@@ -51,7 +53,8 @@ class TimeViewModel private constructor(
     val times = facade
         .filterNotNull()
         .flatMapLatest { it.times }
-        .retainStateIn(viewModelScope, emptyList())
+        .map { it.toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
     val filters = facade
         .filterNotNull()
         .flatMapLatest { it.filters }

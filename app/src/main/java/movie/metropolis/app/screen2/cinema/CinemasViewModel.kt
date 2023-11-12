@@ -4,6 +4,8 @@ import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
 import movie.metropolis.app.presentation.cinema.CinemasFacade
@@ -19,7 +21,7 @@ class CinemasViewModel @Inject constructor(
     val location = MutableStateFlow(null as Location?)
 
     val cinemas = facade.cinemasFlow(location)
-        .map { it.getOrNull().orEmpty() }
-        .retainStateIn(viewModelScope, emptyList())
+        .map { it.getOrNull().orEmpty().toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
 
 }
