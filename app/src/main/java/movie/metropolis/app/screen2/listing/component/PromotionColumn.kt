@@ -72,7 +72,7 @@ fun PromotionColumn(
                 .matchParentSize()
                 .surface(containerColor, shape, 16.dp, color)
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
-                .glow(shape),
+                .glow(shape, color),
             propagateMinConstraints = true
         ) {
             poster()
@@ -85,7 +85,7 @@ fun PromotionColumn(
                 .padding(top = 4.dp, end = 4.dp)
                 .align(Alignment.BottomStart)
                 .surface(color, CircleShape, 16.dp, color)
-                .glow(CircleShape, lightSource = LightSource.Top)
+                .glow(CircleShape, color, lightSource = LightSource.Top)
                 .padding(8.dp, 4.dp)
         ) {
             ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
@@ -109,13 +109,7 @@ fun PromotionColumn(
                 .align(Alignment.TopStart)
                 .surface(color, CircleShape, 16.dp, color)
                 .clickable(onClick = onActionClick, role = Role.Button)
-                .glow(
-                    CircleShape,
-                    lightSource = LightSource.BottomRight,
-                    color = contentColor,
-                    width = 2.dp,
-                    alpha = .4f
-                )
+                .glow(CircleShape, contentColor, lightSource = LightSource.BottomRight)
                 .padding(6.dp),
             propagateMinConstraints = true
         ) {

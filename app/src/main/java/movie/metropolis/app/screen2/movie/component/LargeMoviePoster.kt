@@ -60,7 +60,7 @@ fun LargeMoviePoster(
         Box(
             modifier = Modifier
                 .surface(containerColor, shape, 16.dp, color)
-                .glow(shape)
+                .glow(shape, color)
                 .aspectRatio(DefaultPosterAspectRatio),
             propagateMinConstraints = true
         ) {
@@ -81,13 +81,7 @@ fun LargeMoviePoster(
                 .align(Alignment.TopStart)
                 .surface(color, Theme.container.button, 16.dp, color)
                 .clickable(onClick = onOrderClick, role = Role.Button)
-                .glow(
-                    Theme.container.button,
-                    lightSource = LightSource.BottomRight,
-                    color = contentColor,
-                    width = 2.dp,
-                    alpha = .4f
-                )
+                .glow(Theme.container.button, contentColor, lightSource = LightSource.BottomRight)
                 .padding(12.dp),
             propagateMinConstraints = true
         ) {
