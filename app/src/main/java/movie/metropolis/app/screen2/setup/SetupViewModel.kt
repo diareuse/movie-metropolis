@@ -3,10 +3,12 @@ package movie.metropolis.app.screen2.setup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.RegionView
-import movie.metropolis.app.presentation.Loadable
 import movie.metropolis.app.presentation.login.LoginFacade
 import movie.metropolis.app.presentation.setup.SetupFacade
 import movie.metropolis.app.presentation.setup.SetupFacade.Companion.regionsFlow
@@ -22,7 +24,8 @@ class SetupViewModel @Inject constructor(
 
     val requiresSetup = facade.requiresSetupFlow
     val regions = facade.regionsFlow
-        .retainStateIn(viewModelScope, Loadable.loading())
+        .map { it.getOrNull().orEmpty().toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
 
     val loginState = MutableStateFlow(LoginState())
 
@@ -72,7 +75,7 @@ class SetupViewModel @Inject constructor(
         "https://www.themoviedb.org/t/p/w1280/kuf6dutpsT0vSVehic3EZIqkOBt.jpg",
         "https://www.themoviedb.org/t/p/w1280/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg",
         "https://www.themoviedb.org/t/p/w1280/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg"
-    ).shuffled()
+    ).shuffled().toImmutableList()
 
     fun select(view: RegionView) {
         viewModelScope.launch {
