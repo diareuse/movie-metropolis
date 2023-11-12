@@ -26,6 +26,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.presentation.Posters
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen2.booking.BookingFiltersDialog
 import movie.metropolis.app.screen2.booking.BookingScreen
@@ -271,6 +272,7 @@ fun NavGraphBuilder.settings(
         }
     ) {
         SettingsScreen(
+            background = remember { Posters.random() },
             state = state,
             onStateChange = viewModel::updateState,
             onClickBack = navController::navigateUp,
