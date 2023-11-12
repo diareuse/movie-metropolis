@@ -9,6 +9,6 @@ class MovieDetailViewWithRating(
 ) : MovieDetailView by origin {
 
     override val rating: String?
-        get() = ratings?.rating?.let { "%d%%".format(it) }
+        get() = ratings?.rating?.takeIf { it > 0 }?.let { "%d%%".format(it) }
 
 }
