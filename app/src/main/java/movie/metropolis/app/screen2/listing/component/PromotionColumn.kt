@@ -42,31 +42,24 @@ fun PromotionColumn(
     var ratingSize by remember { mutableStateOf(DpSize.Zero) }
     var nameSize by remember { mutableStateOf(DpSize.Zero) }
     val favoriteSize = DpSize(36.dp, 36.dp)
-    val shape = CompositeShape {
-        setBaseline(Theme.container.poster)
+    val baseline = Theme.container.poster
+    val cornerSize = baseline.topStart
+    val shape = CompositeShape(ratingSize, nameSize) {
+        setBaseline(baseline)
         addShape(
-            shape = CutoutShape(
-                Theme.container.poster.topStart,
-                CutoutShape.Orientation.TopRight
-            ),
+            shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopRight),
             size = ratingSize,
             alignment = Alignment.TopEnd,
             operation = PathOperation.Difference
         )
         addShape(
-            shape = CutoutShape(
-                Theme.container.poster.topStart,
-                CutoutShape.Orientation.TopLeft
-            ),
+            shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopLeft),
             size = favoriteSize,
             alignment = Alignment.TopStart,
             operation = PathOperation.Difference
         )
         addShape(
-            shape = CutoutShape(
-                Theme.container.poster.topStart,
-                CutoutShape.Orientation.BottomLeft
-            ),
+            shape = CutoutShape(cornerSize, CutoutShape.Orientation.BottomLeft),
             size = nameSize,
             alignment = Alignment.BottomStart,
             operation = PathOperation.Difference

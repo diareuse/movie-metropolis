@@ -73,8 +73,8 @@ fun ActorRow(
     offset = imageOffset,
     background = {
         val surfaceColor = Theme.color.container.background
-        val imagePadding = imagePadding + imageRingPadding + imageRingWidth + imageRingPadding
         val shape = CompositeShape {
+            val imagePadding = imagePadding + imageRingPadding + imageRingWidth + imageRingPadding
             setBaseline(RoundedCornerShape(20.dp))
             addShape(
                 shape = ActorShape(imageOffset + PaddingValues(horizontal = imagePadding / 2)),

@@ -30,13 +30,12 @@ fun CinemaTimeContainer(
 ) {
     val density = LocalDensity.current
     var nameSize by remember { mutableStateOf(DpSize.Zero) }
-    val shape = CompositeShape {
-        setBaseline(Theme.container.poster)
+    val baseline = Theme.container.poster
+    val cornerSize = baseline.topStart
+    val shape = CompositeShape(nameSize) {
+        setBaseline(baseline)
         addShape(
-            shape = CutoutShape(
-                Theme.container.poster.topStart,
-                CutoutShape.Orientation.BottomLeft
-            ),
+            shape = CutoutShape(cornerSize, CutoutShape.Orientation.BottomLeft),
             size = nameSize,
             alignment = Alignment.BottomStart,
             operation = PathOperation.Difference

@@ -38,7 +38,7 @@ fun TicketColumn(
     var codeSize by remember { mutableStateOf(IntSize.Zero) }
     val baselineShape = RoundedCornerShape(32.dp)
     val innerShape = RoundedCornerShape(24.dp)
-    val shape = CompositeShape {
+    val shape = CompositeShape(codeSize) {
         setBaseline(baselineShape)
         addShape(TicketShape(12.dp, codeSize.height))
     }
