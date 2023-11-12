@@ -16,7 +16,7 @@ data class MovieDetailResponse(
     @SerialName("name") val name: String,
     @SerialName("originalName") val nameOriginal: String,
     @Serializable(MinutesDurationSerializer::class)
-    @SerialName("length") val duration: Duration,
+    @SerialName("length") val duration: Duration?,
     @SerialName("link") val url: String,
     @Serializable(YearSerializer::class)
     @SerialName("releaseYear") val releasedAt: Date,
