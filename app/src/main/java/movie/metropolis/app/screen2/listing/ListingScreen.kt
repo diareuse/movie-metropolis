@@ -93,7 +93,7 @@ fun ListingScreen(
                             offset = PaddingValues(start = 4.dp, bottom = 4.dp)
                         )
                     },
-                    poster = { Image(state) },
+                    poster = { Image(state, alignment = Alignment.TopCenter) },
                     action = { Icon(Icons.Rounded.FavoriteBorder, null) },
                     onClick = { onClick(it) },
                     onActionClick = { onFavoriteClick(it) },
