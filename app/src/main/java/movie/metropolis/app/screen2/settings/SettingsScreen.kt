@@ -4,7 +4,6 @@ package movie.metropolis.app.screen2.settings
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.*
@@ -13,8 +12,6 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.geometry.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.input.*
@@ -27,14 +24,16 @@ import movie.metropolis.app.screen2.settings.component.SettingsItemColumn
 import movie.metropolis.app.screen2.settings.component.SettingsItemRow
 import movie.metropolis.app.screen2.settings.component.SettingsSection
 import movie.metropolis.app.screen2.settings.component.SettingsTextField
+import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.action.clearFocus
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.theme.Theme
+import movie.style.rememberImageState
 
 @Composable
 fun SettingsScreen(
+    background: String,
     state: SettingsState,
     onStateChange: (SettingsState) -> Unit,
     onClickBack: () -> Unit,
@@ -56,25 +55,9 @@ fun SettingsScreen(
         )
     }
 ) { padding ->
-    val transition = rememberInfiniteTransition()
-    val alpha by transition.animateFloat(
-        initialValue = .1f,
-        targetValue = .2f,
-        animationSpec = infiniteRepeatable(tween(10000), RepeatMode.Reverse)
-    )
-    val colors = listOf(
-        Theme.color.content.background.copy(alpha),
-        Color.Transparent
-    )
-    val background = Brush.radialGradient(
-        colors = colors,
-        center = Offset.Infinite,
-        tileMode = TileMode.Repeated
-    )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(background)
+    BackgroundImage(
+        modifier = Modifier.fillMaxSize(),
+        state = rememberImageState(background)
     )
     Column(
         modifier = Modifier
@@ -153,6 +136,7 @@ fun SettingsScreen(
 @Composable
 private fun SettingsScreenPreview() = PreviewLayout {
     SettingsScreen(
+        background = "",
         state = SettingsState(),
         onStateChange = {},
         onClickBack = {},
