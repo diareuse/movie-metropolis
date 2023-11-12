@@ -16,6 +16,7 @@ import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.util.*
@@ -32,6 +33,15 @@ private const val NavigationIcon = "navigationIcon"
 private const val Title = "title"
 private const val Actions = "actions"
 private const val ExpandedTitle = "expandedTitle"
+
+fun fastLerp(start: TextStyle, end: TextStyle, fraction: Float) = start.copy(
+    fontSize = lerp(start.fontSize, end.fontSize, fraction),
+    fontWeight = when {
+        start.fontWeight == null -> end.fontWeight
+        end.fontWeight == null -> start.fontWeight
+        else -> FontWeight(lerp(start.fontWeight!!.weight, end.fontWeight!!.weight, fraction))
+    }
+)
 
 @Composable
 fun CollapsingTopAppBar(
@@ -59,7 +69,15 @@ fun CollapsingTopAppBar(
     val fraction = scrollBehavior.state.collapsedFraction
     val expandFraction = fraction.coerceAtMost(.5f) * 2
     val hideFraction = (fraction - .5f).coerceIn(0f, .5f) * 2
-    val expandedTitleStyle = lerp(expandedTextStyle, titleStyle, expandFraction)
+    val expandedTitleStyle by remember(expandFraction) {
+        derivedStateOf {
+            fastLerp(
+                expandedTextStyle,
+                titleStyle,
+                expandFraction
+            )
+        }
+    }
     val spacing = with(density) { arrangement.spacing.roundToPx() }
     val minHeight = with(density) { minHeight.roundToPx() }
     Layout(
