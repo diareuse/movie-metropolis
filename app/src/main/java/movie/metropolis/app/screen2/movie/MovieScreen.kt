@@ -9,14 +9,15 @@ import androidx.compose.foundation.gestures.snapping.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.*
-import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.detail.MovieDetailViewProvider
 import movie.metropolis.app.screen2.movie.component.ActorRow
@@ -53,7 +54,7 @@ fun MovieScreen(
             },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
-                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, null)
+                    Icon(painterResource(R.drawable.ic_back), null)
                 }
             },
             scrollBehavior = scrollBehavior
