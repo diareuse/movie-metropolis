@@ -70,7 +70,7 @@ fun PromotionColumn(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .surface(containerColor, shape, 16.dp, color)
+                .surface(containerColor, shape, 0.dp, color)
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
                 .glow(shape, color),
             propagateMinConstraints = true
@@ -84,7 +84,7 @@ fun PromotionColumn(
                 }
                 .padding(top = 4.dp, end = 4.dp)
                 .align(Alignment.BottomStart)
-                .surface(color, CircleShape, 16.dp, color)
+                .surface(color, CircleShape, 0.dp, color)
                 .glow(CircleShape, color, lightSource = LightSource.Top)
                 .padding(8.dp, 4.dp)
         ) {
@@ -107,7 +107,7 @@ fun PromotionColumn(
             modifier = Modifier
                 .size(32.dp)
                 .align(Alignment.TopStart)
-                .surface(color, CircleShape, 16.dp, color)
+                .surface(color, CircleShape, 0.dp, color)
                 .clickable(onClick = onActionClick, role = Role.Button)
                 .glow(CircleShape, contentColor, lightSource = LightSource.BottomRight)
                 .padding(6.dp),
