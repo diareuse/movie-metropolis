@@ -24,9 +24,11 @@ data class ListingFacadeActionWithPoster(
 
     private fun withPoster(items: List<MovieView>) = channelFlow {
         val output = items.map { MovieViewWithPoster(it) }.toMutableList()
-        send(output)
+        if (cachePoster.isEmpty()) send(output)
         for ((index, item) in output.withIndex()) launch {
-            val promo = cachePoster.getOrPut(item.id) { getPoster(item) }
+            val promo = cachePoster.getOrPut(item.id) {
+                getPoster(item) ?: item.posterLarge ?: item.poster
+            }
             val poster = item.copy(poster = promo)
             output[index] = poster
             send(output.toList())
