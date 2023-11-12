@@ -343,7 +343,7 @@ private fun ProjectionTypeBadge(
             elevation = if (emphasize) 8.dp else 0.dp,
             shadowColor = color
         )
-        .glow(shape)
+        .glow(shape, color)
         .padding(4.dp, 2.dp)
 ) {
     CompositionLocalProvider(LocalContentColor provides contentColor) {
