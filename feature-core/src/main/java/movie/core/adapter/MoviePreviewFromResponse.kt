@@ -12,8 +12,8 @@ internal data class MoviePreviewFromResponse(
     private val response: ExtendedMovieResponse
 ) : MoviePreview {
 
-    private val metadata = response.metadata[Locale.getDefault()]
-        ?: response.metadata[Locale("en", "GB")]
+    private val metadata = response.metadata.entries
+        .firstOrNull { (key, _) -> key.language == Locale.getDefault().language }?.value
         ?: response.metadata.entries.first().value
 
     override val id: String
