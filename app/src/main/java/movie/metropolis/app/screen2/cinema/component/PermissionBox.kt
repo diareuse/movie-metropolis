@@ -37,10 +37,7 @@ fun PermissionBox(
     val shape = CompositeShape {
         setBaseline(baselineShape)
         addShape(
-            shape = CutoutShape(
-                CornerSize(24.dp),
-                CutoutShape.Orientation.TopRight
-            ),
+            shape = CutoutShape(CornerSize(24.dp), CutoutShape.Orientation.TopRight),
             size = iconSize,
             alignment = Alignment.TopEnd,
             operation = PathOperation.Difference

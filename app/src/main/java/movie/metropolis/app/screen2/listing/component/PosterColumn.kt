@@ -84,22 +84,18 @@ private fun RatedPoster(
     val density = LocalDensity.current
     var cutoutSize by remember { mutableStateOf(DpSize.Zero) }
     val favoriteSize = DpSize(36.dp, 36.dp)
-    val shape = CompositeShape {
-        setBaseline(Theme.container.poster)
+    val baseline = Theme.container.poster
+    val cornerSize = baseline.topStart
+    val shape = CompositeShape(cutoutSize) {
+        setBaseline(baseline)
         addShape(
-            shape = CutoutShape(
-                Theme.container.poster.topStart,
-                CutoutShape.Orientation.BottomRight
-            ),
+            shape = CutoutShape(cornerSize, CutoutShape.Orientation.BottomRight),
             size = cutoutSize,
             alignment = Alignment.BottomEnd,
             operation = PathOperation.Difference
         )
         addShape(
-            shape = CutoutShape(
-                Theme.container.poster.topStart,
-                CutoutShape.Orientation.TopLeft
-            ),
+            shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopLeft),
             size = favoriteSize,
             alignment = Alignment.TopStart,
             operation = PathOperation.Difference

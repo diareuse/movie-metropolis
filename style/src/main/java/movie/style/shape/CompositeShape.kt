@@ -76,8 +76,44 @@ class CompositeShape private constructor(
     )
 
     companion object {
-        inline operator fun invoke(builder: Builder.() -> Unit) =
-            Builder().apply(builder).build()
+        inline fun build(builder: Builder.() -> Unit): CompositeShape {
+            return Builder().apply(builder).build()
+        }
+
+        @Composable
+        inline operator fun invoke(
+            key1: Any?,
+            crossinline builder: Builder.() -> Unit
+        ) = remember(key1) {
+            build(builder)
+        }
+
+        @Composable
+        inline operator fun invoke(
+            key1: Any?,
+            key2: Any?,
+            crossinline builder: Builder.() -> Unit
+        ) = remember(key1, key2) {
+            build(builder)
+        }
+
+        @Composable
+        inline operator fun invoke(
+            key1: Any?,
+            key2: Any?,
+            key3: Any?,
+            crossinline builder: Builder.() -> Unit
+        ) = remember(key1, key2, key3) {
+            build(builder)
+        }
+
+        @Composable
+        inline operator fun invoke(
+            vararg keys: Any?,
+            crossinline builder: Builder.() -> Unit
+        ) = remember(keys = keys) {
+            build(builder)
+        }
     }
 
 }

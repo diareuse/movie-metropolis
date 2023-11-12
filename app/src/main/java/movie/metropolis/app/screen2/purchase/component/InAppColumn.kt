@@ -38,26 +38,21 @@ fun InAppColumn(
         modifier = modifier
     ) {
         val baseShape = Theme.container.poster
+        val cornerSize = baseShape.topStart
         val iconSize = DpSize(48.dp, 48.dp)
         val offset = DpSize(8.dp, 8.dp)
         val density = LocalDensity.current
         var buttonSize by remember { mutableStateOf(DpSize.Zero) }
-        val shape = CompositeShape {
+        val shape = CompositeShape(buttonSize) {
             setBaseline(baseShape)
             addShape(
-                shape = CutoutShape(
-                    baseShape.topStart,
-                    CutoutShape.Orientation.TopRight
-                ),
+                shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopRight),
                 size = iconSize + offset,
                 alignment = Alignment.TopEnd,
                 operation = PathOperation.Difference
             )
             addShape(
-                shape = CutoutShape(
-                    baseShape.topStart,
-                    CutoutShape.Orientation.BottomRight
-                ),
+                shape = CutoutShape(cornerSize, CutoutShape.Orientation.BottomRight),
                 size = buttonSize + offset,
                 alignment = Alignment.BottomEnd,
                 operation = PathOperation.Difference
