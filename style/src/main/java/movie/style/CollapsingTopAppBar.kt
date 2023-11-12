@@ -42,8 +42,8 @@ fun CollapsingTopAppBar(
     actions: @Composable () -> Unit = {},
     minHeight: Dp = 48.dp,
     arrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp),
-    contentPadding: PaddingValues = PaddingValues(12.dp),
-    expandedTitlePadding: PaddingValues = PaddingValues(start = 12.dp, top = 24.dp),
+    contentPadding: PaddingValues = PaddingValues(top = 12.dp, start = 12.dp, end = 12.dp),
+    expandedTitlePadding: PaddingValues = PaddingValues(start = 12.dp, top = 12.dp, end = 12.dp),
     titleStyle: TextStyle = Theme.textStyle.title,
     expandedTextStyle: TextStyle = Theme.textStyle.display
 ) {
