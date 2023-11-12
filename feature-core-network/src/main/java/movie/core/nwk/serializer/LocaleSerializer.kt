@@ -12,7 +12,7 @@ internal class LocaleSerializer : KSerializer<Locale> {
     override val descriptor = PrimitiveSerialDescriptor("locale", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): Locale {
-        return Locale(decoder.decodeString().replace("_", "-"))
+        return Locale.forLanguageTag(decoder.decodeString().replace("_", "-"))
     }
 
     override fun serialize(encoder: Encoder, value: Locale) {
