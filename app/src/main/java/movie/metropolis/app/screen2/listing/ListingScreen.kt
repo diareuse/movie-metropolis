@@ -94,7 +94,13 @@ fun ListingScreen(
                         )
                     },
                     poster = { Image(state, alignment = Alignment.TopCenter) },
-                    action = { Icon(Icons.Rounded.FavoriteBorder, null) },
+                    action = {
+                        val icon = when (it.favorite) {
+                            true -> Icons.Rounded.Favorite
+                            else -> Icons.Rounded.FavoriteBorder
+                        }
+                        Icon(icon, null)
+                    },
                     onClick = { onClick(it) },
                     onActionClick = { onFavoriteClick(it) },
                     onLongClick = { /* todo show overlay */ }
