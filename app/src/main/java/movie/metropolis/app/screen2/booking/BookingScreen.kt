@@ -101,7 +101,8 @@ fun BookingScreen(
             .statusBarsPadding()
             .padding(top = padding.calculateTopPadding())
             .largeScreenPadding(widthAtMost = 350.dp) { largeScreenPadding = it },
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
