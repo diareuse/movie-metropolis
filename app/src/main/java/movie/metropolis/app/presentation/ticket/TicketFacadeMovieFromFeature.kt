@@ -50,7 +50,7 @@ class TicketFacadeMovieFromFeature(
     }
 
     override val poster: Flow<String?> = movie.map {
-        MovieDetailViewFromFeature(it).poster?.url
+        MovieDetailViewFromFeature(it).backdrop?.url
     }
     override val name: Flow<String> = movie.map { it.name }
     override val filters = _filters.activate(activeLanguages, activeTypes)

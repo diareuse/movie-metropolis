@@ -59,10 +59,10 @@ fun MovieScreen(
         )
     }
 ) { padding ->
-    val poster = rememberPaletteImageState(url = movie?.poster?.url)
+    val backdrop = rememberPaletteImageState(url = movie?.backdrop?.url)
     BackgroundImage(
         modifier = Modifier.fillMaxSize(),
-        state = poster
+        state = backdrop
     )
     TwoPaneSurface(
         modifier = Modifier.fillMaxSize(),
@@ -70,6 +70,7 @@ fun MovieScreen(
         connection = scrollBehavior.nestedScrollConnection,
         primaryWeight = .5f,
         primary = {
+            val poster = rememberPaletteImageState(url = movie?.poster?.url)
             LargeMoviePoster(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -108,8 +109,8 @@ fun MovieScreen(
                     time = { Text(movie.duration.replace(" ", "\n")) },
                     country = { Text(movie.countryOfOrigin.replace("/", "\n")) },
                     year = { Text(movie.releasedAt) },
-                    color = poster.palette.color,
-                    contentColor = poster.palette.textColor
+                    color = backdrop.palette.color,
+                    contentColor = backdrop.palette.textColor
                 )
                 if (movie.directors.isNotEmpty()) {
                     Text(
@@ -132,8 +133,8 @@ fun MovieScreen(
                         items(movie.directors) {
                             val state = rememberPaletteImageState(
                                 url = it.image,
-                                color = poster.palette.color,
-                                contentColor = poster.palette.textColor
+                                color = backdrop.palette.color,
+                                contentColor = backdrop.palette.textColor
                             )
                             ActorRow(
                                 image = {
@@ -171,8 +172,8 @@ fun MovieScreen(
                         items(movie.cast) {
                             val state = rememberPaletteImageState(
                                 url = it.image,
-                                color = poster.palette.color,
-                                contentColor = poster.palette.textColor
+                                color = backdrop.palette.color,
+                                contentColor = backdrop.palette.textColor
                             )
                             ActorRow(
                                 image = {
