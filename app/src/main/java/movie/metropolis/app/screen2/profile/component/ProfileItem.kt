@@ -3,16 +3,17 @@ package movie.metropolis.app.screen2.profile.component
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
-import androidx.compose.material.icons.automirrored.rounded.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.glow
 import movie.style.theme.Theme
@@ -39,7 +40,7 @@ fun ProfileItem(
             title()
         }
     }
-    Icon(Icons.AutoMirrored.Rounded.ArrowForward, null)
+    Icon(painterResource(R.drawable.ic_forward), null)
 }
 
 @Preview

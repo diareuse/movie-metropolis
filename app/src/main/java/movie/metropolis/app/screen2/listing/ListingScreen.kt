@@ -8,17 +8,17 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.input.pointer.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.screen.listing.MovieViewProvider
 import movie.metropolis.app.screen2.booking.component.rememberMultiChildPagerState
@@ -96,8 +96,8 @@ fun ListingScreen(
                     poster = { Image(state, alignment = Alignment.TopCenter) },
                     action = {
                         val icon = when (it.favorite) {
-                            true -> Icons.Rounded.Favorite
-                            else -> Icons.Rounded.FavoriteBorder
+                            true -> painterResource(R.drawable.ic_favorite_fill)
+                            else -> painterResource(R.drawable.ic_favorite_outline)
                         }
                         Icon(icon, null)
                     },
@@ -116,8 +116,8 @@ fun ListingScreen(
                 poster = { Image(state) },
                 favorite = {
                     val icon = when (it.favorite) {
-                        true -> Icons.Rounded.Favorite
-                        else -> Icons.Rounded.FavoriteBorder
+                        true -> painterResource(R.drawable.ic_favorite_fill)
+                        else -> painterResource(R.drawable.ic_favorite_outline)
                     }
                     Icon(icon, null)
                 },

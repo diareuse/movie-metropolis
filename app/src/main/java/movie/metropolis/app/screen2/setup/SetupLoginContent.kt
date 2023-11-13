@@ -8,8 +8,6 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.foundation.text.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -126,7 +124,7 @@ fun SetupLoginContent(
                     keyboardType = KeyboardType.Email
                 ),
                 leadingIcon = {
-                    Icon(Icons.Rounded.Email, null)
+                    Icon(painterResource(R.drawable.ic_email), null)
                 }
             )
             Spacer(Modifier.height(8.dp))
@@ -164,7 +162,7 @@ fun SetupLoginContent(
                     disabledContainerColor = Color.Transparent
                 ),
                 leadingIcon = {
-                    Icon(Icons.Rounded.Lock, null)
+                    Icon(painterResource(R.drawable.ic_password), null)
                 }
             )
             Spacer(Modifier.height(8.dp))

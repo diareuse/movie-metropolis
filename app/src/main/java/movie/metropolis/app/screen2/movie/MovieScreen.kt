@@ -8,12 +8,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.snapping.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.vector.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
@@ -79,7 +76,7 @@ fun MovieScreen(
                     .padding(horizontal = 24.dp),
                 color = poster.palette.color,
                 contentColor = poster.palette.textColor,
-                order = { Icon(Icons.Rounded.ShoppingCart, null) },
+                order = { Icon(painterResource(R.drawable.ic_cart), null) },
                 rating = {
                     if (movie?.rating != null) LargeRatingBox(
                         color = poster.palette.color,
@@ -142,7 +139,7 @@ fun MovieScreen(
                                 image = {
                                     Image(
                                         state = state,
-                                        placeholderError = rememberVectorPainter(Icons.Rounded.Person)
+                                        placeholderError = painterResource(R.drawable.ic_person)
                                     )
                                 },
                                 name = { Text(it.name) },
@@ -181,7 +178,7 @@ fun MovieScreen(
                                 image = {
                                     Image(
                                         state = state,
-                                        placeholderError = rememberVectorPainter(Icons.Rounded.Person)
+                                        placeholderError = painterResource(R.drawable.ic_person)
                                     )
                                 },
                                 name = { Text(it.name) },

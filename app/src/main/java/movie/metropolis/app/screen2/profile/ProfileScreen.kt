@@ -7,8 +7,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -114,17 +112,17 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ProfileItem(
-                icon = { Icon(Icons.Rounded.Settings, null) },
+                icon = { Icon(painterResource(R.drawable.ic_settings), null) },
                 title = { Text(stringResource(id = R.string.settings)) },
                 onClick = onClickSettings
             )
             ProfileItem(
-                icon = { Icon(Icons.Rounded.Edit, null) },
+                icon = { Icon(painterResource(R.drawable.ic_edit), null) },
                 title = { Text("Edit profile") },
                 onClick = onClickEdit
             )
             ProfileItem(
-                icon = { Icon(Icons.Rounded.Favorite, null) },
+                icon = { Icon(painterResource(R.drawable.ic_favorite_fill), null) },
                 title = { Text("Favorite movies") },
                 onClick = onClickFavorite
             )
