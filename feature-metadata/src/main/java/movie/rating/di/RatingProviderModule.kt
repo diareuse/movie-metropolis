@@ -18,6 +18,7 @@ import movie.rating.MetadataProvider
 import movie.rating.MetadataProviderCatch
 import movie.rating.MetadataProviderDatabase
 import movie.rating.MetadataProviderFold
+import movie.rating.MetadataProviderInvalidateRating
 import movie.rating.MetadataProviderStoring
 import movie.rating.MetadataProviderTMDB
 import movie.rating.database.RatingDao
@@ -38,8 +39,9 @@ internal class RatingProviderModule {
         out = MetadataProviderTMDB(client)
         out = MetadataProviderStoring(out, dao)
         out = MetadataProviderFold(
-            MetadataProviderDatabase(dao),
-            out
+            MetadataProviderInvalidateRating(MetadataProviderDatabase(dao)),
+            out,
+            MetadataProviderDatabase(dao)
         )
         out = MetadataProviderCatch(out)
         return out
