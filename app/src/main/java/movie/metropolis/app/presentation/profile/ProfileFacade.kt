@@ -23,6 +23,18 @@ interface ProfileFacade {
 
     companion object {
 
+        suspend fun ProfileFacade.getMembership(): Result<MembershipView?> {
+            var out: Result<MembershipView?> = Result.failure(IllegalStateException())
+            getMembership { out = it }
+            return out
+        }
+
+        suspend fun ProfileFacade.getUser(): Result<UserView> {
+            var out: Result<UserView> = Result.failure(IllegalStateException())
+            getUser { out = it }
+            return out
+        }
+
         val ProfileFacade.cinemasFlow
             get() = channelFlow {
                 getCinemas {
