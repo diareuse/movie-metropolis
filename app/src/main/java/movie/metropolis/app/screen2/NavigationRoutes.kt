@@ -41,6 +41,8 @@ import movie.metropolis.app.screen2.listing.ListingScreen
 import movie.metropolis.app.screen2.listing.ListingViewModel
 import movie.metropolis.app.screen2.movie.MovieScreen
 import movie.metropolis.app.screen2.movie.MovieViewModel
+import movie.metropolis.app.screen2.profile.ProfileEditorScreen
+import movie.metropolis.app.screen2.profile.ProfileEditorViewModel
 import movie.metropolis.app.screen2.profile.ProfileScreen
 import movie.metropolis.app.screen2.purchase.PurchaseCompleteScreen
 import movie.metropolis.app.screen2.purchase.PurchaseCompleteViewModel
@@ -220,7 +222,7 @@ fun NavGraphBuilder.home(
                 modifier = modifier,
                 contentPadding = padding,
                 onClickCard = { showCard = true },
-                onClickEdit = {},
+                onClickEdit = { navController.navigate(Route.UserEditor()) },
                 onClickFavorite = {},
                 onClickSettings = { navController.navigate(Route.Settings()) }
             )
@@ -344,6 +346,28 @@ fun NavGraphBuilder.orderComplete(
             }
         )
     }
+}
+
+fun NavGraphBuilder.editor(
+    navController: NavHostController
+) = composable(
+    route = Route.UserEditor.route,
+    deepLinks = Route.UserEditor.deepLinks
+) {
+    val viewModel = hiltViewModel<ProfileEditorViewModel>()
+    val state by viewModel.state.collectAsState()
+    val password by viewModel.password.collectAsState()
+    val loading by viewModel.loading.collectAsState()
+    ProfileEditorScreen(
+        state = state,
+        password = password,
+        loading = loading,
+        onStateChange = viewModel::update,
+        onPasswordChange = viewModel::update,
+        onBackClick = navController::navigateUp,
+        onSaveStateClick = viewModel::saveState,
+        onSavePasswordClick = viewModel::savePassword
+    )
 }
 
 fun NavGraphBuilder.booking(

@@ -43,5 +43,6 @@ fun Navigation(
         orderComplete(navController)
         booking(navController)
         upcoming(navController)
+        editor(navController)
     }
 }

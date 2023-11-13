@@ -32,7 +32,7 @@ sealed class Route(
             Settings.route -> Settings
             Setup.route -> Setup
             Tickets.route -> Tickets
-            User.route -> User
+            UserEditor.route -> UserEditor
             else -> throw IllegalArgumentException("Unknown route name $name")
         }
 
@@ -75,8 +75,7 @@ sealed class Route(
 
     }
 
-    @Deprecated("")
-    data object User : Route("users/me") {
+    data object UserEditor : Route("users/me") {
         operator fun invoke() = route
     }
 
