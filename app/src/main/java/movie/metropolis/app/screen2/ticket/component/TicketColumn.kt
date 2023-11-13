@@ -3,8 +3,6 @@ package movie.metropolis.app.screen2.ticket.component
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -140,7 +138,7 @@ fun TicketMetadata(
                 )
             }
             IconRow(
-                icon = { Icon(Icons.Rounded.Place, null) },
+                icon = { Icon(painterResource(R.drawable.ic_location), null) },
                 text = { cinema() }
             )
             Spacer(Modifier)

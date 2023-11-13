@@ -4,14 +4,14 @@ package movie.metropolis.app.screen2.booking.component
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
 
@@ -25,7 +25,7 @@ fun FilterBox(
     content: @Composable () -> Unit,
 ) {
     val leadingIcon: (@Composable () -> Unit)? = if (selected) (@Composable {
-        Icon(Icons.Rounded.Check, null)
+        Icon(painterResource(R.drawable.ic_done), null)
     }) else null
     FilterChip(
         modifier = modifier,

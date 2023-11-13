@@ -7,8 +7,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -116,7 +114,7 @@ fun SettingsScreen(
                             .padding(bottom = 16.dp),
                         value = state.nearbyCinemas,
                         onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
-                        leadingIcon = { Icon(Icons.Rounded.LocationOn, null) },
+                        leadingIcon = { Icon(painterResource(R.drawable.ic_location), null) },
                         visualTransformation = LengthVisualTransformation,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,

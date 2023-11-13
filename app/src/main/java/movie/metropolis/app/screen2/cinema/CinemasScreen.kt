@@ -7,11 +7,10 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -19,6 +18,7 @@ import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen2.cinema.component.CinemaBox
@@ -56,7 +56,7 @@ fun CinemasScreen(
         if (!permission.allPermissionsGranted) item(key = "permission") {
             PermissionBox(
                 modifier = Modifier.animateItemPlacement(),
-                icon = { Icon(Icons.Rounded.LocationOn, null) },
+                icon = { Icon(painterResource(R.drawable.ic_location), null) },
                 title = { Text("Location Permission") },
                 message = { Text("The app uses location permission to sort this list by the distance from any given cinema. The location is processed ephemerally on device and never leaves it.") },
                 onClick = permission::launchMultiplePermissionRequest
@@ -82,7 +82,7 @@ fun CinemasScreen(
                     )
                 },
                 poster = { Image(state) },
-                action = { Icon(Icons.Rounded.LocationOn, null) },
+                action = { Icon(painterResource(R.drawable.ic_location), null) },
                 onClick = { onClick(it) },
                 onActionClick = { onMapClick(it) }
             )

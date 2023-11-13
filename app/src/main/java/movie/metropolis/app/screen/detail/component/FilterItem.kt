@@ -4,13 +4,13 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
+import movie.metropolis.app.R
 import movie.metropolis.app.model.Filter
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
@@ -44,7 +44,7 @@ fun FilterItem(
                 enter = expandIn(expandFrom = Alignment.CenterStart),
                 exit = shrinkOut(shrinkTowards = Alignment.CenterStart)
             ) {
-                Icon(Icons.Rounded.Check, null)
+                Icon(painterResource(id = R.drawable.ic_done), null)
             }
         }
     )

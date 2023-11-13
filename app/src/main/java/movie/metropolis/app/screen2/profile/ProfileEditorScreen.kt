@@ -7,8 +7,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -75,7 +73,7 @@ fun ProfileEditorScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Rounded.Person, null)
+                Icon(painterResource(R.drawable.ic_person), null)
                 CommonTextField(
                     modifier = Modifier
                         .weight(1f)
@@ -99,7 +97,7 @@ fun ProfileEditorScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Rounded.Email, null)
+                Icon(painterResource(R.drawable.ic_email), null)
                 CommonTextField(
                     modifier = Modifier
                         .weight(1f)
@@ -114,7 +112,7 @@ fun ProfileEditorScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Rounded.Phone, null)
+                Icon(painterResource(R.drawable.ic_phone), null)
                 CommonTextField(
                     modifier = Modifier
                         .weight(1f)
@@ -130,7 +128,7 @@ fun ProfileEditorScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Rounded.Star, null)
+                Icon(painterResource(R.drawable.ic_star), null)
                 Text(
                     modifier = Modifier
                         .padding(start = 16.dp)
@@ -162,7 +160,7 @@ fun ProfileEditorScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Rounded.Lock, null)
+                Icon(painterResource(R.drawable.ic_password), null)
                 CommonTextField(
                     modifier = Modifier.weight(1f),
                     value = password.current,
@@ -175,7 +173,7 @@ fun ProfileEditorScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(Icons.Rounded.Lock, null)
+                Icon(painterResource(R.drawable.ic_password), null)
                 CommonTextField(
                     modifier = Modifier.weight(1f),
                     value = password.current,
