@@ -22,7 +22,7 @@ class ListingFacadeActionWithRating(
     private val detail: EventDetailFeature
 ) : ListingFacade.Action by origin {
 
-    private val cache = mutableMapOf<String, Byte>()
+    private val cache = mutableMapOf<String, MovieMetadata>()
 
     override val groups = origin.groups.flatMapResult { withRating(it) }
 
@@ -48,7 +48,7 @@ class ListingFacadeActionWithRating(
         }
     }.map(Result.Companion::success)
 
-    private suspend fun getRating(movie: MoviePreview): Byte? = cache.getOrPut(movie.id) {
+    private suspend fun getRating(movie: MoviePreview): MovieMetadata? = cache.getOrPut(movie.id) {
         val descriptors = detail.get(movie).map {
             val year = Calendar.getInstance().apply { time = it.releasedAt }[Calendar.YEAR]
             arrayOf(
@@ -58,7 +58,7 @@ class ListingFacadeActionWithRating(
         }.getOrNull() ?: return null
         descriptors.fold(null as MovieMetadata?) { acc, it ->
             acc ?: rating.get(it)
-        }?.rating ?: return null
+        } ?: return@getRating null
     }
 
 }

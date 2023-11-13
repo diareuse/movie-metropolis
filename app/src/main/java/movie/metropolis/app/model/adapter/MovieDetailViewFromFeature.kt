@@ -42,6 +42,8 @@ data class MovieDetailViewFromFeature(
         get() = movie.media.asSequence().filterIsInstance<Media.Image>()
             .sortedByDescending { it.width * it.height }.firstOrNull()
             ?.let { ImageViewFromFeature(it) }
+    override val backdrop: ImageView?
+        get() = poster
     override val trailer: VideoView?
         get() = movie.media.filterIsInstance<Media.Video>().firstOrNull()
             ?.let(::VideoViewFromFeature)

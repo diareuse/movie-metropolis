@@ -16,6 +16,7 @@ interface MovieDetailView {
     val description: String
     val availableFrom: String
     val poster: ImageView?
+    val backdrop: ImageView?
     val trailer: VideoView?
     val rating: String?
 
