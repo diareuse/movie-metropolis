@@ -8,7 +8,6 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
 import movie.style.modifier.glow
 import movie.style.theme.Theme
 
@@ -19,11 +18,7 @@ fun SettingsItemColumn(
     value: @Composable () -> Unit,
     modifier: Modifier = Modifier,
 ) = Column(
-    modifier = modifier.glow(
-        Theme.container.button,
-        lightSource = LightSource.BottomRight,
-        width = 1.dp
-    )
+    modifier = modifier.glow(Theme.container.button)
 ) {
     Column(
         modifier = Modifier.padding(16.dp, 12.dp),
