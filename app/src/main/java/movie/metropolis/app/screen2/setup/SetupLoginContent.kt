@@ -13,7 +13,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.focus.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.input.*
@@ -22,6 +21,7 @@ import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.R
+import movie.metropolis.app.screen2.profile.CommonTextField
 import movie.metropolis.app.screen2.setup.component.rememberRandomItemAsState
 import movie.style.BackgroundImage
 import movie.style.layout.PreviewLayout
@@ -71,7 +71,7 @@ fun SetupLoginContent(
                 )
             }
             Image(
-                modifier = Modifier.height(128.dp),
+                modifier = Modifier.height(100.dp),
                 painter = painterResource(R.drawable.ic_logo_cinemacity),
                 contentDescription = null,
                 contentScale = ContentScale.FillHeight
@@ -88,86 +88,64 @@ fun SetupLoginContent(
                 .glow(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                 .navigationBarsPadding()
                 .imePadding()
-                .padding(32.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val reqs = remember { List(2) { FocusRequester() } }
             LaunchedEffect(reqs) {
                 reqs[0].requestFocus()
             }
-            Text(modifier = Modifier.padding(start = 12.dp), text = stringResource(R.string.email))
-            TextField(
-                modifier = Modifier
-                    .focusRequester(reqs[0])
-                    .focusProperties {
-                        next = reqs[1]
-                    }
-                    .fillMaxWidth()
-                    .glow(Theme.container.button),
-                value = state.email,
-                onValueChange = { onStateChange(state.copy(email = it)) },
-                placeholder = { Text("john.doe@email.com") },
-                shape = Theme.container.button,
-                colors = TextFieldDefaults.colors(
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Theme.color.container.surface.copy(.2f),
-                    errorContainerColor = Theme.color.container.error.copy(.2f),
-                    disabledContainerColor = Color.Transparent
-                ),
-                keyboardOptions = KeyboardOptions(
-                    autoCorrect = false,
-                    imeAction = ImeAction.Next,
-                    keyboardType = KeyboardType.Email
-                ),
-                leadingIcon = {
-                    Icon(painterResource(R.drawable.ic_email), null)
-                }
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                modifier = Modifier.padding(start = 12.dp),
-                text = stringResource(R.string.password)
-            )
-            TextField(
-                modifier = Modifier
-                    .focusRequester(reqs[1])
-                    .focusProperties {
-                        previous = reqs[0]
-                    }
-                    .fillMaxWidth()
-                    .glow(Theme.container.button),
-                value = state.password,
-                onValueChange = { onStateChange(state.copy(password = it)) },
-                placeholder = { Text("*****") },
-                shape = Theme.container.button,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardActions = KeyboardActions(onGo = { onLoginClick() }),
-                keyboardOptions = KeyboardOptions(
-                    autoCorrect = false,
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Go
-                ),
-                colors = TextFieldDefaults.colors(
-                    disabledIndicatorColor = Color.Transparent,
-                    errorIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    focusedContainerColor = Theme.color.container.surface.copy(.1f),
-                    errorContainerColor = Theme.color.container.error.copy(.1f),
-                    disabledContainerColor = Color.Transparent
-                ),
-                leadingIcon = {
-                    Icon(painterResource(R.drawable.ic_password), null)
-                }
-            )
-            Spacer(Modifier.height(8.dp))
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painterResource(R.drawable.ic_email), null)
+                CommonTextField(
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(reqs[0])
+                        .focusProperties {
+                            next = reqs[1]
+                        },
+                    value = state.email,
+                    onValueChange = { onStateChange(state.copy(email = it)) },
+                    label = { Text(stringResource(R.string.email)) },
+                    placeholder = { Text("john.doe@email.com") },
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Email
+                    )
+                )
+            }
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painterResource(R.drawable.ic_password), null)
+                CommonTextField(
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(reqs[1])
+                        .focusProperties {
+                            previous = reqs[0]
+                        },
+                    value = state.password,
+                    onValueChange = { onStateChange(state.copy(password = it)) },
+                    label = { Text(stringResource(R.string.password)) },
+                    placeholder = { Text("*****") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    keyboardActions = KeyboardActions(onGo = { onLoginClick() }),
+                    keyboardOptions = KeyboardOptions(
+                        autoCorrect = false,
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Go
+                    ),
+                )
+            }
             HorizontalDivider(
                 modifier = Modifier
+                    .padding(top = 12.dp)
                     .width(100.dp)
                     .align(Alignment.CenterHorizontally)
             )
@@ -175,7 +153,7 @@ fun SetupLoginContent(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 onClick = onLoginSkip
             ) {
-                Text("Continue without logging in")
+                Text("Continue without login")
             }
         }
     }
