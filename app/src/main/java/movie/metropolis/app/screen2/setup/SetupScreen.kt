@@ -7,35 +7,27 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
-import kotlinx.collections.immutable.toImmutableList
-import movie.metropolis.app.model.RegionView
 import movie.style.layout.PreviewLayout
 
 @Composable
 fun SetupScreen(
-    posters: ImmutableList<String>,
-    regions: ImmutableList<RegionView>,
-    loginState: LoginState,
-    onLoginStateChange: (LoginState) -> Unit,
-    onLoginClick: () -> Unit,
-    onLoginSkip: () -> Unit,
     regionSelected: Boolean,
-    onRegionClick: (RegionView) -> Unit,
     modifier: Modifier = Modifier,
-    startWith: SetupState = SetupState.Initial
+    startWith: SetupState = SetupState.Initial,
+    initial: @Composable () -> Unit,
+    region: @Composable () -> Unit,
+    login: @Composable () -> Unit,
+    navController: NavHostController = rememberNavController()
 ) = Scaffold(
     modifier = modifier,
     topBar = {},
     bottomBar = {},
     contentWindowInsets = WindowInsets(0)
 ) { padding ->
-    val navController = rememberNavController()
     NavHost(
         modifier = Modifier
             .fillMaxSize()
@@ -44,39 +36,16 @@ fun SetupScreen(
         startDestination = startWith.name
     ) {
         composable(SetupState.Initial.name) {
-            SetupInitialContent(
-                posters = posters,
-                onContinueClick = {
-                    val builder: NavOptionsBuilder.() -> Unit = {
-                        popUpTo(SetupState.Initial.name) {
-                            inclusive = true
-                        }
-                    }
-                    when (regionSelected) {
-                        true -> navController.navigate(SetupState.Login.name, builder)
-                        else -> navController.navigate(SetupState.RegionSelection.name, builder)
-                    }
-                }
-            )
+            initial()
         }
         composable(SetupState.RegionSelection.name) {
             LaunchedEffect(regionSelected) {
                 if (regionSelected) navController.navigate(SetupState.Login.name)
             }
-            SetupRegionSelectionContent(
-                regions = regions,
-                posters = posters,
-                onRegionClick = onRegionClick
-            )
+            region()
         }
         composable(SetupState.Login.name) {
-            SetupLoginContent(
-                posters = posters,
-                state = loginState,
-                onStateChange = onLoginStateChange,
-                onLoginClick = onLoginClick,
-                onLoginSkip = onLoginSkip
-            )
+            login()
         }
     }
 }
@@ -86,13 +55,9 @@ fun SetupScreen(
 @Composable
 private fun SetupScreenPreview() = PreviewLayout {
     SetupScreen(
-        posters = List(20) { "" }.toImmutableList(),
-        regions = persistentListOf<RegionView>().toImmutableList(),
-        loginState = LoginState(),
-        onLoginStateChange = {},
-        onLoginClick = { /*TODO*/ },
         regionSelected = false,
-        onRegionClick = {},
-        onLoginSkip = {}
+        initial = {},
+        region = {},
+        login = {}
     )
 }

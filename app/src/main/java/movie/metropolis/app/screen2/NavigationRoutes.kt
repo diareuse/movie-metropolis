@@ -19,7 +19,9 @@ import androidx.compose.ui.res.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
@@ -30,6 +32,8 @@ import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.presentation.Posters
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
+import movie.metropolis.app.screen.profile.component.requestOneTapAsState
 import movie.metropolis.app.screen2.booking.BookingFiltersDialog
 import movie.metropolis.app.screen2.booking.BookingScreen
 import movie.metropolis.app.screen2.booking.TimeViewModel
@@ -54,6 +58,10 @@ import movie.metropolis.app.screen2.purchase.component.Confetti
 import movie.metropolis.app.screen2.settings.SettingsScreen
 import movie.metropolis.app.screen2.settings.SettingsViewModel
 import movie.metropolis.app.screen2.settings.component.CalendarColumn
+import movie.metropolis.app.screen2.setup.LoginState
+import movie.metropolis.app.screen2.setup.SetupInitialContent
+import movie.metropolis.app.screen2.setup.SetupLoginContent
+import movie.metropolis.app.screen2.setup.SetupRegionSelectionContent
 import movie.metropolis.app.screen2.setup.SetupScreen
 import movie.metropolis.app.screen2.setup.SetupState
 import movie.metropolis.app.screen2.setup.SetupViewModel
@@ -120,23 +128,65 @@ fun NavGraphBuilder.setup(
             }
         }
     }
+    val childNavController = rememberNavController()
     SetupScreen(
         startWith = it.arguments?.getString("startWith")?.let(SetupState::valueOf)
             ?: SetupState.Initial,
-        regions = regions,
-        posters = posters,
+        navController = childNavController,
         regionSelected = !requiresSetup,
-        onRegionClick = viewModel::select,
-        loginState = loginState,
-        onLoginStateChange = { viewModel.loginState.value = it },
-        onLoginClick = {
-            scope.launch {
-                viewModel.login().onSuccess {
-                    navigateHome(HomeState.Profile)
+        initial = {
+            SetupInitialContent(
+                posters = posters,
+                onContinueClick = {
+                    val builder: NavOptionsBuilder.() -> Unit = {
+                        popUpTo(SetupState.Initial.name) {
+                            inclusive = true
+                        }
+                    }
+                    when (!requiresSetup) {
+                        true -> childNavController.navigate(SetupState.Login.name, builder)
+                        else -> childNavController.navigate(
+                            SetupState.RegionSelection.name,
+                            builder
+                        )
+                    }
+                }
+            )
+        },
+        region = {
+            SetupRegionSelectionContent(
+                regions = regions,
+                posters = posters,
+                onRegionClick = viewModel::select
+            )
+        },
+        login = {
+            val saving = rememberOneTapSaving()
+            val oneTap by requestOneTapAsState()
+            LaunchedEffect(oneTap) {
+                val oneTap = oneTap
+                if (oneTap != null) {
+                    viewModel.loginState.value = LoginState(
+                        email = oneTap.userName,
+                        password = oneTap.password.concatToString()
+                    )
                 }
             }
-        },
-        onLoginSkip = { navigateHome(HomeState.Listing) }
+            SetupLoginContent(
+                posters = posters,
+                state = loginState,
+                onStateChange = { viewModel.loginState.value = it },
+                onLoginClick = {
+                    scope.launch {
+                        viewModel.login().onSuccess {
+                            saving.save(loginState.email, loginState.password)
+                            navigateHome(HomeState.Profile)
+                        }
+                    }
+                },
+                onLoginSkip = { navigateHome(HomeState.Listing) }
+            )
+        }
     )
 }
 
