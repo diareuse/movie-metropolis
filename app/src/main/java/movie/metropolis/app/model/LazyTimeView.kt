@@ -14,7 +14,7 @@ interface LazyTimeView {
     val dateString get() = format.format(date)
 
     companion object {
-        private val format = SimpleDateFormat("dd\nMMM", Locale.getDefault())
+        private val format = SimpleDateFormat("EEE\ndd\nMMM", Locale.getDefault())
     }
 
 }
