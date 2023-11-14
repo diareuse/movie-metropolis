@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
@@ -58,6 +59,7 @@ import movie.metropolis.app.screen2.setup.SetupViewModel
 import movie.metropolis.app.screen2.ticket.TicketContentState
 import movie.metropolis.app.screen2.ticket.TicketScreen
 import movie.metropolis.app.screen2.ticket.TicketViewModel
+import movie.metropolis.app.util.share
 import movie.style.CollapsingTopAppBar
 import movie.style.Container
 import movie.style.DialogBox
@@ -173,8 +175,10 @@ fun NavGraphBuilder.home(
             )
         },
         tickets = { modifier, padding ->
-            val bookingVM = hiltViewModel<TicketViewModel>()
-            val tickets by bookingVM.tickets.collectAsState()
+            val viewModel = hiltViewModel<TicketViewModel>()
+            val tickets by viewModel.tickets.collectAsState()
+            val scope = rememberCoroutineScope()
+            val context = LocalContext.current
             val (bookingState, bookingIndicatorState) = rememberMultiChildPagerState(childCount = 1) {
                 when (val t = tickets) {
                     is TicketContentState.Failure -> 0
@@ -183,14 +187,19 @@ fun NavGraphBuilder.home(
                 }
             }
             LaunchedEffect(Unit) {
-                bookingVM.refresh()
+                viewModel.refresh()
             }
             TicketScreen(
                 bookings = tickets,
                 state = bookingState,
                 indicatorState = bookingIndicatorState,
                 modifier = modifier,
-                contentPadding = padding
+                contentPadding = padding,
+                onShareClick = {
+                    scope.launch {
+                        viewModel.share(it).share(context)
+                    }
+                }
             )
         },
         cinemas = { modifier, padding ->
