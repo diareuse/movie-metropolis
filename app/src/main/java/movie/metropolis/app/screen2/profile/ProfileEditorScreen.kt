@@ -141,16 +141,10 @@ fun ProfileEditorScreen(
                     text = "Marketing",
                     style = Theme.textStyle.emphasis
                 )
-                Switch(
+                CommonSwitch(
                     modifier = Modifier.imagePlaceholder(loading),
                     checked = state.marketingMessaging,
-                    onCheckedChange = { onStateChange(state.copy(marketingMessaging = it)) },
-                    colors = SwitchDefaults.colors(
-                        uncheckedBorderColor = Color.Transparent,
-                        checkedBorderColor = Color.Transparent,
-                        disabledCheckedBorderColor = Color.Transparent,
-                        disabledUncheckedBorderColor = Color.Transparent
-                    )
+                    onCheckedChange = { onStateChange(state.copy(marketingMessaging = it)) }
                 )
             }
             TextButton(
@@ -196,6 +190,23 @@ fun ProfileEditorScreen(
         }
     }
 }
+
+@Composable
+fun CommonSwitch(
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) = Switch(
+    modifier = modifier,
+    checked = checked,
+    onCheckedChange = onCheckedChange,
+    colors = SwitchDefaults.colors(
+        uncheckedBorderColor = Color.Transparent,
+        checkedBorderColor = Color.Transparent,
+        disabledCheckedBorderColor = Color.Transparent,
+        disabledUncheckedBorderColor = Color.Transparent
+    )
+)
 
 @Composable
 fun CommonTextField(

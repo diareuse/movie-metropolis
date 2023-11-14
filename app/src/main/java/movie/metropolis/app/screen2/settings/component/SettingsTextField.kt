@@ -10,9 +10,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
 import movie.style.modifier.glow
 import movie.style.theme.Theme
 
@@ -28,7 +26,7 @@ fun SettingsTextField(
 ) = TextField(
     modifier = modifier
         .fillMaxWidth()
-        .glow(Theme.container.button, lightSource = LightSource.BottomRight, width = 1.dp),
+        .glow(Theme.container.button),
     value = value,
     onValueChange = onValueChange,
     shape = Theme.container.button,

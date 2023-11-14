@@ -17,11 +17,12 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import movie.metropolis.app.R
+import movie.metropolis.app.screen2.profile.CommonSwitch
+import movie.metropolis.app.screen2.profile.CommonTextField
 import movie.metropolis.app.screen2.settings.component.LengthVisualTransformation
 import movie.metropolis.app.screen2.settings.component.SettingsItemColumn
 import movie.metropolis.app.screen2.settings.component.SettingsItemRow
 import movie.metropolis.app.screen2.settings.component.SettingsSection
-import movie.metropolis.app.screen2.settings.component.SettingsTextField
 import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.action.clearFocus
@@ -74,7 +75,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(id = R.string.settings_unseen_title)) },
                 description = { Text(stringResource(id = R.string.settings_unseen_description)) },
                 value = {
-                    Switch(
+                    CommonSwitch(
                         checked = state.unseenOnly,
                         onCheckedChange = { onStateChange(state.copy(unseenOnly = it)) }
                     )
@@ -84,7 +85,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(id = R.string.settings_only_movies_title)) },
                 description = { Text(stringResource(id = R.string.settings_only_movies_description)) },
                 value = {
-                    Switch(
+                    CommonSwitch(
                         checked = state.moviesOnly,
                         onCheckedChange = { onStateChange(state.copy(moviesOnly = it)) }
                     )
@@ -96,7 +97,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(id = R.string.settings_calendar_title)) },
                 description = { Text(stringResource(id = R.string.settings_calendar_description)) },
                 value = {
-                    Switch(
+                    CommonSwitch(
                         checked = state.tickets,
                         onCheckedChange = { onShowCalendarsRequest() }
                     )
@@ -108,20 +109,25 @@ fun SettingsScreen(
                 title = { Text(stringResource(id = R.string.nearby_cinemas)) },
                 description = { Text(stringResource(id = R.string.nearby_cinemas_description)) },
                 value = {
-                    SettingsTextField(
+                    Row(
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
                             .padding(bottom = 16.dp),
-                        value = state.nearbyCinemas,
-                        onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
-                        leadingIcon = { Icon(painterResource(R.drawable.ic_location), null) },
-                        visualTransformation = LengthVisualTransformation,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number,
-                            imeAction = ImeAction.Done
-                        ),
-                        keyboardActions = KeyboardActions(onDone = clearFocus())
-                    )
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(painterResource(R.drawable.ic_location), null)
+                        CommonTextField(
+                            value = state.nearbyCinemas,
+                            onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
+                            visualTransformation = LengthVisualTransformation,
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number,
+                                imeAction = ImeAction.Done
+                            ),
+                            keyboardActions = KeyboardActions(onDone = clearFocus())
+                        )
+                    }
                 }
             )
         }
