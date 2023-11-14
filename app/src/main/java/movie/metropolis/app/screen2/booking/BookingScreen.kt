@@ -2,6 +2,7 @@
 
 package movie.metropolis.app.screen2.booking
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
@@ -12,13 +13,17 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.LazyTimeView
@@ -29,6 +34,7 @@ import movie.metropolis.app.model.SpecificTimeView
 import movie.metropolis.app.model.TimeView
 import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
 import movie.metropolis.app.screen.listing.MovieViewProvider
+import movie.metropolis.app.screen2.booking.BookingState.Companion.asBookingState
 import movie.metropolis.app.screen2.booking.component.CinemaTimeContainer
 import movie.metropolis.app.screen2.booking.component.DateBox
 import movie.metropolis.app.screen2.booking.component.MovieTimeContainer
@@ -40,6 +46,7 @@ import movie.metropolis.app.util.interpolatePage
 import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
+import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.layout.largeScreenPadding
@@ -48,12 +55,38 @@ import movie.style.modifier.VerticalGravity
 import movie.style.modifier.verticalOverlay
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
+import movie.style.textPlaceholder
+import movie.style.theme.Theme
 import java.text.DateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
 
+sealed class BookingState {
+    data class Value(
+        val value: List<TimeView>
+    ) : BookingState()
+
+    data object Loading : BookingState()
+    data object Empty : BookingState()
+    data class Error(
+        val exception: Throwable
+    ) : BookingState()
+
+    companion object {
+        fun loading() = Loading as BookingState
+
+        fun error(exception: Throwable) = Error(exception) as BookingState
+
+        fun Flow<List<TimeView>>.asBookingState() =
+            map { if (it.all { it.times.isEmpty() }) Empty else Value(it) }
+                .catch { emit(error(it)) }
+                .onStart { emit(loading()) }
+    }
+}
+
+@SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun BookingScreen(
     poster: String?,
@@ -139,7 +172,7 @@ fun BookingScreen(
             verticalAlignment = Alignment.Top,
             contentPadding = largeScreenPadding
         ) {
-            val page by items[it].content.collectAsState(emptyList())
+            val page by items[it].content.asBookingState().collectAsState(BookingState.loading())
             val bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.interpolatePage(
@@ -157,7 +190,8 @@ fun BookingScreen(
                     top = 16.dp
                 ) + PaddingValues(24.dp)
             ) {
-                for (view in page) {
+                val page = page
+                if (page is BookingState.Value) for (view in page.value) {
                     if (view.times.isEmpty()) continue
                     when (view) {
                         is TimeView.Cinema -> item(
@@ -234,6 +268,68 @@ fun BookingScreen(
                     }
                     if (view is TimeView.Movie) item(span = StaggeredGridItemSpan.FullLine) {
                         Spacer(modifier = Modifier.fillMaxWidth())
+                    }
+                }
+                else if (page is BookingState.Loading) {
+                    item(
+                        span = StaggeredGridItemSpan.FullLine
+                    ) {
+                        CinemaTimeContainer(
+                            modifier = Modifier.animateItemPlacement(),
+                            color = Theme.color.container.background,
+                            contentColor = Theme.color.content.background,
+                            name = { Text("#".repeat(10), Modifier.textPlaceholder()) }
+                        ) {
+                            Box(modifier = Modifier.imagePlaceholder())
+                        }
+                    }
+                    item {
+                        val count = remember { nextInt(1, 5) }
+                        for (ignore in 0 until count) Column(
+                            modifier = Modifier.animateItemPlacement(),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            ProjectionTypeRow(
+                                modifier = Modifier.fillMaxWidth(),
+                                language = {
+                                    ProjectionTypeRowDefaults.Speech {
+                                        Text("#".repeat(5), Modifier.textPlaceholder())
+                                    }
+                                },
+                                subtitle = {}
+                            ) {
+                                ProjectionTypeRowDefaults.TypeOther(
+                                    "#".repeat(5),
+                                    Modifier.textPlaceholder()
+                                )
+                            }
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                val count2 = remember { nextInt(1, 5) }
+                                for (ignore in 0 until count2) TimeButton(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    time = 0,
+                                    onClick = {}
+                                ) {
+                                    Text("#".repeat(5), Modifier.textPlaceholder())
+                                }
+                            }
+                        }
+                    }
+                } else if (page is BookingState.Empty) {
+                    item(span = StaggeredGridItemSpan.FullLine) {
+                        Text(
+                            "No projections on this day",
+                            style = Theme.textStyle.emphasis,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                } else if (page is BookingState.Error) {
+                    item(span = StaggeredGridItemSpan.FullLine) {
+                        Text(
+                            page.exception.stackTraceToString(),
+                            style = Theme.textStyle.emphasis,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
             }
