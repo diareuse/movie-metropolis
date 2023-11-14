@@ -16,6 +16,7 @@ import movie.core.model.Location
 import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.presentation.ticket.TicketFacade
+import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 import android.location.Location as AndroidLocation
@@ -31,8 +32,12 @@ class TimeViewModel private constructor(
         factory: TicketFacade.Factory
     ) : this(
         when {
-            state.contains("cinema") -> factory.cinema(state["cinema"]!!)
-            state.contains("movie") -> factory.movie(state["movie"]!!)
+            Route.Booking.Movie.Arguments.keys.all { it in state } ->
+                factory.movie(Route.Booking.Movie.Arguments(state).movie)
+
+            Route.Booking.Cinema.Arguments.keys.all { it in state } ->
+                factory.cinema(Route.Booking.Cinema.Arguments(state).cinema)
+
             else -> error("Cannot find 'cinema' or 'movie' parameters")
         }
     )

@@ -20,21 +20,6 @@ sealed class Route(
     companion object {
 
         private const val InternalUri = "app://movie.metropolis"
-        fun by(name: String) = when (name) {
-            Cinema.route -> Cinema
-            Cinemas.route -> Cinemas
-            Home.route -> Home
-            Login.route -> Login
-            Movie.route -> Movie
-            Movies.route -> Movies
-            Order.route -> Order
-            OrderComplete.route -> OrderComplete
-            Settings.route -> Settings
-            Setup.route -> Setup
-            Tickets.route -> Tickets
-            UserEditor.route -> UserEditor
-            else -> throw IllegalArgumentException("Unknown route name $name")
-        }
 
     }
 
@@ -77,30 +62,6 @@ sealed class Route(
 
     data object UserEditor : Route("users/me") {
         operator fun invoke() = route
-    }
-
-    @Deprecated("")
-    data object Login : Route("users/new") {
-        operator fun invoke() = route
-    }
-
-    @Deprecated("")
-    data object Cinema : Route("cinemas/{cinema}") {
-        val arguments = listOf(
-            navArgument("cinema") {
-                type = NavType.StringType
-            }
-        )
-
-        class Arguments(private val handle: SavedStateHandle) {
-            val cinema get() = handle.get<String>("cinema").let(::requireNotNull)
-        }
-
-        operator fun invoke(cinema: String) =
-            route.replace("{cinema}", cinema)
-
-        fun deepLink(cinema: String) =
-            "$InternalUri/${invoke(cinema)}".toUri()
     }
 
     data object Movie : Route("movies/{movie}?upcoming={upcoming}") {
@@ -147,6 +108,10 @@ sealed class Route(
 
             class Arguments(private val entry: SavedStateHandle) {
                 val movie get() = entry.get<String>("movie").let(::requireNotNull)
+
+                companion object {
+                    val keys = listOf("movie")
+                }
             }
 
             operator fun invoke(movie: String) =
@@ -167,6 +132,10 @@ sealed class Route(
 
             class Arguments(private val entry: SavedStateHandle) {
                 val cinema get() = entry.get<String>("cinema").let(::requireNotNull)
+
+                companion object {
+                    val keys = listOf("cinema")
+                }
             }
 
             operator fun invoke(cinema: String) =
@@ -198,22 +167,6 @@ sealed class Route(
     }
 
     data object Settings : Route("settings") {
-        const val index = 4
-        operator fun invoke() = route
-    }
-
-    data object Movies : Route("movies") {
-        const val index = 1
-        operator fun invoke() = route
-    }
-
-    data object Tickets : Route("tickets") {
-        const val index = 3
-        operator fun invoke() = route
-    }
-
-    data object Cinemas : Route("cinemas") {
-        const val index = 2
         operator fun invoke() = route
     }
 

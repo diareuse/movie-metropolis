@@ -439,7 +439,8 @@ fun NavGraphBuilder.booking(
 ) {
     composable(
         route = Route.Booking.Movie.route,
-        deepLinks = Route.Booking.Movie.deepLinks
+        deepLinks = Route.Booking.Movie.deepLinks,
+        arguments = Route.Booking.Movie.arguments
     ) {
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
@@ -478,7 +479,8 @@ fun NavGraphBuilder.booking(
     }
     composable(
         route = Route.Booking.Cinema.route,
-        deepLinks = Route.Booking.Cinema.deepLinks
+        deepLinks = Route.Booking.Cinema.deepLinks,
+        arguments = Route.Booking.Cinema.arguments,
     ) {
         val viewModel = hiltViewModel<TimeViewModel>()
         val times by viewModel.times.collectAsState()
