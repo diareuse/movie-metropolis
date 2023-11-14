@@ -25,6 +25,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
+import movie.metropolis.app.feature.shortcut.createShortcut
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.presentation.Posters
@@ -212,6 +213,7 @@ fun NavGraphBuilder.home(
             val location by rememberLocation(state)
             val cinemasVM = hiltViewModel<CinemasViewModel>()
             val cinemas by cinemasVM.cinemas.collectAsState()
+            val context = LocalContext.current
             LaunchedEffect(location) {
                 cinemasVM.location.value = location
             }
@@ -221,7 +223,10 @@ fun NavGraphBuilder.home(
                 cinemas = cinemas,
                 permission = state,
                 state = rememberLazyListState(),
-                onClick = { navController.navigate(Route.Booking.Cinema(it.id)) },
+                onClick = {
+                    context.createShortcut(it)
+                    navController.navigate(Route.Booking.Cinema(it.id))
+                },
                 onMapClick = actionView<CinemaView> { it.uri }
             )
         },
