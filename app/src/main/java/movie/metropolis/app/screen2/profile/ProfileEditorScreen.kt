@@ -22,6 +22,7 @@ import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
+import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
 import movie.style.rememberImageState
 import movie.style.theme.Theme
@@ -42,6 +43,7 @@ fun ProfileEditorScreen(
     modifier = modifier,
     topBar = {
         CollapsingTopAppBar(
+            modifier = Modifier.alignForLargeScreen(),
             title = { Text("You") },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
@@ -61,6 +63,7 @@ fun ProfileEditorScreen(
         BackgroundImage(state = background)
         Column(
             modifier = Modifier
+                .alignForLargeScreen()
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .verticalScroll(rememberScrollState())
                 .padding(padding)
