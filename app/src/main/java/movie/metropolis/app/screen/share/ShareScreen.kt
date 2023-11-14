@@ -14,7 +14,6 @@ import movie.metropolis.app.R
 import movie.metropolis.app.screen.setup.component.Background
 import movie.style.theme.Theme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareScreen() {
     Scaffold { padding ->
