@@ -14,6 +14,7 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
@@ -206,6 +207,7 @@ fun CommonTextField(
     supportingText: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
@@ -219,6 +221,7 @@ fun CommonTextField(
         supportingText = supportingText,
         maxLines = 1,
         singleLine = true,
+        visualTransformation = visualTransformation,
         colors = TextFieldDefaults.colors(
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
