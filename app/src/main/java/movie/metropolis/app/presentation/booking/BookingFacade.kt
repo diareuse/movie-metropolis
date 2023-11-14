@@ -12,7 +12,7 @@ interface BookingFacade {
 
     val bookings: Flow<List<BookingView>>
 
-    suspend fun getShareImage(view: BookingView): Image?
+    suspend fun getShareImage(view: BookingView): Image
 
     fun refresh()
 

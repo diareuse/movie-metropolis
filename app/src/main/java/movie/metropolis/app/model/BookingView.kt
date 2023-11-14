@@ -17,6 +17,8 @@ interface BookingView {
     val hall: String
     val seats: List<Seat>
 
+    fun origin(): BookingView
+
     @Immutable
     interface Seat {
         val row: String

@@ -36,6 +36,10 @@ data class BookingViewFromFeature(
     override val seats: List<BookingView.Seat>
         get() = booking.seats.map(BookingViewFromFeature::SeatFromFeature)
 
+    override fun origin(): BookingView {
+        return this
+    }
+
     data class SeatFromFeature(
         private val feature: Booking.Seat
     ) : BookingView.Seat {

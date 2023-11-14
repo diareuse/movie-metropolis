@@ -16,7 +16,7 @@ data class FormatConfig(
 ) {
 
     suspend fun getImage(value: String) = withContext(Dispatchers.Default) {
-        if (width * height <= 0) return@withContext null
+        check(width * height >= 0)
         val matrix = writer.encode(value, format, width, height)
         val width = matrix.width
         val height = matrix.height

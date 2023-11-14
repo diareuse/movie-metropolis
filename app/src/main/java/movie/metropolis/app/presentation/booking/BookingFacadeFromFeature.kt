@@ -27,8 +27,9 @@ class BookingFacadeFromFeature(
         booking.invalidate()
     }
 
-    override suspend fun getShareImage(view: BookingView): Image? {
-        if (view !is BookingViewFromFeature) return null
+    override suspend fun getShareImage(view: BookingView): Image {
+        val view = view.origin()
+        check(view is BookingViewFromFeature)
         val shareableText = share.get(view.booking)
         return MultiFormatWriter()
             .prepare(500, 300, BarcodeFormat.PDF_417)
