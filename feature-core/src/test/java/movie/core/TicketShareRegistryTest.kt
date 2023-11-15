@@ -42,7 +42,7 @@ class TicketShareRegistryTest {
         private val TestCinema = mock<Cinema> {
             on { id }.thenReturn("id")
         }
-        private val TestBooking = mock<Booking.Active> {
+        private val TestBooking = mock<Booking> {
             on { id }.thenReturn("id")
             on { startsAt }.thenReturn(Date(123))
             on { hall }.thenReturn("hall")
@@ -50,6 +50,7 @@ class TicketShareRegistryTest {
             on { eventId }.thenReturn("eventId")
             on { cinema }.thenReturn(TestCinema)
             on { seats }.thenReturn(emptyList())
+            on { expired }.thenReturn(false)
         }
 
     }

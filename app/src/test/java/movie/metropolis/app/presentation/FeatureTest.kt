@@ -21,6 +21,7 @@ import movie.image.Swatch
 import movie.image.SwatchColor.Companion.Black
 import movie.log.Logger
 import movie.log.PlatformLogger
+import movie.rating.ActorProvider
 import movie.rating.MetadataProvider
 import org.junit.Before
 import org.mockito.kotlin.any
@@ -43,6 +44,7 @@ abstract class FeatureTest {
     protected lateinit var credentials: UserCredentialFeature
     protected lateinit var booking: UserBookingFeature
     protected lateinit var poster: PosterFeature
+    protected lateinit var actors: ActorProvider
 
     abstract fun prepare()
 
@@ -67,6 +69,7 @@ abstract class FeatureTest {
                 movieMock
         }
         detail = mock()
+        actors = mock()
         cinema = mock()
         prefs = mock()
         analyzer = mock {

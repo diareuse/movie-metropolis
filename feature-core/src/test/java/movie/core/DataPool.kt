@@ -143,7 +143,8 @@ interface DataPool<T> {
                 auditorium = "",
                 language = "",
                 types = emptyList(),
-                movie = ""
+                movie = "",
+                subtitles = null
             )
         }.map(modifier)
 
@@ -313,7 +314,8 @@ interface DataPool<T> {
                 directors = emptyList(),
                 description = "",
                 screeningFrom = Date(),
-                ageRestrictionUrl = ""
+                ageRestrictionUrl = "",
+                genres = emptyList()
             )
         }.map(modifier)
 

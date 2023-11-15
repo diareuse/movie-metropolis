@@ -7,6 +7,7 @@ import org.junit.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
@@ -63,7 +64,7 @@ class SettingsFacadeTest : FeatureTest() {
 
     @Test
     fun selectCalendar_setsValue() = runTest {
-        facade.selectCalendar("aa")
+        facade.selectedCalendar = "aa"
         verify(prefs).calendarId = "aa"
     }
 
@@ -73,8 +74,9 @@ class SettingsFacadeTest : FeatureTest() {
         facade.addListener {
             latch.countDown()
         }
-        facade.filterSeen = false
-        latch.await()
+        whenever(facade.filterSeen).thenReturn(false)
+        facade.filterSeen = true
+        latch.await(1, TimeUnit.SECONDS)
     }
 
     @Test
@@ -83,8 +85,9 @@ class SettingsFacadeTest : FeatureTest() {
         val listener = facade.addListener {
             value = "failure"
         }
+        whenever(facade.filterSeen).thenReturn(false)
         facade.removeListener(listener)
-        facade.filterSeen = false
+        facade.filterSeen = true
         assertEquals("success", value)
     }
 

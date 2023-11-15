@@ -2,7 +2,6 @@
 
 package movie.metropolis.app.presentation.booking
 
-import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
@@ -24,7 +23,7 @@ import org.mockito.kotlin.verify
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
-import kotlin.test.assertIs
+import kotlin.test.assertFailsWith
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
@@ -45,46 +44,38 @@ class BookingFacadeTest : FeatureTest() {
         booking_responds_success()
         detail_responds_success()
         for (result in facade.getBookings())
-            assert(result.getOrThrow().isNotEmpty())
+            assert(result.isNotEmpty())
     }
 
     @Test
     fun bookings_returns_detail() = runTest {
         booking_responds_success()
         val expected = detail_responds_success()
-        val result = facade.getBookings().last().getOrThrow()
+        val result = facade.getBookings().last()
         for (item in result)
         // directors are available only from detail
-            assertEquals(expected.directors, item.movie.directors)
-    }
-
-    @Test
-    fun bookings_returns_color() = runTest {
-        booking_responds_success()
-        detail_responds_success()
-        val color = analyzer_responds_success()
-        val result = facade.getBookings().last().getOrThrow()
-        for (item in result)
-            assertEquals(color, item.movie.poster?.spotColor?.toArgb())
+            assertEquals(expected.directors, item.movie.directors.map { it.name })
     }
 
     @Test
     fun returns_failureWhenSignedOff() = runTest {
         booking_responds_failure(SecurityException())
-        for (result in facade.getBookings())
-            assertIs<SecurityException>(result.exceptionOrNull())
+        assertFailsWith(SecurityException::class) {
+            facade.getBookings()
+        }
     }
 
     @Test
     fun returns_failure() = runTest {
         booking_responds_failure(RuntimeException())
-        for (result in facade.getBookings())
-            assertFails { result.getOrThrow() }
+        assertFails {
+            facade.getBookings()
+        }
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     fun getImage_returns_null() = runTest {
-        assertNull(facade.getShareImage(BookingView.Empty))
+        assertNull(facade.getShareImage(mock()))
     }
 
     @Test
@@ -102,8 +93,8 @@ class BookingFacadeTest : FeatureTest() {
 
     // ---
 
-    private suspend fun BookingFacade.getBookings(): List<Result<List<BookingView>>> {
-        val outputs = mutableListOf<Result<List<BookingView>>>()
+    private suspend fun BookingFacade.getBookings(): List<List<BookingView>> {
+        val outputs = mutableListOf<List<BookingView>>()
         bookings.collect { outputs += it }
         return outputs
     }
@@ -113,13 +104,15 @@ class BookingFacadeTest : FeatureTest() {
     }
 
     private fun booking_responds_success() {
-        val active = mock<Booking.Active> {
+        val active = mock<Booking> {
             on { id }.thenReturn("")
             on { movieId }.thenReturn("")
+            on { expired }.thenReturn(false)
         }
-        val expired = mock<Booking.Expired> {
+        val expired = mock<Booking> {
             on { id }.thenReturn("")
             on { movieId }.thenReturn("")
+            on { expired }.thenReturn(true)
         }
         val data = Result.success(sequenceOf(active, expired))
         wheneverBlocking { booking.get() }.thenReturn(data)

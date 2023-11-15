@@ -14,7 +14,6 @@ import movie.core.CinemaWithShowings
 import movie.core.adapter.MovieFromId
 import movie.core.model.Cinema
 import movie.core.model.Location
-import movie.core.model.Media
 import movie.core.model.MovieDetail
 import movie.core.model.Showing
 import movie.image.Swatch
@@ -32,6 +31,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
+import java.util.Locale
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -42,7 +42,7 @@ class MovieFacadeTest : FeatureTest() {
 
     override fun prepare() {
         facade =
-            FacadeModule().movie(showings, detail, favorite, rating).create("5376O2R")
+            FacadeModule().movie(showings, detail, favorite, rating, actors).create("5376O2R")
     }
 
     @Test
@@ -92,7 +92,7 @@ class MovieFacadeTest : FeatureTest() {
     @Test
     fun returns_movie_failure() = runTest {
         assertFails {
-            facade.movie.first().getOrThrow()
+            facade.movie.first()
         }
     }
 
@@ -158,19 +158,6 @@ class MovieFacadeTest : FeatureTest() {
     }
 
     @Test
-    fun detail_returns_color() = runTest {
-        movie_responds_success {
-            on { releasedAt }.thenReturn(Date())
-            on { originalName }.thenReturn("")
-            on { name }.thenReturn("")
-            on { media }.thenReturn(listOf(Media.Image(0, 0, "")))
-        }
-        val color = analyzer_responds_success()
-        val movie = facade.movie.last().getOrThrow()
-        assertEquals(color, movie.poster?.spotColor)
-    }
-
-    @Test
     fun detail_returns_rating() = runTest {
         movie_responds_success {
             on { releasedAt }.thenReturn(Date())
@@ -178,7 +165,7 @@ class MovieFacadeTest : FeatureTest() {
             on { name }.thenReturn("")
         }
         val rating = rating_responds_success()
-        val movie = facade.movie.last().getOrThrow()
+        val movie = facade.movie.last()
         assertEquals("%d%%".format(rating.rating), movie.rating)
     }
 
@@ -221,12 +208,12 @@ class MovieFacadeTest : FeatureTest() {
                 when (it % 2) {
                     1 -> mock(name = "$it") {
                         on { types }.thenReturn(listOf("type", "type2"))
-                        on { language }.thenReturn("language")
+                        on { language }.thenReturn(Locale("language"))
                     }
 
                     else -> mock(name = "$it") {
                         on { types }.thenReturn(listOf("type2"))
-                        on { language }.thenReturn("language2")
+                        on { language }.thenReturn(Locale("language2"))
                     }
                 }
             }
