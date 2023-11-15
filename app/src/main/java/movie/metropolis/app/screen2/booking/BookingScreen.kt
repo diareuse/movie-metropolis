@@ -243,16 +243,8 @@ fun BookingScreen(
                                     }
                                 }
                             ) {
-                                for (p in type.projection) when (p) {
-                                    ProjectionType.Imax -> ProjectionTypeRowDefaults.TypeImax()
-                                    ProjectionType.Plane2D -> ProjectionTypeRowDefaults.Type2D()
-                                    ProjectionType.Plane3D -> ProjectionTypeRowDefaults.Type3D()
-                                    ProjectionType.Plane4DX -> ProjectionTypeRowDefaults.Type4DX()
-                                    ProjectionType.DolbyAtmos -> ProjectionTypeRowDefaults.DolbyAtmos()
-                                    ProjectionType.HighFrameRate -> ProjectionTypeRowDefaults.HighFrameRate()
-                                    ProjectionType.VIP -> ProjectionTypeRowDefaults.VIP()
-                                    is ProjectionType.Other -> ProjectionTypeRowDefaults.TypeOther(p.type)
-                                }
+                                for (p in type.projection)
+                                    ProjectionTypeRow(type = p)
                             }
                             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                                 for (time in times)
