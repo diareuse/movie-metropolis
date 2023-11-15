@@ -11,7 +11,7 @@ import androidx.compose.ui.res.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import movie.metropolis.app.R
-import movie.metropolis.app.screen.setup.component.Background
+import movie.metropolis.app.screen.share.component.Background
 import movie.style.theme.Theme
 
 @Composable

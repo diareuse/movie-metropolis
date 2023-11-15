@@ -7,8 +7,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import movie.metropolis.app.screen2.home.HomeState
-import movie.metropolis.app.screen2.setup.SetupState
+import movie.metropolis.app.screen.home.HomeState
+import movie.metropolis.app.screen.setup.SetupState
 import movie.metropolis.app.util.decodeBase64
 import movie.metropolis.app.util.encodeBase64
 

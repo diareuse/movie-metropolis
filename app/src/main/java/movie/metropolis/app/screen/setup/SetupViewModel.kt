@@ -1,33 +1,46 @@
 package movie.metropolis.app.screen.setup
 
-import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.RegionView
-import movie.metropolis.app.presentation.Loadable
+import movie.metropolis.app.presentation.Posters
+import movie.metropolis.app.presentation.login.LoginFacade
 import movie.metropolis.app.presentation.setup.SetupFacade
 import movie.metropolis.app.presentation.setup.SetupFacade.Companion.regionsFlow
 import movie.metropolis.app.presentation.setup.SetupFacade.Companion.requiresSetupFlow
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
-@Stable
 @HiltViewModel
 class SetupViewModel @Inject constructor(
-    private val facade: SetupFacade
+    private val facade: SetupFacade,
+    private val login: LoginFacade
 ) : ViewModel() {
 
     val requiresSetup = facade.requiresSetupFlow
-
     val regions = facade.regionsFlow
-        .retainStateIn(viewModelScope, Loadable.loading())
+        .map { it.getOrNull().orEmpty().toImmutableList() }
+        .retainStateIn(viewModelScope, persistentListOf())
+
+    val loginState = MutableStateFlow(LoginState())
+
+    val posters = Posters.shuffled()
 
     fun select(view: RegionView) {
         viewModelScope.launch {
             facade.select(view)
         }
+    }
+
+    suspend fun login(): Result<Unit> {
+        val state = loginState.value
+        return login.login(state.email, state.password)
     }
 
 }

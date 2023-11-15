@@ -5,8 +5,8 @@ import movie.core.model.MovieReference
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
-import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.metropolis.app.util.toStringComponents
+import movie.style.layout.DefaultPosterAspectRatio
 import java.text.SimpleDateFormat
 import java.util.Locale
 

@@ -52,7 +52,7 @@
             android:value="false" />
 
         <activity
-            android:name="movie.metropolis.app.MainActivity2"
+            android:name="movie.metropolis.app.MainActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:exported="true"
             android:theme="@style/Theme.MovieMetropolis"

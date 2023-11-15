@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import movie.metropolis.app.screen.Route
-import movie.metropolis.app.screen2.home.HomeState
+import movie.metropolis.app.screen.home.HomeState
 
 class ShortcutActivity : Activity() {
 
@@ -17,7 +17,7 @@ class ShortcutActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intent = Intent(this, MainActivity2::class.java)
+        val intent = Intent(this, MainActivity::class.java)
             .setAction(Intent.ACTION_VIEW)
             .setData(route)
             .setPackage(packageName)

@@ -6,7 +6,7 @@ import android.net.Uri
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import movie.metropolis.app.MainActivity2
+import movie.metropolis.app.MainActivity
 
 interface ShortcutFactory {
 
@@ -84,7 +84,7 @@ private class ShortcutFactoryDefault(
     }
 
     override fun setRoute(deepLink: Uri) = apply {
-        this.intent = Intent(context, MainActivity2::class.java)
+        this.intent = Intent(context, MainActivity::class.java)
             .setAction(Intent.ACTION_VIEW)
             .setData(deepLink)
             .setPackage(context.packageName)

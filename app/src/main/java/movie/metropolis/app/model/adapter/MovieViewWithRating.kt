@@ -2,8 +2,8 @@ package movie.metropolis.app.model.adapter
 
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.screen.listing.component.DefaultPosterAspectRatio
 import movie.rating.MovieMetadata
+import movie.style.layout.DefaultPosterAspectRatio
 
 data class MovieViewWithRating(
     private val origin: MovieView,
