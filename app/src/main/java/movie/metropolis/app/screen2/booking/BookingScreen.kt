@@ -9,6 +9,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.foundation.pager.*
+import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -20,10 +21,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.LazyTimeView
@@ -52,6 +50,7 @@ import movie.style.layout.alignForLargeScreen
 import movie.style.layout.largeScreenPadding
 import movie.style.layout.plus
 import movie.style.modifier.VerticalGravity
+import movie.style.modifier.surface
 import movie.style.modifier.verticalOverlay
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
@@ -63,32 +62,10 @@ import java.util.Locale
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
 
-sealed class BookingState {
-    data class Value(
-        val value: List<TimeView>
-    ) : BookingState()
-
-    data object Loading : BookingState()
-    data object Empty : BookingState()
-    data class Error(
-        val exception: Throwable
-    ) : BookingState()
-
-    companion object {
-        fun loading() = Loading as BookingState
-
-        fun error(exception: Throwable) = Error(exception) as BookingState
-
-        fun Flow<List<TimeView>>.asBookingState() =
-            map { if (it.all { it.times.isEmpty() }) Empty else Value(it) }
-                .catch { emit(error(it)) }
-                .onStart { emit(loading()) }
-    }
-}
-
 @SuppressLint("FlowOperatorInvokedInComposition")
 @Composable
 fun BookingScreen(
+    activeFilterCount: Int,
     poster: String?,
     title: String,
     items: ImmutableList<LazyTimeView>,
@@ -111,8 +88,21 @@ fun BookingScreen(
                 }
             },
             actions = {
-                IconButton(onClick = onActionClick) {
-                    Icon(painterResource(R.drawable.ic_filter), null)
+                Box(
+                    contentAlignment = Alignment.TopEnd
+                ) {
+                    IconButton(onClick = onActionClick) {
+                        Icon(painterResource(R.drawable.ic_filter), null)
+                    }
+                    if (activeFilterCount > 0)
+                        Text(
+                            modifier = Modifier
+                                .surface(Theme.color.container.primary, CircleShape)
+                                .padding(4.dp, 0.dp),
+                            text = "$activeFilterCount",
+                            style = Theme.textStyle.caption,
+                            color = Theme.color.content.primary
+                        )
                 }
             }
         )
@@ -337,6 +327,7 @@ private fun TimeScreenPreview(
     time: LazyTimeView
 ) = PreviewLayout {
     BookingScreen(
+        activeFilterCount = 2,
         poster = null,
         title = "",
         items = persistentListOf(time, time),
