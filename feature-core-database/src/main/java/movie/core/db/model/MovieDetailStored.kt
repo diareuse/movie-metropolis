@@ -38,5 +38,7 @@ data class MovieDetailStored(
     @ColumnInfo("screening_from")
     val screeningFrom: Date,
     @ColumnInfo("age_restriction_url")
-    val ageRestrictionUrl: String
+    val ageRestrictionUrl: String,
+    @ColumnInfo("genres")
+    val genres: Iterable<String>
 )
