@@ -468,6 +468,7 @@ fun NavGraphBuilder.booking(
             }
         ) {
             BookingScreen(
+                activeFilterCount = filters.activeCount,
                 poster = poster,
                 title = title,
                 items = times,
@@ -504,6 +505,7 @@ fun NavGraphBuilder.booking(
             }
         ) {
             BookingScreen(
+                activeFilterCount = filters.activeCount,
                 poster = poster,
                 title = title,
                 items = times,

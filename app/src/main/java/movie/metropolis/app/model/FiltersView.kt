@@ -7,6 +7,7 @@ import java.util.Locale
 @Stable
 interface FiltersView {
 
+    val activeCount: Int get() = languages.count { it.selected } + types.count { it.selected }
     val languages: ImmutableList<Language>
     val types: ImmutableList<Type>
     val isEmpty: Boolean
