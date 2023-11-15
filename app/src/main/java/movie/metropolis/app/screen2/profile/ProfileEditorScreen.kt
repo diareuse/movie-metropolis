@@ -164,7 +164,8 @@ fun ProfileEditorScreen(
                     value = password.current,
                     onValueChange = { onPasswordChange(password.copy(current = it)) },
                     label = { Text("Current Password") },
-                    placeholder = { Text("p4$\$w0rd") }
+                    placeholder = { Text("p4$\$w0rd") },
+                    visualTransformation = PasswordVisualTransformation()
                 )
             }
             Row(
@@ -174,10 +175,11 @@ fun ProfileEditorScreen(
                 Icon(painterResource(R.drawable.ic_password), null)
                 CommonTextField(
                     modifier = Modifier.weight(1f),
-                    value = password.current,
-                    onValueChange = { onPasswordChange(password.copy(current = it)) },
+                    value = password.new,
+                    onValueChange = { onPasswordChange(password.copy(new = it)) },
                     label = { Text("New Password") },
-                    placeholder = { Text("p4$\$w0rd") }
+                    placeholder = { Text("p4$\$w0rd") },
+                    visualTransformation = PasswordVisualTransformation()
                 )
             }
             TextButton(
