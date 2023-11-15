@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package movie.metropolis.app.screen2.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
@@ -72,6 +74,7 @@ fun HomeScreen(
     }
     Scaffold(
         modifier = modifier,
+        contentWindowInsets = WindowInsets.navigationBars,
         bottomBar = {
             TransparentBottomNavigation(
                 modifier = Modifier.alignForLargeScreen()

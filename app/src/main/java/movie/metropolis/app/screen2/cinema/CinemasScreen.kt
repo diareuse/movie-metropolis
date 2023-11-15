@@ -1,4 +1,7 @@
-@file:OptIn(ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class)
+@file:OptIn(
+    ExperimentalPermissionsApi::class, ExperimentalFoundationApi::class,
+    ExperimentalMaterial3Api::class
+)
 
 package movie.metropolis.app.screen2.cinema
 
@@ -10,6 +13,7 @@ import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -26,6 +30,7 @@ import movie.metropolis.app.screen2.cinema.component.PermissionBox
 import movie.metropolis.app.screen2.listing.component.RatingBox
 import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.BackgroundImage
+import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
@@ -41,17 +46,29 @@ fun CinemasScreen(
     onMapClick: (CinemaView) -> Unit,
     modifier: Modifier = Modifier,
     permission: MultiplePermissionsState = rememberMultiplePermissionsState(permissions = emptyList()),
-    contentPadding: PaddingValues = PaddingValues()
-) = Box(modifier = modifier.fillMaxSize(), propagateMinConstraints = true) {
+    contentPadding: PaddingValues = PaddingValues(),
+    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+) = Scaffold(
+    modifier = modifier.fillMaxSize(),
+    topBar = {
+        CollapsingTopAppBar(
+            title = { Text(stringResource(R.string.cinemas)) },
+            scrollBehavior = scrollBehavior
+        )
+    }
+) { padding ->
     val selectedItem by state.rememberVisibleItemAsState()
     BackgroundImage(
+        modifier = Modifier.fillMaxSize(),
         state = rememberImageState(cinemas.getOrNull(selectedItem)?.image)
     )
     LazyColumn(
-        modifier = Modifier.alignForLargeScreen(),
+        modifier = Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .alignForLargeScreen(),
         state = state,
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = contentPadding + PaddingValues(24.dp)
+        contentPadding = padding + contentPadding + PaddingValues(24.dp)
     ) {
         if (!permission.allPermissionsGranted) item(key = "permission") {
             PermissionBox(

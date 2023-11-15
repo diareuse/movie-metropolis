@@ -50,7 +50,7 @@ fun TicketScreen(
     indicatorState: PagerState,
     onShareClick: (BookingView) -> Unit,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(),
+    contentPadding: PaddingValues = PaddingValues()
 ) = Box(
     modifier = modifier,
     propagateMinConstraints = true
@@ -65,6 +65,7 @@ fun TicketScreen(
     Column(
         modifier = Modifier
             .padding(contentPadding)
+            .statusBarsPadding()
             .padding(bottom = 16.dp)
             .largeScreenPadding(widthAtMost = 400.dp) { largeScreenPadding = it },
         horizontalAlignment = Alignment.CenterHorizontally
