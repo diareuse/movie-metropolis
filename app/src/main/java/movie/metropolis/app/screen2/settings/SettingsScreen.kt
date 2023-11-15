@@ -108,28 +108,25 @@ fun SettingsScreen(
             SettingsItemColumn(
                 title = { Text(stringResource(id = R.string.nearby_cinemas)) },
                 description = { Text(stringResource(id = R.string.nearby_cinemas_description)) },
-                value = {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(painterResource(R.drawable.ic_location), null)
-                        CommonTextField(
-                            value = state.nearbyCinemas,
-                            onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
-                            visualTransformation = LengthVisualTransformation,
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Number,
-                                imeAction = ImeAction.Done
-                            ),
-                            keyboardActions = KeyboardActions(onDone = clearFocus())
-                        )
-                    }
-                }
+                value = {}
             )
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(painterResource(R.drawable.ic_location), null)
+                CommonTextField(
+                    modifier = Modifier.weight(1f),
+                    value = state.nearbyCinemas,
+                    onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
+                    visualTransformation = LengthVisualTransformation,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(onDone = clearFocus())
+                )
+            }
         }
     }
 

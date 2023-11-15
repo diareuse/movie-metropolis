@@ -43,7 +43,7 @@ class SettingsViewModel @Inject constructor(
             unseenOnly = filterSeen,
             moviesOnly = onlyMovies,
             tickets = addToCalendar,
-            nearbyCinemas = clipRadius.toString(),
+            nearbyCinemas = clipRadius.takeUnless { it <= 0 }?.toString().orEmpty(),
             selectedCalendar = calendar
         )
     }.retainStateIn(viewModelScope, SettingsState())
