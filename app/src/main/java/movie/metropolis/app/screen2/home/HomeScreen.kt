@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package movie.metropolis.app.screen2.home
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
@@ -15,6 +13,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -62,13 +61,7 @@ fun HomeScreen(
         when (destination.route) {
             HomeState.Profile.name -> {
                 onNavigateToLogin()
-                navController.navigate(HomeState.Listing.name) {
-                    popUpTo(navController.graph.findStartDestination().id) {
-                        saveState = true
-                    }
-                    launchSingleTop = true
-                    restoreState = true
-                }
+                navController.navigateBottomNav(HomeState.Listing.name)
             }
         }
     }
@@ -84,15 +77,7 @@ fun HomeScreen(
                         selected = route == state.name,
                         active = { Icon(painterResource(state.active), null) },
                         inactive = { Icon(painterResource(state.inactive), null) },
-                        onClick = {
-                            navController.navigate(state.name) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
+                        onClick = { navController.navigateBottomNav(state.name) }
                     )
             }
         }
@@ -105,11 +90,18 @@ fun HomeScreen(
         val destinationTab = getStoreable("home-tab", HomeState.Listing.name) {
             currentState.name
         }
+        LaunchedEffect(Unit) {
+            if (navController.currentBackStackEntry?.destination?.route != destinationTab)
+                navController.navigateBottomNav(destinationTab)
+            val startWith = startWith?.name
+            if (startWith != null)
+                navController.navigateBottomNav(startWith)
+        }
         NavHost(
             modifier = Modifier
                 .fillMaxSize(),
             navController = navController,
-            startDestination = startWith?.name ?: destinationTab,
+            startDestination = HomeState.Listing.name,
             enterTransition = {
                 val initial = initialState.getIndex()
                 val target = targetState.getIndex()
@@ -135,6 +127,14 @@ fun HomeScreen(
             composable(HomeState.Profile.name) { profile(overlayModifier, padding) }
         }
     }
+}
+
+private fun NavHostController.navigateBottomNav(route: String) = navigate(route) {
+    popUpTo(graph.findStartDestination().id) {
+        saveState = true
+    }
+    launchSingleTop = true
+    restoreState = true
 }
 
 private fun NavBackStackEntry.getIndex() = when (destination.route) {
