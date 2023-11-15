@@ -36,7 +36,7 @@ import movie.metropolis.app.screen.profile.component.rememberOneTapSaving
 import movie.metropolis.app.screen.profile.component.requestOneTapAsState
 import movie.metropolis.app.screen2.booking.BookingFiltersDialog
 import movie.metropolis.app.screen2.booking.BookingScreen
-import movie.metropolis.app.screen2.booking.TimeViewModel
+import movie.metropolis.app.screen2.booking.BookingViewModel
 import movie.metropolis.app.screen2.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.screen2.cinema.CinemasScreen
 import movie.metropolis.app.screen2.cinema.CinemasViewModel
@@ -442,7 +442,7 @@ fun NavGraphBuilder.booking(
         deepLinks = Route.Booking.Movie.deepLinks,
         arguments = Route.Booking.Movie.arguments
     ) {
-        val viewModel = hiltViewModel<TimeViewModel>()
+        val viewModel = hiltViewModel<BookingViewModel>()
         val times by viewModel.times.collectAsState()
         val poster by viewModel.poster.collectAsState()
         val title by viewModel.title.collectAsState()
@@ -482,7 +482,7 @@ fun NavGraphBuilder.booking(
         deepLinks = Route.Booking.Cinema.deepLinks,
         arguments = Route.Booking.Cinema.arguments,
     ) {
-        val viewModel = hiltViewModel<TimeViewModel>()
+        val viewModel = hiltViewModel<BookingViewModel>()
         val times by viewModel.times.collectAsState()
         val poster by viewModel.poster.collectAsState()
         val title by viewModel.title.collectAsState()

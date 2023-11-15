@@ -65,3 +65,5 @@ private val LocationSaver = object : Saver<Location?, Bundle> {
         }
     }
 }
+
+fun Location.toLocation() = movie.core.model.Location(latitude, longitude)

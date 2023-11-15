@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import movie.core.model.Location
+import movie.metropolis.app.feature.location.toLocation
 import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.presentation.ticket.TicketFacade
@@ -22,7 +23,7 @@ import javax.inject.Inject
 import android.location.Location as AndroidLocation
 
 @HiltViewModel
-class TimeViewModel private constructor(
+class BookingViewModel private constructor(
     private val factory: TicketFacade.LocationFactory
 ) : ViewModel() {
 
@@ -74,5 +75,3 @@ class TimeViewModel private constructor(
     }
 
 }
-
-fun AndroidLocation.toLocation() = Location(latitude, longitude)
