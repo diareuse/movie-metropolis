@@ -40,7 +40,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 14,
+    version = 15,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -93,36 +93,36 @@ internal abstract class MovieDatabase : RoomDatabase() {
     abstract fun poster(): PosterDao
 
     class Migration2to3 : Migration(2, 3) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS `movie_media_copy` (`movie` TEXT NOT NULL, `width` INTEGER, `height` INTEGER, `url` TEXT NOT NULL, `type` TEXT NOT NULL, PRIMARY KEY(`url`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
-            database.execSQL("insert into movie_media_copy (`movie`,`width`,`height`,`url`,`type`) select `movie`,`width`,`height`,`url`,`type` from movie_media")
-            database.execSQL("drop table movie_media")
-            database.execSQL("alter table movie_media_copy rename to movie_media")
-            database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_media_movie` ON `movie_media` (`movie`)")
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `movie_media_copy` (`movie` TEXT NOT NULL, `width` INTEGER, `height` INTEGER, `url` TEXT NOT NULL, `type` TEXT NOT NULL, PRIMARY KEY(`url`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            db.execSQL("insert into movie_media_copy (`movie`,`width`,`height`,`url`,`type`) select `movie`,`width`,`height`,`url`,`type` from movie_media")
+            db.execSQL("drop table movie_media")
+            db.execSQL("alter table movie_media_copy rename to movie_media")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_media_movie` ON `movie_media` (`movie`)")
         }
     }
 
     class Migration7to8 : Migration(7, 8) {
-        override fun migrate(database: SupportSQLiteDatabase) {
+        override fun migrate(db: SupportSQLiteDatabase) {
             // --- table
-            database.execSQL("CREATE TABLE IF NOT EXISTS `movie_previews_copy` (`movie` TEXT NOT NULL, `screening_from` INTEGER NOT NULL, `description` TEXT NOT NULL, `directors` TEXT NOT NULL, `cast` TEXT NOT NULL, `country_of_origin` TEXT NOT NULL, `upcoming` INTEGER NOT NULL, `genres` TEXT NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
-            database.execSQL("insert into movie_previews_copy (`movie`, `screening_from`, `description`, `directors`, `cast`, `country_of_origin`, `upcoming`, `genres`) select `movie`, `screening_from`, `description`, `directors`, `cast`, `country_of_origin`, `upcoming`, \"\" from movie_previews")
-            database.execSQL("drop table movie_previews")
-            database.execSQL("alter table movie_previews_copy rename to movie_previews")
-            database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_previews_movie` ON `movie_previews` (`movie`)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS `movie_previews_copy` (`movie` TEXT NOT NULL, `screening_from` INTEGER NOT NULL, `description` TEXT NOT NULL, `directors` TEXT NOT NULL, `cast` TEXT NOT NULL, `country_of_origin` TEXT NOT NULL, `upcoming` INTEGER NOT NULL, `genres` TEXT NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            db.execSQL("insert into movie_previews_copy (`movie`, `screening_from`, `description`, `directors`, `cast`, `country_of_origin`, `upcoming`, `genres`) select `movie`, `screening_from`, `description`, `directors`, `cast`, `country_of_origin`, `upcoming`, \"\" from movie_previews")
+            db.execSQL("drop table movie_previews")
+            db.execSQL("alter table movie_previews_copy rename to movie_previews")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_previews_movie` ON `movie_previews` (`movie`)")
             // --- view
-            database.execSQL("drop view `movie_preview_views`")
-            database.execSQL("CREATE VIEW `movie_preview_views` AS select movies.id,movies.name,movies.url,movies.released_at,movies.duration,movie_previews.screening_from,movie_previews.description,movie_previews.directors,movie_previews.`cast`,movie_previews.country_of_origin,movie_previews.upcoming,movie_previews.genres from movies, movie_previews where movies.id=movie_previews.movie")
+            db.execSQL("drop view `movie_preview_views`")
+            db.execSQL("CREATE VIEW `movie_preview_views` AS select movies.id,movies.name,movies.url,movies.released_at,movies.duration,movie_previews.screening_from,movie_previews.description,movie_previews.directors,movie_previews.`cast`,movie_previews.country_of_origin,movie_previews.upcoming,movie_previews.genres from movies, movie_previews where movies.id=movie_previews.movie")
         }
     }
 
     class Migration10to11 : Migration(10, 11) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL("CREATE TABLE IF NOT EXISTS `movie_ratings_copy` (`movie` TEXT NOT NULL, `rating` INTEGER NOT NULL, `link_imdb` TEXT, `link_rt` TEXT, `link_csfd` TEXT, `created_at` INTEGER NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
-            database.execSQL("insert into `movie_ratings_copy` (`movie`,`rating`,`link_imdb`,`link_rt`,`link_csfd`,`created_at`) select `movie`,`rating`,`link_imdb`,`link_rt`,`link_csfd`,0 from movie_ratings")
-            database.execSQL("drop table `movie_ratings`")
-            database.execSQL("alter table `movie_ratings_copy` rename to `movie_ratings`")
-            database.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_ratings_movie` ON `movie_ratings` (`movie`)")
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `movie_ratings_copy` (`movie` TEXT NOT NULL, `rating` INTEGER NOT NULL, `link_imdb` TEXT, `link_rt` TEXT, `link_csfd` TEXT, `created_at` INTEGER NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            db.execSQL("insert into `movie_ratings_copy` (`movie`,`rating`,`link_imdb`,`link_rt`,`link_csfd`,`created_at`) select `movie`,`rating`,`link_imdb`,`link_rt`,`link_csfd`,0 from movie_ratings")
+            db.execSQL("drop table `movie_ratings`")
+            db.execSQL("alter table `movie_ratings_copy` rename to `movie_ratings`")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_ratings_movie` ON `movie_ratings` (`movie`)")
         }
     }
 
@@ -137,6 +137,18 @@ internal abstract class MovieDatabase : RoomDatabase() {
         override fun migrate(db: SupportSQLiteDatabase) {
             db.execSQL("delete from `showings`")
             db.execSQL("alter table `showings` add column `subtitles` text")
+        }
+    }
+
+    class Migration14to15 : Migration(14, 15) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `movie_details_copy` (`movie` TEXT NOT NULL, `original_name` TEXT NOT NULL, `country_of_origin` TEXT, `cast` TEXT NOT NULL, `directors` TEXT NOT NULL, `description` TEXT NOT NULL, `screening_from` INTEGER NOT NULL, `age_restriction_url` TEXT NOT NULL, `genres` TEXT NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            db.execSQL("insert into `movie_details_copy` (`movie`,`original_name`,`country_of_origin`,`cast`,`directors`,`description`,`screening_from`,`age_restriction_url`,`genres`) select `movie`,`original_name`,`country_of_origin`,`cast`,`directors`,`description`,`screening_from`,`age_restriction_url`,'' from `movie_details`")
+            db.execSQL("drop table `movie_details`")
+            db.execSQL("alter table `movie_details_copy` rename to `movie_details`")
+            db.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_details_movie` ON `movie_details` (`movie`)")
+            db.execSQL("drop view `movie_detail_views`")
+            db.execSQL("CREATE VIEW `movie_detail_views` AS select m.id, m.name, m.url, m.released_at, m.duration, md.original_name, md.country_of_origin, md.`cast`, md.directors, mp.description, md.screening_from, md.age_restriction_url, md.genres from movies as m, movie_details as md, movie_previews as mp where md.movie=m.id and mp.movie=md.movie")
         }
     }
 

@@ -37,4 +37,6 @@ data class MovieDetailFromDatabase(
         get() = movie.ageRestrictionUrl
     override val media: Iterable<Media>
         get() = mediaStored.map(::MediaFromDatabase)
+    override val genres: Iterable<String>
+        get() = movie.genres
 }

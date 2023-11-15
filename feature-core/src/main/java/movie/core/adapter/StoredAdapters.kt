@@ -46,7 +46,8 @@ fun MovieDetail.asStored() = MovieDetailStored(
     directors = directors,
     description = description,
     screeningFrom = screeningFrom,
-    ageRestrictionUrl = ageRestrictionUrl
+    ageRestrictionUrl = ageRestrictionUrl,
+    genres = genres
 )
 
 fun Media.asStored(movie: Movie) = when (this) {

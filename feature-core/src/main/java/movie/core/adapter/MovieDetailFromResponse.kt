@@ -33,6 +33,8 @@ internal data class MovieDetailFromResponse(
         get() = response.synopsis.orEmpty()
     override val screeningFrom: Date
         get() = response.screeningFrom
+    override val genres: List<String>
+        get() = response.genres
     override val ageRestrictionUrl: String
         get() = response.restrictionUrl
     override val media: Iterable<Media>

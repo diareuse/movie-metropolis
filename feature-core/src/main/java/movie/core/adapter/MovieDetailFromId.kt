@@ -34,5 +34,6 @@ data class MovieDetailFromId(
         get() = ""
     override val media: Iterable<Media>
         get() = emptyList()
-
+    override val genres: Iterable<String>
+        get() = emptyList()
 }
