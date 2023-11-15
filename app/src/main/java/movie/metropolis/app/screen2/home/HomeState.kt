@@ -15,22 +15,22 @@ enum class HomeState(
     Listing(
         active = R.drawable.ic_listing_active,
         inactive = R.drawable.ic_listing_inactive,
-        title = R.string.home_listing_title
+        title = R.string.movies
     ),
     Cinemas(
         active = R.drawable.ic_cinemas_active,
         inactive = R.drawable.ic_cinemas_inactive,
-        title = R.string.home_cinemas_title
+        title = R.string.cinemas
     ),
     Tickets(
         active = R.drawable.ic_ticket_active,
         inactive = R.drawable.ic_ticket_inactive,
-        title = R.string.home_tickets_title
+        title = R.string.tickets
     ),
     Profile(
         active = R.drawable.ic_profile_active,
         inactive = R.drawable.ic_profile_inactive,
-        title = R.string.home_profile_title
+        title = R.string.user
     );
 
     companion object {

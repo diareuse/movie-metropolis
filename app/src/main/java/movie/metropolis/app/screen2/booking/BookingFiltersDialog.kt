@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.persistentListOf
+import movie.metropolis.app.R
 import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.ProjectionType
@@ -30,7 +32,7 @@ fun BookingFiltersDialog(
         modifier = modifier.padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Languages", style = Theme.textStyle.title)
+        Text(stringResource(R.string.languages), style = Theme.textStyle.title)
         FlowRow {
             for (it in filters.languages) FilterBox(
                 selected = it.selected,
@@ -39,7 +41,7 @@ fun BookingFiltersDialog(
                 Text(it.locale.getDisplayLanguage(locale))
             }
         }
-        Text("Projection types", style = Theme.textStyle.title)
+        Text(stringResource(R.string.projection_types), style = Theme.textStyle.title)
         FlowRow {
             for (it in filters.types) FilterBox(
                 selected = it.selected,

@@ -45,7 +45,7 @@ fun ProfileEditorScreen(
     topBar = {
         CollapsingTopAppBar(
             modifier = Modifier.alignForLargeScreen(),
-            title = { Text("You") },
+            title = { Text(stringResource(R.string.user)) },
             navigationIcon = {
                 IconButton(onClick = onBackClick) {
                     Icon(painterResource(R.drawable.ic_back), null)
@@ -84,7 +84,7 @@ fun ProfileEditorScreen(
                         .imagePlaceholder(loading),
                     value = state.firstName,
                     onValueChange = { onStateChange(state.copy(firstName = it)) },
-                    label = { Text("First Name") },
+                    label = { Text(stringResource(R.string.first_name)) },
                     placeholder = { Text("John") }
                 )
                 CommonTextField(
@@ -93,7 +93,7 @@ fun ProfileEditorScreen(
                         .imagePlaceholder(loading),
                     value = state.lastName,
                     onValueChange = { onStateChange(state.copy(lastName = it)) },
-                    label = { Text("Last Name") },
+                    label = { Text(stringResource(R.string.last_name)) },
                     placeholder = { Text("Doe") }
                 )
             }
@@ -108,7 +108,7 @@ fun ProfileEditorScreen(
                         .imagePlaceholder(loading),
                     value = state.email,
                     onValueChange = { onStateChange(state.copy(email = it)) },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.email)) },
                     placeholder = { Text("em@il.com") }
                 )
             }
@@ -123,7 +123,7 @@ fun ProfileEditorScreen(
                         .imagePlaceholder(loading),
                     value = state.phone,
                     onValueChange = { onStateChange(state.copy(phone = it)) },
-                    label = { Text("Phone") },
+                    label = { Text(stringResource(R.string.phone)) },
                     placeholder = { Text("+420 703 000 000") }
                 )
             }
@@ -138,7 +138,7 @@ fun ProfileEditorScreen(
                         .padding(start = 16.dp)
                         .weight(1f)
                         .alpha(.75f),
-                    text = "Marketing",
+                    text = stringResource(R.string.accept_marketing),
                     style = Theme.textStyle.emphasis
                 )
                 CommonSwitch(
@@ -152,7 +152,7 @@ fun ProfileEditorScreen(
                 enabled = state.isChanged,
                 onClick = onSaveStateClick
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -163,7 +163,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.weight(1f),
                     value = password.current,
                     onValueChange = { onPasswordChange(password.copy(current = it)) },
-                    label = { Text("Current Password") },
+                    label = { Text(stringResource(R.string.old_password)) },
                     placeholder = { Text("p4$\$w0rd") },
                     visualTransformation = PasswordVisualTransformation()
                 )
@@ -177,7 +177,7 @@ fun ProfileEditorScreen(
                     modifier = Modifier.weight(1f),
                     value = password.new,
                     onValueChange = { onPasswordChange(password.copy(new = it)) },
-                    label = { Text("New Password") },
+                    label = { Text(stringResource(R.string.new_password)) },
                     placeholder = { Text("p4$\$w0rd") },
                     visualTransformation = PasswordVisualTransformation()
                 )
@@ -187,7 +187,7 @@ fun ProfileEditorScreen(
                 enabled = password.isChanged,
                 onClick = onSavePasswordClick
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save))
             }
         }
     }

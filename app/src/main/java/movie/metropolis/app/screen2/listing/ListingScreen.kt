@@ -143,7 +143,7 @@ fun ListingScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onMoreClick
             ) {
-                Text("View upcoming")
+                Text(stringResource(R.string.view_upcoming))
             }
         }
     }

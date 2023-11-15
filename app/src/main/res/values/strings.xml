@@ -39,6 +39,9 @@
     <string name="select_calendar_description">Events will be queried and created in the selected calendar. You may want to create a special calendar in order to not interfere with existing events.</string>
     <string name="password">Password</string>
     <string name="movies">Movies</string>
+    <string name="languages">Languages</string>
+    <string name="projection_types">Projection types</string>
+    <string name="no_projections">No projections on this day</string>
     <string name="cinemas">Cinemas</string>
     <string name="venue">Venue</string>
     <string name="time">Time</string>
@@ -47,11 +50,7 @@
     <string name="loading">Loading…</string>
     <string name="detail_error">There was an error loading this detail.</string>
     <string name="now_available">Now Available</string>
-    <string name="showing">Showing</string>
     <string name="upcoming">Upcoming</string>
-    <string name="csfd" translatable="false">ČSFD</string>
-    <string name="imdb" translatable="false">IMDB</string>
-    <string name="rotten_tomatoes" translatable="false">Rotten Tomatoes</string>
     <string name="login_credentials">Use the same credentials as you\'d use in your CinemaCity app, or on their website</string>
     <string name="select_country">Select a country</string>
     <string name="select_country_description">Please note that you will not be able to change the country later. Cinema City accounts are not transferable between regions.</string>
@@ -73,6 +72,15 @@
     <string name="error_movie_main_title">Oh no!</string>
     <string name="error_movie_main">It\'s not possible to fetch movies at this time. Check back later, OK?</string>
     <string name="empty_cinema">No cinema appears to be nearby, if you\'d like to see all cinemas turn off your location or disable location permission for this app. Otherwise readjust maximum distance in settings.</string>
+    <string name="permission_location_title">Location Permission</string>
+    <string name="permission_location_description">The app uses location permission to sort this list by the distance from any given cinema. The location is processed ephemerally on device and never leaves it.</string>
+    <string name="view_upcoming">View Upcoming</string>
+    <string name="cast">Cast</string>
+    <string name="description">Description</string>
+    <string name="directors">Directors</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="favorite_movies">Favorite movies</string>
+    <string name="loyalty_card">Loyalty card</string>
     <string name="error_cinema">Cinemas cannot be shown due to an internal issue</string>
     <string name="nearby_cinemas">Nearby Cinemas</string>
     <string name="nearby_cinemas_description">Value is in KMs. Choosing large values can affect loading performance. Values up to 50 kms should display your city, 100 kms nearby cities and 20037 cinemas in the whole universe.</string>
@@ -80,6 +88,11 @@
     <string name="share_method">Your ticket is being imported…\nPlease wait</string>
     <string name="settings_only_movies_title">Show only movies</string>
     <string name="settings_only_movies_description">If checked, app will show only movies and hides operas, concerts or similar events.</string>
+    <string name="welcome_title">Welcome to Movie Metropolis!</string>
+    <string name="welcome_body">Movie Metropolis is a sister application for browsing, managing and buying tickets in Cinema City theaters and multiplexes.\n\nFirstly we need you to choose in which region are you going to use the app so we can offer you personalized results.</string>
+    <string name="continue_cta">Continue</string>
+    <string name="continue_without_login">Continue without login</string>
+    <string name="for_word">for</string>
     <string name="action">Action</string>
     <string name="adventure">Adventure</string>
     <string name="animation">Animated</string>
@@ -114,10 +127,5 @@
     <string name="share_add_ticket">Add a ticket</string>
     <string name="select_content_left">There\'s nothing here yet, select content from the left to display it here</string>
     <string name="install">Install</string>
-    <string name="home_listing_title">Showing movies</string>
-    <string name="home_tickets_title">Your tickets</string>
-    <string name="home_cinemas_title">Cinemas nearby</string>
-    <string name="home_profile_title">Your profile</string>
-    <string name="home_greeting">Hi %s!</string>
     <string name="hall">Hall</string>
 </resources>
