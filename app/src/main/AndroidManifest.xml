@@ -18,6 +18,7 @@
     <application
         android:name="movie.metropolis.app.App"
         android:allowBackup="true"
+        android:colorMode="wideColorGamut"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
@@ -52,10 +53,10 @@
 
         <activity
             android:name="movie.metropolis.app.MainActivity2"
-            android:exported="true"
             android:configChanges="keyboard|keyboardHidden"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.MovieMetropolis">
+            android:exported="true"
+            android:theme="@style/Theme.MovieMetropolis"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="android.intent.action.MAIN" />
