@@ -10,10 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import movie.metropolis.app.R
 import movie.metropolis.app.screen2.setup.component.SetupContainerColumn
 import movie.metropolis.app.screen2.setup.component.SetupPreviewLayout
 import movie.metropolis.app.util.rememberVisibleItemAsState
@@ -71,18 +73,18 @@ fun SetupInitialContent(
         title = {
             Text(
                 modifier = Modifier.padding(horizontal = 24.dp),
-                text = "Welcome to Movie Metropolis!"
+                text = stringResource(R.string.welcome_title)
             )
         },
         description = {
             Text(
                 modifier = Modifier.padding(horizontal = 24.dp),
-                text = "Movie Metropolis is a sister application for browsing, managing and buying tickets in Cinema City theaters and multiplexes.\n\nFirstly we need you to choose in which region are you going to use the app so we can offer you personalized results."
+                text = stringResource(R.string.welcome_body)
             )
         },
         cta = {
             AppButton(modifier = Modifier.padding(24.dp), onClick = onContinueClick) {
-                Text("Continue")
+                Text(stringResource(R.string.continue_cta))
             }
         }
     )

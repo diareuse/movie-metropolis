@@ -300,7 +300,7 @@ fun BookingScreen(
                 } else if (page is BookingState.Empty) {
                     item(span = StaggeredGridItemSpan.FullLine) {
                         Text(
-                            "No projections on this day",
+                            text = stringResource(R.string.no_projections),
                             style = Theme.textStyle.emphasis,
                             textAlign = TextAlign.Center
                         )

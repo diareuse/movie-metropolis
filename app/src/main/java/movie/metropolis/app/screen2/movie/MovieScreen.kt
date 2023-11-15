@@ -115,7 +115,7 @@ fun MovieScreen(
                 if (movie.directors.isNotEmpty()) {
                     Text(
                         modifier = Modifier.padding(horizontal = 24.dp),
-                        text = "Directors",
+                        text = stringResource(R.string.directors),
                         style = Theme.textStyle.headline,
                         textAlign = TextAlign.Center
                     )
@@ -154,7 +154,7 @@ fun MovieScreen(
                 if (movie.cast.isNotEmpty()) {
                     Text(
                         modifier = Modifier.padding(horizontal = 24.dp),
-                        text = "Cast",
+                        text = stringResource(R.string.cast),
                         style = Theme.textStyle.headline,
                         textAlign = TextAlign.Center
                     )
@@ -193,7 +193,7 @@ fun MovieScreen(
                 if (movie.description.isNotEmpty()) {
                     Text(
                         modifier = Modifier.padding(horizontal = 24.dp),
-                        text = "Description",
+                        text = stringResource(R.string.description),
                         style = Theme.textStyle.headline,
                         textAlign = TextAlign.Center
                     )

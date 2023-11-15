@@ -119,18 +119,18 @@ fun ProfileScreen(
             )
             ProfileItem(
                 icon = { Icon(painterResource(R.drawable.ic_edit), null) },
-                title = { Text("Edit profile") },
+                title = { Text(stringResource(R.string.edit_profile)) },
                 onClick = onClickEdit
             )
             ProfileItem(
                 icon = { Icon(painterResource(R.drawable.ic_favorite_fill), null) },
-                title = { Text("Favorite movies") },
+                title = { Text(stringResource(R.string.favorite_movies)) },
                 onClick = onClickFavorite
             )
             ProfileItem(
                 enabled = user != null,
                 icon = { Icon(painterResource(id = R.drawable.ic_card), null) },
-                title = { Text("Loyalty card") },
+                title = { Text(stringResource(R.string.loyalty_card)) },
                 onClick = onClickCard
             )
             Spacer(modifier = Modifier.weight(1f))

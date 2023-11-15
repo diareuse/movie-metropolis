@@ -74,8 +74,8 @@ fun CinemasScreen(
             PermissionBox(
                 modifier = Modifier.animateItemPlacement(),
                 icon = { Icon(painterResource(R.drawable.ic_location), null) },
-                title = { Text("Location Permission") },
-                message = { Text("The app uses location permission to sort this list by the distance from any given cinema. The location is processed ephemerally on device and never leaves it.") },
+                title = { Text(stringResource(R.string.permission_location_title)) },
+                message = { Text(stringResource(R.string.permission_location_description)) },
                 onClick = permission::launchMultiplePermissionRequest
             )
         }

@@ -59,14 +59,14 @@ fun SetupLoginContent(
                     modifier = Modifier
                         .alignByBaseline()
                         .alpha(.5f),
-                    text = "Movie Metropolis",
+                    text = stringResource(R.string.app_name),
                     style = Theme.textStyle.title
                 )
                 Text(
                     modifier = Modifier
                         .alignByBaseline()
                         .alpha(.5f),
-                    text = "for",
+                    text = stringResource(R.string.for_word),
                     style = Theme.textStyle.caption
                 )
             }
@@ -153,7 +153,7 @@ fun SetupLoginContent(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 onClick = onLoginSkip
             ) {
-                Text("Continue without login")
+                Text(stringResource(R.string.continue_without_login))
             }
         }
     }
