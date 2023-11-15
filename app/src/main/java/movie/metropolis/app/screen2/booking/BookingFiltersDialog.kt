@@ -8,11 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import kotlinx.collections.immutable.persistentListOf
 import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.screen2.booking.component.FilterBox
-import movie.metropolis.app.screen2.booking.component.ProjectionTypeRowDefaults
+import movie.metropolis.app.screen2.booking.component.ProjectionTypeRow
 import movie.style.layout.PreviewLayout
 import movie.style.theme.Theme
 import java.util.Locale
@@ -29,11 +30,8 @@ fun BookingFiltersDialog(
         modifier = modifier.padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text("Filters", style = Theme.textStyle.title)
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        Text("Languages", style = Theme.textStyle.title)
+        FlowRow {
             for (it in filters.languages) FilterBox(
                 selected = it.selected,
                 onClick = { onLanguageClick(it) }
@@ -41,31 +39,30 @@ fun BookingFiltersDialog(
                 Text(it.locale.getDisplayLanguage(locale))
             }
         }
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
+        Text("Projection types", style = Theme.textStyle.title)
+        FlowRow {
             for (it in filters.types) FilterBox(
                 selected = it.selected,
                 onClick = { onTypeClick(it) }
             ) {
-                when (val p = it.type) {
-                    ProjectionType.Imax -> ProjectionTypeRowDefaults.TypeImax()
-                    ProjectionType.Plane2D -> ProjectionTypeRowDefaults.Type2D()
-                    ProjectionType.Plane3D -> ProjectionTypeRowDefaults.Type3D()
-                    ProjectionType.Plane4DX -> ProjectionTypeRowDefaults.Type4DX()
-                    ProjectionType.DolbyAtmos -> ProjectionTypeRowDefaults.DolbyAtmos()
-                    ProjectionType.HighFrameRate -> ProjectionTypeRowDefaults.HighFrameRate()
-                    ProjectionType.VIP -> ProjectionTypeRowDefaults.VIP()
-                    is ProjectionType.Other -> ProjectionTypeRowDefaults.TypeOther(p.type)
-                }
+                ProjectionTypeRow(type = it.type)
             }
         }
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun BookingFiltersDialogPreview() = PreviewLayout {
-    BookingFiltersDialog(DataFiltersView(), {}, {})
+    val filters = DataFiltersView(
+        languages = persistentListOf(
+            FiltersView.Language(Locale.ENGLISH),
+            FiltersView.Language(Locale.FRENCH, true)
+        ),
+        types = persistentListOf(
+            FiltersView.Type(ProjectionType.Plane4DX),
+            FiltersView.Type(ProjectionType.Plane3D, true)
+        )
+    )
+    BookingFiltersDialog(filters, {}, {})
 }
