@@ -50,6 +50,21 @@ fun ProjectionTypeRow(
     }
 }
 
+@Composable
+fun ProjectionTypeRow(
+    type: ProjectionType,
+    modifier: Modifier = Modifier,
+) = when (type) {
+    ProjectionType.Imax -> ProjectionTypeRowDefaults.TypeImax(modifier = modifier)
+    ProjectionType.Plane2D -> ProjectionTypeRowDefaults.Type2D(modifier = modifier)
+    ProjectionType.Plane3D -> ProjectionTypeRowDefaults.Type3D(modifier = modifier)
+    ProjectionType.Plane4DX -> ProjectionTypeRowDefaults.Type4DX(modifier = modifier)
+    ProjectionType.DolbyAtmos -> ProjectionTypeRowDefaults.DolbyAtmos(modifier = modifier)
+    ProjectionType.HighFrameRate -> ProjectionTypeRowDefaults.HighFrameRate(modifier = modifier)
+    ProjectionType.VIP -> ProjectionTypeRowDefaults.VIP(modifier = modifier)
+    is ProjectionType.Other -> ProjectionTypeRowDefaults.TypeOther(type.type, modifier = modifier)
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun ProjectionTypeRowPreview(
