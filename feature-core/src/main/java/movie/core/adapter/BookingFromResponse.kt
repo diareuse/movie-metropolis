@@ -34,7 +34,7 @@ internal data class BookingFromResponse(
     override val eventId: String
         get() = response.eventId
     override val expired: Boolean
-        get() = false
+        get() = response.isExpired()
     override val movieId: String
         get() = response.movieId
     override val hall: String

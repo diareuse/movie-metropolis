@@ -23,6 +23,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import java.util.Date
+import java.util.Locale
 import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
@@ -143,12 +144,12 @@ class CinemaFacadeTest : FeatureTest() {
                 when (it % 2) {
                     1 -> mock(name = "$it") {
                         on { types }.thenReturn(listOf("type", "type2"))
-                        on { language }.thenReturn("language")
+                        on { language }.thenReturn(Locale("language"))
                     }
 
                     else -> mock(name = "$it") {
                         on { types }.thenReturn(listOf("type2"))
-                        on { language }.thenReturn("language2")
+                        on { language }.thenReturn(Locale("language2"))
                     }
                 }
             }

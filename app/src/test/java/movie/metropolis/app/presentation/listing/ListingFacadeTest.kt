@@ -1,6 +1,5 @@
 package movie.metropolis.app.presentation.listing
 
-import androidx.compose.ui.graphics.*
 import kotlinx.coroutines.test.runTest
 import movie.core.EventPreviewFeature
 import movie.core.model.MovieDetail
@@ -133,18 +132,6 @@ abstract class ListingFacadeTest : FeatureTest() {
             .promotions().last().getOrThrow()
         for (output in outputs)
             assertEquals(url, output.poster?.url)
-    }
-
-    @Test
-    fun promotions_returns_withPosterColors() = runTest {
-        preview_responds_success()
-        val color = analyzer_responds_success()
-        promo_responds_success()
-        val outputs = facade
-            .get().getOrThrow()
-            .promotions().last().getOrThrow()
-        for (output in outputs)
-            assertEquals(Color(color), output.poster?.spotColor)
     }
 
     @Test

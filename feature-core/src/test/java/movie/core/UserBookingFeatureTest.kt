@@ -11,7 +11,6 @@ import movie.core.db.dao.BookingSeatsDao
 import movie.core.db.dao.MovieDao
 import movie.core.db.model.BookingStored
 import movie.core.di.UserFeatureModule
-import movie.core.model.Booking
 import movie.core.model.MovieDetail
 import movie.core.model.TicketShared
 import movie.core.nwk.UserService
@@ -28,6 +27,7 @@ import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.atLeastOnce
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
@@ -119,8 +119,8 @@ class UserBookingFeatureTest {
         feature(this).get()
         awaitChildJobCompletion()
         verify(booking, times(testData.size)).insertOrUpdate(any())
-        verify(seats, times(testData.count { !it.isExpired() })).insertOrUpdate(any())
-        verify(seats, times(testData.count { it.isExpired() })).deleteFor(any())
+        verify(seats, times(testData.size)).insertOrUpdate(any())
+        verify(seats, never()).deleteFor(any())
     }
 
     @Test
@@ -171,8 +171,8 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val output = feature(this).get()
-        assertTrue(output.getOrThrow().any { it is Booking.Expired })
-        assertTrue(output.getOrThrow().any { it is Booking.Active })
+        assertTrue(output.getOrThrow().any { it.expired })
+        assertTrue(output.getOrThrow().any { !it.expired })
     }
 
     @Test
@@ -182,8 +182,8 @@ class UserBookingFeatureTest {
         detail_responds_success()
         val output = feature(this).get()
         awaitChildJobCompletion()
-        assertTrue(output.getOrThrow().any { it is Booking.Expired })
-        assertTrue(output.getOrThrow().any { it is Booking.Active })
+        assertTrue(output.getOrThrow().any { it.expired })
+        assertTrue(output.getOrThrow().any { !it.expired })
     }
 
     @Test

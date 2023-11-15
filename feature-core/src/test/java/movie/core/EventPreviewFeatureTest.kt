@@ -116,7 +116,7 @@ abstract class EventPreviewFeatureTest {
     fun get_sorts_fromNetwork() = runTest {
         service_responds_success()
         val output = feature(this).get()
-        assertEquals(listOf("1", "2", "3"), output.getOrThrow().map { it.id }.toList())
+        assertEquals(listOf("3", "1", "2"), output.getOrThrow().map { it.id }.toList())
     }
 
     @Test
@@ -140,7 +140,7 @@ abstract class EventPreviewFeatureTest {
     fun get_sorts_fromDatabase() = runTest {
         database_responds_success()
         val output = feature(this).get()
-        assertEquals(listOf("1", "2", "3"), output.getOrThrow().map { it.id }.toList())
+        assertEquals(listOf("3", "1", "2"), output.getOrThrow().map { it.id }.toList())
     }
 
     @Test

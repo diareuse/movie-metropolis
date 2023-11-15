@@ -38,7 +38,13 @@ class UserBookingFeatureWear(
     override suspend fun get() = origin.get().onSuccess {
         scope.launch {
             val active = mutableListOf<Booking>()
-            update("/bookings", active.asDataMap())
+            val expired = mutableListOf<Booking>()
+            for (booking in it) when (booking.expired) {
+                true -> expired += booking
+                else -> active += booking
+            }
+            update("/bookings/active", active.asDataMap())
+            update("/bookings/expired", expired.asDataMap())
         }
     }
 
