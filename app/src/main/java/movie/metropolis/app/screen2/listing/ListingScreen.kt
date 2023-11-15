@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalFoundationApi::class)
+@file:OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
 package movie.metropolis.app.screen2.listing
 
@@ -53,6 +53,7 @@ fun ListingScreen(
 ) {
     val selectedItem by state.rememberVisibleItemAsState()
     BackgroundImage(
+        modifier = Modifier.fillMaxSize(),
         state = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
     )
     var zoom by rememberStoreable(key = "listing-zoom", default = 100f)

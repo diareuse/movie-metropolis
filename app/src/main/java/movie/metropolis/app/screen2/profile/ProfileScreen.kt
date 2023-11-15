@@ -53,6 +53,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
+            .statusBarsPadding()
             .alignForLargeScreen()
     ) {
         Column(

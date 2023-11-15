@@ -73,6 +73,7 @@ import movie.style.CollapsingTopAppBar
 import movie.style.Container
 import movie.style.DialogBox
 import movie.style.action.actionView
+import movie.style.layout.plus
 
 fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
     route = Route.Upcoming.route,
@@ -214,16 +215,27 @@ fun NavGraphBuilder.home(
             val listingVM = hiltViewModel<ListingViewModel>()
             val promotions by listingVM.promotions.collectAsState()
             val movies by listingVM.movies.collectAsState()
-            ListingScreen(
-                modifier = modifier,
-                contentPadding = padding,
-                state = rememberLazyStaggeredGridState(),
-                movies = movies,
-                promotions = promotions,
-                onClick = { navController.navigate(Route.Movie(it.id)) },
-                onFavoriteClick = { listingVM.favorite(it) },
-                onMoreClick = { navController.navigate(Route.Upcoming()) }
-            )
+            val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+            Scaffold(
+                topBar = {
+                    CollapsingTopAppBar(
+                        title = { Text(stringResource(R.string.movies)) },
+                        scrollBehavior = scrollBehavior
+                    )
+                }
+            ) { innerPadding ->
+                ListingScreen(
+                    modifier = modifier,
+                    contentPadding = innerPadding + padding,
+                    state = rememberLazyStaggeredGridState(),
+                    movies = movies,
+                    promotions = promotions,
+                    onClick = { navController.navigate(Route.Movie(it.id)) },
+                    onFavoriteClick = { listingVM.favorite(it) },
+                    onMoreClick = { navController.navigate(Route.Upcoming()) },
+                    connection = scrollBehavior.nestedScrollConnection
+                )
+            }
         },
         tickets = { modifier, padding ->
             val viewModel = hiltViewModel<TicketViewModel>()
