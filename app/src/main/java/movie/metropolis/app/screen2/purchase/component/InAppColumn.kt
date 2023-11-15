@@ -65,7 +65,8 @@ fun InAppColumn(
                 .surface(2.dp, shape)
                 .glow(shape)
                 .padding(horizontal = 20.dp, vertical = 16.dp)
-                .padding(end = 16.dp, bottom = 24.dp),
+                .padding(end = 16.dp, bottom = 16.dp)
+                .padding(bottom = buttonSize.height),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             ProvideTextStyle(Theme.textStyle.title) {
