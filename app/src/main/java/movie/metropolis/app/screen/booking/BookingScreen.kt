@@ -44,6 +44,7 @@ import movie.metropolis.app.util.interpolatePage
 import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
+import movie.style.haptic.TickOnChange
 import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
@@ -125,6 +126,7 @@ fun BookingScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        TickOnChange(statePage.currentPage)
         HorizontalPager(
             modifier = Modifier.fillMaxWidth(),
             state = stateDate,

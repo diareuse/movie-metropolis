@@ -1,5 +1,6 @@
 package movie.style.haptic
 
+import android.os.Build
 import android.view.HapticFeedbackConstants
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.*
@@ -11,11 +12,23 @@ import androidx.compose.ui.platform.*
 import kotlinx.coroutines.flow.filterIsInstance
 
 fun HapticFeedback.click() {
-    performHapticFeedback(HapticFeedbackType(HapticFeedbackConstants.CONTEXT_CLICK))
+    performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
 }
 
 fun HapticFeedback.tick() {
-    performHapticFeedback(HapticFeedbackType(HapticFeedbackConstants.CLOCK_TICK))
+    performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+}
+
+fun HapticFeedback.fastTick() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+        performHapticFeedback(HapticFeedbackConstants.SEGMENT_FREQUENT_TICK)
+    } else {
+        performHapticFeedback(HapticFeedbackConstants.CLOCK_TICK)
+    }
+}
+
+fun HapticFeedback.performHapticFeedback(type: Int) {
+    performHapticFeedback(HapticFeedbackType(type))
 }
 
 @Composable

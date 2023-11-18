@@ -26,6 +26,7 @@ import movie.metropolis.app.screen.card.component.CardContentFront
 import movie.metropolis.app.screen.card.component.FlippableCard
 import movie.metropolis.app.screen.setup.component.MembershipViewParameter
 import movie.style.Barcode
+import movie.style.haptic.TickOnChange
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
@@ -86,6 +87,7 @@ fun CardScreen(
         val name = @Composable {
             Text("CLUB")
         }
+        TickOnChange((state.rotation / 180).toInt())
         FlippableCard(
             modifier = Modifier
                 .offset(y = state.offset)

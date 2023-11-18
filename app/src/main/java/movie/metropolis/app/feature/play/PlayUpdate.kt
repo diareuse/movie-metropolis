@@ -28,7 +28,7 @@ import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import kotlinx.coroutines.tasks.await
 import movie.metropolis.app.R
 import movie.metropolis.app.util.isConnectionMetered
-import movie.style.AnticipateOvershootEasing
+import movie.style.animation.AnticipateOvershootEasing
 import movie.style.theme.Theme
 import movie.style.util.findActivityOrNull
 

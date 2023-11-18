@@ -37,7 +37,7 @@ fun Barcode(
 }
 
 @Composable
-fun BarcodeViewer(
+private fun BarcodeViewer(
     bitmap: ImageBitmap,
     modifier: Modifier = Modifier
 ) {
@@ -47,7 +47,7 @@ fun BarcodeViewer(
 }
 
 @Composable
-fun rememberBarcodeAsState(
+private fun rememberBarcodeAsState(
     color: Color,
     size: IntSize,
     code: String,

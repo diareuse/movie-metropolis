@@ -25,6 +25,7 @@ import movie.metropolis.app.screen.card.CardScreenState
 import movie.metropolis.app.screen.home.component.TransparentBottomNavigation
 import movie.metropolis.app.screen.home.component.TransparentBottomNavigationItem
 import movie.metropolis.app.util.getStoreable
+import movie.style.haptic.ClickOnChange
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.VerticalGravity
@@ -55,6 +56,7 @@ fun HomeScreen(
     val entry by navController.currentBackStackEntryAsState()
     val route = entry?.destination?.route
     val currentState = HomeState.by(route)
+    ClickOnChange(currentState)
     if (!loggedIn) LaunchedEffect(entry) {
         val entry = entry ?: return@LaunchedEffect
         val destination = entry.destination

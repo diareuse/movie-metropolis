@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalLayoutApi::class)
 
 package movie.metropolis.app.screen.setup
 
@@ -135,25 +135,27 @@ fun SetupLoginContent(
                     label = { Text(stringResource(R.string.password)) },
                     placeholder = { Text("*****") },
                     visualTransformation = PasswordVisualTransformation(),
-                    keyboardActions = KeyboardActions(onGo = { onLoginClick() }),
+                    keyboardActions = KeyboardActions(onDone = { onLoginClick() }),
                     keyboardOptions = KeyboardOptions(
                         autoCorrect = false,
                         keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Go
+                        imeAction = ImeAction.Done
                     ),
                 )
             }
-            HorizontalDivider(
-                modifier = Modifier
-                    .padding(top = 12.dp)
-                    .width(100.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            TextButton(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                onClick = onLoginSkip
-            ) {
-                Text(stringResource(R.string.continue_without_login))
+            if (!WindowInsets.isImeVisible) {
+                HorizontalDivider(
+                    modifier = Modifier
+                        .padding(top = 12.dp)
+                        .width(100.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+                TextButton(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    onClick = onLoginSkip
+                ) {
+                    Text(stringResource(R.string.continue_without_login))
+                }
             }
         }
     }

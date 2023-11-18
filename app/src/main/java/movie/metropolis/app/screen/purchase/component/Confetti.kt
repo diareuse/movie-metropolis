@@ -3,8 +3,12 @@ package movie.metropolis.app.screen.purchase.component
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import movie.style.haptic.fastTick
 import movie.style.layout.PreviewLayout
 import nl.dionsegijn.konfetti.compose.KonfettiView
 import nl.dionsegijn.konfetti.core.Angle
@@ -27,9 +31,19 @@ fun Confetti(
     ) {
         content()
         var isVisible by remember { mutableStateOf(false) }
+        val haptic = LocalHapticFeedback.current
         LaunchedEffect(Unit) {
             awaitFrame()
             isVisible = true
+            for (party in parties) launch {
+                val emitter = party.emitter
+                val count = (emitter.amountPerMs * emitter.emittingTime).toInt()
+                val delay = emitter.emittingTime / count
+                repeat(count) {
+                    haptic.fastTick()
+                    delay(delay)
+                }
+            }
         }
         if (isVisible) KonfettiView(modifier = Modifier.fillMaxSize(), parties = parties)
     }

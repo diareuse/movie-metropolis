@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.*
-import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
@@ -16,13 +15,11 @@ import movie.metropolis.app.feature.play.PlayRating
 import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.home.HomeState
-import movie.style.LocalWindowSizeClass
 import movie.style.theme.Theme
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -30,14 +27,10 @@ class MainActivity : AppCompatActivity() {
             PlayRating()
             Theme {
                 Surface {
-                    CompositionLocalProvider(
-                        LocalWindowSizeClass provides calculateWindowSizeClass(activity = this)
-                    ) {
-                        val controller = rememberNavController()
-                        Navigation(controller)
-                        LaunchedEffect(Unit) {
-                            navigateIfNecessary(controller)
-                        }
+                    val controller = rememberNavController()
+                    Navigation(controller)
+                    LaunchedEffect(Unit) {
+                        navigateIfNecessary(controller)
                     }
                 }
             }

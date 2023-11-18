@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import movie.style.AnticipateOvershootEasing
+import movie.style.animation.AnticipateOvershootEasing
 import movie.style.layout.PreviewLayout
 
 private const val AnimationDuration = 500

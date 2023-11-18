@@ -11,9 +11,9 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import movie.style.layout.toIntSize
-import movie.style.layout.toPath
-import movie.style.layout.toSize
+import movie.style.util.toIntSize
+import movie.style.util.toPath
+import movie.style.util.toSize
 
 class CompositeShape private constructor(
     private val baseline: Shape,

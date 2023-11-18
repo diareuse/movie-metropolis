@@ -19,7 +19,6 @@ import movie.metropolis.app.R
 import movie.metropolis.app.screen.setup.component.SetupContainerColumn
 import movie.metropolis.app.screen.setup.component.SetupPreviewLayout
 import movie.metropolis.app.util.rememberVisibleItemAsState
-import movie.style.AppButton
 import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
@@ -83,7 +82,7 @@ fun SetupInitialContent(
             )
         },
         cta = {
-            AppButton(modifier = Modifier.padding(24.dp), onClick = onContinueClick) {
+            Button(modifier = Modifier.padding(24.dp), onClick = onContinueClick) {
                 Text(stringResource(R.string.continue_cta))
             }
         }

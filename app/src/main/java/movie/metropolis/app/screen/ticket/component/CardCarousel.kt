@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.screen.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.util.interpolatePage
+import movie.style.haptic.TickOnChange
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
 import movie.style.theme.Theme
@@ -61,6 +62,7 @@ fun PageIndicator(
     itemPadding: Dp = 4.dp,
     displayItems: Int = 5
 ) {
+    TickOnChange(state.currentPage)
     HorizontalPager(
         modifier = modifier.width(itemSize * displayItems + itemPadding * (displayItems - 1)),
         state = state,

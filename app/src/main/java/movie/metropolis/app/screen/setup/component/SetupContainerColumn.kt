@@ -8,7 +8,6 @@ import androidx.compose.ui.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import movie.style.AppButton
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.modifier.glow
@@ -71,7 +70,7 @@ private fun SetupContainerColumnPreview() = PreviewLayout {
         title = { Text("Welcome back!") },
         description = { Text("Lorem ipsum dolor sit amet") },
         cta = {
-            AppButton(onClick = { /*TODO*/ }) {
+            Button(onClick = { /*TODO*/ }) {
                 Text("Continue")
             }
         }
