@@ -16,6 +16,8 @@ data class MovieReferenceFromDatabase(
         get() = movie.url
     override val releasedAt: Date
         get() = movie.releasedAt
+    override val screeningFrom: Date
+        get() = movie.releasedAt
     override val duration: Duration
         get() = movie.duration
     override val posterUrl: String

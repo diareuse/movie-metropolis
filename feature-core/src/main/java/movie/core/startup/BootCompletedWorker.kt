@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import movie.core.di.BootCompletedWorkerEntryPoint
-import movie.core.model.MoviePreview
+import movie.core.model.Movie
 import movie.core.pulse.ExactPulseNotificationMovie
 import movie.pulse.ExactPulseRequest
 
@@ -20,13 +20,13 @@ class BootCompletedWorker : BroadcastReceiver() {
         val entry = BootCompletedWorkerEntryPoint(context)
         scope.launch {
             entry.favorite().getAll().onSuccess {
-                for (movie in it.map(::asRequest))
+                for (movie in it.map { asRequest(it.movie) })
                     entry.scheduler().schedule(movie)
             }
         }
     }
 
-    private fun asRequest(movie: MoviePreview) =
+    private fun asRequest(movie: Movie) =
         ExactPulseRequest.Builder<ExactPulseNotificationMovie>()
             .setDate(movie.screeningFrom)
             .setData(ExactPulseNotificationMovie.getData(movie))

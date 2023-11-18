@@ -8,5 +8,6 @@ interface Movie {
     val name: String
     val url: String
     val releasedAt: Date
+    val screeningFrom: Date
     val duration: Duration
 }

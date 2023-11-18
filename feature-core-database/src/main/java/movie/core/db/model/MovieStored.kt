@@ -17,6 +17,8 @@ data class MovieStored(
     val url: String,
     @ColumnInfo("released_at")
     val releasedAt: Date,
+    @ColumnInfo("screening_from")
+    val screeningFrom: Date,
     @ColumnInfo("duration")
     val durationMillis: Long
 ) {

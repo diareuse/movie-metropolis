@@ -40,7 +40,7 @@ import movie.core.db.model.MovieStored
 import movie.core.db.model.ShowingStored
 
 @Database(
-    version = 15,
+    version = 16,
     entities = [
         BookingStored::class,
         BookingSeatsStored::class,
@@ -149,6 +149,24 @@ internal abstract class MovieDatabase : RoomDatabase() {
             db.execSQL("CREATE INDEX IF NOT EXISTS `index_movie_details_movie` ON `movie_details` (`movie`)")
             db.execSQL("drop view `movie_detail_views`")
             db.execSQL("CREATE VIEW `movie_detail_views` AS select m.id, m.name, m.url, m.released_at, m.duration, md.original_name, md.country_of_origin, md.`cast`, md.directors, mp.description, md.screening_from, md.age_restriction_url, md.genres from movies as m, movie_details as md, movie_previews as mp where md.movie=m.id and mp.movie=md.movie")
+        }
+    }
+
+    class Migration15to16 : Migration(15, 16) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `movie_favorites_copy` (`movie` TEXT NOT NULL, `notified` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, PRIMARY KEY(`movie`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )")
+            val now = System.currentTimeMillis()
+            db.execSQL("insert into `movie_favorites_copy` (`movie`, `notified`, `created_at`) select mf.`movie`, (m.`screening_from` < $now) as `notified`, mf.`created_at` from `movie_favorites` as mf join `movie_details` as m on m.`movie`=mf.`movie`")
+            db.execSQL("drop table `movie_favorites`")
+            db.execSQL("alter table `movie_favorites_copy` rename to `movie_favorites`")
+            // ---
+            db.execSQL("CREATE TABLE IF NOT EXISTS `movies_copy` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `url` TEXT NOT NULL, `released_at` INTEGER NOT NULL, `screening_from` INTEGER NOT NULL, `duration` INTEGER NOT NULL, PRIMARY KEY(`id`))")
+            db.execSQL("insert into `movies_copy` (`id`,`name`,`url`,`released_at`,`screening_from`,`duration`) select `id`, `name`, `url`, `released_at`, COALESCE((select `screening_from` from `movie_details` as md where md.`movie`= m.`id`),(select `screening_from` from `movie_previews` as mp where mp.`movie`=m.`id`),0), `duration` from `movies` as m")
+            db.execSQL("drop table `movies`")
+            db.execSQL("alter table `movies_copy` rename to `movies`")
+            // ---
+            db.execSQL("drop view `movie_reference_views`")
+            db.execSQL("CREATE VIEW `movie_reference_views` AS select m.id,m.name,m.url,m.released_at,m.screening_from,m.duration,mr.poster,mr.video from movies as m, movie_references as mr where m.id=mr.movie")
         }
     }
 

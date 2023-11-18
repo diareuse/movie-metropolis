@@ -7,7 +7,6 @@ import movie.calendar.EventMetadata
 import movie.core.db.dao.MovieDao
 import movie.core.model.Booking
 import movie.core.preference.EventPreference
-import kotlin.time.Duration.Companion.milliseconds
 
 class UserBookingFeatureCalendar(
     private val origin: UserBookingFeature,
@@ -27,7 +26,7 @@ class UserBookingFeatureCalendar(
         val calendar = preference.calendarId ?: return
         val writer = writer.create(calendar)
         for (booking in bookings) {
-            val duration = dao.getDuration(booking.movieId)?.milliseconds ?: continue
+            val duration = dao.select(booking.movieId)?.duration ?: continue
             val metadata = EventMetadata(
                 name = booking.name,
                 start = booking.startsAt,

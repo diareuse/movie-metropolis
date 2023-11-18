@@ -18,8 +18,8 @@ class MovieDaoLowercase(
         return origin.update(model.lowercase())
     }
 
-    override suspend fun getDuration(id: String): Long? {
-        return origin.getDuration(id.lowercase())
+    override suspend fun select(id: String): MovieStored? {
+        return origin.select(id.lowercase())
     }
 
     // ---

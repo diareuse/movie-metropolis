@@ -2,7 +2,6 @@ package movie.core.db.dao
 
 import movie.core.db.io
 import movie.core.db.model.MovieFavoriteStored
-import movie.core.db.model.MoviePreviewView
 
 class MovieFavoriteDaoThreading(
     private val origin: MovieFavoriteDao
@@ -14,7 +13,13 @@ class MovieFavoriteDaoThreading(
 
     override suspend fun update(model: MovieFavoriteStored) = origin.io { update(model) }
 
-    override suspend fun selectAll(): List<MoviePreviewView> = origin.io { selectAll() }
+    override suspend fun selectAll() = origin.io { selectAll() }
+
+    override suspend fun selectPending() = origin.io { selectPending() }
+
+    override suspend fun select(id: String) = origin.io { select(id) }
+
+    override suspend fun setFavorite(id: String) = origin.io { setFavorite(id) }
 
     override suspend fun isFavorite(id: String) = origin.io { isFavorite(id) }
 

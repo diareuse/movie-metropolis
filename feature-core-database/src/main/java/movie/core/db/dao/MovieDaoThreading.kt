@@ -13,6 +13,6 @@ class MovieDaoThreading(
 
     override suspend fun update(model: MovieStored) = origin.io { update(model) }
 
-    override suspend fun getDuration(id: String) = origin.io { getDuration(id) }
+    override suspend fun select(id: String) = origin.io { select(id) }
 
 }

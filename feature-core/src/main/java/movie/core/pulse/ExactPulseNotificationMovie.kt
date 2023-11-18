@@ -14,7 +14,6 @@ import movie.core.EventDetailFeature
 import movie.core.FavoriteFeature
 import movie.core.R
 import movie.core.adapter.MovieFromId
-import movie.core.adapter.MoviePreviewFromDetail
 import movie.core.model.Media
 import movie.core.model.Movie
 import movie.core.model.MovieDetail
@@ -38,7 +37,7 @@ class ExactPulseNotificationMovie(
         val movie = detail.get(MovieFromId(id)).getOrNull() ?: return
         val notification = getNotification(context, movie)
         manager.notify(movie.id.hashCode(), notification)
-        favorite.toggle(MoviePreviewFromDetail(movie))
+        favorite.setNotified(movie)
     }
 
     private suspend fun getNotification(context: Context, movie: MovieDetail): Notification {

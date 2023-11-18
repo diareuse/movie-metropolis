@@ -21,6 +21,8 @@ data class MovieFavoriteStored(
     @PrimaryKey
     @ColumnInfo(name = "movie")
     val movie: String,
+    @ColumnInfo(name = "notified")
+    val notified: Boolean,
     @ColumnInfo(name = "created_at")
     val createdAt: Date = Date()
 )

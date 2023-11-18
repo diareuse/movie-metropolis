@@ -12,6 +12,7 @@ data class MovieFromId(
     override val name: String = ""
     override val url: String = ""
     override val releasedAt: Date = Date(0)
+    override val screeningFrom: Date = Date(0)
     override val duration: Duration = 0.seconds
 
 }

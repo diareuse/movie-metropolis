@@ -29,6 +29,18 @@ class MovieFavoriteDaoPerformance(
         origin.isFavorite(id)
     }
 
+    override suspend fun selectPending() = tracer.trace("$Tag.selectPending") {
+        origin.selectPending()
+    }
+
+    override suspend fun select(id: String) = tracer.trace("$Tag.select") {
+        origin.select(id)
+    }
+
+    override suspend fun setFavorite(id: String) = tracer.trace("$Tag.setFavorite") {
+        origin.setFavorite(id)
+    }
+
     companion object {
         private const val Tag = "movie-favorite"
     }

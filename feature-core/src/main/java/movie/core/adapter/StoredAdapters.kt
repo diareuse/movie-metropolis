@@ -35,6 +35,7 @@ fun Movie.asStored() = MovieStored(
     name = name,
     url = url,
     releasedAt = releasedAt,
+    screeningFrom = screeningFrom,
     durationMillis = duration.inWholeMilliseconds
 )
 
