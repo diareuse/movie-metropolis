@@ -17,7 +17,10 @@ class FavoriteFeatureScheduleNotification(
             .setDate(movie.screeningFrom)
             .setData(ExactPulseNotificationMovie.getData(movie))
             .build()
-        when (isFavorite && get(movie).map { !it.isNotified }.getOrDefault(false)) {
+        println("isfav: $isFavorite")
+        when (isFavorite && get(movie).onFailure { it.printStackTrace() }
+            .map { println("notified:${it.isNotified}"); !it.isNotified }
+            .getOrDefault(false)) {
             true -> scheduler.schedule(request)
             else -> scheduler.cancel(request)
         }

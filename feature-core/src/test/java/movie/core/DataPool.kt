@@ -160,6 +160,7 @@ interface DataPool<T> {
                 releasedAt = Date(0),
                 durationMillis = 0,
                 poster = "",
+                screeningFrom = Date(0),
                 video = null
             )
         }.map(modifier)

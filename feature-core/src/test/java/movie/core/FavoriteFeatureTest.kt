@@ -1,10 +1,11 @@
 package movie.core
 
 import kotlinx.coroutines.test.runTest
+import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieFavoriteDao
-import movie.core.db.dao.MovieMediaDao
 import movie.core.di.FavoriteFeatureModule
-import movie.core.mock.MoviePreviewView
+import movie.core.mock.MovieFavoriteStored
+import movie.core.mock.MovieStored
 import movie.core.model.Movie
 import movie.core.model.MoviePreview
 import movie.pulse.ExactPulseScheduler
@@ -23,18 +24,18 @@ class FavoriteFeatureTest {
 
     private lateinit var scheduler: ExactPulseScheduler
     private lateinit var feature: FavoriteFeature
-    private lateinit var media: MovieMediaDao
+    private lateinit var movieDao: MovieDao
     private lateinit var favorite: MovieFavoriteDao
 
     @Before
     fun prepare() {
         favorite = mock()
-        media = mock()
+        movieDao = mock()
         scheduler = mock {
             on { schedule(any()) }.then { }
             on { cancel(any()) }.then { }
         }
-        feature = FavoriteFeatureModule().feature(favorite, media, scheduler)
+        feature = FavoriteFeatureModule().feature(favorite, movieDao, scheduler)
     }
 
     @Test
@@ -71,6 +72,7 @@ class FavoriteFeatureTest {
         val movie = mock<MoviePreview> {
             on { id }.thenReturn("id")
             on { screeningFrom }.thenReturn(Date(0))
+            on { releasedAt }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(false)
         feature.toggle(movie).getOrThrow()
@@ -82,6 +84,7 @@ class FavoriteFeatureTest {
         val movie = mock<MoviePreview> {
             on { id }.thenReturn("id")
             on { screeningFrom }.thenReturn(Date(0))
+            on { releasedAt }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(true)
         feature.toggle(movie).getOrThrow()
@@ -131,6 +134,7 @@ class FavoriteFeatureTest {
         val movie = mock<MoviePreview> {
             on { id }.thenReturn("id")
             on { screeningFrom }.thenReturn(Date(0))
+            on { releasedAt }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(any())).thenReturn(true)
         feature.toggle(movie).getOrThrow()
@@ -141,18 +145,21 @@ class FavoriteFeatureTest {
     fun toggle_schedulesAlarm() = runTest {
         val movie = mock<MoviePreview> {
             on { id }.thenReturn("id")
-            on { screeningFrom }.thenReturn(Date(0))
+            on { screeningFrom }.thenReturn(Date(System.currentTimeMillis() + 10000))
+            on { releasedAt }.thenReturn(Date(System.currentTimeMillis() + 10000))
         }
         whenever(favorite.isFavorite(any())).thenReturn(false)
+        whenever(favorite.select(movie.id)).thenReturn(MovieFavoriteStored(false))
+        whenever(movieDao.select(movie.id)).thenReturn(MovieStored())
         feature.toggle(movie).getOrThrow()
         verify(scheduler).schedule(any())
     }
 
     @Test
     fun getAll_returnsValue() = runTest {
-        val previews = List(1) { MoviePreviewView() }
+        val previews = List(1) { MovieFavoriteStored() }
         whenever(favorite.selectAll()).thenReturn(previews)
-        whenever(media.select(any())).thenReturn(emptyList())
+        whenever(movieDao.select(any())).thenReturn(MovieStored())
         assertTrue("Values should not be empty") { feature.getAll().getOrThrow().isNotEmpty() }
     }
 

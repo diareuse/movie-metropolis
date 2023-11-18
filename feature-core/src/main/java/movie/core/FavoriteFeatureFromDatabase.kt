@@ -50,6 +50,7 @@ class FavoriteFeatureFromDatabase(
 
     override suspend fun get(movie: Movie): Result<MovieFavorite> {
         return favoriteDao.runCatching { select(movie.id).let(::requireNotNull) }.mapCatching {
+            println("$movieDao, ${it.movie}")
             val movie = movieDao.select(it.movie)?.let(::MovieFromDatabase).let(::requireNotNull)
             MovieFavoriteFromDatabase(it, movie)
         }
