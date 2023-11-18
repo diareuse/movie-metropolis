@@ -6,7 +6,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.foundation.text.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,8 +25,6 @@ import movie.metropolis.app.screen.setup.component.rememberRandomItemAsState
 import movie.style.BackgroundImage
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
-import movie.style.modifier.surface
 import movie.style.rememberImageState
 import movie.style.theme.Theme
 
@@ -81,14 +78,9 @@ fun SetupLoginContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .surface(
-                    color = Theme.color.container.background,
-                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
-                )
-                .glow(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                 .navigationBarsPadding()
                 .imePadding()
-                .padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             val reqs = remember { List(2) { FocusRequester() } }
