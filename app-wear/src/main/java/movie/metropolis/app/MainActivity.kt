@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         var isReady = false
-        Handler(Looper.getMainLooper()).postDelayed(500) { isReady = true }
+        Handler(Looper.getMainLooper()).postDelayed(2000) { isReady = true }
         val content = findViewById<View>(android.R.id.content)
         content.viewTreeObserver.addOnPreDrawListener(
             object : ViewTreeObserver.OnPreDrawListener {
