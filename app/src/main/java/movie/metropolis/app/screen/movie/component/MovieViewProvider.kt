@@ -1,7 +1,7 @@
 package movie.metropolis.app.screen.movie.component
 
 import androidx.compose.ui.tooling.preview.datasource.*
-import movie.core.model.MoviePreview
+import movie.core.model.Movie
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
@@ -30,7 +30,7 @@ class MovieViewProvider :
         override val rating: String? = "75%",
         override val posterLarge: ImageView? = PreviewImage()
     ) : MovieView {
-        override fun getBase(): MoviePreview = throw IllegalAccessError()
+        override fun getBase(): Movie = throw IllegalAccessError()
     }
 
     private data class PreviewImage(

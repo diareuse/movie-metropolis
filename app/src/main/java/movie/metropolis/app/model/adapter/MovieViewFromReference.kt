@@ -1,6 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.MoviePreview
+import movie.core.model.Movie
 import movie.core.model.MovieReference
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
@@ -52,7 +52,7 @@ data class MovieViewFromReference(
             }
         }
 
-    override fun getBase(): MoviePreview {
-        throw NotImplementedError()
+    override fun getBase(): Movie {
+        return ref
     }
 }
