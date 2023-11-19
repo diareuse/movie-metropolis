@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.feature.location.rememberLocation
@@ -37,6 +38,7 @@ import movie.metropolis.app.screen.booking.BookingViewModel
 import movie.metropolis.app.screen.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.screen.cinema.CinemasScreen
 import movie.metropolis.app.screen.cinema.CinemasViewModel
+import movie.metropolis.app.screen.favorite.FavoriteViewModel
 import movie.metropolis.app.screen.home.HomeScreen
 import movie.metropolis.app.screen.home.HomeState
 import movie.metropolis.app.screen.home.HomeViewModel
@@ -298,7 +300,7 @@ fun NavGraphBuilder.home(
                 contentPadding = padding,
                 onClickCard = { showCard = true },
                 onClickEdit = { navController.navigate(Route.UserEditor()) },
-                onClickFavorite = {},
+                onClickFavorite = { navController.navigate(Route.Favorite()) },
                 onClickSettings = { navController.navigate(Route.Settings()) }
             )
         }
@@ -525,5 +527,39 @@ fun NavGraphBuilder.booking(
                 onActionClick = { filtersVisible = true }
             )
         }
+    }
+}
+
+fun NavGraphBuilder.favorite(
+    navController: NavHostController
+) = composable(
+    route = Route.Favorite.route,
+    deepLinks = Route.Favorite.deepLinks
+) {
+    val viewModel = hiltViewModel<FavoriteViewModel>()
+    val movies by viewModel.items.collectAsState()
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Scaffold(
+        topBar = {
+            CollapsingTopAppBar(
+                title = { Text(stringResource(R.string.favorite_movies)) },
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(onClick = navController::navigateUp) {
+                        Icon(painterResource(R.drawable.ic_back), null)
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
+        ListingScreen(
+            contentPadding = innerPadding,
+            state = rememberLazyStaggeredGridState(),
+            movies = movies,
+            promotions = persistentListOf(),
+            onClick = { navController.navigate(Route.Movie(it.id, true)) },
+            onFavoriteClick = viewModel::remove,
+            connection = scrollBehavior.nestedScrollConnection
+        )
     }
 }

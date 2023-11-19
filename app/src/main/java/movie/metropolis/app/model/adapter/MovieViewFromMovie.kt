@@ -2,7 +2,7 @@ package movie.metropolis.app.model.adapter
 
 import movie.core.model.Media
 import movie.core.model.Movie
-import movie.core.model.MoviePreview
+import movie.core.model.MovieFavorite
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
@@ -11,35 +11,36 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-data class MovieViewFromFeature(
-    internal val movie: MoviePreview,
-    override val favorite: Boolean
+data class MovieViewFromMovie(
+    private val movie: MovieFavorite,
+    private val media: Iterable<Media>
 ) : MovieView {
-
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
     private val images
-        get() = movie.media
+        get() = media
             .asSequence()
             .filterIsInstance<Media.Image>()
             .sortedByDescending { it.height * it.width }
 
     override val id: String
-        get() = movie.id
+        get() = movie.movie.id
     override val name: String
-        get() = movie.name
+        get() = movie.movie.name
     override val releasedAt: String
-        get() = yearFormat.format(movie.releasedAt)
+        get() = yearFormat.format(movie.movie.releasedAt)
     override val duration: String
-        get() = movie.duration.toStringComponents()
+        get() = movie.movie.duration.toStringComponents()
     override val availableFrom: String
-        get() = dateFormat.format(movie.screeningFrom)
+        get() = dateFormat.format(movie.movie.screeningFrom)
     override val directors: List<String>
-        get() = movie.directors.toList()
+        get() = emptyList()
     override val cast: List<String>
-        get() = movie.cast.toList()
+        get() = emptyList()
     override val countryOfOrigin: String
-        get() = movie.countryOfOrigin
+        get() = ""
+    override val favorite: Boolean
+        get() = true
     override val rating: String?
         get() = null
     override val poster: ImageView?
@@ -47,11 +48,13 @@ data class MovieViewFromFeature(
     override val posterLarge: ImageView?
         get() = images.firstOrNull()?.let { ImageViewFromFeature(it) }
     override val video: VideoView?
-        get() = movie.media
+        get() = media
             .asSequence()
             .filterIsInstance<Media.Video>()
             .firstOrNull()
             ?.let(::VideoViewFromFeature)
 
-    override fun getBase(): Movie = movie
+    override fun getBase(): Movie {
+        return movie.movie
+    }
 }

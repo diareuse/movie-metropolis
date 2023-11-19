@@ -41,6 +41,10 @@ import movie.metropolis.app.presentation.detail.MovieFacadeRating
 import movie.metropolis.app.presentation.detail.MovieFacadeReactive
 import movie.metropolis.app.presentation.detail.MovieFacadeRecover
 import movie.metropolis.app.presentation.detail.MovieFacadeWithActors
+import movie.metropolis.app.presentation.favorite.FavoriteFacade
+import movie.metropolis.app.presentation.favorite.FavoriteFacadeFromFeature
+import movie.metropolis.app.presentation.favorite.FavoriteFacadeRating
+import movie.metropolis.app.presentation.favorite.FavoriteFacadeReactive
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.home.HomeFacadeFromFeature
 import movie.metropolis.app.presentation.listing.ListingFacade
@@ -281,6 +285,20 @@ class FacadeModule {
                 out
             }
         }
+    }
+
+    @Provides
+    @Reusable
+    fun favorite(
+        favorite: FavoriteFeature,
+        detail: EventDetailFeature,
+        rating: MetadataProvider
+    ): FavoriteFacade {
+        var out: FavoriteFacade
+        out = FavoriteFacadeFromFeature(favorite, detail)
+        out = FavoriteFacadeReactive(out)
+        out = FavoriteFacadeRating(out, rating, detail)
+        return out
     }
 
 }

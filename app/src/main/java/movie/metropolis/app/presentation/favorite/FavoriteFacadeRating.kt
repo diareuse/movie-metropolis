@@ -1,52 +1,44 @@
-package movie.metropolis.app.presentation.listing
+package movie.metropolis.app.presentation.favorite
 
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.core.EventDetailFeature
 import movie.core.model.Movie
-import movie.metropolis.app.model.Genre
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithRating
-import movie.metropolis.app.util.flatMapResult
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
 import movie.rating.MovieMetadata
 import java.util.Calendar
 
-class ListingFacadeActionWithRating(
-    private val origin: ListingFacade.Action,
+class FavoriteFacadeRating(
+    private val origin: FavoriteFacade,
     private val rating: MetadataProvider,
     private val detail: EventDetailFeature
-) : ListingFacade.Action by origin {
+) : FavoriteFacade by origin {
 
     private val cache = mutableMapOf<String, MovieMetadata>()
 
-    override val groups = origin.groups.flatMapResult { withRating(it) }
+    override fun get(): Flow<List<MovieView>> = origin.get().flatMapLatest { withRating(it) }
 
-    private fun withRating(items: Map<Genre, List<MovieView>>) = channelFlow {
+    private fun withRating(items: List<MovieView>) = channelFlow {
         if (cache.isEmpty()) send(items)
-        val output = items.mapValues { (_, it) -> it.toMutableList() }
-        val writeLock = Mutex()
-        val movies = items.asSequence()
-            .flatMap { it.value }
-            .distinctBy { it.id }
-        for (movie in movies) launch {
+        val output = items.toMutableList()
+        val lock = Mutex()
+        for ((index, movie) in output.withIndex()) launch {
             val base = movie.getBase()
             val rating = getRating(base) ?: return@launch
-            val updated = MovieViewWithRating(movie, rating)
-            writeLock.withLock {
-                output.mapValues { (_, it) ->
-                    it.replaceAll { m ->
-                        if (m.id == movie.id) updated else m
-                    }
-                }
+            val out = lock.withLock {
+                output[index] = MovieViewWithRating(movie, rating)
+                output.toList()
             }
-            send(output)
+            send(out)
         }
-    }.map(Result.Companion::success)
+    }
 
     private suspend fun getRating(movie: Movie): MovieMetadata? = cache.getOrPut(movie.id) {
         val descriptors = detail.get(movie).map {
