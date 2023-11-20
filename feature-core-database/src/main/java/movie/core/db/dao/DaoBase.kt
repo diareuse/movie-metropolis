@@ -15,11 +15,17 @@ interface DaoBase<T> {
     @Update
     suspend fun update(model: T)
 
-    suspend fun insertOrUpdate(model: T) {
-        try {
-            insert(model)
-        } catch (e: Throwable) {
-            update(model)
+    suspend fun insertOrUpdate(model: T) = insertOrElse(model) {
+        update(model)
+    }
+
+    companion object {
+        suspend inline fun <T> DaoBase<T>.insertOrElse(model: T, otherwise: (T) -> Unit) {
+            try {
+                insert(model)
+            } catch (e: Throwable) {
+                otherwise(model)
+            }
         }
     }
 

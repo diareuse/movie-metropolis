@@ -147,7 +147,7 @@ class EventShowingsFeatureCinemaTest {
         val testData = cinemaEvents_responds_success()
         feature(this).get(Date()).getOrThrow()
         awaitChildJobCompletion()
-        verify(movie, times(testData.movies.size)).insertOrUpdate(any())
+        verify(movie, times(testData.movies.size)).insert(any())
         verify(reference, times(testData.movies.size)).insertOrUpdate(any())
         verify(showing, times(testData.events.size)).insertOrUpdate(any())
     }
