@@ -66,7 +66,7 @@ class EventDetailFeatureTest {
         val testData = service_responds_success()
         feature(this).get(item)
         awaitChildJobCompletion()
-        verify(movie, times(1)).insertOrUpdate(any())
+        verify(movie, times(1)).insert(any())
         verify(detail, times(1)).insertOrUpdate(any())
         verify(media, times(testData.media.size)).insertOrUpdate(any())
     }

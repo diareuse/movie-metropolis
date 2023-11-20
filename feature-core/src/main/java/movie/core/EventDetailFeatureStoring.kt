@@ -3,6 +3,7 @@ package movie.core
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import movie.core.adapter.asStored
+import movie.core.db.dao.DaoBase.Companion.insertOrElse
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieDetailDao
 import movie.core.db.dao.MovieMediaDao
@@ -26,7 +27,7 @@ class EventDetailFeatureStoring(
     }
 
     private suspend fun store(model: MovieDetail) {
-        movie.insertOrUpdate((model as Movie).asStored())
+        movie.insertOrElse((model as Movie).asStored()) {}
         detail.insertOrUpdate(model.asStored())
         for (item in model.media)
             media.insertOrUpdate(item.asStored(model))
