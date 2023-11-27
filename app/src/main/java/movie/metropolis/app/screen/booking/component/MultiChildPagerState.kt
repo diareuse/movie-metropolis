@@ -25,8 +25,11 @@ class MultiChildPagerState(
         super.scroll(scrollPriority) {
             val scope = ScrollScope { pixels ->
                 scrollBy(pixels).also { _ ->
-                    for (child in children)
-                        child.snapToItem(currentPage, currentPageOffsetFraction)
+                    val currentPage = currentPage
+                    val currentPageOffsetFraction = currentPageOffsetFraction
+                    for (child in children) with(child) {
+                        updateCurrentPage(currentPage, currentPageOffsetFraction)
+                    }
                 }
             }
             scope.block()
@@ -46,29 +49,8 @@ class MultiChildPagerState(
         }
     }
 
-    private fun PagerState.snapToItem(page: Int, offset: Float) {
-        val actualOffset = offset * pageAvailableSpace.invoke(this) as Int
-        snapToItem.invoke(this, page, actualOffset.toInt())
-    }
-
     operator fun component1() = this
     operator fun component2() = children[0]
-
-    companion object {
-
-        private val pagerState = PagerState::class.java
-        private val pageAvailableSpace = pagerState.getDeclaredMethod("getPageAvailableSpace")
-        private val snapToItem = pagerState.getDeclaredMethod(
-            "snapToItem\$foundation_release",
-            Int::class.java,
-            Int::class.java
-        )
-
-        init {
-            pageAvailableSpace.isAccessible = true
-            snapToItem.isAccessible = true
-        }
-    }
 
 }
 
