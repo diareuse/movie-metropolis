@@ -13,7 +13,7 @@ interface SyncPreference {
     companion object {
 
         fun Date.isInThreshold(duration: Duration): Boolean {
-            return System.currentTimeMillis() - duration.inWholeMilliseconds < time
+            return Date(time + duration.inWholeMilliseconds).before(Date())
         }
 
     }
