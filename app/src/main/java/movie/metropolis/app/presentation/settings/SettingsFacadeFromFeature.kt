@@ -43,6 +43,12 @@ class SettingsFacadeFromFeature(
             prefs.calendarId = value
         }
 
+    override var filters: List<String>
+        get() = prefs.keywords
+        set(value) {
+            prefs.keywords = value
+        }
+
     override suspend fun getCalendars(): Calendars {
         return calendars.query().map(::CalendarViewFromFeature).let(::Calendars)
     }

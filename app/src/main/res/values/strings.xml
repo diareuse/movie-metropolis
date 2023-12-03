@@ -128,4 +128,6 @@
     <string name="select_content_left">There\'s nothing here yet, select content from the left to display it here</string>
     <string name="install">Install</string>
     <string name="hall">Hall</string>
+    <string name="filter_movie_names">Block keywords</string>
+    <string name="filter_movie_names_description">Filters out movies with the keywords you specified. Be careful by specifying the filtered keywords as all keywords are case sensitive and can appear in the middle of other words.</string>
 </resources>

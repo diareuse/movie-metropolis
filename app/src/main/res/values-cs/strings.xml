@@ -128,4 +128,6 @@
     <string name="share_add_ticket">Přidat lístek</string>
     <string name="select_content_left">Ještě tu nic není, vyber něco zleva</string>
     <string name="install">Instalovat</string>
+    <string name="filter_movie_names">Blokování klíčových slov</string>
+    <string name="filter_movie_names_description">Vyfiltruje filmy s klíčovými slovy, které si specifikuješ. Opatrně ale se slovy, které filtrují filmy - odpovídají velkým a malým písmenkům s diaktritikou a mohou se objevit uprostřed jiných slov. Nechtěně tak vyfiltruješ filmy, které bys rád/a viděl/a.</string>
 </resources>

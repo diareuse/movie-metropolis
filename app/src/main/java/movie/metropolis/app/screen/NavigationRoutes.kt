@@ -355,7 +355,9 @@ fun NavGraphBuilder.settings(
             state = state,
             onStateChange = viewModel::updateState,
             onClickBack = navController::navigateUp,
-            onShowCalendarsRequest = { showCalendars = true }
+            onShowCalendarsRequest = { showCalendars = true },
+            onAddFilterClick = viewModel::addFilter,
+            onDeleteFilterClick = viewModel::deleteFilter
         )
     }
 }

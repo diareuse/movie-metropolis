@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -17,6 +18,7 @@ import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.addTo
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.calendarFlow
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.clipRadiusFlow
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.filterSeenFlow
+import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.filtersFlow
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.onlyMoviesFlow
 import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.selectedCalendarFlow
 import movie.metropolis.app.util.retainStateIn
@@ -32,6 +34,7 @@ class SettingsViewModel @Inject constructor(
     val calendars = refreshKey.consumeAsFlow()
         .flatMapLatest { facade.calendarFlow }
         .retainStateIn(viewModelScope, Calendars())
+    private val pendingFilter = MutableStateFlow("")
     val state = combine(
         facade.filterSeenFlow,
         facade.onlyMoviesFlow,
@@ -46,9 +49,14 @@ class SettingsViewModel @Inject constructor(
             nearbyCinemas = clipRadius.takeUnless { it <= 0 }?.toString().orEmpty(),
             selectedCalendar = calendar
         )
+    }.combine(facade.filtersFlow) { state, filters ->
+        state.copy(filters = filters)
+    }.combine(pendingFilter) { state, filter ->
+        state.copy(pendingFilter = filter)
     }.retainStateIn(viewModelScope, SettingsState())
 
     fun updateState(state: SettingsState) {
+        pendingFilter.value = state.pendingFilter
         facade.filterSeen = state.unseenOnly
         facade.clipRadius = state.nearbyCinemas.toIntOrNull() ?: 0
         facade.onlyMovies = state.moviesOnly
@@ -72,6 +80,18 @@ class SettingsViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun addFilter() {
+        val pendingFilter = pendingFilter.value
+        if (pendingFilter.isNotEmpty()) {
+            facade.filters += pendingFilter
+            this.pendingFilter.value = ""
+        }
+    }
+
+    fun deleteFilter(filter: String) {
+        facade.filters -= filter
     }
 
 }

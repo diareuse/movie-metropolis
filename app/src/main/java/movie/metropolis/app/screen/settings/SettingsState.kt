@@ -5,5 +5,7 @@ data class SettingsState(
     val moviesOnly: Boolean = false,
     val tickets: Boolean = false,
     val nearbyCinemas: String = "",
-    val selectedCalendar: String? = null
+    val selectedCalendar: String? = null,
+    val pendingFilter: String = "",
+    val filters: List<String> = emptyList()
 )

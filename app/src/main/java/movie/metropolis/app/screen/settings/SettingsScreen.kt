@@ -7,6 +7,8 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.*
+import androidx.compose.material.icons.*
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -37,6 +39,8 @@ fun SettingsScreen(
     onStateChange: (SettingsState) -> Unit,
     onClickBack: () -> Unit,
     onShowCalendarsRequest: () -> Unit,
+    onAddFilterClick: () -> Unit,
+    onDeleteFilterClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) = Scaffold(
@@ -44,7 +48,7 @@ fun SettingsScreen(
     topBar = {
         CollapsingTopAppBar(
             modifier = Modifier.alignForLargeScreen(),
-            title = { Text("Settings") },
+            title = { Text(stringResource(id = R.string.settings)) },
             navigationIcon = {
                 IconButton(onClick = onClickBack) {
                     Icon(painterResource(R.drawable.ic_back), null)
@@ -91,6 +95,37 @@ fun SettingsScreen(
                     )
                 }
             )
+            SettingsItemRow(
+                title = { Text(stringResource(R.string.filter_movie_names)) },
+                description = { Text(stringResource(R.string.filter_movie_names_description)) },
+                value = {}
+            )
+            CommonTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                value = state.pendingFilter,
+                onValueChange = { onStateChange(state.copy(pendingFilter = it)) },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                ),
+                trailingIcon = {
+                    IconButton(onClick = onAddFilterClick) {
+                        Icon(Icons.Rounded.Add, null)
+                    }
+                },
+                placeholder = { Text("keyword") }
+            )
+            for (filter in state.filters)
+                Row(
+                    modifier = Modifier.padding(start = 32.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(filter, Modifier.weight(1f))
+                    IconButton(onClick = { onDeleteFilterClick(filter) }) {
+                        Icon(Icons.Rounded.Delete, null)
+                    }
+                }
         }
         SettingsSection(title = { Text(stringResource(id = R.string.tickets)) }) {
             SettingsItemRow(
@@ -138,9 +173,11 @@ fun SettingsScreen(
 private fun SettingsScreenPreview() = PreviewLayout {
     SettingsScreen(
         background = "",
-        state = SettingsState(),
+        state = SettingsState(filters = listOf("opera", "opereta")),
         onStateChange = {},
         onClickBack = {},
-        onShowCalendarsRequest = {}
+        onShowCalendarsRequest = {},
+        onAddFilterClick = {},
+        onDeleteFilterClick = {}
     )
 }

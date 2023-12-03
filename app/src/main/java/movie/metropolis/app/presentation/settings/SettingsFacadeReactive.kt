@@ -40,6 +40,15 @@ class SettingsFacadeReactive(
                 notifyListeners()
         }
 
+    override var filters: List<String>
+        get() = origin.filters
+        set(value) {
+            val prev = filters
+            origin.filters = value
+            if (prev != filters)
+                notifyListeners()
+        }
+
     private fun notifyListeners() = synchronized(origin.listeners) {
         for (listener in origin.listeners)
             listener.onChanged()
