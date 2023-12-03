@@ -6,5 +6,6 @@ interface EventPreference {
     var onlyMovies: Boolean
     var calendarId: String?
     var distanceKms: Int
+    var keywords: List<String>
 
 }

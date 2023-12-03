@@ -57,10 +57,10 @@ data class ExtendedMovieResponse(
     @Serializable
     data class Metadata(
         @SerialName("name") val name: String,
-        @SerialName("synopsis") val synopsis: String?,
-        @SerialName("directors") val directors: String?,
-        @SerialName("cast") val cast: String?,
-        @SerialName("production") val countryOfOrigin: String?
+        @SerialName("synopsis") val synopsis: String? = null,
+        @SerialName("directors") val directors: String? = null,
+        @SerialName("cast") val cast: String? = null,
+        @SerialName("production") val countryOfOrigin: String? = null
     )
 
 }

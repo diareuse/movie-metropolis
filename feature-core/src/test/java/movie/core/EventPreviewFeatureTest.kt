@@ -28,7 +28,9 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
+import java.util.Locale
 import kotlin.test.assertContains
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 
@@ -55,7 +57,9 @@ abstract class EventPreviewFeatureTest {
             onBlocking { getColors(any()) }
                 .thenReturn(Swatch(SwatchColor(0), SwatchColor(0), SwatchColor(0)))
         }
-        preference = mock {}
+        preference = mock {
+            on { keywords }.thenReturn(emptyList())
+        }
         booking = mock {}
         sync = mock {
             on { previewCurrent }.thenReturn(Date())
@@ -188,10 +192,38 @@ abstract class EventPreviewFeatureTest {
             assertContains(output, i.id.key)
     }
 
+    @Test
+    fun get_filtersKeywords_fromNetwork() = runTest {
+        service_responds_success {
+            it.copy(
+                metadata = mapOf(
+                    Locale.getDefault() to ExtendedMovieResponse.Metadata("none")
+                )
+            )
+        }
+        keywords_responds_value("none")
+        val output = feature(this).get().getOrThrow()
+        assertContentEquals(emptySequence(), output)
+    }
+
+    @Test
+    fun get_filtersKeywords_fromDatabase() = runTest {
+        database_responds_success {
+            it.copy(name = "none")
+        }
+        keywords_responds_value("none")
+        val output = feature(this).get().getOrThrow()
+        assertContentEquals(emptySequence(), output)
+    }
+
     // ---
 
     protected fun onlyMovies_responds_true() {
         whenever(preference.onlyMovies).thenReturn(true)
+    }
+
+    protected fun keywords_responds_value(vararg values: String) {
+        whenever(preference.keywords).thenReturn(values.toList())
     }
 
     private fun booking_responds_positive(): List<String> {
@@ -201,8 +233,8 @@ abstract class EventPreviewFeatureTest {
         return data
     }
 
-    protected fun database_responds_success(): List<MoviePreviewView> {
-        val data = DataPool.MoviePreviewViews.all()
+    protected fun database_responds_success(modifier: Modifier<MoviePreviewView> = { it }): List<MoviePreviewView> {
+        val data = DataPool.MoviePreviewViews.all(modifier)
         wheneverBlocking { preview.selectCurrent() }.thenReturn(data)
         wheneverBlocking { preview.selectUpcoming() }.thenReturn(data)
         wheneverBlocking { media.select(any()) }.thenReturn(DataPool.MovieMediaViews.all())
@@ -214,8 +246,8 @@ abstract class EventPreviewFeatureTest {
         wheneverBlocking { preview.selectUpcoming() }.thenReturn(emptyList())
     }
 
-    protected fun service_responds_success(): List<ExtendedMovieResponse> {
-        val data = DataPool.ExtendedMovieResponses.all()
+    protected fun service_responds_success(modifier: Modifier<ExtendedMovieResponse> = { it }): List<ExtendedMovieResponse> {
+        val data = DataPool.ExtendedMovieResponses.all(modifier)
         wheneverBlocking { service.getMoviesByType(any()) }
             .thenReturn(Result.success(BodyResponse(data)))
         return data

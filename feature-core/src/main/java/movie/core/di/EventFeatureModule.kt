@@ -28,6 +28,7 @@ import movie.core.EventPreviewFeature
 import movie.core.EventPreviewFeatureCatch
 import movie.core.EventPreviewFeatureDatabase
 import movie.core.EventPreviewFeatureFilter
+import movie.core.EventPreviewFeatureFilterKeywords
 import movie.core.EventPreviewFeatureFilterMovie
 import movie.core.EventPreviewFeatureFold
 import movie.core.EventPreviewFeatureInvalidateAfter
@@ -153,12 +154,15 @@ internal class EventFeatureModule {
             db = EventPreviewFeatureDatabase(preview, media, type)
             db = EventPreviewFeatureRequireNotEmpty(db)
             db = EventPreviewFeatureInvalidateAfter(db, sync, type, 1.days)
+            db = EventPreviewFeatureCatch(db)
             var out: EventPreviewFeature
             out = EventPreviewFeatureNetwork(service, type)
             out = EventPreviewFeatureStoring(out, type, movie, preview, media, scope)
             out = EventPreviewFeatureSaveTimestamp(out, sync, type)
+            out = EventPreviewFeatureCatch(out)
             out = EventPreviewFeatureFold(db, out, fallback)
             out = EventPreviewFeatureFilterMovie(out, preference)
+            out = EventPreviewFeatureFilterKeywords(out, preference)
             out = EventPreviewFeatureSort(out)
             out = EventPreviewFeatureFilter(out, preference, booking)
             out = EventPreviewFeatureCatch(out)
@@ -198,10 +202,12 @@ internal class EventFeatureModule {
         db = EventCinemaFeatureDatabase(cinema)
         db = EventCinemaFeatureRequireNotEmpty(db)
         db = EventCinemaFeatureInvalidateAfter(db, sync, 30.days)
+        db = EventCinemaFeatureCatch(db)
         var out: EventCinemaFeature
         out = EventCinemaFeatureNetwork(service, provider)
         out = EventCinemaFeatureStoring(out, cinema, scope)
         out = EventCinemaFeatureSaveTimestamp(out, sync)
+        out = EventCinemaFeatureCatch(out)
         out = EventCinemaFeatureFold(db, out, fallback)
         out = EventCinemaFeatureDistance(out)
         out = EventCinemaFeatureDistanceClosest(out, preference)

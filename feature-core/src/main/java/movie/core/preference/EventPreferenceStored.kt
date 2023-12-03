@@ -26,5 +26,10 @@ class EventPreferenceStored(
         set(value) {
             store["distance-kms"] = value.toString()
         }
+    override var keywords: List<String>
+        get() = store["disabled-keywords"]?.split("\n").orEmpty()
+        set(value) {
+            store["disabled-keywords"] = value.joinToString("\n")
+        }
 
 }

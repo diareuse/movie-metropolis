@@ -188,7 +188,7 @@ interface DataPool<T> {
                 duration = 0.seconds,
                 media = listOf(ExtendedMovieResponse.Media.Image(0, 0, "")),
                 metadata = mapOf(
-                    Locale.getDefault() to Metadata("", null, null, null, null)
+                    Locale.getDefault() to Metadata("a", null, null, null, null)
                 ),
                 attributes = listOf(ExtendedMovieResponse.Key("action"))
             )
@@ -200,7 +200,7 @@ interface DataPool<T> {
                 duration = 0.seconds,
                 media = listOf(ExtendedMovieResponse.Media.Image(0, 0, "")),
                 metadata = mapOf(
-                    Locale.getDefault() to Metadata("", null, null, null, null)
+                    Locale.getDefault() to Metadata("b", null, null, null, null)
                 ),
                 attributes = emptyList()
             )
@@ -212,7 +212,7 @@ interface DataPool<T> {
                 duration = 0.seconds,
                 media = listOf(ExtendedMovieResponse.Media.Image(0, 0, "")),
                 metadata = mapOf(
-                    Locale.getDefault() to Metadata("", null, null, null, null)
+                    Locale.getDefault() to Metadata("c", null, null, null, null)
                 ),
                 attributes = emptyList()
             )
