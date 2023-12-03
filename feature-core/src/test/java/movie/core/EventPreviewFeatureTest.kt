@@ -11,7 +11,6 @@ import movie.core.db.dao.MovieMediaDao
 import movie.core.db.dao.MoviePreviewDao
 import movie.core.db.model.MoviePreviewView
 import movie.core.di.EventFeatureModule
-import movie.core.model.MovieDetail
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.ExtendedMovieResponse
@@ -24,16 +23,14 @@ import movie.image.SwatchColor
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
-import kotlin.random.Random.Default.nextInt
+import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 
 abstract class EventPreviewFeatureTest {
 
@@ -175,42 +172,26 @@ abstract class EventPreviewFeatureTest {
 
     @Test
     fun get_filtersMovies_fromDatabase() = runTest {
-        database_responds_success()
+        val expected = database_responds_success()
         onlyMovies_responds_true()
-        val output = feature(this).get()
-        assertTrue {
-            output.getOrThrow().all { it.genres.toList().isNotEmpty() }
-        }
+        val output = feature(this).get().getOrThrow().toList().map { it.id }
+        for (i in expected)
+            assertContains(output, i.id)
     }
 
     @Test
     fun get_filtersMovies_fromNetwork() = runTest {
-        service_responds_success()
+        val expected = service_responds_success()
         onlyMovies_responds_true()
-        val output = feature(this).get()
-        assertTrue {
-            output.getOrThrow().all { it.genres.toList().isNotEmpty() }
-        }
+        val output = feature(this).get().getOrThrow().toList().map { it.id }
+        for (i in expected)
+            assertContains(output, i.id.key)
     }
 
     // ---
 
     protected fun onlyMovies_responds_true() {
         whenever(preference.onlyMovies).thenReturn(true)
-    }
-
-    protected fun detail_responds_success(): Byte {
-        val value = nextInt(1, 100).toByte()
-        val movie = mock<MovieDetail>()
-        wheneverBlocking { detail.get(any()) }.thenReturn(Result.success(movie))
-        return value
-    }
-
-    private fun analyzer_responds_success(): Int {
-        val color = nextInt(0xff000000.toInt(), 0xffffffff.toInt())
-        val swatch = Swatch(SwatchColor(color), SwatchColor(color), SwatchColor(color))
-        wheneverBlocking { analyzer.getColors(anyOrNull()) }.thenReturn(swatch)
-        return color
     }
 
     private fun booking_responds_positive(): List<String> {
