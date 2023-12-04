@@ -45,7 +45,7 @@ jobs:
           sed -i "s/versionCode 1/versionCode $versionNumber/" buildSrc/src/main/groovy/application-conventions.gradle
 
       - name: Set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
