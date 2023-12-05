@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.windowsizeclass.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.geometry.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
@@ -16,7 +15,7 @@ import movie.style.util.findActivityOrNull
 fun rememberWindowSizeClass(): WindowSizeClass {
     val context = LocalContext.current
     val activity = context.findActivityOrNull()
-        ?: return WindowSizeClass.calculateFromSize(Size.Zero, LocalDensity.current)
+        ?: return WindowSizeClass.calculateFromSize(DpSize.Zero)
     return calculateWindowSizeClass(activity = activity)
 }
 
