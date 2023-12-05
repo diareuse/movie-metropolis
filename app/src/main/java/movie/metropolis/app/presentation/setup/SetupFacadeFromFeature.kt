@@ -22,7 +22,7 @@ class SetupFacadeFromFeature(
     }.let(Result.Companion::success)
 
     override suspend fun select(view: RegionView) {
-        if (view !is RegionViewFromFeature) return
+        require(view is RegionViewFromFeature)
         feature.region = view.region
     }
 }
