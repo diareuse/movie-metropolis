@@ -6,11 +6,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.platform.*
 import androidx.core.os.bundleOf
@@ -19,6 +15,7 @@ import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.collectLatest
+import movie.metropolis.app.util.rememberStoreable
 
 @SuppressLint("MissingPermission")
 @Composable
@@ -32,14 +29,27 @@ fun rememberLocation(
 ): State<Location?> {
     val context = LocalContext.current
     val provider = remember { LocationServices.getFusedLocationProviderClient(context) }
+    var latitude by rememberStoreable(key = "latitude", default = 0f)
+    var longitude by rememberStoreable(key = "longitude", default = 0f)
     val snapshotState = rememberSaveable(key = "location", stateSaver = LocationSaver) {
-        mutableStateOf(null as Location?)
+        val default = when {
+            latitude != 0f && longitude != 0f -> Location(null).apply {
+                this.latitude = latitude.toDouble()
+                this.longitude = longitude.toDouble()
+            }
+
+            else -> null
+        }
+        mutableStateOf(default)
     }
 
     LaunchedEffect(state.allPermissionsGranted) {
         if (!state.allPermissionsGranted) return@LaunchedEffect
         provider.requestLocationUpdates().collectLatest {
-            snapshotState.value = it
+            snapshotState.value = it?.also { location ->
+                latitude = location.latitude.toFloat()
+                longitude = location.longitude.toFloat()
+            }
         }
     }
     return snapshotState
