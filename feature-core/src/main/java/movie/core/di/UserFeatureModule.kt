@@ -41,7 +41,7 @@ import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
 import movie.core.preference.UserPreference
 import movie.wear.WearService
-import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -103,7 +103,7 @@ internal class UserFeatureModule {
         out = UserBookingFeatureStoring(out, booking, seats, scope)
         out = UserBookingFeatureSaveTimestamp(out, sync)
         out = UserBookingFeatureCalendar(out, writer, preference, scope, movie)
-        out = UserBookingFeatureFold(UserBookingFeatureInvalidateAfter(db, sync, 1.days), out, db)
+        out = UserBookingFeatureFold(UserBookingFeatureInvalidateAfter(db, sync, 1.hours), out, db)
         out = UserBookingFeatureWear(out, wear, scope)
         out = UserBookingFeatureCatch(out)
         return out
