@@ -6,6 +6,7 @@ import movie.metropolis.app.presentation.FeatureTest
 import org.junit.Test
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.util.Date
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
@@ -17,7 +18,7 @@ class SettingsFacadeTest : FeatureTest() {
     private lateinit var facade: SettingsFacade
 
     override fun prepare() {
-        facade = FacadeModule().settings(prefs, calendars)
+        facade = FacadeModule().settings(prefs, sync, calendars)
     }
 
     @Test
@@ -89,6 +90,15 @@ class SettingsFacadeTest : FeatureTest() {
         facade.removeListener(listener)
         facade.filterSeen = true
         assertEquals("success", value)
+    }
+
+    @Test
+    fun cleanup_setsTimestamp() = runTest {
+        facade.cleanTimestamps()
+        verify(sync).booking = Date(0)
+        verify(sync).cinema = Date(0)
+        verify(sync).previewCurrent = Date(0)
+        verify(sync).previewUpcoming = Date(0)
     }
 
 }

@@ -16,6 +16,7 @@ import movie.core.model.Cinema
 import movie.core.model.Location
 import movie.core.model.Movie
 import movie.core.preference.EventPreference
+import movie.core.preference.SyncPreference
 import movie.image.ImageAnalyzer
 import movie.image.Swatch
 import movie.image.SwatchColor.Companion.Black
@@ -38,6 +39,7 @@ abstract class FeatureTest {
     protected lateinit var detail: EventDetailFeature
     protected lateinit var cinema: EventCinemaFeature
     protected lateinit var prefs: EventPreference
+    protected lateinit var sync: SyncPreference
     protected lateinit var calendars: CalendarList
     protected lateinit var setup: SetupFeature
     protected lateinit var data: UserDataFeature
@@ -78,6 +80,7 @@ abstract class FeatureTest {
         rating = mock {
             onBlocking { get(any()) }.thenReturn(null)
         }
+        sync = mock {}
         data = mock()
         credentials = mock()
         booking = mock()
