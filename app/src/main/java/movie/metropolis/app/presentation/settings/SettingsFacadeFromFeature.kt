@@ -1,15 +1,20 @@
 package movie.metropolis.app.presentation.settings
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import movie.calendar.CalendarList
 import movie.core.preference.EventPreference
+import movie.core.preference.SyncPreference
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.model.adapter.CalendarViewFromFeature
 import movie.metropolis.app.presentation.OnChangedListener
 import java.util.Collections
+import java.util.Date
 import kotlin.math.absoluteValue
 
 class SettingsFacadeFromFeature(
     private val prefs: EventPreference,
+    private val syncs: SyncPreference,
     private val calendars: CalendarList
 ) : SettingsFacade {
 
@@ -51,6 +56,13 @@ class SettingsFacadeFromFeature(
 
     override suspend fun getCalendars(): Calendars {
         return calendars.query().map(::CalendarViewFromFeature).let(::Calendars)
+    }
+
+    override suspend fun cleanTimestamps() = withContext(Dispatchers.IO) {
+        syncs.booking = Date(0)
+        syncs.cinema = Date(0)
+        syncs.previewCurrent = Date(0)
+        syncs.previewUpcoming = Date(0)
     }
 
     override fun addListener(listener: OnChangedListener): OnChangedListener {

@@ -94,4 +94,8 @@ class SettingsViewModel @Inject constructor(
         facade.filters -= filter
     }
 
+    fun cleanup() = viewModelScope.launch {
+        facade.cleanTimestamps()
+    }
+
 }

@@ -130,4 +130,7 @@
     <string name="install">Instalovat</string>
     <string name="filter_movie_names">Blokování klíčových slov</string>
     <string name="filter_movie_names_description">Vyfiltruje filmy s klíčovými slovy, které si specifikuješ. Opatrně ale se slovy, které filtrují filmy - odpovídají velkým a malým písmenkům s diaktritikou a mohou se objevit uprostřed jiných slov. Nechtěně tak vyfiltruješ filmy, které bys rád/a viděl/a.</string>
+    <string name="storage">Úložiště</string>
+    <string name="timestamp_title">Resetovat časové značky</string>
+    <string name="timestamp_description">Tohle nastavení vyčistí časové značky používané k ukládání lokálních dat. Pokud je doba obnovení moc dlouhá nebo se vyskytne jiná chyba, vymazání časových značek může pomoci k obnovení lokálních dat ze serveru. Časté čištění časových značek může způsobit neoptimální chování aplikace.</string>
 </resources>

@@ -17,6 +17,7 @@ interface SettingsFacade {
     var filters: List<String>
 
     suspend fun getCalendars(): Calendars
+    suspend fun cleanTimestamps()
 
     fun addListener(listener: OnChangedListener): OnChangedListener
     fun removeListener(listener: OnChangedListener)

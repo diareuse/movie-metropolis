@@ -39,6 +39,7 @@ fun SettingsScreen(
     onStateChange: (SettingsState) -> Unit,
     onClickBack: () -> Unit,
     onShowCalendarsRequest: () -> Unit,
+    onClearTimestampClick: () -> Unit,
     onAddFilterClick: () -> Unit,
     onDeleteFilterClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -163,12 +164,23 @@ fun SettingsScreen(
                 )
             }
         }
+        SettingsSection(title = { Text(stringResource(R.string.storage)) }) {
+            SettingsItemRow(
+                title = { Text(stringResource(R.string.timestamp_title)) },
+                description = { Text(stringResource(R.string.timestamp_description)) },
+                value = {
+                    IconButton(onClick = onClearTimestampClick) {
+                        Icon(Icons.Rounded.Delete, null)
+                    }
+                }
+            )
+        }
     }
 
 }
 
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES, heightDp = 1300)
+@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO, heightDp = 1300)
 @Composable
 private fun SettingsScreenPreview() = PreviewLayout {
     SettingsScreen(
@@ -178,6 +190,7 @@ private fun SettingsScreenPreview() = PreviewLayout {
         onClickBack = {},
         onShowCalendarsRequest = {},
         onAddFilterClick = {},
-        onDeleteFilterClick = {}
+        onDeleteFilterClick = {},
+        onClearTimestampClick = {}
     )
 }

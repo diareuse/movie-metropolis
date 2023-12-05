@@ -20,6 +20,7 @@ import movie.core.UserCredentialFeature
 import movie.core.UserDataFeature
 import movie.core.adapter.MovieFromId
 import movie.core.preference.EventPreference
+import movie.core.preference.SyncPreference
 import movie.image.ImageAnalyzer
 import movie.metropolis.app.feature.billing.BillingFacade
 import movie.metropolis.app.model.adapter.CinemaFromId
@@ -210,10 +211,11 @@ class FacadeModule {
     @Reusable
     fun settings(
         prefs: EventPreference,
+        sync: SyncPreference,
         calendars: CalendarList
     ): SettingsFacade {
         var facade: SettingsFacade
-        facade = SettingsFacadeFromFeature(prefs, calendars)
+        facade = SettingsFacadeFromFeature(prefs, sync, calendars)
         facade = SettingsFacadeReactive(facade)
         facade = SettingsFacadeRecover(facade)
         return facade
