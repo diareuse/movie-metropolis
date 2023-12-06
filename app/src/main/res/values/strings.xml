@@ -133,4 +133,5 @@
     <string name="storage">Storage</string>
     <string name="timestamp_title">Reset last updated timestamps</string>
     <string name="timestamp_description">This setting clears timestamps used to cache local content. If the cache gets stuck for whatever reason or delay is too long, clearing timestamps helps to fetch new data as soon as possible. Cleaning timestamps often may produce non-optimal user experience.</string>
+    <string name="login_loading">Logging you in…</string>
 </resources>

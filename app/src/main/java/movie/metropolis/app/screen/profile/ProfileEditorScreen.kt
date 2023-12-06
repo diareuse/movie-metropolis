@@ -24,7 +24,6 @@ import movie.style.CollapsingTopAppBar
 import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
 import movie.style.rememberImageState
 import movie.style.theme.Theme
 
@@ -220,12 +219,13 @@ fun CommonTextField(
     supportingText: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
+    isError: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default
 ) {
     TextField(
-        modifier = modifier.glow(Theme.container.poster),
+        modifier = modifier,
         value = value,
         onValueChange = onValueChange,
         label = label,
@@ -234,13 +234,14 @@ fun CommonTextField(
         supportingText = supportingText,
         maxLines = 1,
         singleLine = true,
+        isError = isError,
         visualTransformation = visualTransformation,
         colors = TextFieldDefaults.colors(
             disabledIndicatorColor = Color.Transparent,
             errorIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            unfocusedContainerColor = Theme.color.container.surface.copy(.2f),
+            unfocusedContainerColor = Theme.color.container.surface.copy(.3f),
             focusedContainerColor = Theme.color.container.surface.copy(.5f),
             errorContainerColor = Theme.color.container.error.copy(.2f),
             disabledContainerColor = Theme.color.container.surface.copy(.2f)

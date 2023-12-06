@@ -74,6 +74,8 @@ import movie.style.CollapsingTopAppBar
 import movie.style.Container
 import movie.style.DialogBox
 import movie.style.action.actionView
+import movie.style.haptic.confirm
+import movie.style.haptic.reject
 import movie.style.layout.plus
 
 fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
@@ -165,6 +167,7 @@ fun NavGraphBuilder.setup(
         login = {
             val saving = rememberOneTapSaving()
             val oneTap by requestOneTapAsState()
+            val feedback = LocalHapticFeedback.current
             LaunchedEffect(oneTap) {
                 val oneTap = oneTap
                 if (oneTap != null) {
@@ -181,8 +184,11 @@ fun NavGraphBuilder.setup(
                 onLoginClick = {
                     scope.launch {
                         viewModel.login().onSuccess {
+                            feedback.confirm()
                             saving.save(loginState.email, loginState.password)
                             navigateHome(HomeState.Profile)
+                        }.onFailure {
+                            feedback.reject()
                         }
                     }
                 },

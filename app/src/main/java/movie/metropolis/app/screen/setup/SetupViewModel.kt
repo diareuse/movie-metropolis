@@ -7,6 +7,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.presentation.Posters
@@ -39,8 +40,15 @@ class SetupViewModel @Inject constructor(
     }
 
     suspend fun login(): Result<Unit> {
+        loginState.update { it.copy(loading = true, error = false) }
         val state = loginState.value
-        return login.login(state.email, state.password)
+        return try {
+            login.login(state.email, state.password).apply {
+                loginState.update { it.copy(error = isFailure) }
+            }
+        } finally {
+            loginState.update { it.copy(loading = false) }
+        }
     }
 
 }

@@ -31,6 +31,18 @@ fun HapticFeedback.performHapticFeedback(type: Int) {
     performHapticFeedback(HapticFeedbackType(type))
 }
 
+fun HapticFeedback.confirm() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        performHapticFeedback(HapticFeedbackConstants.CONFIRM)
+    }
+}
+
+fun HapticFeedback.reject() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        performHapticFeedback(HapticFeedbackConstants.REJECT)
+    }
+}
+
 @Composable
 fun <T> TickOnChange(value: T, key: Any? = Unit) {
     var last by rememberSaveable(key) { mutableStateOf(value) }

@@ -133,4 +133,5 @@
     <string name="storage">Úložiště</string>
     <string name="timestamp_title">Resetovat časové značky</string>
     <string name="timestamp_description">Tohle nastavení vyčistí časové značky používané k ukládání lokálních dat. Pokud je doba obnovení moc dlouhá nebo se vyskytne jiná chyba, vymazání časových značek může pomoci k obnovení lokálních dat ze serveru. Časté čištění časových značek může způsobit neoptimální chování aplikace.</string>
+    <string name="login_loading">Probíhá přihlašování…</string>
 </resources>

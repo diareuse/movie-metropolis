@@ -4,6 +4,7 @@ package movie.metropolis.app.screen.setup
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.*
@@ -83,6 +84,18 @@ fun SetupLoginContent(
                 .padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            AnimatedVisibility(
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                visible = state.loading
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
+                    Text(stringResource(R.string.login_loading))
+                }
+            }
             val reqs = remember { List(2) { FocusRequester() } }
             LaunchedEffect(reqs) {
                 reqs[0].requestFocus()
@@ -101,6 +114,8 @@ fun SetupLoginContent(
                         },
                     value = state.email,
                     onValueChange = { onStateChange(state.copy(email = it)) },
+                    isError = state.error,
+                    enabled = !state.loading,
                     label = { Text(stringResource(R.string.email)) },
                     placeholder = { Text("john.doe@email.com") },
                     keyboardOptions = KeyboardOptions(
@@ -124,6 +139,8 @@ fun SetupLoginContent(
                         },
                     value = state.password,
                     onValueChange = { onStateChange(state.copy(password = it)) },
+                    isError = state.error,
+                    enabled = !state.loading,
                     label = { Text(stringResource(R.string.password)) },
                     placeholder = { Text("*****") },
                     visualTransformation = PasswordVisualTransformation(),
@@ -133,6 +150,11 @@ fun SetupLoginContent(
                         keyboardType = KeyboardType.Password,
                         imeAction = ImeAction.Done
                     ),
+                    supportingText = {
+                        AnimatedVisibility(state.error) {
+                            Text(stringResource(R.string.login_error))
+                        }
+                    }
                 )
             }
             if (!WindowInsets.isImeVisible) {
@@ -144,7 +166,8 @@ fun SetupLoginContent(
                 )
                 TextButton(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    onClick = onLoginSkip
+                    onClick = onLoginSkip,
+                    enabled = !state.loading,
                 ) {
                     Text(stringResource(R.string.continue_without_login))
                 }
@@ -156,10 +179,13 @@ fun SetupLoginContent(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
-private fun SetupLoginContentPreview() = PreviewLayout(modifier = Modifier.fillMaxSize()) {
+private fun SetupLoginContentPreview(
+    @PreviewParameter(SetupLoginContentParameter::class)
+    state: LoginState
+) = PreviewLayout(modifier = Modifier.fillMaxSize()) {
     SetupLoginContent(
         posters = List(10) { "" }.toImmutableList(),
-        state = LoginState(),
+        state = state,
         onStateChange = {},
         onLoginClick = {},
         onLoginSkip = {}
@@ -167,8 +193,12 @@ private fun SetupLoginContentPreview() = PreviewLayout(modifier = Modifier.fillM
 }
 
 private class SetupLoginContentParameter :
-    PreviewParameterProvider<SetupLoginContentParameter.Data> {
-    override val values = sequence { yield(Data()) }
+    PreviewParameterProvider<LoginState> {
+    override val values = sequence {
+        yield(LoginState())
+        yield(LoginState(error = true))
+        yield(LoginState(loading = true))
+    }
 
     class Data
 }
