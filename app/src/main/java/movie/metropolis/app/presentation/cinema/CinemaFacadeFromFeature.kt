@@ -18,7 +18,8 @@ class CinemaFacadeFromFeature(
 ) : CinemaFacade {
 
     override val cinema: Flow<Result<CinemaView>> = flow {
-        emit(cinemas.get(null).map { it.first { it.id == id }.let(::CinemaViewFromFeature) })
+        emit(cinemas.runCatching { get(null) }
+            .map { it.first { it.id == id }.let(::CinemaViewFromFeature) })
     }
 
     override fun showings(date: Date): Flow<Result<List<MovieBookingView>>> = flow {

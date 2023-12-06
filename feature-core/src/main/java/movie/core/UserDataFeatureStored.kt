@@ -13,7 +13,7 @@ class UserDataFeatureStored(
         throw IllegalStateException("Not supported by offline storage")
     }
 
-    override suspend fun get() = cinema.get(null).mapCatching {
+    override suspend fun get() = cinema.runCatching { get(null) }.mapCatching {
         UserFromStored(preference, it.asIterable())
     }
 

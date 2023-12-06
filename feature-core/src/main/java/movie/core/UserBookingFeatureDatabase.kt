@@ -18,7 +18,7 @@ class UserBookingFeatureDatabase(
 ) : UserBookingFeature {
 
     override suspend fun get(): Result<Sequence<Booking>> = kotlin.runCatching {
-        val cinemas = cinema.get(null).getOrNull()
+        val cinemas = cinema.runCatching { get(null) }.getOrNull()
         booking.selectAll().mapNotNull { booking ->
             val cinema = cinemas
                 ?.firstOrNull { it.id == booking.cinemaId }

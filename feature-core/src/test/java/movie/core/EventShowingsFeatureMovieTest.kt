@@ -92,7 +92,7 @@ class EventShowingsFeatureMovieTest {
 
     private fun cinema_responds_success(): List<Cinema> {
         val data = DataPool.Cinemas.all()
-        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(Result.success(data.asSequence()))
+        wheneverBlocking { cinema.get(anyOrNull()) }.thenReturn(data.asSequence())
         return data
     }
 

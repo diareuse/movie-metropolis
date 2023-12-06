@@ -9,12 +9,10 @@ class EventCinemaFeatureDistanceClosest(
     private val preference: EventPreference
 ) : EventCinemaFeature {
 
-    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
-        return origin.get(location).map { cinemas ->
-            cinemas.filter { cinema ->
-                val distance = cinema.distance
-                distance == null || distance.toInt() in 0 until preference.distanceKms
-            }
+    override suspend fun get(location: Location?): Sequence<Cinema> {
+        return origin.get(location).filter { cinema ->
+            val distance = cinema.distance
+            distance == null || distance.toInt() in 0 until preference.distanceKms
         }
     }
 

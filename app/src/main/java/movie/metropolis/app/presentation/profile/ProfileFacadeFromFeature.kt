@@ -19,7 +19,7 @@ class ProfileFacadeFromFeature(
 ) : ProfileFacade {
 
     override suspend fun getCinemas(callback: ResultCallback<List<CinemaSimpleView>>) {
-        val output = cinemas.get(null).map { result ->
+        val output = cinemas.runCatching { get(null) }.map { result ->
             result.map(::CinemaSimpleViewFromFeature).toList()
         }
         callback(output)

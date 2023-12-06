@@ -48,7 +48,7 @@ class CinemasFacadeTest : FeatureTest() {
 
     private suspend fun cinema_responds_success(count: Int) {
         whenever(cinema.get(anyOrNull()))
-            .thenReturn(Result.success(sequence { repeat(count) { yield(mock()) } }))
+            .thenReturn(sequence { repeat(count) { yield(mock()) } })
     }
 
 }

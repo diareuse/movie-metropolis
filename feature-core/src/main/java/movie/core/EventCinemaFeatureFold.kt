@@ -7,8 +7,8 @@ class EventCinemaFeatureFold(
     private vararg val options: EventCinemaFeature
 ) : EventCinemaFeature, Recoverable {
 
-    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
-        return options.fold { get(location) }
+    override suspend fun get(location: Location?): Sequence<Cinema> {
+        return options.foldSimple { get(location) }
     }
 
 }

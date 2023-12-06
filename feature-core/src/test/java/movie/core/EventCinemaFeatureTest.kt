@@ -2,7 +2,6 @@
 
 package movie.core
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.CinemaDao
@@ -35,7 +34,7 @@ class EventCinemaFeatureTest {
     private lateinit var preference: EventPreference
     private lateinit var cinema: CinemaDao
     private lateinit var service: CinemaService
-    private lateinit var feature: (CoroutineScope) -> EventCinemaFeature
+    private lateinit var feature: EventCinemaFeature
 
     @Before
     fun prepare() {
@@ -50,15 +49,13 @@ class EventCinemaFeatureTest {
             on { cinema }.thenReturn(Date())
         }
         provider = mock {}
-        feature = { scope ->
-            EventFeatureModule().cinema(service, cinema, preference, sync, provider, scope)
-        }
+        feature = EventFeatureModule().cinema(service, cinema, preference, sync, provider)
     }
 
     @Test
     fun get_returns_fromNetwork() = runTest {
         val testData = service_responds_success()
-        val output = feature(this).get(null).getOrThrow()
+        val output = feature.get(null)
         assertEquals(testData.size, output.count())
     }
 
@@ -67,14 +64,14 @@ class EventCinemaFeatureTest {
         val testData = service_responds_success(modifier = {
             it.copy(latitude = 0.0, longitude = 0.0)
         })
-        val output = feature(this).get(Location(0.0, 0.0)).getOrThrow()
+        val output = feature.get(Location(0.0, 0.0))
         assertEquals(testData.size, output.count())
     }
 
     @Test
     fun get_returns_fromDatabase() = runTest {
         val testData = database_responds_success()
-        val output = feature(this).get(null).getOrThrow()
+        val output = feature.get(null)
         assertEquals(testData.size, output.count())
     }
 
@@ -83,35 +80,35 @@ class EventCinemaFeatureTest {
         val testData = database_responds_success(modifier = {
             it.copy(latitude = 0.0, longitude = 0.0)
         })
-        val output = feature(this).get(Location(0.0, 0.0)).getOrThrow()
+        val output = feature.get(Location(0.0, 0.0))
         assertEquals(testData.size, output.count())
     }
 
     @Test
     fun get_returns_sorted_fromDatabase() = runTest {
         database_responds_success()
-        val output = feature(this).get(null).getOrThrow()
+        val output = feature.get(null)
         assertContentEquals(listOf("a", "b", "c", "d"), output.map { it.city }.toList())
     }
 
     @Test
     fun get_returns_sortedByDistance_fromDatabase() = runTest {
         database_responds_success()
-        val output = feature(this).get(Location(0.0, 0.0)).getOrThrow()
+        val output = feature.get(Location(0.0, 0.0))
         assertContentEquals(listOf("1", "2", "3"), output.map { it.id }.toList())
     }
 
     @Test
     fun get_returns_sorted_fromNetwork() = runTest {
         service_responds_success()
-        val output = feature(this).get(null).getOrThrow()
+        val output = feature.get(null)
         assertContentEquals(listOf("a", "b", "c", "d"), output.map { it.city }.toList())
     }
 
     @Test
     fun get_returns_sortedByDistance_fromNetwork() = runTest {
         service_responds_success()
-        val output = feature(this).get(Location(0.0, 0.0)).getOrThrow()
+        val output = feature.get(Location(0.0, 0.0))
         assertContentEquals(listOf("1", "2", "3"), output.map { it.id }.toList())
     }
 
@@ -119,7 +116,7 @@ class EventCinemaFeatureTest {
     fun get_returns_closestOnly_fromDatabase() = runTest {
         // 1.0,1.0 is roughly 1100kms from 0.0,0.0
         database_responds_success { it.copy(latitude = 1.0, longitude = 1.0) }
-        val output = feature(this).get(Location(0.0, 0.0)).getOrThrow()
+        val output = feature.get(Location(0.0, 0.0))
         assertEquals(emptyList(), output.toList())
     }
 
@@ -127,27 +124,27 @@ class EventCinemaFeatureTest {
     fun get_returns_closestOnly_fromNetwork() = runTest {
         // 1.0,1.0 is roughly 1100kms from 0.0,0.0
         service_responds_success { it.copy(latitude = 1.0, longitude = 1.0) }
-        val output = feature(this).get(Location(0.0, 0.0)).getOrThrow()
+        val output = feature.get(Location(0.0, 0.0))
         assertEquals(emptyList(), output.toList())
     }
 
     @Test
     fun get_stores() = runTest {
         val testData = service_responds_success()
-        feature(this).get(null)
+        feature.get(null)
         awaitChildJobCompletion()
         verify(cinema, times(testData.size)).insertOrUpdate(any())
     }
 
     @Test
     fun get_throws() = runTest {
-        assertFails { feature(this).get(null).getOrThrow() }
+        assertFails { feature.get(null) }
     }
 
     @Test
     fun get_writes_syncDate() = runTest {
         service_responds_success()
-        feature(this).get(null)
+        feature.get(null)
         verify(sync).cinema = any()
     }
 

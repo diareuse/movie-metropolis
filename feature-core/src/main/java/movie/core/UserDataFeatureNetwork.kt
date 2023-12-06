@@ -21,7 +21,7 @@ class UserDataFeatureNetwork(
 
     override suspend fun get(): Result<User> = kotlin.runCatching {
         val user = service.getUser().getOrThrow()
-        val cinema = cinema.get(null).getOrThrow()
+        val cinema = cinema.get(null)
         val points = service.getPoints().getOrThrow()
         UserFromRemote(
             customer = user,

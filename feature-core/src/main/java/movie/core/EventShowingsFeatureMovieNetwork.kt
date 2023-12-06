@@ -14,17 +14,18 @@ class EventShowingsFeatureMovieNetwork(
     private val cinema: EventCinemaFeature
 ) : EventShowingsFeature.Movie {
 
-    override suspend fun get(date: Date): Result<CinemaWithShowings> = cinema.get(location)
-        .mapCatching { it.requireNotEmpty() }
-        .recoverCatching { cinema.get(null).getOrThrow() }
-        .mapCatching { cinemas ->
-            cinemas.associateWith { cinema ->
-                service.getEventsInCinema(cinema.id, date)
-                    .map { it.body.events }
-                    .getOrDefault(emptyList())
-                    .filter { it.movieId == movie.id }
-                    .map { ShowingFromResponse(it, cinema) }
+    override suspend fun get(date: Date): Result<CinemaWithShowings> =
+        cinema.runCatching { get(location) }
+            .mapCatching { it.requireNotEmpty() }
+            .recoverCatching { cinema.get(null) }
+            .mapCatching { cinemas ->
+                cinemas.associateWith { cinema ->
+                    service.getEventsInCinema(cinema.id, date)
+                        .map { it.body.events }
+                        .getOrDefault(emptyList())
+                        .filter { it.movieId == movie.id }
+                        .map { ShowingFromResponse(it, cinema) }
+                }
             }
-        }
 
 }

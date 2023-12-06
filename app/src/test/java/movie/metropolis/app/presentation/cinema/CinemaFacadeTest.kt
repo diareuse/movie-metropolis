@@ -125,11 +125,11 @@ class CinemaFacadeTest : FeatureTest() {
     // ---
 
     private suspend fun cinemas_returns_cinema() {
-        whenever(cinema.get(anyOrNull())).thenReturn(Result.success(sequenceOf(model)))
+        whenever(cinema.get(anyOrNull())).thenReturn(sequenceOf(model))
     }
 
     private suspend fun cinemas_returns_empty() {
-        whenever(cinema.get(anyOrNull())).thenReturn(Result.success(emptySequence()))
+        whenever(cinema.get(anyOrNull())).thenReturn(emptySequence())
     }
 
     private suspend fun showings_returns_value(count: Int = 1) {

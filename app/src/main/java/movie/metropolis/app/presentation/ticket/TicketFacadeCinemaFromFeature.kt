@@ -29,7 +29,8 @@ class TicketFacadeCinemaFromFeature(
     private val activeTypes = MutableStateFlow(setOf<ProjectionType>())
     private val _filters = MutableStateFlow(DataFiltersView())
     private val cinema = flow {
-        val cinema = cinemas.get(null).getOrDefault(emptySequence()).first { it.id == id }
+        val cinema =
+            cinemas.runCatching { get(null) }.getOrDefault(emptySequence()).first { it.id == id }
         emit(cinema)
     }.shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 

@@ -5,6 +5,6 @@ import movie.core.model.Location
 
 interface EventCinemaFeature {
 
-    suspend fun get(location: Location?): Result<Sequence<Cinema>>
+    suspend fun get(location: Location?): Sequence<Cinema>
 
 }

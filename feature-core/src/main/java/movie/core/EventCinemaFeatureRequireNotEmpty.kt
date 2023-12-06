@@ -7,8 +7,8 @@ class EventCinemaFeatureRequireNotEmpty(
     private val origin: EventCinemaFeature
 ) : EventCinemaFeature {
 
-    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
-        return origin.get(location).mapCatching { require(it.count() > 0); it }
+    override suspend fun get(location: Location?): Sequence<Cinema> {
+        return origin.get(location).also { require(it.count() > 0) }
     }
 
 }

@@ -16,9 +16,9 @@ class EventShowingsFeatureMovieDatabase(
     private val cinema: EventCinemaFeature
 ) : EventShowingsFeature.Movie {
 
-    override suspend fun get(date: Date) = cinema.get(location)
+    override suspend fun get(date: Date) = cinema.runCatching { get(location) }
         .mapCatching { it.requireNotEmpty() }
-        .recoverCatching { cinema.get(null).getOrThrow() }
+        .recoverCatching { cinema.get(null) }
         .mapCatching {
             it.asIterable().associateWith { cinema ->
                 showing.selectByCinema(

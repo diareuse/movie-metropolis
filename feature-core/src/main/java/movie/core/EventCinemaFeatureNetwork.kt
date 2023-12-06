@@ -11,10 +11,10 @@ class EventCinemaFeatureNetwork(
     private val provider: EndpointProvider
 ) : EventCinemaFeature {
 
-    override suspend fun get(location: Location?): Result<Sequence<Cinema>> {
-        return service.getCinemas().map {
-            it.results.asSequence().map { CinemaFromResponse(it, null, provider) }
-        }
+    override suspend fun get(location: Location?): Sequence<Cinema> {
+        return service.getCinemas().getOrThrow()
+            .results.asSequence()
+            .map { CinemaFromResponse(it, null, provider) }
     }
 
 }

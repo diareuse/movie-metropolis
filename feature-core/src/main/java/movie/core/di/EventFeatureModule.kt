@@ -188,8 +188,7 @@ internal class EventFeatureModule {
         cinema: CinemaDao,
         preference: EventPreference,
         sync: SyncPreference,
-        provider: EndpointProvider,
-        scope: CoroutineScope
+        provider: EndpointProvider
     ): EventCinemaFeature {
         val fallback = EventCinemaFeatureDatabase(cinema)
         var db: EventCinemaFeature
@@ -199,7 +198,7 @@ internal class EventFeatureModule {
         db = EventCinemaFeatureCatch(db)
         var out: EventCinemaFeature
         out = EventCinemaFeatureNetwork(service, provider)
-        out = EventCinemaFeatureStoring(out, cinema, scope)
+        out = EventCinemaFeatureStoring(out, cinema)
         out = EventCinemaFeatureSaveTimestamp(out, sync)
         out = EventCinemaFeatureCatch(out)
         out = EventCinemaFeatureFold(db, out, fallback)

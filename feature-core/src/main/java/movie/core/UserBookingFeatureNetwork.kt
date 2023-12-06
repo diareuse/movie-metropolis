@@ -13,7 +13,7 @@ class UserBookingFeatureNetwork(
 
     override suspend fun get(): Result<Sequence<Booking>> = kotlin.runCatching {
         val bookings = service.getBookings().getOrThrow()
-        val cinemas = cinema.get(null).getOrThrow().asIterable()
+        val cinemas = cinema.get(null).asIterable()
         bookings.map { it.asBooking(cinemas) }.asSequence()
     }
 

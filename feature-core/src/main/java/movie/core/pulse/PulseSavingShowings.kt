@@ -11,7 +11,7 @@ class PulseSavingShowings(
 ) : Pulse {
 
     // todo try loading for release dates of movies user has marked as favorite
-    override suspend fun execute() = cinema.get(null).onSuccess { cinemas ->
+    override suspend fun execute() = cinema.runCatching { get(null) }.onSuccess { cinemas ->
         for (cinema in cinemas)
             showing.cinema(cinema).get(Date())
     }
