@@ -183,7 +183,7 @@ abstract class ListingFacadeTest : FeatureTest() {
         }
     ) {
         val movie = mock { modifier() }
-        wheneverBlocking { detail.get(any()) }.thenReturn(Result.success(movie))
+        wheneverBlocking { detail.get(any()) }.thenReturn(movie)
     }
 
     fun favorite_responds_success(): Boolean {

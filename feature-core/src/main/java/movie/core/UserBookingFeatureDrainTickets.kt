@@ -19,7 +19,7 @@ class UserBookingFeatureDrainTickets(
     }
 
     private suspend fun getStored() = store.getAll().mapNotNull { ticket ->
-        val movie = this.movie.get(MovieFromId(ticket.movieId)).getOrNull()
+        val movie = this.movie.runCatching { get(MovieFromId(ticket.movieId)) }.getOrNull()
             ?: return@mapNotNull null
         val cinemas = this.cinema.get(null).getOrNull()
         val cinema = cinemas?.firstOrNull { it.id == ticket.cinemaId }

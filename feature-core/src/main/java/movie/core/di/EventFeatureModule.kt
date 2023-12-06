@@ -171,12 +171,11 @@ internal class EventFeatureModule {
         service: EventService,
         movie: MovieDao,
         detail: MovieDetailDao,
-        media: MovieMediaDao,
-        scope: CoroutineScope
+        media: MovieMediaDao
     ): EventDetailFeature {
         var out: EventDetailFeature
         out = EventDetailFeatureNetwork(service)
-        out = EventDetailFeatureStoring(out, movie, detail, media, scope)
+        out = EventDetailFeatureStoring(out, movie, detail, media)
         out = EventDetailFeatureFold(EventDetailFeatureDatabase(detail, media), out)
         out = EventDetailFeatureCatch(out)
         return out

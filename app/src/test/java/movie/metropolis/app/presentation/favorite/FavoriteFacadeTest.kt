@@ -93,7 +93,7 @@ class FavoriteFacadeTest : FeatureTest() {
             on { name }.thenReturn("name")
             on { originalName }.thenReturn("original")
         }
-        whenever(detail.get(any())).thenReturn(Result.success(item))
+        whenever(detail.get(any())).thenReturn(item)
         return item
     }
 

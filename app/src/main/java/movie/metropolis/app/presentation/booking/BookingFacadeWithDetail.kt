@@ -8,7 +8,6 @@ import kotlinx.coroutines.sync.withLock
 import movie.core.EventDetailFeature
 import movie.core.adapter.MovieFromId
 import movie.core.model.MovieDetail
-import movie.log.logSevere
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.adapter.BookingViewWithDetail
 
@@ -40,7 +39,7 @@ class BookingFacadeWithDetail(
 
     private suspend fun getDetail(id: String): MovieDetail? = movieCacheLock.withLock {
         return movieCache.getOrPut(id) {
-            detail.get(MovieFromId(id)).logSevere().getOrNull() ?: return@getDetail null
+            detail.runCatching { get(MovieFromId(id)) }.getOrNull() ?: return@getDetail null
         }
     }
 

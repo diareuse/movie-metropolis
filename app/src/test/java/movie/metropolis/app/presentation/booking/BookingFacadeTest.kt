@@ -123,8 +123,7 @@ class BookingFacadeTest : FeatureTest() {
             on { directors }.thenReturn(listOf("a", "b", "c"))
             on { media }.thenReturn(listOf(Media.Image(0, 0, "")))
         }
-        val data = Result.success(movie)
-        wheneverBlocking { detail.get(any()) }.thenReturn(data)
+        wheneverBlocking { detail.get(any()) }.thenReturn(movie)
         return movie
     }
 

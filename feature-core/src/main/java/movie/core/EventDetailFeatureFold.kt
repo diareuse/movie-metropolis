@@ -7,8 +7,8 @@ class EventDetailFeatureFold(
     private vararg val options: EventDetailFeature
 ) : EventDetailFeature, Recoverable {
 
-    override suspend fun get(movie: Movie): Result<MovieDetail> {
-        return options.fold { get(movie) }
+    override suspend fun get(movie: Movie): MovieDetail {
+        return options.foldSimple { get(movie) }
     }
 
 }

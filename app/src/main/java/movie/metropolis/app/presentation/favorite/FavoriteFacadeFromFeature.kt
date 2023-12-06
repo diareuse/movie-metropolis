@@ -24,7 +24,7 @@ class FavoriteFacadeFromFeature(
             .toMutableList()
         val mutex = Mutex()
         for ((index, it) in input.withIndex()) launch {
-            val detail = cache.getOrPut(it.id) { detail.get(it.getBase()).getOrThrow() }
+            val detail = cache.getOrPut(it.id) { detail.get(it.getBase()) }
             val out = mutex.withLock {
                 input[index] = it.copy(media = detail.media)
                 input.toList()

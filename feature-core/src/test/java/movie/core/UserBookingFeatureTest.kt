@@ -241,7 +241,7 @@ class UserBookingFeatureTest {
             on { duration }.thenReturn(2.hours)
             on { name }.thenReturn("")
         }
-        wheneverBlocking { detail.get(any()) }.thenReturn(Result.success(movie))
+        wheneverBlocking { detail.get(any()) }.thenReturn(movie)
     }
 
     private fun cinema_responds_success() {

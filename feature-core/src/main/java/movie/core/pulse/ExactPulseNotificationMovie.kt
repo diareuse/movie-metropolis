@@ -34,7 +34,7 @@ class ExactPulseNotificationMovie(
         val manager = NotificationManagerCompat.from(context)
         if (!manager.areNotificationsEnabled()) return
         val id = data.getString(ExtraId).let(::checkNotNull)
-        val movie = detail.get(MovieFromId(id)).getOrNull() ?: return
+        val movie = detail.get(MovieFromId(id))
         val notification = getNotification(context, movie)
         manager.notify(movie.id.hashCode(), notification)
         favorite.setNotified(movie)

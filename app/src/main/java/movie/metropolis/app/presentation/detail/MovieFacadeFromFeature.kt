@@ -26,7 +26,7 @@ class MovieFacadeFromFeature(
 
     private val model = MovieFromId(id)
     private val detailFlow = flow {
-        emit(detail.get(model).getOrThrow())
+        emit(detail.get(model))
     }
 
     override val movie: Flow<MovieDetailView> = detailFlow.map(::MovieDetailViewFromFeature)

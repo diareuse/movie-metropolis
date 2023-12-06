@@ -5,6 +5,7 @@ import movie.core.model.MovieDetail
 
 interface EventDetailFeature {
 
-    suspend fun get(movie: Movie): Result<MovieDetail>
+    @Throws(Throwable::class)
+    suspend fun get(movie: Movie): MovieDetail
 
 }

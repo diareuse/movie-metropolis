@@ -41,7 +41,7 @@ class FavoriteFacadeRating(
     }
 
     private suspend fun getRating(movie: Movie): MovieMetadata? = cache.getOrPut(movie.id) {
-        val descriptors = detail.get(movie).map {
+        val descriptors = detail.runCatching { get(movie) }.map {
             val year = Calendar.getInstance().apply { time = it.releasedAt }[Calendar.YEAR]
             arrayOf(
                 MovieDescriptor.Original(it.originalName, year),

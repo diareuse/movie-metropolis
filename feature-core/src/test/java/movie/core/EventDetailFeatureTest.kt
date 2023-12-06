@@ -2,7 +2,6 @@
 
 package movie.core
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.MovieDao
@@ -26,7 +25,7 @@ import org.mockito.kotlin.verify
 class EventDetailFeatureTest {
 
     private lateinit var item: Movie
-    private lateinit var feature: (CoroutineScope) -> EventDetailFeature
+    private lateinit var feature: EventDetailFeature
     private lateinit var media: MovieMediaDao
     private lateinit var detail: MovieDetailDao
     private lateinit var movie: MovieDao
@@ -38,10 +37,8 @@ class EventDetailFeatureTest {
         detail = mock {}
         movie = mock {}
         service = mock {}
-        feature = { scope ->
-            EventFeatureModule()
-                .detail(service, movie, detail, media, scope)
-        }
+        feature = EventFeatureModule()
+            .detail(service, movie, detail, media)
         item = mock {
             on { id }.thenReturn("")
         }
@@ -50,21 +47,19 @@ class EventDetailFeatureTest {
     @Test
     fun get_returns_fromNetwork() = runTest {
         service_responds_success()
-        val output = feature(this).get(item)
-        output.getOrThrow()
+        feature.get(item)
     }
 
     @Test
     fun get_returns_fromDatabase() = runTest {
         database_responds_success()
-        val output = feature(this).get(item)
-        output.getOrThrow()
+        feature.get(item)
     }
 
     @Test
     fun get_stores() = runTest {
         val testData = service_responds_success()
-        feature(this).get(item)
+        feature.get(item)
         awaitChildJobCompletion()
         verify(movie, times(1)).insert(any())
         verify(detail, times(1)).insertOrUpdate(any())
