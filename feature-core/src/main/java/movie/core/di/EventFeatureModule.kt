@@ -25,7 +25,6 @@ import movie.core.EventDetailFeatureFold
 import movie.core.EventDetailFeatureNetwork
 import movie.core.EventDetailFeatureStoring
 import movie.core.EventPreviewFeature
-import movie.core.EventPreviewFeatureCatch
 import movie.core.EventPreviewFeatureDatabase
 import movie.core.EventPreviewFeatureFilter
 import movie.core.EventPreviewFeatureFilterKeywords
@@ -140,8 +139,7 @@ internal class EventFeatureModule {
         media: MovieMediaDao,
         preference: EventPreference,
         booking: BookingDao,
-        sync: SyncPreference,
-        scope: CoroutineScope
+        sync: SyncPreference
     ): EventPreviewFeature.Factory = object : EventPreviewFeature.Factory {
 
         override fun current(): EventPreviewFeature = common(ShowingType.Current)
@@ -154,18 +152,15 @@ internal class EventFeatureModule {
             db = EventPreviewFeatureDatabase(preview, media, type)
             db = EventPreviewFeatureRequireNotEmpty(db)
             db = EventPreviewFeatureInvalidateAfter(db, sync, type, 1.days)
-            db = EventPreviewFeatureCatch(db)
             var out: EventPreviewFeature
             out = EventPreviewFeatureNetwork(service, type)
-            out = EventPreviewFeatureStoring(out, type, movie, preview, media, scope)
+            out = EventPreviewFeatureStoring(out, type, movie, preview, media)
             out = EventPreviewFeatureSaveTimestamp(out, sync, type)
-            out = EventPreviewFeatureCatch(out)
             out = EventPreviewFeatureFold(db, out, fallback)
             out = EventPreviewFeatureFilterMovie(out, preference)
             out = EventPreviewFeatureFilterKeywords(out, preference)
             out = EventPreviewFeatureSort(out)
             out = EventPreviewFeatureFilter(out, preference, booking)
-            out = EventPreviewFeatureCatch(out)
             return out
         }
     }

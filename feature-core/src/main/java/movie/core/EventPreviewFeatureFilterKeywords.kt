@@ -7,7 +7,7 @@ class EventPreviewFeatureFilterKeywords(
     private val preference: EventPreference
 ) : EventPreviewFeature {
 
-    override suspend fun get() = origin.get().map { movies ->
+    override suspend fun get() = origin.get().let { movies ->
         val keywords = preference.keywords
         movies.filter { m -> keywords.none { it in m.name } }
     }

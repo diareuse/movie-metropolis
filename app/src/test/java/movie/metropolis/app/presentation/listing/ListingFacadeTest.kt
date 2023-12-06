@@ -212,12 +212,12 @@ abstract class ListingFacadeTest : FeatureTest() {
                 modifier(index)
             }
         }
-        wheneverBlocking { previewFork.get() }.thenReturn(Result.success(content.asSequence()))
+        wheneverBlocking { previewFork.get() }.thenReturn(content.asSequence())
         return content
     }
 
     private fun preview_responds_failure() {
-        wheneverBlocking { previewFork.get() }.thenReturn(Result.failure(RuntimeException()))
+        wheneverBlocking { previewFork.get() }.thenThrow(RuntimeException())
     }
 
     suspend fun ListingFacade.Action.promotions(): List<Result<List<MovieView>>> {

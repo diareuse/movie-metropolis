@@ -4,7 +4,8 @@ import movie.core.model.MoviePreview
 
 interface EventPreviewFeature {
 
-    suspend fun get(): Result<Sequence<MoviePreview>>
+    @Throws(Throwable::class)
+    suspend fun get(): Sequence<MoviePreview>
 
     interface Factory {
         fun current(): EventPreviewFeature

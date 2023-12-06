@@ -10,9 +10,10 @@ class EventPreviewFeatureNetwork(
     private val type: ShowingType
 ) : EventPreviewFeature {
 
-    override suspend fun get(): Result<Sequence<MoviePreview>> {
+    override suspend fun get(): Sequence<MoviePreview> {
         return service.getMoviesByType(type)
             .map { it.body.asSequence().map(::MoviePreviewFromResponse) }
+            .getOrThrow()
     }
 
 }

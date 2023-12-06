@@ -21,7 +21,7 @@ class ListingFacadeCurrent(
 
     private val listenable = Listenable<OnChangedListener>()
 
-    override suspend fun get(): Result<ListingFacade.Action> = preview.get().map {
+    override suspend fun get(): Result<ListingFacade.Action> = preview.runCatching { get() }.map {
         var out: ListingFacade.Action
         out = ListingFacadeActionFromData(it.asIterable())
         out = ListingFacadeActionFavorite(out, favorite)

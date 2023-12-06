@@ -9,9 +9,9 @@ class EventPreviewFeatureFilter(
     private val booking: BookingDao
 ) : EventPreviewFeature {
 
-    override suspend fun get() = origin.get().map { items ->
+    override suspend fun get() = origin.get().let { items ->
         if (!preference.filterSeen) {
-            return@map items
+            return@let items
         }
         val booking = booking.selectIds()
         items.filter { it.id !in booking }

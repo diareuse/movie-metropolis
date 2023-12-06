@@ -7,8 +7,8 @@ class EventPreviewFeatureRequireNotEmpty(
     private val origin: EventPreviewFeature
 ) : EventPreviewFeature {
 
-    override suspend fun get(): Result<Sequence<MoviePreview>> {
-        return origin.get().mapCatching { it.requireNotEmpty() }
+    override suspend fun get(): Sequence<MoviePreview> {
+        return origin.get().also { it.requireNotEmpty() }
     }
 
 }

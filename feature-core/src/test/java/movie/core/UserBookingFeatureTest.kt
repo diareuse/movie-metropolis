@@ -133,6 +133,15 @@ class UserBookingFeatureTest {
     }
 
     @Test
+    fun get_not_saves_timestamp_on_database() = runTest {
+        cinema_responds_success()
+        detail_responds_success()
+        database_responds_success()
+        feature(this).get()
+        verify(sync, never()).booking = any()
+    }
+
+    @Test
     fun get_drains_tickets() = runTest {
         val ticket = TicketShared("testId", Date(), "", "", "", "id", emptyList())
         store.add(ticket)

@@ -48,3 +48,15 @@ inline fun <T, R> Array<T>.fold(body: T.() -> Result<R>): Result<R> {
     }
     return Result.failure(error)
 }
+
+inline fun <T, R> Array<T>.foldSimple(body: T.() -> R): R {
+    val error = IllegalStateException("All options were exhausted")
+    for (option in this) {
+        try {
+            return body(option)
+        } catch (e: Throwable) {
+            error.addSuppressed(e)
+        }
+    }
+    throw error
+}

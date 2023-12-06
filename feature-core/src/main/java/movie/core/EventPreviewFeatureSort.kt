@@ -6,8 +6,8 @@ class EventPreviewFeatureSort(
     private val origin: EventPreviewFeature
 ) : EventPreviewFeature {
 
-    override suspend fun get(): Result<Sequence<MoviePreview>> {
-        return origin.get().map { items ->
+    override suspend fun get(): Sequence<MoviePreview> {
+        return origin.get().let { items ->
             items.sortedByDescending { it.screeningFrom.time }
         }
     }

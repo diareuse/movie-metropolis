@@ -1,7 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import movie.core.adapter.asStored
 import movie.core.db.dao.MovieDao
 import movie.core.db.dao.MovieMediaDao
@@ -15,15 +13,12 @@ class EventPreviewFeatureStoring(
     private val type: ShowingType,
     private val movie: MovieDao,
     private val preview: MoviePreviewDao,
-    private val media: MovieMediaDao,
-    private val scope: CoroutineScope
+    private val media: MovieMediaDao
 ) : EventPreviewFeature {
 
-    override suspend fun get(): Result<Sequence<MoviePreview>> {
-        return origin.get().onSuccess {
-            scope.launch {
-                store(it)
-            }
+    override suspend fun get(): Sequence<MoviePreview> {
+        return origin.get().also {
+            store(it)
         }
     }
 

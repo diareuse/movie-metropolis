@@ -7,6 +7,6 @@ class PulseSavingCurrent(
     private val event: EventPreviewFeature.Factory
 ) : Pulse {
 
-    override suspend fun execute() = event.current().get()
+    override suspend fun execute() = kotlin.runCatching { event.current().get() }
 
 }

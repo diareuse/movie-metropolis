@@ -10,7 +10,7 @@ class EventPreviewFeatureSaveTimestamp(
     private val type: ShowingType
 ) : EventPreviewFeature {
 
-    override suspend fun get() = origin.get().onSuccess {
+    override suspend fun get() = origin.get().also {
         @Suppress("UNUSED_VARIABLE")
         val ignore = when (type) {
             ShowingType.Current -> preference.previewCurrent = Date()

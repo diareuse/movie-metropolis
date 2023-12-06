@@ -11,13 +11,11 @@ class EventPreviewFeatureDatabase(
     private val type: ShowingType
 ) : EventPreviewFeature {
 
-    override suspend fun get() = kotlin.runCatching {
-        when (type) {
-            ShowingType.Current -> preview.selectCurrent()
-            ShowingType.Upcoming -> preview.selectUpcoming()
-        }.map {
-            MoviePreviewFromDatabase(it, media.select(it.id))
-        }.asSequence()
-    }
+    override suspend fun get() = when (type) {
+        ShowingType.Current -> preview.selectCurrent()
+        ShowingType.Upcoming -> preview.selectUpcoming()
+    }.map {
+        MoviePreviewFromDatabase(it, media.select(it.id))
+    }.asSequence()
 
 }

@@ -2,7 +2,6 @@
 
 package movie.core
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.core.db.dao.BookingDao
@@ -14,6 +13,7 @@ import movie.core.di.EventFeatureModule
 import movie.core.nwk.EventService
 import movie.core.nwk.model.BodyResponse
 import movie.core.nwk.model.ExtendedMovieResponse
+import movie.core.nwk.model.ShowingType
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
 import movie.core.util.wheneverBlocking
@@ -25,6 +25,7 @@ import org.junit.Test
 import org.mockito.kotlin.any
 import org.mockito.kotlin.atMost
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import java.util.Date
@@ -45,7 +46,7 @@ abstract class EventPreviewFeatureTest {
     protected lateinit var preview: MoviePreviewDao
     protected lateinit var movie: MovieDao
     protected lateinit var service: EventService
-    protected lateinit var feature: (CoroutineScope) -> EventPreviewFeature
+    protected lateinit var feature: EventPreviewFeature
 
     @Before
     fun prepare() {
@@ -66,18 +67,15 @@ abstract class EventPreviewFeatureTest {
             on { previewUpcoming }.thenReturn(Date())
         }
         detail = mock {}
-        feature = { scope ->
-            EventFeatureModule().preview(
-                service = service,
-                movie = movie,
-                preview = preview,
-                media = media,
-                preference = preference,
-                booking = booking,
-                sync = sync,
-                scope = scope
-            ).run(::create)
-        }
+        feature = EventFeatureModule().preview(
+            service = service,
+            movie = movie,
+            preview = preview,
+            media = media,
+            preference = preference,
+            booking = booking,
+            sync = sync
+        ).run(::create)
     }
 
     abstract fun create(factory: EventPreviewFeature.Factory): EventPreviewFeature
@@ -88,8 +86,24 @@ abstract class EventPreviewFeatureTest {
         @Test
         fun get_writes_syncDate() = runTest {
             service_responds_success()
-            feature(this).get()
+            feature.get()
             verify(sync).previewCurrent = any()
+        }
+
+        @Test
+        fun get_not_writes_syncDate() = runTest {
+            database_responds_success()
+            feature.get()
+            verify(sync, never()).previewCurrent = any()
+        }
+
+        @Test
+        fun get_returns_fromNetwork_whenInvalidated() = runTest {
+            service_responds_success()
+            database_responds_success()
+            whenever(sync.previewCurrent).thenReturn(Date(0))
+            feature.get()
+            verify(service).getMoviesByType(ShowingType.Current)
         }
 
     }
@@ -100,8 +114,24 @@ abstract class EventPreviewFeatureTest {
         @Test
         fun get_writes_syncDate() = runTest {
             service_responds_success()
-            feature(this).get()
+            feature.get()
             verify(sync).previewUpcoming = any()
+        }
+
+        @Test
+        fun get_not_writes_syncDate() = runTest {
+            database_responds_success()
+            feature.get()
+            verify(sync, never()).previewUpcoming = any()
+        }
+
+        @Test
+        fun get_returns_fromNetwork_whenInvalidated() = runTest {
+            service_responds_success()
+            database_responds_success()
+            whenever(sync.previewUpcoming).thenReturn(Date(0))
+            feature.get()
+            verify(service).getMoviesByType(ShowingType.Upcoming)
         }
 
     }
@@ -109,21 +139,21 @@ abstract class EventPreviewFeatureTest {
     @Test
     fun get_returns_fromNetwork() = runTest {
         val testData = service_responds_success()
-        val output = feature(this).get()
-        assertEquals(testData.size, output.getOrThrow().count())
+        val output = feature.get()
+        assertEquals(testData.size, output.count())
     }
 
     @Test
     fun get_sorts_fromNetwork() = runTest {
         service_responds_success()
-        val output = feature(this).get()
-        assertEquals(listOf("3", "1", "2"), output.getOrThrow().map { it.id }.toList())
+        val output = feature.get()
+        assertEquals(listOf("3", "1", "2"), output.map { it.id }.toList())
     }
 
     @Test
     fun get_stores() = runTest {
         val testData = service_responds_success()
-        feature(this).get()
+        feature.get()
         verify(preview, atMost(1)).deleteAll(any())
         verify(movie, atMost(testData.size)).insertOrUpdate(any())
         verify(preview, atMost(testData.size)).insertOrUpdate(any())
@@ -133,30 +163,30 @@ abstract class EventPreviewFeatureTest {
     @Test
     fun get_returns_fromDatabase() = runTest {
         val testData = database_responds_success()
-        val output = feature(this).get()
-        assertEquals(testData.size, output.getOrThrow().count())
+        val output = feature.get()
+        assertEquals(testData.size, output.count())
     }
 
     @Test
     fun get_sorts_fromDatabase() = runTest {
         database_responds_success()
-        val output = feature(this).get()
-        assertEquals(listOf("3", "1", "2"), output.getOrThrow().map { it.id }.toList())
+        val output = feature.get()
+        assertEquals(listOf("3", "1", "2"), output.map { it.id }.toList())
     }
 
     @Test
     fun get_returns_fromNetwork_whenDatabaseEmpty() = runTest {
         database_responds_empty()
         service_responds_success()
-        val output = feature(this).get()
-        output.getOrThrow()
+        val output = feature.get()
+        assert(output.count() > 0)
     }
 
     @Test
     fun get_filters_fromNetwork() = runTest {
         service_responds_success()
         val testBooking = booking_responds_positive()
-        val output = feature(this).get().getOrThrow()
+        val output = feature.get()
         assertFalse(
             output.any { it.id in testBooking },
             "Expected output not to contain $testBooking, but was ${output.map { it.id }}"
@@ -167,7 +197,7 @@ abstract class EventPreviewFeatureTest {
     fun get_filters_fromDatabase() = runTest {
         database_responds_success()
         val testBooking = booking_responds_positive()
-        val output = feature(this).get().getOrThrow()
+        val output = feature.get()
         assertFalse(
             output.any { it.id in testBooking },
             "Expected output not to contain $testBooking, but was ${output.map { it.id }}"
@@ -178,7 +208,7 @@ abstract class EventPreviewFeatureTest {
     fun get_filtersMovies_fromDatabase() = runTest {
         val expected = database_responds_success()
         onlyMovies_responds_true()
-        val output = feature(this).get().getOrThrow().toList().map { it.id }
+        val output = feature.get().toList().map { it.id }
         for (i in expected)
             assertContains(output, i.id)
     }
@@ -187,7 +217,7 @@ abstract class EventPreviewFeatureTest {
     fun get_filtersMovies_fromNetwork() = runTest {
         val expected = service_responds_success()
         onlyMovies_responds_true()
-        val output = feature(this).get().getOrThrow().toList().map { it.id }
+        val output = feature.get().toList().map { it.id }
         for (i in expected)
             assertContains(output, i.id.key)
     }
@@ -202,7 +232,7 @@ abstract class EventPreviewFeatureTest {
             )
         }
         keywords_responds_value("none")
-        val output = feature(this).get().getOrThrow()
+        val output = feature.get()
         assertContentEquals(emptySequence(), output)
     }
 
@@ -212,7 +242,7 @@ abstract class EventPreviewFeatureTest {
             it.copy(name = "none")
         }
         keywords_responds_value("none")
-        val output = feature(this).get().getOrThrow()
+        val output = feature.get()
         assertContentEquals(emptySequence(), output)
     }
 
