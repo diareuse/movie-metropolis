@@ -22,7 +22,7 @@ fun SettingsItemRow(
 ) = Row(
     modifier = modifier
         .heightIn(min = 56.dp)
-        .surface(Theme.color.container.surface.copy(.3f), Theme.container.button)
+        .surface(Theme.color.container.surface.copy(.5f), Theme.container.button)
         .padding(16.dp, 12.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(16.dp)

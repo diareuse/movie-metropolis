@@ -19,7 +19,7 @@ fun SettingsItemColumn(
     modifier: Modifier = Modifier,
 ) = Column(
     modifier = modifier
-        .surface(Theme.color.container.surface.copy(.3f), Theme.container.button)
+        .surface(Theme.color.container.surface.copy(.5f), Theme.container.button)
 ) {
     Column(
         modifier = Modifier.padding(16.dp, 12.dp),

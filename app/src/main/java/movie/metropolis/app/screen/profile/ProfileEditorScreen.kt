@@ -242,10 +242,10 @@ fun CommonTextField(
             errorIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
-            unfocusedContainerColor = Theme.color.container.surface.copy(.3f),
-            focusedContainerColor = Theme.color.container.surface.copy(.5f),
-            errorContainerColor = Theme.color.container.error.copy(.2f),
-            disabledContainerColor = Theme.color.container.surface.copy(.2f)
+            unfocusedContainerColor = Theme.color.container.surface.copy(.5f),
+            focusedContainerColor = Theme.color.container.surface.copy(.7f),
+            errorContainerColor = Theme.color.container.error.copy(.3f),
+            disabledContainerColor = Theme.color.container.surface.copy(.3f)
         ),
         shape = Theme.container.poster,
         trailingIcon = trailingIcon,
