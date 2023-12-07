@@ -1,16 +1,15 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import movie.core.EventPreviewFeature
 import movie.core.model.MovieDetail
 import movie.core.model.MoviePreview
 import movie.core.model.MoviePromoPoster
-import movie.image.Swatch
-import movie.image.SwatchColor.Companion.White
 import movie.metropolis.app.di.FacadeModule
-import movie.metropolis.app.model.Genre
-import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.FeatureTest
+import movie.metropolis.app.util.testFlow
 import movie.metropolis.app.util.wheneverBlocking
 import org.junit.Test
 import org.mockito.kotlin.KStubbing
@@ -22,7 +21,7 @@ import kotlin.random.Random.Default.nextInt
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFails
-import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 abstract class ListingFacadeTest : FeatureTest() {
@@ -36,59 +35,14 @@ abstract class ListingFacadeTest : FeatureTest() {
     override fun prepare() {
         wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(false)
         facade = FacadeModule()
-            .listing(preview, favorite, promo, analyzer, rating, detail)
+            .listing(preview, favorite, promo, rating, detail, prefs)
             .run(::choose)
         previewFork = choose(preview)
     }
 
     class Upcoming : ListingFacadeTest() {
-
         override fun choose(factory: ListingFacade.Factory) = factory.upcoming()
         override fun choose(factory: EventPreviewFeature.Factory) = factory.upcoming()
-
-        @Test
-        fun toggle_notifies() = runTest {
-            favorite_responds_success()
-            var notified = false
-            facade.addListener { notified = true }
-            facade.toggle(mock {
-                on { getBase() }.thenReturn(mock())
-            })
-            assertTrue(notified)
-        }
-
-        @Test
-        fun toggle_doesNotNotify_whenRemoved() = runTest {
-            favorite_responds_success()
-            var notified = false
-            val listener = facade.addListener { notified = true }
-            facade.removeListener(listener)
-            facade.toggle(mock {
-                on { getBase() }.thenReturn(mock())
-            })
-            assertFalse(notified)
-        }
-
-        @Test
-        fun toggle_calls_feature() = runTest {
-            facade.toggle(mock {
-                on { getBase() }.thenReturn(mock())
-            })
-            verify(favorite).toggle(any())
-        }
-
-        @Test
-        fun promotions_returns_favorite() = runTest {
-            preview_responds_success()
-            promo_responds_success()
-            val value = favorite_responds_success()
-            val outputs = facade
-                .get().getOrThrow()
-                .promotions().last().getOrThrow()
-            for (output in outputs)
-                assertEquals(value, output.favorite)
-        }
-
     }
 
     class Current : ListingFacadeTest() {
@@ -97,85 +51,102 @@ abstract class ListingFacadeTest : FeatureTest() {
     }
 
     @Test
+    fun toggle_notifies() = runTest {
+        preview_responds_success()
+        favorite_responds_success()
+        val output = testFlow(facade.get())
+        advanceUntilIdle()
+        val count = output.size
+        facade.toggle(mock {
+            on { getBase() }.thenReturn(mock())
+        })
+        advanceUntilIdle()
+        assertNotEquals(count, output.size)
+    }
+
+    @Test
+    fun toggle_calls_feature() = runTest {
+        facade.toggle(mock {
+            on { getBase() }.thenReturn(mock())
+        })
+        verify(favorite).toggle(any())
+    }
+
+    @Test
+    fun promotions_returns_favorite() = runTest {
+        preview_responds_success()
+        val value = favorite_responds_success()
+        val output = testFlow(facade.get())
+        advanceUntilIdle()
+        for (output in output.last().items)
+            assertEquals(value, output.favorite)
+        for (output in output.last().promotions)
+            assertEquals(value, output.favorite)
+    }
+
+    @Test
     fun promotions_returns_setOfAtMost3() = runTest {
         val count = nextInt(0, 100)
         preview_responds_success(count)
         promo_responds_success()
-        val action = facade.get()
-        for (output in action.getOrThrow().promotions())
+        favorite_responds_success()
+        detail_responds_success()
+        val output = testFlow(facade.get())
+        advanceUntilIdle()
+        assertNotEquals(emptyList(), output)
+        for (output in output)
             assertTrue {
-                output.getOrThrow().size in 0..3
+                output.promotions.size in 0..3
             }
     }
 
     @Test
-    fun groupUp_returns_moviesInGenres() = runTest {
-        val count = nextInt(0, 100)
-        detail_responds_success()
-        preview_responds_success(count) {
-            on { genres }.thenReturn(listOf("1", "2"))
-        }
-        val action = facade.get()
-        for (output in action.getOrThrow().groupUp())
-            assertContentEquals(
-                setOf(Genre("1"), Genre("2")),
-                output.getOrThrow().keys.asIterable()
-            )
-    }
-
-    @Test
     fun promotions_returns_withPosterUrls() = runTest {
+        detail_responds_success()
         preview_responds_success()
         val url = promo_responds_success().url
-        val outputs = facade
-            .get().getOrThrow()
-            .promotions().last().getOrThrow()
+        val outputs = testFlow(facade.get())
+        advanceUntilIdle()
         for (output in outputs)
-            assertEquals(url, output.poster?.url)
+            for (output in output.promotions)
+                assertEquals(url, output.poster?.url)
     }
 
     @Test
     fun promotions_returns_withPosterRatio() = runTest {
+        //detail_responds_success()
         preview_responds_success()
         promo_responds_success()
-        val outputs = facade
-            .get().getOrThrow()
-            .promotions().last().getOrThrow()
+        val outputs = testFlow(facade.get())
+        advanceUntilIdle()
         for (output in outputs)
-            assertEquals(1.5f, output.poster?.aspectRatio)
+            for (output in output.promotions)
+                assertEquals(1.5f, output.poster?.aspectRatio)
     }
 
     @Test
     fun get_fails() = runTest {
         preview_responds_failure()
-        val output = facade.get()
         assertFails {
-            output.getOrThrow()
+            facade.get().collect()
         }
     }
 
     @Test
-    fun groups_returns_defaultGroup() = runTest {
+    fun groups_returns_values() = runTest {
         detail_responds_success()
-        preview_responds_success {
+        val values = preview_responds_success {
             on { genres }.thenReturn(emptyList())
         }
-        val action = facade.get()
-        for (output in action.getOrThrow().groupUp())
-            assertContentEquals(
-                setOf(Genre("other")),
-                output.getOrThrow().keys.asIterable()
-            )
+        val outputs = testFlow(facade.get())
+        advanceUntilIdle()
+        for (output in outputs)
+            assertContentEquals(values.map { it.id }, output.items.map { it.id })
     }
 
     // ---
 
-    private fun analyzer_responds_success(): Int {
-        wheneverBlocking { analyzer.getColors(any()) }.thenReturn(Swatch(White, White, White))
-        return White.rgb
-    }
-
-    private fun detail_responds_success(
+    fun detail_responds_success(
         modifier: KStubbing<MovieDetail>.() -> Unit = {
             on { releasedAt }.thenReturn(Date())
             on { originalName }.thenReturn("original")
@@ -218,18 +189,6 @@ abstract class ListingFacadeTest : FeatureTest() {
 
     private fun preview_responds_failure() {
         wheneverBlocking { previewFork.get() }.thenThrow(RuntimeException())
-    }
-
-    suspend fun ListingFacade.Action.promotions(): List<Result<List<MovieView>>> {
-        val outputs = mutableListOf<Result<List<MovieView>>>()
-        promotions.collect { outputs += it }
-        return outputs
-    }
-
-    private suspend fun ListingFacade.Action.groupUp(): List<Result<Map<Genre, List<MovieView>>>> {
-        val outputs = mutableListOf<Result<Map<Genre, List<MovieView>>>>()
-        groups.collect { outputs += it }
-        return outputs
     }
 
 }

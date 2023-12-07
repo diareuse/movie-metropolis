@@ -12,7 +12,7 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.consumePurchase
 import com.android.billingclient.api.queryProductDetails
-import movie.metropolis.app.presentation.Listenable
+import movie.core.util.Listenable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 

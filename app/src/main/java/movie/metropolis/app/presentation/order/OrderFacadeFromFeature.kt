@@ -2,7 +2,7 @@ package movie.metropolis.app.presentation.order
 
 import kotlinx.collections.immutable.toImmutableMap
 import movie.core.UserCredentialFeature
-import movie.metropolis.app.presentation.Listenable
+import movie.core.util.Listenable
 import movie.metropolis.app.presentation.OnChangedListener
 
 class OrderFacadeFromFeature(

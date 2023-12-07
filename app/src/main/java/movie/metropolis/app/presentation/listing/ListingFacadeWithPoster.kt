@@ -1,28 +1,35 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import movie.core.EventPromoFeature
-import movie.image.ImageAnalyzer
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.ImageViewFromPoster
 import movie.metropolis.app.model.adapter.MovieViewWithPoster
-import movie.metropolis.app.util.flatMapResult
 
-data class ListingFacadeActionWithPoster(
-    private val origin: ListingFacade.Action,
-    private val promo: EventPromoFeature,
-    private val analyzer: ImageAnalyzer
-) : ListingFacade.Action by origin {
+data class ListingFacadeWithPoster(
+    private val origin: ListingFacade,
+    private val promo: EventPromoFeature
+) : ListingFacade by origin {
 
     private val cachePoster = mutableMapOf<String, ImageView?>()
 
-    override val promotions = origin.promotions.flatMapResult { withPoster(it) }
-    override val groups = origin.groups
+    override fun get() = origin.get().flatMapLatest {
+        flow {
+            withPoster(it.promotions)
+                .catch { _ -> emit(it.promotions) }
+                .collect { promos ->
+                    emit(it.copy(promotions = promos))
+                }
+        }
+    }
 
-    private fun withPoster(items: List<MovieView>) = channelFlow {
+    private fun withPoster(items: List<MovieView>): Flow<List<MovieView>> = channelFlow {
         val output = items.map { MovieViewWithPoster(it) }.toMutableList()
         if (cachePoster.isEmpty()) send(output)
         for ((index, item) in output.withIndex()) launch {
@@ -33,7 +40,7 @@ data class ListingFacadeActionWithPoster(
             output[index] = poster
             send(output.toList())
         }
-    }.map(Result.Companion::success)
+    }
 
     private suspend fun getPoster(movie: MovieView) = cachePoster.getOrPut(movie.id) {
         promo.get(movie.getBase())

@@ -21,7 +21,6 @@ import movie.core.UserDataFeature
 import movie.core.adapter.MovieFromId
 import movie.core.preference.EventPreference
 import movie.core.preference.SyncPreference
-import movie.image.ImageAnalyzer
 import movie.metropolis.app.feature.billing.BillingFacade
 import movie.metropolis.app.model.adapter.CinemaFromId
 import movie.metropolis.app.presentation.booking.BookingFacade
@@ -49,9 +48,11 @@ import movie.metropolis.app.presentation.favorite.FavoriteFacadeReactive
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.home.HomeFacadeFromFeature
 import movie.metropolis.app.presentation.listing.ListingFacade
-import movie.metropolis.app.presentation.listing.ListingFacadeCurrent
-import movie.metropolis.app.presentation.listing.ListingFacadeRecover
-import movie.metropolis.app.presentation.listing.ListingFacadeUpcoming
+import movie.metropolis.app.presentation.listing.ListingFacadeFavorite
+import movie.metropolis.app.presentation.listing.ListingFacadeFromFeature
+import movie.metropolis.app.presentation.listing.ListingFacadeSettingsReactive
+import movie.metropolis.app.presentation.listing.ListingFacadeWithPoster
+import movie.metropolis.app.presentation.listing.ListingFacadeWithRating
 import movie.metropolis.app.presentation.login.LoginFacade
 import movie.metropolis.app.presentation.login.LoginFacadeFromFeature
 import movie.metropolis.app.presentation.order.OrderCompleteFacade
@@ -147,22 +148,25 @@ class FacadeModule {
         preview: EventPreviewFeature.Factory,
         favorite: FavoriteFeature,
         promo: EventPromoFeature,
-        analyzer: ImageAnalyzer,
         rating: MetadataProvider,
-        detail: EventDetailFeature
+        detail: EventDetailFeature,
+        settings: EventPreference
     ): ListingFacade.Factory {
         return object : ListingFacade.Factory {
             override fun upcoming(): ListingFacade = create(
-                ListingFacadeUpcoming(preview.upcoming(), favorite, promo, analyzer)
+                ListingFacadeFromFeature(preview.upcoming(), favorite)
             )
 
             override fun current(): ListingFacade = create(
-                ListingFacadeCurrent(preview.current(), promo, analyzer, rating, favorite, detail)
+                ListingFacadeFromFeature(preview.current(), favorite)
             )
 
             private fun create(facade: ListingFacade): ListingFacade {
                 var out: ListingFacade = facade
-                out = ListingFacadeRecover(out)
+                out = ListingFacadeFavorite(out, favorite)
+                out = ListingFacadeWithPoster(out, promo)
+                out = ListingFacadeWithRating(out, rating, detail)
+                out = ListingFacadeSettingsReactive(out, settings)
                 return out
             }
         }
