@@ -96,8 +96,8 @@ internal class UserFeatureModule {
         out = UserBookingFeatureDrainTickets(out, detail, cinema, store)
         out = UserBookingFeatureStoring(out, booking, seats)
         out = UserBookingFeatureSaveTimestamp(out, sync)
-        out = UserBookingFeatureCalendar(out, writer, preference, movie)
         out = UserBookingFeatureFold(UserBookingFeatureInvalidateAfter(db, sync, 1.hours), out, db)
+        out = UserBookingFeatureCalendar(out, writer, preference, movie)
         out = UserBookingFeatureWear(out, wear)
         return out
     }
