@@ -20,6 +20,7 @@ import org.mockito.kotlin.whenever
 import java.util.Date
 import kotlin.random.Random.Default.nextBoolean
 import kotlin.random.Random.Default.nextInt
+import kotlin.test.assertNotNull
 
 class UserDataFeatureTest {
 
@@ -105,14 +106,14 @@ class UserDataFeatureTest {
     fun get_returns_fromNetwork() = runTest {
         cinema_responds_success()
         service_responds_success()
-        feature.get().getOrThrow()
+        assertNotNull(feature.get())
     }
 
     @Test
     fun get_returns_fromStored() = runTest {
         cinema_responds_success()
         stored_responds_success()
-        feature.get().getOrThrow()
+        assertNotNull(feature.get())
     }
 
     // ---

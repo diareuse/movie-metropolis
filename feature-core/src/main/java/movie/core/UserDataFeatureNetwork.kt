@@ -19,11 +19,11 @@ class UserDataFeatureNetwork(
         service.updateUser(request)
     }
 
-    override suspend fun get(): Result<User> = kotlin.runCatching {
+    override suspend fun get(): User {
         val user = service.getUser().getOrThrow()
         val cinema = cinema.get(null)
         val points = service.getPoints().getOrThrow()
-        UserFromRemote(
+        return UserFromRemote(
             customer = user,
             customerPoints = points,
             favorite = cinema.firstOrNull { it.id == user.favoriteCinema }

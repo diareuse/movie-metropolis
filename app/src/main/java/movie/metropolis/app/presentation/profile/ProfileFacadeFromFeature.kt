@@ -26,13 +26,13 @@ class ProfileFacadeFromFeature(
     }
 
     override suspend fun getMembership(callback: ResultCallback<MembershipView?>) {
-        callback(user.get().map {
+        callback(user.runCatching { get() }.map {
             it.let(::MembershipViewFeature).takeIf { _ -> it.membership != null }
         })
     }
 
     override suspend fun getUser(callback: ResultCallback<UserView>) {
-        callback(user.get().map(::UserViewFromFeature))
+        callback(user.runCatching { get() }.map(::UserViewFromFeature))
     }
 
     override suspend fun isLoggedIn(): Boolean {

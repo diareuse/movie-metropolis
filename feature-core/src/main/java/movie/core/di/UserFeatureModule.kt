@@ -26,7 +26,6 @@ import movie.core.UserBookingFeatureWear
 import movie.core.UserCredentialFeature
 import movie.core.UserCredentialFeatureNetwork
 import movie.core.UserDataFeature
-import movie.core.UserDataFeatureCatch
 import movie.core.UserDataFeatureChain
 import movie.core.UserDataFeatureFold
 import movie.core.UserDataFeatureNetwork
@@ -72,7 +71,6 @@ internal class UserFeatureModule {
             UserDataFeatureFold(out, network),
             UserDataFeatureFold(network, out)
         )
-        out = UserDataFeatureCatch(out)
         return out
     }
 

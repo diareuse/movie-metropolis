@@ -146,11 +146,11 @@ class ProfileFacadeTest : FeatureTest() {
     }
 
     private fun data_responds_success(user: User = mock()) {
-        wheneverBlocking { data.get() }.thenReturn(Result.success(user))
+        wheneverBlocking { data.get() }.thenReturn(user)
     }
 
     private fun data_responds_failure() {
-        wheneverBlocking { data.get() }.thenReturn(Result.failure(RuntimeException()))
+        wheneverBlocking { data.get() }.thenThrow(RuntimeException())
     }
 
     private fun cinema_responds_success() {
