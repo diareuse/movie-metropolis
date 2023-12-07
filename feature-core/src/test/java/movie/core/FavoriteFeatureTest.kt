@@ -44,7 +44,7 @@ class FavoriteFeatureTest {
             on { id }.thenReturn("id")
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(true)
-        assertTrue(feature.isFavorite(movie).getOrThrow())
+        assertTrue(feature.isFavorite(movie))
     }
 
     @Test
@@ -53,7 +53,7 @@ class FavoriteFeatureTest {
             on { id }.thenReturn("id")
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(false)
-        assertFalse(feature.isFavorite(movie).getOrThrow())
+        assertFalse(feature.isFavorite(movie))
     }
 
     @Test
@@ -63,7 +63,7 @@ class FavoriteFeatureTest {
         }
         whenever(favorite.isFavorite(movie.id)).thenThrow(RuntimeException())
         assertFails {
-            feature.isFavorite(movie).getOrThrow()
+            feature.isFavorite(movie)
         }
     }
 
@@ -74,8 +74,10 @@ class FavoriteFeatureTest {
             on { screeningFrom }.thenReturn(Date(0))
             on { releasedAt }.thenReturn(Date(0))
         }
+        whenever(favorite.select(movie.id)).thenReturn(MovieFavoriteStored())
         whenever(favorite.isFavorite(movie.id)).thenReturn(false)
-        feature.toggle(movie).getOrThrow()
+        whenever(movieDao.select(movie.id)).thenReturn(MovieStored())
+        feature.toggle(movie)
         verify(favorite).insertOrUpdate(any())
     }
 
@@ -87,7 +89,7 @@ class FavoriteFeatureTest {
             on { releasedAt }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(movie.id)).thenReturn(true)
-        feature.toggle(movie).getOrThrow()
+        feature.toggle(movie)
         verify(favorite).delete(any())
     }
 
@@ -100,7 +102,7 @@ class FavoriteFeatureTest {
         whenever(favorite.isFavorite(any())).thenReturn(false)
         whenever(favorite.insertOrUpdate(any())).thenThrow(RuntimeException())
         assertFails {
-            feature.toggle(movie).getOrThrow()
+            feature.toggle(movie)
         }
     }
 
@@ -113,7 +115,7 @@ class FavoriteFeatureTest {
         whenever(favorite.isFavorite(any())).thenReturn(true)
         whenever(favorite.delete(any())).thenThrow(RuntimeException())
         assertFails {
-            feature.toggle(movie).getOrThrow()
+            feature.toggle(movie)
         }
     }
 
@@ -125,7 +127,7 @@ class FavoriteFeatureTest {
         }
         whenever(favorite.isFavorite(any())).thenThrow(RuntimeException())
         assertFails {
-            feature.toggle(movie).getOrThrow()
+            feature.toggle(movie)
         }
     }
 
@@ -137,7 +139,7 @@ class FavoriteFeatureTest {
             on { releasedAt }.thenReturn(Date(0))
         }
         whenever(favorite.isFavorite(any())).thenReturn(true)
-        feature.toggle(movie).getOrThrow()
+        feature.toggle(movie)
         verify(scheduler).cancel(any())
     }
 
@@ -151,7 +153,7 @@ class FavoriteFeatureTest {
         whenever(favorite.isFavorite(any())).thenReturn(false)
         whenever(favorite.select(movie.id)).thenReturn(MovieFavoriteStored(false))
         whenever(movieDao.select(movie.id)).thenReturn(MovieStored())
-        feature.toggle(movie).getOrThrow()
+        feature.toggle(movie)
         verify(scheduler).schedule(any())
     }
 
@@ -160,14 +162,14 @@ class FavoriteFeatureTest {
         val previews = List(1) { MovieFavoriteStored() }
         whenever(favorite.selectAll()).thenReturn(previews)
         whenever(movieDao.select(any())).thenReturn(MovieStored())
-        assertTrue("Values should not be empty") { feature.getAll().getOrThrow().isNotEmpty() }
+        assertTrue("Values should not be empty") { feature.getAll().isNotEmpty() }
     }
 
     @Test
     fun getAll_returnsFailure() = runTest {
         whenever(favorite.selectAll()).thenThrow(RuntimeException())
         assertFails {
-            feature.getAll().getOrThrow()
+            feature.getAll()
         }
     }
 

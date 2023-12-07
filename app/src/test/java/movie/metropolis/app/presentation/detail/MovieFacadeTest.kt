@@ -48,7 +48,7 @@ class MovieFacadeTest : FeatureTest() {
     @Test
     fun returns_isFavorite_success() = runTest {
         movie_responds_success()
-        whenever(favorite.isFavorite(any())).thenReturn(Result.success(true))
+        whenever(favorite.isFavorite(any())).thenReturn(true)
         facade.favorite.first()
     }
 

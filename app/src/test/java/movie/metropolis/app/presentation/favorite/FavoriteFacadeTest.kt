@@ -83,7 +83,7 @@ class FavoriteFacadeTest : FeatureTest() {
                 on { movie }.thenReturn(mockMovie)
             }
         }
-        whenever(favorite.getAll()).thenReturn(Result.success(favorites))
+        whenever(favorite.getAll()).thenReturn(favorites)
         return favorites
     }
 

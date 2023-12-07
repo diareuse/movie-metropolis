@@ -19,7 +19,7 @@ class BootCompletedWorker : BroadcastReceiver() {
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         val entry = BootCompletedWorkerEntryPoint(context)
         scope.launch {
-            entry.favorite().getAll().onSuccess {
+            entry.favorite().getAll().also {
                 for (movie in it.map { asRequest(it.movie) })
                     entry.scheduler().schedule(movie)
             }

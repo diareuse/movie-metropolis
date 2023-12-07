@@ -20,7 +20,7 @@ class ListingFacadeActionFavorite(
 
     private suspend fun List<MovieView>.markFavorite(): List<MovieView> = map {
         val movie = MovieFromId(it.id)
-        val isFavorite = favorite.isFavorite(movie).getOrDefault(false)
+        val isFavorite = favorite.isFavorite(movie)
         MovieViewWithFavorite(it, isFavorite)
     }
 

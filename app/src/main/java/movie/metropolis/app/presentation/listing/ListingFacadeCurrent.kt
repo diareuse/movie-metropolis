@@ -31,9 +31,8 @@ class ListingFacadeCurrent(
     }
 
     override suspend fun toggle(item: MovieView) {
-        favorite.toggle(item.getBase()).onSuccess {
-            listenable.notify { onChanged() }
-        }
+        favorite.toggle(item.getBase())
+        listenable.notify { onChanged() }
     }
 
     override fun addListener(listener: OnChangedListener): OnChangedListener {

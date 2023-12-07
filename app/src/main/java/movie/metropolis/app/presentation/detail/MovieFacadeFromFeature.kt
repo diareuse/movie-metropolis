@@ -31,7 +31,7 @@ class MovieFacadeFromFeature(
 
     override val movie: Flow<MovieDetailView> = detailFlow.map(::MovieDetailViewFromFeature)
     override val favorite = flow {
-        emit(favorites.isFavorite(model).getOrDefault(false))
+        emit(favorites.isFavorite(model))
     }
     override val availability = detailFlow.map { it.screeningFrom }.catch { emit(Date()) }
 

@@ -12,15 +12,12 @@ class FavoriteFeatureScheduleNotification(
 
     override suspend fun toggle(
         movie: Movie
-    ) = origin.toggle(movie).onSuccess { isFavorite ->
+    ) = origin.toggle(movie).also { isFavorite ->
         val request = ExactPulseRequest.Builder<ExactPulseNotificationMovie>()
             .setDate(movie.screeningFrom)
             .setData(ExactPulseNotificationMovie.getData(movie))
             .build()
-        println("isfav: $isFavorite")
-        when (isFavorite && get(movie).onFailure { it.printStackTrace() }
-            .map { println("notified:${it.isNotified}"); !it.isNotified }
-            .getOrDefault(false)) {
+        when (isFavorite && !get(movie).isNotified) {
             true -> scheduler.schedule(request)
             else -> scheduler.cancel(request)
         }

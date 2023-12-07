@@ -34,7 +34,7 @@ abstract class ListingFacadeTest : FeatureTest() {
     abstract fun choose(factory: EventPreviewFeature.Factory): EventPreviewFeature
 
     override fun prepare() {
-        wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(Result.success(false))
+        wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(false)
         facade = FacadeModule()
             .listing(preview, favorite, promo, analyzer, rating, detail)
             .run(::choose)
@@ -188,8 +188,8 @@ abstract class ListingFacadeTest : FeatureTest() {
 
     fun favorite_responds_success(): Boolean {
         val value = true
-        wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(Result.success(value))
-        wheneverBlocking { favorite.toggle(any()) }.thenReturn(Result.success(value))
+        wheneverBlocking { favorite.isFavorite(any()) }.thenReturn(value)
+        wheneverBlocking { favorite.toggle(any()) }.thenReturn(value)
         return value
     }
 

@@ -19,7 +19,6 @@ class FavoriteFacadeFromFeature(
 
     override fun get() = channelFlow {
         val input = favorite.getAll()
-            .getOrDefault(emptyList())
             .map { MovieViewFromMovie(it, emptyList()) }
             .toMutableList()
         val mutex = Mutex()
