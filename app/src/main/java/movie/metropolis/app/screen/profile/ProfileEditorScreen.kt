@@ -218,6 +218,7 @@ fun CommonTextField(
     placeholder: (@Composable () -> Unit)? = null,
     supportingText: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
+    leadingIcon: (@Composable () -> Unit)? = null,
     enabled: Boolean = true,
     isError: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -248,6 +249,7 @@ fun CommonTextField(
         ),
         shape = Theme.container.poster,
         trailingIcon = trailingIcon,
+        leadingIcon = leadingIcon,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions
     )

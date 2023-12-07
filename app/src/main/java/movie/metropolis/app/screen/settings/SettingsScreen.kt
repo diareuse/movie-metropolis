@@ -4,13 +4,13 @@ package movie.metropolis.app.screen.settings
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.res.*
@@ -30,7 +30,9 @@ import movie.style.CollapsingTopAppBar
 import movie.style.action.clearFocus
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
+import movie.style.modifier.surface
 import movie.style.rememberImageState
+import movie.style.theme.Theme
 
 @Composable
 fun SettingsScreen(
@@ -101,32 +103,58 @@ fun SettingsScreen(
                 description = { Text(stringResource(R.string.filter_movie_names_description)) },
                 value = {}
             )
-            CommonTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp),
-                value = state.pendingFilter,
-                onValueChange = { onStateChange(state.copy(pendingFilter = it)) },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text
-                ),
-                trailingIcon = {
-                    IconButton(onClick = onAddFilterClick) {
-                        Icon(Icons.Rounded.Add, null)
-                    }
-                },
-                placeholder = { Text("keyword") }
-            )
-            for (filter in state.filters)
-                Row(
-                    modifier = Modifier.padding(start = 32.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(filter, Modifier.weight(1f))
-                    IconButton(onClick = { onDeleteFilterClick(filter) }) {
-                        Icon(Icons.Rounded.Delete, null)
+            Column(
+                Modifier
+                    .padding(start = 16.dp)
+                    .surface(Theme.color.container.surface.copy(.1f), Theme.container.button)
+            ) {
+                var expanded by rememberSaveable { mutableStateOf(false) }
+                CommonTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = state.pendingFilter,
+                    onValueChange = { onStateChange(state.copy(pendingFilter = it)) },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text
+                    ),
+                    trailingIcon = {
+                        if (state.pendingFilter.isNotBlank()) IconButton(onClick = onAddFilterClick) {
+                            Icon(painterResource(R.drawable.ic_add), null)
+                        }
+                    },
+                    leadingIcon = {
+                        IconButton(onClick = { expanded = !expanded }) {
+                            val painter = when (expanded) {
+                                true -> painterResource(R.drawable.ic_collapse)
+                                else -> painterResource(R.drawable.ic_expand)
+                            }
+                            Icon(painter, null)
+                        }
+                    },
+                    label = { Text(stringResource(R.string.keyword)) }
+                )
+                AnimatedVisibility(expanded) {
+                    Column {
+                        for ((index, filter) in state.filters.withIndex()) {
+                            Row(
+                                modifier = Modifier.padding(start = 32.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(filter, Modifier.weight(1f))
+                                IconButton(onClick = { onDeleteFilterClick(filter) }) {
+                                    Icon(painterResource(R.drawable.ic_delete), null)
+                                }
+                            }
+                            if (index != state.filters.size - 1) HorizontalDivider(
+                                modifier = Modifier.padding(
+                                    start = 32.dp,
+                                    end = 48.dp
+                                )
+                            )
+                        }
                     }
                 }
+            }
         }
         SettingsSection(title = { Text(stringResource(id = R.string.tickets)) }) {
             SettingsItemRow(
@@ -146,23 +174,22 @@ fun SettingsScreen(
                 description = { Text(stringResource(id = R.string.nearby_cinemas_description)) },
                 value = {}
             )
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(painterResource(R.drawable.ic_location), null)
-                CommonTextField(
-                    modifier = Modifier.weight(1f),
-                    value = state.nearbyCinemas,
-                    onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
-                    visualTransformation = LengthVisualTransformation,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(onDone = clearFocus())
-                )
-            }
+            CommonTextField(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp),
+                value = state.nearbyCinemas,
+                onValueChange = { onStateChange(state.copy(nearbyCinemas = it)) },
+                visualTransformation = LengthVisualTransformation,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                leadingIcon = {
+                    Icon(painterResource(R.drawable.ic_location), null)
+                },
+                keyboardActions = KeyboardActions(onDone = clearFocus())
+            )
         }
         SettingsSection(title = { Text(stringResource(R.string.storage)) }) {
             SettingsItemRow(
@@ -170,7 +197,7 @@ fun SettingsScreen(
                 description = { Text(stringResource(R.string.timestamp_description)) },
                 value = {
                     IconButton(onClick = onClearTimestampClick) {
-                        Icon(Icons.Rounded.Delete, null)
+                        Icon(painterResource(R.drawable.ic_delete), null)
                     }
                 }
             )

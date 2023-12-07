@@ -10,7 +10,7 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
+import movie.style.modifier.surface
 import movie.style.theme.Theme
 
 @Composable
@@ -22,7 +22,7 @@ fun SettingsItemRow(
 ) = Row(
     modifier = modifier
         .heightIn(min = 56.dp)
-        .glow(Theme.container.button)
+        .surface(Theme.color.container.surface.copy(.3f), Theme.container.button)
         .padding(16.dp, 12.dp),
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(16.dp)
