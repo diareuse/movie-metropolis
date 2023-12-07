@@ -15,6 +15,7 @@ import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import movie.metropolis.app.util.rememberStoreable
 
 @SuppressLint("MissingPermission")
@@ -45,8 +46,8 @@ fun rememberLocation(
 
     LaunchedEffect(state.allPermissionsGranted) {
         if (!state.allPermissionsGranted) return@LaunchedEffect
-        provider.requestLocationUpdates().collectLatest {
-            snapshotState.value = it?.also { location ->
+        provider.requestLocationUpdates().filterNotNull().collectLatest {
+            snapshotState.value = it.also { location ->
                 latitude = location.latitude.toFloat()
                 longitude = location.longitude.toFloat()
             }
