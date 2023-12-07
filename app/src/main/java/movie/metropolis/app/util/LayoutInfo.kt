@@ -25,30 +25,42 @@ val LazyStaggeredGridLayoutInfo.completelyVisibleItemsInfo: List<LazyStaggeredGr
 val LazyListLayoutInfo.completelyVisibleItemsInfo: List<LazyListItemInfo>
     get() {
         val visibleOffset = viewportStartOffset..viewportEndOffset
-        fun LazyListItemInfo.offset() = offset + size
+        fun LazyListItemInfo.offset() = (offset + size)
         return visibleItemsInfo.fastFilter { it.offset() in visibleOffset }
     }
 
 @Composable
 fun LazyListState.rememberVisibleItemAsState(): State<Int> {
-    val visibleItems by remember { derivedStateOf { layoutInfo.completelyVisibleItemsInfo.fastMap { it.index } } }
-    val item = rememberSaveable { mutableIntStateOf(visibleItems.randomOrNull() ?: -1) }
-    LaunchedEffect(item.value !in visibleItems) {
-        val info = visibleItems
-        if (item.value !in info)
-            item.value = info.randomOrNull() ?: -1
+    val item = rememberSaveable { mutableIntStateOf(-1) }
+    fun update() {
+        val visibleItems = layoutInfo.completelyVisibleItemsInfo.fastMap { it.index }
+        if (item.value !in visibleItems) {
+            item.value = visibleItems.randomOrNull() ?: -1
+        }
+    }
+    SideEffect {
+        update()
+    }
+    LaunchedEffect(layoutInfo.viewportStartOffset) {
+        update()
     }
     return item
 }
 
 @Composable
 fun LazyStaggeredGridState.rememberVisibleItemAsState(): State<Int> {
-    val visibleItems by remember { derivedStateOf { layoutInfo.completelyVisibleItemsInfo.fastMap { it.index } } }
-    val item = rememberSaveable { mutableIntStateOf(visibleItems.randomOrNull() ?: -1) }
-    LaunchedEffect(item.value !in visibleItems) {
-        val info = visibleItems
-        if (item.value !in info)
-            item.value = info.randomOrNull() ?: -1
+    val item = rememberSaveable { mutableIntStateOf(-1) }
+    fun update() {
+        val visibleItems = layoutInfo.completelyVisibleItemsInfo.fastMap { it.index }
+        if (item.value !in visibleItems) {
+            item.value = visibleItems.randomOrNull() ?: -1
+        }
+    }
+    SideEffect {
+        update()
+    }
+    LaunchedEffect(layoutInfo.viewportStartOffset) {
+        update()
     }
     return item
 }
