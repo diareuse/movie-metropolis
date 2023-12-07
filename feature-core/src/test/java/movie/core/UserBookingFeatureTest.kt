@@ -2,7 +2,6 @@
 
 package movie.core
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import movie.calendar.CalendarWriter
@@ -38,7 +37,7 @@ import kotlin.time.Duration.Companion.hours
 
 class UserBookingFeatureTest {
 
-    private lateinit var feature: (CoroutineScope) -> UserBookingFeature
+    private lateinit var feature: UserBookingFeature
     private lateinit var movie: MovieDao
     private lateinit var wear: WearService
     private lateinit var sync: SyncPreference
@@ -69,27 +68,24 @@ class UserBookingFeatureTest {
         booking = mock {}
         wear = mock {}
         movie = mock {}
-        feature = { scope ->
-            UserFeatureModule().booking(
-                booking,
-                seats,
-                service,
-                cinema,
-                detail,
-                writer,
-                preference,
-                store,
-                sync,
-                wear,
-                scope,
-                movie
-            )
-        }
+        feature = UserFeatureModule().booking(
+            booking,
+            seats,
+            service,
+            cinema,
+            detail,
+            writer,
+            preference,
+            store,
+            sync,
+            wear,
+            movie
+        )
     }
 
     @Test
     fun invalidate_sets_preference() = runTest {
-        feature(this).invalidate()
+        feature.invalidate()
         verify(sync).booking = Date(0)
     }
 
@@ -98,8 +94,8 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val testData = service_responds_success()
-        val output = feature(this).get()
-        assertEquals(testData.size, output.getOrThrow().count())
+        val output = feature.get()
+        assertEquals(testData.size, output.count())
     }
 
     @Test
@@ -107,8 +103,8 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val testData = database_responds_success()
-        val output = feature(this).get()
-        assertEquals(testData.size, output.getOrThrow().count())
+        val output = feature.get()
+        assertEquals(testData.size, output.count())
     }
 
     @Test
@@ -116,7 +112,7 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         val testData = service_responds_success()
-        feature(this).get()
+        feature.get()
         awaitChildJobCompletion()
         verify(booking, times(testData.size)).insertOrUpdate(any())
         verify(seats, times(testData.size)).insertOrUpdate(any())
@@ -128,7 +124,7 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         service_responds_success()
-        feature(this).get()
+        feature.get()
         verify(sync, atLeastOnce()).booking = any()
     }
 
@@ -137,7 +133,7 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         database_responds_success()
-        feature(this).get()
+        feature.get()
         verify(sync, never()).booking = any()
     }
 
@@ -148,7 +144,7 @@ class UserBookingFeatureTest {
         cinema_responds_success()
         detail_responds_success()
         service_responds_success()
-        val result = feature(this).get().getOrThrow()
+        val result = feature.get()
         assertTrue {
             result.any { it.id == ticket.id }
         }
@@ -161,7 +157,7 @@ class UserBookingFeatureTest {
         service_responds_security()
         cinema_responds_success()
         detail_responds_success()
-        val result = feature(this).get().getOrThrow()
+        val result = feature.get()
         assertTrue {
             result.any { it.id == ticket.id }
         }
@@ -170,7 +166,10 @@ class UserBookingFeatureTest {
     @Test
     fun get_defaults_toNetwork_whenInvalidated() = runTest {
         sync_responds_invalid()
-        feature(this).get()
+        service_responds_success()
+        cinema_responds_success()
+        detail_responds_success()
+        feature.get()
         verify(service).getBookings()
     }
 
@@ -179,9 +178,9 @@ class UserBookingFeatureTest {
         service_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        val output = feature(this).get()
-        assertTrue(output.getOrThrow().any { it.expired })
-        assertTrue(output.getOrThrow().any { !it.expired })
+        val output = feature.get()
+        assertTrue(output.any { it.expired })
+        assertTrue(output.any { !it.expired })
     }
 
     @Test
@@ -189,10 +188,10 @@ class UserBookingFeatureTest {
         database_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        val output = feature(this).get()
+        val output = feature.get()
         awaitChildJobCompletion()
-        assertTrue(output.getOrThrow().any { it.expired })
-        assertTrue(output.getOrThrow().any { !it.expired })
+        assertTrue(output.any { it.expired })
+        assertTrue(output.any { !it.expired })
     }
 
     @Test
@@ -200,7 +199,7 @@ class UserBookingFeatureTest {
         database_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        feature(this).get()
+        feature.get()
         awaitChildJobCompletion()
         verify(wear).send(eq("/bookings/active"), any())
         verify(wear).send(eq("/bookings/expired"), any())
@@ -211,7 +210,7 @@ class UserBookingFeatureTest {
         service_responds_success()
         cinema_responds_success()
         detail_responds_success()
-        feature(this).get()
+        feature.get()
         awaitChildJobCompletion()
         verify(wear).send(eq("/bookings/active"), any())
         verify(wear).send(eq("/bookings/expired"), any())
@@ -223,7 +222,7 @@ class UserBookingFeatureTest {
         service_responds_empty()
         cinema_responds_success()
         detail_responds_success()
-        feature(this).get().getOrThrow()
+        feature.get()
         awaitChildJobCompletion()
         verify(wear).remove("/bookings/active")
         verify(wear).remove("/bookings/expired")

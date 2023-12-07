@@ -17,7 +17,7 @@ class BookingFacadeFromFeature(
 ) : BookingFacade {
 
     override val bookings: Flow<List<BookingView>> = flow {
-        val items = booking.get().getOrThrow()
+        val items = booking.get()
             .map(::BookingViewFromFeature)
             .toList()
         emit(items)

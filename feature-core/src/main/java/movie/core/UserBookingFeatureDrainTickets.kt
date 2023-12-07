@@ -2,6 +2,7 @@ package movie.core
 
 import movie.core.adapter.BookingFromTicket
 import movie.core.adapter.MovieFromId
+import movie.core.model.Booking
 
 class UserBookingFeatureDrainTickets(
     private val origin: UserBookingFeature,
@@ -10,7 +11,7 @@ class UserBookingFeatureDrainTickets(
     private val store: TicketStore
 ) : UserBookingFeature by origin {
 
-    override suspend fun get() = origin.get().mapCatching {
+    override suspend fun get(): Sequence<Booking> = origin.get().let {
         val stored = getStored()
         sequence {
             yieldAll(it)

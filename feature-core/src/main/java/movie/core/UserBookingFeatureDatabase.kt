@@ -17,14 +17,11 @@ class UserBookingFeatureDatabase(
     private val cinema: EventCinemaFeature,
 ) : UserBookingFeature {
 
-    override suspend fun get(): Result<Sequence<Booking>> = kotlin.runCatching {
-        val cinemas = cinema.runCatching { get(null) }.getOrNull()
-        booking.selectAll().mapNotNull { booking ->
-            val cinema = cinemas
-                ?.firstOrNull { it.id == booking.cinemaId }
-                ?: return@mapNotNull null
-            booking.asBooking(cinema)
-        }.asSequence()
+    override suspend fun get(): Sequence<Booking> {
+        val cinemas = cinema.runCatching { get(null) }.getOrNull()?.associateBy { it.id }.orEmpty()
+        return booking.selectAll()
+            .mapNotNull { it.asBooking(cinemas[it.cinemaId] ?: return@mapNotNull null) }
+            .asSequence()
     }
 
     override fun invalidate() = Unit

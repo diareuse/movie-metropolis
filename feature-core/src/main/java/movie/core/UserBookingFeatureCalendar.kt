@@ -1,7 +1,5 @@
 package movie.core
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import movie.calendar.CalendarWriter
 import movie.calendar.EventMetadata
 import movie.core.db.dao.MovieDao
@@ -12,14 +10,11 @@ class UserBookingFeatureCalendar(
     private val origin: UserBookingFeature,
     private val writer: CalendarWriter.Factory,
     private val preference: EventPreference,
-    private val scope: CoroutineScope,
     private val dao: MovieDao
 ) : UserBookingFeature by origin {
 
-    override suspend fun get() = origin.get().onSuccess { bookings ->
-        scope.launch {
-            writeInCalendar(bookings)
-        }
+    override suspend fun get(): Sequence<Booking> = origin.get().also { bookings ->
+        writeInCalendar(bookings)
     }
 
     private suspend fun writeInCalendar(bookings: Sequence<Booking>) {

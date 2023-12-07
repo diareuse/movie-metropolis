@@ -11,10 +11,10 @@ class UserBookingFeatureNetwork(
     private val cinema: EventCinemaFeature
 ) : UserBookingFeature {
 
-    override suspend fun get(): Result<Sequence<Booking>> = kotlin.runCatching {
+    override suspend fun get(): Sequence<Booking> {
         val bookings = service.getBookings().getOrThrow()
         val cinemas = cinema.get(null).asIterable()
-        bookings.map { it.asBooking(cinemas) }.asSequence()
+        return bookings.map { it.asBooking(cinemas) }.asSequence()
     }
 
     override fun invalidate() = Unit

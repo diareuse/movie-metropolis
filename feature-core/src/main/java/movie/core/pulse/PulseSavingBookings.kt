@@ -9,7 +9,7 @@ class PulseSavingBookings(
 ) : Pulse {
 
     override suspend fun execute(): Result<Sequence<Booking>> {
-        return user.get()
+        return user.runCatching { get() }
     }
 
 }

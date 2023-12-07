@@ -5,14 +5,12 @@ import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineScope
 import movie.calendar.CalendarWriter
 import movie.core.EventCinemaFeature
 import movie.core.EventDetailFeature
 import movie.core.TicketStore
 import movie.core.UserBookingFeature
 import movie.core.UserBookingFeatureCalendar
-import movie.core.UserBookingFeatureCatch
 import movie.core.UserBookingFeatureDatabase
 import movie.core.UserBookingFeatureDrainTickets
 import movie.core.UserBookingFeatureFold
@@ -87,7 +85,6 @@ internal class UserFeatureModule {
         store: TicketStore,
         sync: SyncPreference,
         wear: WearService,
-        scope: CoroutineScope,
         movie: MovieDao
     ): UserBookingFeature {
         var db: UserBookingFeature
@@ -95,15 +92,13 @@ internal class UserFeatureModule {
         db = UserBookingFeatureRequireNotEmpty(db)
         var out: UserBookingFeature
         out = UserBookingFeatureNetwork(service, cinema)
-        out = UserBookingFeatureCatch(out)
         out = UserBookingFeatureLoginBypass(out)
         out = UserBookingFeatureDrainTickets(out, detail, cinema, store)
-        out = UserBookingFeatureStoring(out, booking, seats, scope)
+        out = UserBookingFeatureStoring(out, booking, seats)
         out = UserBookingFeatureSaveTimestamp(out, sync)
-        out = UserBookingFeatureCalendar(out, writer, preference, scope, movie)
+        out = UserBookingFeatureCalendar(out, writer, preference, movie)
         out = UserBookingFeatureFold(UserBookingFeatureInvalidateAfter(db, sync, 1.hours), out, db)
-        out = UserBookingFeatureWear(out, wear, scope)
-        out = UserBookingFeatureCatch(out)
+        out = UserBookingFeatureWear(out, wear)
         return out
     }
 

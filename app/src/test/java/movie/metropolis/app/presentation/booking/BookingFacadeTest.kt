@@ -114,8 +114,7 @@ class BookingFacadeTest : FeatureTest() {
             on { movieId }.thenReturn("")
             on { expired }.thenReturn(true)
         }
-        val data = Result.success(sequenceOf(active, expired))
-        wheneverBlocking { booking.get() }.thenReturn(data)
+        wheneverBlocking { booking.get() }.thenReturn(sequenceOf(active, expired))
     }
 
     private fun detail_responds_success(): MovieDetail {
