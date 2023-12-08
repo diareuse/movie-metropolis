@@ -6,7 +6,9 @@ import androidx.compose.foundation.shape.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
@@ -31,26 +33,50 @@ fun nextColor(
 }
 
 @Composable
-fun CardBackgroundFront(
+fun ScatterPointBackground(
+    bounds: DpRect,
     modifier: Modifier = Modifier,
-) = BoxWithConstraints(
-    modifier = modifier,
-    contentAlignment = Alignment.CenterStart
+    count: Int = 20,
 ) {
-    val bounds = remember(maxWidth, maxHeight) {
-        val w = maxWidth.value.toInt()
-        val h = maxHeight.value.toInt()
-        IntRect(IntOffset(w / -5, h / -2), IntSize(w / 2, h + 2 * h / 5))
-    }
-    val points = remember(bounds) { ScatterPoint.create(bounds) }
+    val density = LocalDensity.current
+    ScatterPointBackground(
+        modifier = modifier,
+        bounds = with(density) { bounds.toRect() },
+        count = count
+    )
+}
+
+@Composable
+fun ScatterPointBackground(
+    bounds: Rect,
+    modifier: Modifier = Modifier,
+    count: Int = 20,
+) = Box(modifier = modifier) {
+    val density = LocalDensity.current
+    val points = remember(bounds) { ScatterPoint.create(bounds, density, count) }
     for ((offset, color) in points)
         Box(
             modifier = Modifier
                 .size(64.dp)
-                .offset(offset.x, offset.y)
+                .offset(offset.x - 32.dp, offset.y - 32.dp)
                 .blur(10.dp, BlurredEdgeTreatment.Unbounded)
                 .background(color, CircleShape)
         )
+}
+
+@Composable
+fun CardBackgroundFront(
+    modifier: Modifier = Modifier,
+) = BoxWithConstraints(
+    modifier = modifier,
+    propagateMinConstraints = true
+) {
+    val bounds = remember(maxWidth, maxHeight) {
+        val w = maxWidth
+        val h = maxHeight
+        DpRect(DpOffset.Zero, DpSize(w / 2, h))
+    }
+    ScatterPointBackground(bounds = bounds)
 }
 
 @Composable
@@ -58,22 +84,14 @@ fun CardBackgroundBack(
     modifier: Modifier = Modifier,
 ) = BoxWithConstraints(
     modifier = modifier,
-    contentAlignment = Alignment.CenterStart
+    propagateMinConstraints = true
 ) {
     val bounds = remember(maxWidth, maxHeight) {
-        val w = maxWidth.value.toInt()
-        val h = maxHeight.value.toInt()
-        IntRect(IntOffset(w / -5, 0), IntSize(w + 2 * w / 5, h / 2))
+        val w = maxWidth
+        val h = maxHeight
+        DpRect(DpOffset(0.dp, h / 2), DpSize(w, h / 2))
     }
-    val points = remember(bounds) { ScatterPoint.create(bounds) }
-    for ((offset, color) in points)
-        Box(
-            modifier = Modifier
-                .size(64.dp)
-                .offset(offset.x, offset.y)
-                .blur(10.dp, BlurredEdgeTreatment.Unbounded)
-                .background(color, CircleShape)
-        )
+    ScatterPointBackground(bounds = bounds)
 }
 
 data class ScatterPoint(
@@ -83,13 +101,17 @@ data class ScatterPoint(
 
     companion object {
 
-        fun create(bounds: IntRect, count: Int = 27): ImmutableList<ScatterPoint> {
+        fun create(bounds: Rect, density: Density, count: Int = 27): ImmutableList<ScatterPoint> {
             val out = mutableListOf<ScatterPoint>()
-            repeat(count) {
-                val x = nextInt(bounds.left, bounds.right)
-                val y = nextInt(bounds.top, bounds.bottom)
-                val color = Color(nextColor(red = 128..255, green = 15..165, blue = 0..-1))
-                out += ScatterPoint(DpOffset(x.dp, y.dp), color)
+            val bounds = bounds.roundToIntRect()
+            with(density) {
+                repeat(count) {
+                    val x = nextInt(bounds.left, bounds.right)
+                    val y = nextInt(bounds.top, bounds.bottom)
+                    val color = Color(nextColor(red = 128..255, green = 15..165, blue = 0..-1))
+                    out += ScatterPoint(DpOffset(x.toDp(), y.toDp()), color).also {
+                    }
+                }
             }
             return out.sortedBy { it.color.luminance() }.toImmutableList()
         }
