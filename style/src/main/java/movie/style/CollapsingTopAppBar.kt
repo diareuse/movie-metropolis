@@ -66,6 +66,9 @@ fun CollapsingTopAppBar(
     val expandedTitlePaddingTop = with(density) {
         expandedTitlePadding.calculateTopPadding().roundToPx()
     }
+    val expandedTitlePaddingEnd = with(density) {
+        expandedTitlePadding.calculateEndPadding(direction).roundToPx()
+    }
     val fraction = scrollBehavior.state.collapsedFraction
     val expandFraction = fraction.coerceAtMost(.5f) * 2
     val hideFraction = (fraction - .5f).coerceIn(0f, .5f) * 2
@@ -112,7 +115,7 @@ fun CollapsingTopAppBar(
         val actions = measurables.first { it.layoutId == Actions }.measure(cs)
         cs = cs.minusWidth(actions.width).fixedWidth()
         val title = measurables.first { it.layoutId == Title }.measure(cs)
-        val expandedCS = lerp(constraints, cs, expandFraction)
+        val expandedCS = lerp(constraints, cs, expandFraction).minusWidth(expandedTitlePaddingEnd)
         val expandedTitle = measurables.first { it.layoutId == ExpandedTitle }.measure(expandedCS)
 
         // Stage 2: Arrange
