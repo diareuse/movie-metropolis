@@ -36,7 +36,7 @@ fun SpaceScreen(
     topBar = {
         CollapsingTopAppBar(
             modifier = Modifier.alignForLargeScreen(),
-            title = { Text("Space Management") },
+            title = { Text(stringResource(R.string.space_management)) },
             navigationIcon = {
                 IconButton(onClick = onClickBack) {
                     Icon(painterResource(R.drawable.ic_close), null)
@@ -66,10 +66,10 @@ fun SpaceScreen(
             .alignForLargeScreen(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        SettingsSection(title = { Text("Images") }) {
+        SettingsSection(title = { Text(stringResource(R.string.images)) }) {
             SettingsItemRow(
-                title = { Text("Posters") },
-                description = { Text("${state.posters.megaBytes} MB used") },
+                title = { Text(stringResource(R.string.posters)) },
+                description = { Text(stringResource(R.string.mb_used, state.posters.megaBytes)) },
                 value = {
                     IconButton(onClick = onDeletePosterClick) {
                         Icon(painterResource(id = R.drawable.ic_delete), null)
@@ -77,10 +77,10 @@ fun SpaceScreen(
                 }
             )
         }
-        SettingsSection(title = { Text("Database") }) {
+        SettingsSection(title = { Text(stringResource(R.string.database)) }) {
             SettingsItemRow(
-                title = { Text("Movies and Tickets") },
-                description = { Text("${state.movies.megaBytes} MB used") },
+                title = { Text(stringResource(R.string.movies_and_tickets)) },
+                description = { Text(stringResource(R.string.mb_used, state.movies.megaBytes)) },
                 value = {
                     IconButton(onClick = onDeleteMoviesClick) {
                         Icon(painterResource(id = R.drawable.ic_delete), null)
@@ -88,8 +88,8 @@ fun SpaceScreen(
                 }
             )
             SettingsItemRow(
-                title = { Text("Ratings and Metadata") },
-                description = { Text("${state.ratings.megaBytes} MB used") },
+                title = { Text(stringResource(R.string.ratings_and_metadata)) },
+                description = { Text(stringResource(R.string.mb_used, state.ratings.megaBytes)) },
                 value = {
                     IconButton(onClick = onDeleteRatingsClick) {
                         Icon(painterResource(id = R.drawable.ic_delete), null)

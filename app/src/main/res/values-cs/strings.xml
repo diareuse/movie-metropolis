@@ -135,4 +135,11 @@
     <string name="timestamp_description">Tohle nastavení vyčistí časové značky používané k ukládání lokálních dat. Pokud je doba obnovení moc dlouhá nebo se vyskytne jiná chyba, vymazání časových značek může pomoci k obnovení lokálních dat ze serveru. Časté čištění časových značek může způsobit neoptimální chování aplikace.</string>
     <string name="login_loading">Probíhá přihlašování…</string>
     <string name="keyword">Klíčové slovo</string>
+    <string name="space_management">Správa místa</string>
+    <string name="images">Obrázky</string>
+    <string name="mb_used">%1$s MB použito</string>
+    <string name="posters">Plakáty</string>
+    <string name="movies_and_tickets">Filmy a lístky</string>
+    <string name="ratings_and_metadata">Hodnocení a metadata</string>
+    <string name="database">Databáze</string>
 </resources>

@@ -135,4 +135,11 @@
     <string name="timestamp_description">This setting clears timestamps used to cache local content. If the cache gets stuck for whatever reason or delay is too long, clearing timestamps helps to fetch new data as soon as possible. Cleaning timestamps often may produce non-optimal user experience.</string>
     <string name="login_loading">Logging you in…</string>
     <string name="keyword">Keyword</string>
+    <string name="space_management">Space Management</string>
+    <string name="images">Images</string>
+    <string name="mb_used">%1$s MB used</string>
+    <string name="posters">Posters</string>
+    <string name="movies_and_tickets">Movies and Tickets</string>
+    <string name="ratings_and_metadata">Ratings and Metadata</string>
+    <string name="database">Database</string>
 </resources>
