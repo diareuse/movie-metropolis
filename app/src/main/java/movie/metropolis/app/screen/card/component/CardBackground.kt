@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.card.component
 
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
@@ -16,7 +17,7 @@ import kotlinx.collections.immutable.toImmutableList
 import movie.style.layout.PreviewLayout
 import kotlin.random.Random.Default.nextInt
 
-fun nextColor(
+private fun nextColor(
     alpha: IntRange = 0..0xff,
     red: IntRange = 0..0xff,
     green: IntRange = 0..0xff,
@@ -51,17 +52,32 @@ fun ScatterPointBackground(
     bounds: Rect,
     modifier: Modifier = Modifier,
     count: Int = 20,
-) = Box(modifier = modifier) {
+) = Box(
+    modifier = modifier
+        .blur(10.dp, BlurredEdgeTreatment.Unbounded)
+) {
     val density = LocalDensity.current
     val points = remember(bounds) { ScatterPoint.create(bounds, density, count) }
-    for ((offset, color) in points)
+    val transition = rememberInfiniteTransition()
+    val scale by transition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.2f,
+        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse)
+    )
+    var selected by remember { mutableStateOf(0) }
+    SideEffect {
+        if (scale == 1f) selected = points.indices.random()
+    }
+    for ((index, point) in points.withIndex()) {
+        val (offset, color) = point
         Box(
             modifier = Modifier
-                .size(64.dp)
                 .offset(offset.x - 32.dp, offset.y - 32.dp)
-                .blur(10.dp, BlurredEdgeTreatment.Unbounded)
+                .scale(if (index == selected) scale else 1f)
+                .size(64.dp)
                 .background(color, CircleShape)
         )
+    }
 }
 
 @Composable

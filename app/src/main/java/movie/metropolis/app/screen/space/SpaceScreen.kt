@@ -47,9 +47,10 @@ fun SpaceScreen(
     }
 ) { padding ->
     BoxWithConstraints(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
-            .alpha(.3f)
+            .alpha(.3f),
+        propagateMinConstraints = true
     ) {
         ScatterPointBackground(
             bounds = DpRect(DpOffset.Zero, size = DpSize(maxWidth, maxHeight)),
