@@ -11,7 +11,7 @@ fun Context.findActivity(): Activity {
 fun Context.findActivityOrNull(): Activity? {
     when (this) {
         is Activity -> return this
-        is ContextWrapper -> return baseContext.findActivity()
+        is ContextWrapper -> return baseContext.findActivityOrNull()
     }
     return null
 }

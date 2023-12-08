@@ -13,6 +13,7 @@ import movie.rating.database.ActorReferenceConnectionDao
 import movie.rating.database.ActorReferenceDao
 import movie.rating.database.MetadataDatabase
 import movie.rating.database.RatingDao
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -27,6 +28,7 @@ internal class DatabaseModule {
     ): MetadataDatabase {
         val name = context.packageName + ".rating"
         return Room.databaseBuilder(context, MetadataDatabase::class.java, name)
+            .setAutoCloseTimeout(30, TimeUnit.SECONDS)
             .fallbackToDestructiveMigration()
             .build()
     }

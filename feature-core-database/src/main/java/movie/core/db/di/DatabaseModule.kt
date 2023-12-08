@@ -57,6 +57,7 @@ import movie.core.db.dao.ShowingDao
 import movie.core.db.dao.ShowingDaoLowercase
 import movie.core.db.dao.ShowingDaoPerformance
 import movie.core.db.dao.ShowingDaoThreading
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -72,6 +73,7 @@ class DatabaseModule {
         val name = "${context.packageName}.core"
         return Room
             .databaseBuilder(context, MovieDatabase::class.java, name)
+            .setAutoCloseTimeout(30, TimeUnit.SECONDS)
             .addMigrations(MovieDatabase.Migration2to3())
             .addMigrations(MovieDatabase.Migration7to8())
             .addMigrations(MovieDatabase.Migration10to11())
