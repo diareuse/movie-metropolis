@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchData(
+    @SerialName("id")
+    val id: Long,
     @SerialName("backdrop_path")
     val backdropPath: String?,
     @SerialName("poster_path")

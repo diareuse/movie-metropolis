@@ -14,7 +14,8 @@ internal class MetadataProviderStoring(
             year = descriptor.year,
             rating = it.rating,
             poster = it.posterImageUrl,
-            overlay = it.overlayImageUrl
+            overlay = it.overlayImageUrl,
+            id = it.id
         )
         dao.insertOrUpdate(stored)
     }

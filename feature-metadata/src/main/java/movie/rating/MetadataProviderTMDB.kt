@@ -14,14 +14,16 @@ class MetadataProviderTMDB(
     override suspend fun get(descriptor: MovieDescriptor): MovieMetadata? {
         val data = client.getOrCreate().search(descriptor) ?: return null
         return MovieMetadata(
+            id = data.id,
             rating = (data.rating * 10).toInt().toByte(),
             posterImageUrl = data.posterPath?.let(TMDB::image).orEmpty(),
-            overlayImageUrl = data.backdropPath?.let(TMDB::image).orEmpty()
+            overlayImageUrl = data.backdropPath?.let(TMDB::image).orEmpty(),
+            url = TMDB.url("/movie/${data.id}")
         )
     }
 
     private suspend fun HttpClient.search(descriptor: MovieDescriptor): SearchData? {
-        val result = get(TMDB.url("/search/movie")) {
+        val result = get(TMDB.api("/search/movie")) {
             url.parameters.apply {
                 append("query", descriptor.name)
                 append("include_adult", "false")

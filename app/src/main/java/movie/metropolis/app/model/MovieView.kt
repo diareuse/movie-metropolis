@@ -15,6 +15,7 @@ interface MovieView {
     val countryOfOrigin: String
     val favorite: Boolean
     val rating: String?
+    val url: String
 
     val poster: ImageView?
     val posterLarge: ImageView?

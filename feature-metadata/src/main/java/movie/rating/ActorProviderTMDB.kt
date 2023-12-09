@@ -36,7 +36,7 @@ internal class ActorProviderTMDB(
     }
 
     private suspend fun HttpClient.search(query: String): ActorResponse? {
-        val result = get(TMDB.url("/search/person")) {
+        val result = get(TMDB.api("/search/person")) {
             url.parameters.apply {
                 append("query", query)
                 append("include_adult", "false")
