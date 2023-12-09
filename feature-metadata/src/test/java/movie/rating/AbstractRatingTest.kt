@@ -70,7 +70,8 @@ abstract class AbstractRatingTest {
             year = descriptor.year,
             rating = nextInt(0, 100).toByte(),
             poster = "url",
-            overlay = "url"
+            overlay = "url",
+            id = 1
         )
         whenever(dao.select(any(), any())).thenReturn(data)
         return data.rating
