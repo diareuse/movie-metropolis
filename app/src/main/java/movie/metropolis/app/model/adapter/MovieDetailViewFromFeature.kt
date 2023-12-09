@@ -57,6 +57,7 @@ data class MovieDetailViewFromFeature(
     data class PersonViewFromName(
         override val name: String
     ) : PersonView {
+        override val url = ""
         override val popularity: Int = -1
         override val image: String = ""
         override val starredInMovies: Int = -1

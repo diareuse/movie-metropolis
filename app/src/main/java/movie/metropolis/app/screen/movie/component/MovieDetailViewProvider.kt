@@ -47,7 +47,8 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val name: String,
         override val popularity: Int = -1,
         override val image: String = "",
-        override val starredInMovies: Int = -1
+        override val starredInMovies: Int = -1,
+        override val url: String = ""
     ) : PersonView
 
 }

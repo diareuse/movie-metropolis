@@ -68,6 +68,8 @@ class MovieFacadeWithActors(
     data class PersonViewFromActor(
         private val actor: Actor
     ) : PersonView {
+        override val url: String
+            get() = "https://www.themoviedb.org/person/${actor.id}"
         override val name: String
             get() = actor.name
         override val popularity: Int

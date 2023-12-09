@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.movie.component
 
 import android.content.res.Configuration
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
 import androidx.compose.material.icons.*
@@ -13,6 +14,7 @@ import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -31,6 +33,7 @@ fun ActorRow(
     name: @Composable () -> Unit,
     popularity: @Composable () -> Unit,
     movieCount: @Composable () -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = Theme.color.container.background,
     imageOffset: PaddingValues = PaddingValues(16.dp),
@@ -64,7 +67,8 @@ fun ActorRow(
                         }
                     }
                 }
-                .surface(color, pictureShape, 16.dp),
+                .surface(color, pictureShape, 16.dp)
+                .clickable(onClick = onClick, role = Role.Button),
             propagateMinConstraints = true
         ) {
             image()
@@ -88,6 +92,7 @@ fun ActorRow(
                 .fillMaxSize()
                 .surface(surfaceColor, shape)
                 .glow(shape, color, LightSource.Left, fillAlpha = .4f, alpha = .2f)
+                .clickable(onClick = onClick, role = Role.Button)
         )
     }
 ) {
@@ -203,6 +208,7 @@ private fun ActorRowPreview() = PreviewLayout {
         name = { Text("Brie Larson") },
         popularity = { Text("139") },
         movieCount = { Text("4") },
-        color = Color.Magenta
+        color = Color.Magenta,
+        onClick = {}
     )
 }
