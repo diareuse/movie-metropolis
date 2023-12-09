@@ -142,4 +142,8 @@
     <string name="movies_and_tickets">Filmy a lístky</string>
     <string name="ratings_and_metadata">Hodnocení a metadata</string>
     <string name="database">Databáze</string>
+    <string name="hide">Schovat</string>
+    <string name="open_in_browser">Otevřít v prohlížeči</string>
+    <string name="mark_favorite">Přidat oblíbený</string>
+    <string name="remove_favorite">Odstranit oblíbený</string>
 </resources>
