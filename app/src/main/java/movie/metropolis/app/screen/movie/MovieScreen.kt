@@ -26,6 +26,7 @@ import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.TwoPaneSurface
+import movie.style.action.actionView
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.rememberPaletteImageState
@@ -146,7 +147,8 @@ fun MovieScreen(
                                 name = { Text(it.name) },
                                 popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
                                 movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
-                                color = state.palette.color
+                                color = state.palette.color,
+                                onClick = actionView { it.url }
                             )
                         }
                     }
@@ -185,7 +187,8 @@ fun MovieScreen(
                                 name = { Text(it.name) },
                                 popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
                                 movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
-                                color = state.palette.color
+                                color = state.palette.color,
+                                onClick = actionView { it.url }
                             )
                         }
                     }
