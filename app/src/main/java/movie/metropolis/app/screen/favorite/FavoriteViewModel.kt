@@ -9,12 +9,14 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.favorite.FavoriteFacade
+import movie.metropolis.app.presentation.settings.SettingsFacade
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
-    private val facade: FavoriteFacade
+    private val facade: FavoriteFacade,
+    private val settings: SettingsFacade
 ) : ViewModel() {
 
     val items = facade.get()
@@ -25,6 +27,10 @@ class FavoriteViewModel @Inject constructor(
         viewModelScope.launch {
             facade.remove(view)
         }
+    }
+
+    fun hide(view: MovieView) {
+        settings.filters += view.name.substringBefore(":")
     }
 
 }
