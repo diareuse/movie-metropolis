@@ -12,9 +12,11 @@ internal class MetadataProviderDatabase(
     }
 
     private fun MovieMetadata(rating: RatingStored) = MovieMetadata(
+        id = rating.id,
         rating = rating.rating,
         posterImageUrl = rating.poster,
-        overlayImageUrl = rating.overlay
+        overlayImageUrl = rating.overlay,
+        url = TMDB.url("/movie/${rating.id}")
     )
 
 }

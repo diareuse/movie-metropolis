@@ -53,6 +53,8 @@ data class MovieViewFromMovie(
             .filterIsInstance<Media.Video>()
             .firstOrNull()
             ?.let(::VideoViewFromFeature)
+    override val url: String
+        get() = ""
 
     override fun getBase(): Movie {
         return movie.movie

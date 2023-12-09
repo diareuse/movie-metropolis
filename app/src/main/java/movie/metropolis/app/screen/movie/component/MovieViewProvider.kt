@@ -28,7 +28,8 @@ class MovieViewProvider :
         override val video: VideoView? = PreviewVideo(),
         override val favorite: Boolean = Random.nextBoolean(),
         override val rating: String? = "75%",
-        override val posterLarge: ImageView? = PreviewImage()
+        override val posterLarge: ImageView? = PreviewImage(),
+        override val url: String = ""
     ) : MovieView {
         override fun getBase(): Movie = throw IllegalAccessError()
     }

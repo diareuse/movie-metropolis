@@ -51,6 +51,8 @@ data class MovieViewFromReference(
                     get() = it
             }
         }
+    override val url: String
+        get() = ref.url
 
     override fun getBase(): Movie {
         return ref

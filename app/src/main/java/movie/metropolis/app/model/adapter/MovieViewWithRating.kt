@@ -21,5 +21,7 @@ data class MovieViewWithRating(
                     get() = it
             }
         } ?: origin.poster
+    override val url: String
+        get() = metadata.url
 
 }
