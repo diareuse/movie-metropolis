@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.listing.ListingFacade
+import movie.metropolis.app.presentation.settings.SettingsFacade
 import movie.metropolis.app.util.retainStateIn
 import movie.metropolis.app.util.throttleWithTimeout
 import javax.inject.Inject
@@ -21,7 +22,8 @@ import kotlin.time.Duration.Companion.milliseconds
 @HiltViewModel
 class ListingViewModel @Inject constructor(
     handle: SavedStateHandle,
-    factory: ListingFacade.Factory
+    factory: ListingFacade.Factory,
+    private val settings: SettingsFacade
 ) : ViewModel() {
 
     private val facade = when (handle.contains("type")) {
@@ -46,6 +48,10 @@ class ListingViewModel @Inject constructor(
         viewModelScope.launch {
             facade.toggle(view)
         }
+    }
+
+    fun hide(view: MovieView) {
+        settings.filters += view.name.substringBefore(":")
     }
 
 }

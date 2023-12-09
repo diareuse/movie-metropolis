@@ -142,4 +142,8 @@
     <string name="movies_and_tickets">Movies and Tickets</string>
     <string name="ratings_and_metadata">Ratings and Metadata</string>
     <string name="database">Database</string>
+    <string name="hide">Hide</string>
+    <string name="open_in_browser">Open in Browser</string>
+    <string name="mark_favorite">Mark favorite</string>
+    <string name="remove_favorite">Remove favorite</string>
 </resources>
