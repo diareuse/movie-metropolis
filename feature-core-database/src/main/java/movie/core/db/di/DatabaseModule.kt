@@ -1,6 +1,8 @@
 package movie.core.db.di
 
 import android.content.Context
+import androidx.annotation.OptIn
+import androidx.room.ExperimentalRoomApi
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -64,6 +66,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DatabaseModule {
 
+    @OptIn(ExperimentalRoomApi::class)
     @Provides
     @Singleton
     internal fun database(

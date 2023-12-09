@@ -1,6 +1,8 @@
 package movie.rating.di
 
 import android.content.Context
+import androidx.annotation.OptIn
+import androidx.room.ExperimentalRoomApi
 import androidx.room.Room
 import dagger.Module
 import dagger.Provides
@@ -20,6 +22,7 @@ import javax.inject.Singleton
 @Module
 internal class DatabaseModule {
 
+    @OptIn(ExperimentalRoomApi::class)
     @Provides
     @Singleton
     fun database(
