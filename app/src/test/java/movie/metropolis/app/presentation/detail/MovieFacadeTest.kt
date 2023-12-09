@@ -172,7 +172,7 @@ class MovieFacadeTest : FeatureTest() {
     // ---
 
     private suspend fun rating_responds_success(): MovieMetadata {
-        val composed = MovieMetadata(69, "", "")
+        val composed = MovieMetadata(0, 69, "", "", "")
         whenever(rating.get(any())).thenReturn(composed)
         return composed
     }
