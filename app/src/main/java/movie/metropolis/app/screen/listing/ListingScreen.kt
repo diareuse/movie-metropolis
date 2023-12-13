@@ -101,8 +101,10 @@ fun ListingScreen(
                             color = state.palette.color,
                             contentColor = state.palette.textColor,
                             onFavoriteClick = {
-                                onFavoriteClick(it)
-                                scope.launch { dialogState.close() }
+                                scope.launch {
+                                    dialogState.close()
+                                    onFavoriteClick(it)
+                                }
                             },
                             onHideClick = {
                                 scope.launch {
