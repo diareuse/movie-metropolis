@@ -91,7 +91,7 @@ fun ListingScreen(
             ) {
                 val it = promotions[it]
                 val state = rememberPaletteImageState(it.poster?.url)
-                val dialogState = overlay.rememberDialogCloneState(key = it.id)
+                val dialogState = overlay.rememberDialogCloneState()
                 DialogClone(
                     state = dialogState,
                     expansion = {
@@ -149,7 +149,7 @@ fun ListingScreen(
         }
         items(movies, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.poster?.url ?: it.posterLarge?.url)
-            val dialogState = overlay.rememberDialogCloneState(key = it.id)
+            val dialogState = overlay.rememberDialogCloneState()
             DialogClone(
                 state = dialogState,
                 modifier = Modifier.animateItemPlacement(),

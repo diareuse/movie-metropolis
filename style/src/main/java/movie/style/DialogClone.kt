@@ -12,6 +12,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.hapticfeedback.*
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import androidx.core.view.WindowCompat
 import kotlinx.coroutines.launch
+import movie.style.haptic.tick
 import movie.style.layout.PreviewLayout
 import movie.style.util.toDpSize
 import kotlin.math.roundToInt
@@ -109,13 +111,17 @@ val Alignment.Companion.VerticalSaver
     )
 
 @Composable
-fun OverlayScope.rememberDialogCloneState(key: Any? = null) = remember(this, key) {
-    DialogCloneState(this)
+fun OverlayScope.rememberDialogCloneState(): DialogCloneState {
+    val haptics = LocalHapticFeedback.current
+    return remember(this, haptics) {
+        DialogCloneState(this, haptics)
+    }
 }
 
 @Stable
 class DialogCloneState(
-    private val scope: OverlayScope
+    private val scope: OverlayScope,
+    private val haptics: HapticFeedback
 ) {
     var expanded by mutableStateOf(false)
         private set
@@ -128,7 +134,9 @@ class DialogCloneState(
         expanded = true
         scope.expanded = true
         animate(scale, 1.1f) { it, _ -> scale = it }
+        haptics.tick()
         animate(1.1f, 1f) { it, _ -> scale = it }
+        haptics.tick()
         animate(alpha, 1f) { it, _ -> alpha = it }
     }
 
@@ -136,7 +144,9 @@ class DialogCloneState(
         animate(alpha, 0f) { it, _ -> alpha = it }
         scope.expanded = false
         animate(scale, 1.1f) { it, _ -> scale = it }
+        haptics.tick()
         animate(1.1f, 1f) { it, _ -> scale = it }
+        haptics.tick()
         expanded = false
     }
 }

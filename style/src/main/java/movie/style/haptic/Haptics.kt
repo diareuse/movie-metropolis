@@ -2,6 +2,7 @@ package movie.style.haptic
 
 import android.os.Build
 import android.view.HapticFeedbackConstants
+import android.view.ViewConfiguration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.*
 import androidx.compose.material.ripple.*
@@ -9,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.hapticfeedback.*
 import androidx.compose.ui.platform.*
-import kotlinx.coroutines.flow.filterIsInstance
 
 fun HapticFeedback.click() {
     performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
@@ -79,9 +79,21 @@ class VibrateIndication(
     @Composable
     override fun rememberUpdatedInstance(interactionSource: InteractionSource): IndicationInstance {
         val haptic = LocalHapticFeedback.current
+        val timeout = ViewConfiguration.getLongPressTimeout().toLong()
         LaunchedEffect(interactionSource) {
-            interactionSource.interactions.filterIsInstance<PressInteraction.Release>().collect {
-                haptic.click()
+            var lastPress = 0L
+            interactionSource.interactions.collect {
+                when (it) {
+                    is PressInteraction.Press -> {
+                        lastPress = System.currentTimeMillis()
+                        haptic.fastTick()
+                    }
+
+                    is PressInteraction.Release -> {
+                        if (timeout > System.currentTimeMillis() - lastPress)
+                            haptic.click()
+                    }
+                }
             }
         }
         return origin.rememberUpdatedInstance(interactionSource)
