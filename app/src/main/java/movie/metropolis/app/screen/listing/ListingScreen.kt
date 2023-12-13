@@ -61,6 +61,7 @@ fun ListingScreen(
     propagateMinConstraints = true
 ) {
     val selectedItem by state.rememberVisibleItemAsState()
+    val scope = rememberCoroutineScope()
     BackgroundImage(
         modifier = Modifier.fillMaxSize(),
         state = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
@@ -91,7 +92,6 @@ fun ListingScreen(
                 val it = promotions[it]
                 val state = rememberPaletteImageState(it.poster?.url)
                 val dialogState = overlay.rememberDialogCloneState(key = it.id)
-                val scope = rememberCoroutineScope()
                 DialogClone(
                     state = dialogState,
                     expansion = {
@@ -150,7 +150,6 @@ fun ListingScreen(
         items(movies, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.poster?.url ?: it.posterLarge?.url)
             val dialogState = overlay.rememberDialogCloneState(key = it.id)
-            val scope = rememberCoroutineScope()
             DialogClone(
                 state = dialogState,
                 modifier = Modifier.animateItemPlacement(),
