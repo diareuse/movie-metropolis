@@ -169,6 +169,7 @@ data class PaletteImageState(
         )
     }
 
+    @Immutable
     data class Palette(
         val color: Color,
         val textColor: Color,

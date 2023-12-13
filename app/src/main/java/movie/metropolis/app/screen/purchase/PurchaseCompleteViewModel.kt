@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.purchase
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import movie.metropolis.app.presentation.order.OrderCompleteFacade.Companion.pro
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class PurchaseCompleteViewModel @Inject constructor(
     facade: OrderCompleteFacade

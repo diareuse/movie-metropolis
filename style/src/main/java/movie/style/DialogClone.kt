@@ -42,10 +42,12 @@ fun OverlayContainer(
     }
 }
 
+@Stable
 interface OverlayScope {
     var expanded: Boolean
 }
 
+@Stable
 class OverlayScopeImpl : OverlayScope {
     override var expanded: Boolean by mutableStateOf(false)
 }
@@ -111,6 +113,7 @@ fun OverlayScope.rememberDialogCloneState(key: Any? = null) = remember(this, key
     DialogCloneState(this)
 }
 
+@Stable
 class DialogCloneState(
     private val scope: OverlayScope
 ) {
@@ -281,10 +284,6 @@ fun AnchoredLayout(
             x = horizontalAlignment.align(bottom.width, anchor.width, layoutDirection),
             y = anchor.height
         )
-    }
-}.also {
-    SideEffect {
-        println("Alignment:${horizontalAlignment}")
     }
 }
 

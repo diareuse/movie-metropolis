@@ -1,5 +1,7 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.map
 import movie.core.FavoriteFeature
 import movie.core.adapter.MovieFromId
@@ -31,10 +33,10 @@ class ListingFacadeFavorite(
 
     // ---
 
-    private suspend fun List<MovieView>.markFavorite(): List<MovieView> = map {
+    private suspend fun List<MovieView>.markFavorite(): ImmutableList<MovieView> = map {
         val movie = MovieFromId(it.id)
         val isFavorite = cache.getOrPut(movie.id) { favorite.isFavorite(movie) }
         MovieViewWithFavorite(it, isFavorite)
-    }
+    }.toPersistentList()
 
 }

@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.*
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
+@Stable
 class CardScreenState {
 
     var rotation by mutableFloatStateOf(0f)

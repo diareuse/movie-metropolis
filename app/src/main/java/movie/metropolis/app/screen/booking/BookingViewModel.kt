@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.booking
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +23,7 @@ import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 import android.location.Location as AndroidLocation
 
+@Stable
 @HiltViewModel
 class BookingViewModel private constructor(
     private val factory: TicketFacade.LocationFactory

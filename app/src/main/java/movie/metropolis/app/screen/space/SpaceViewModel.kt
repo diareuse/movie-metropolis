@@ -1,6 +1,7 @@
 package movie.metropolis.app.screen.space
 
 import android.content.Context
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ import movie.metropolis.app.model.DiskSpace.Companion.bytes
 import java.io.File
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class SpaceViewModel @Inject constructor(
     @ApplicationContext

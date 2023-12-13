@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.movie
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class MovieViewModel private constructor(
     private val facade: MovieFacade.Filterable,

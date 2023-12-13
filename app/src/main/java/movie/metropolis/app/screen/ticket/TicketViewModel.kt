@@ -2,6 +2,7 @@ package movie.metropolis.app.screen.ticket
 
 import android.content.Context
 import androidx.annotation.WorkerThread
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +22,7 @@ import movie.metropolis.app.util.writeTo
 import java.io.File
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class TicketViewModel @Inject constructor(
     private val facade: BookingFacade,

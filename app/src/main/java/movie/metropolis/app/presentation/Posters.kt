@@ -1,7 +1,9 @@
 package movie.metropolis.app.presentation
 
+import androidx.compose.runtime.*
 import kotlinx.collections.immutable.toImmutableList
 
+@Immutable
 object Posters {
 
     private val posters = listOf(

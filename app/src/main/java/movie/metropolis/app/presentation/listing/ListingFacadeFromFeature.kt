@@ -1,5 +1,6 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
@@ -20,7 +21,7 @@ class ListingFacadeFromFeature(
     override fun get() = channel.receiveAsFlow().onStart { emit(Unit) }.map {
         val items = preview.get()
             .map { MovieViewFromFeature(it, false) }
-            .toList()
+            .toPersistentList()
         ListingView(items)
     }
 

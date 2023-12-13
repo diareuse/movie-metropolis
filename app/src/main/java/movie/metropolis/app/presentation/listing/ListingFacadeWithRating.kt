@@ -1,5 +1,7 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -34,7 +36,7 @@ class ListingFacadeWithRating(
         }
     }
 
-    private fun withRating(movies: List<MovieView>) = channelFlow {
+    private fun withRating(movies: ImmutableList<MovieView>) = channelFlow {
         if (cache.isEmpty()) send(movies)
         val writeLock = Mutex()
         val movies = movies.toMutableList()
@@ -44,7 +46,7 @@ class ListingFacadeWithRating(
             val updated = MovieViewWithRating(movie, rating)
             val output = writeLock.withLock {
                 movies[index] = updated
-                movies.toList()
+                movies.toPersistentList()
             }
             send(output)
         }

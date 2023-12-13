@@ -1,5 +1,8 @@
 package movie.metropolis.app.screen.profile
 
+import androidx.compose.runtime.*
+
+@Immutable
 data class ProfilePasswordState(
     val current: String = "",
     val new: String = ""

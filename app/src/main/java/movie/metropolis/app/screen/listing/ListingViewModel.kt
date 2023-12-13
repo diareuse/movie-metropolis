@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.listing
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,6 +20,7 @@ import movie.metropolis.app.util.throttleWithTimeout
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
+@Stable
 @HiltViewModel
 class ListingViewModel @Inject constructor(
     handle: SavedStateHandle,

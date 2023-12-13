@@ -1,7 +1,9 @@
 package movie.metropolis.app.model
 
 import android.app.Activity
+import androidx.compose.runtime.*
 
+@Immutable
 interface ProductDetailView {
     val icon: Int
     val name: String

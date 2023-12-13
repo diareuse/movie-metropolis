@@ -1,5 +1,6 @@
 package movie.metropolis.app.screen.home
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,6 +14,7 @@ import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.userFlo
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
+@Stable
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     profile: ProfileFacade,

@@ -1,5 +1,7 @@
 package movie.metropolis.app.presentation.listing
 
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
@@ -29,16 +31,16 @@ data class ListingFacadeWithPoster(
         }
     }
 
-    private fun withPoster(items: List<MovieView>): Flow<List<MovieView>> = channelFlow {
+    private fun withPoster(items: List<MovieView>): Flow<ImmutableList<MovieView>> = channelFlow {
         val output = items.map { MovieViewWithPoster(it) }.toMutableList()
-        if (cachePoster.isEmpty()) send(output)
+        if (cachePoster.isEmpty()) send(output.toPersistentList())
         for ((index, item) in output.withIndex()) launch {
             val promo = cachePoster.getOrPut(item.id) {
                 getPoster(item) ?: item.posterLarge ?: item.poster
             }
             val poster = item.copy(poster = promo)
             output[index] = poster
-            send(output.toList())
+            send(output.toPersistentList())
         }
     }
 

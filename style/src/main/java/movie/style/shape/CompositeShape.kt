@@ -44,6 +44,7 @@ class CompositeShape private constructor(
         return Outline.Generic(path)
     }
 
+    @Stable
     class Builder {
 
         internal var baseline: Shape = RectangleShape
