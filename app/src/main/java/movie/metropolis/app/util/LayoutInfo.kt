@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.util.*
+import kotlinx.coroutines.delay
 
 private operator fun IntRange.contains(other: IntRange): Boolean {
     return first <= other.first && last >= other.last
@@ -41,8 +42,11 @@ fun LazyListState.rememberVisibleItemAsState(): State<Int> {
     SideEffect {
         update()
     }
-    LaunchedEffect(layoutInfo.viewportStartOffset) {
-        update()
+    LaunchedEffect(this) {
+        while (true) {
+            delay(1000)
+            update()
+        }
     }
     return item
 }
@@ -59,8 +63,11 @@ fun LazyStaggeredGridState.rememberVisibleItemAsState(): State<Int> {
     SideEffect {
         update()
     }
-    LaunchedEffect(layoutInfo.viewportStartOffset) {
-        update()
+    LaunchedEffect(this) {
+        while (true) {
+            delay(1000)
+            update()
+        }
     }
     return item
 }
