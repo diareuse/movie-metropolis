@@ -103,16 +103,16 @@ fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
         ) { padding ->
             ListingScreen(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = padding,
-                state = rememberLazyStaggeredGridState(),
-                movies = movies,
                 promotions = promotions,
+                movies = movies,
+                state = rememberLazyStaggeredGridState(),
+                overlay = this,
                 onClick = { navController.navigate(Route.Movie(it.id, true)) },
                 onFavoriteClick = { listingVM.favorite(it) },
                 onHideClick = { listingVM.hide(it) },
+                contentPadding = padding,
                 onMoreClick = null,
-                connection = scrollBehavior.nestedScrollConnection,
-                overlay = this
+                connection = scrollBehavior.nestedScrollConnection
             )
         }
     }
@@ -239,16 +239,16 @@ fun NavGraphBuilder.home(
                 ) { innerPadding ->
                     ListingScreen(
                         modifier = modifier,
-                        contentPadding = innerPadding + padding,
-                        state = rememberLazyStaggeredGridState(),
-                        movies = movies,
                         promotions = promotions,
+                        movies = movies,
+                        state = rememberLazyStaggeredGridState(),
+                        overlay = this,
                         onClick = { navController.navigate(Route.Movie(it.id)) },
                         onFavoriteClick = { listingVM.favorite(it) },
                         onHideClick = { listingVM.hide(it) },
+                        contentPadding = innerPadding + padding,
                         onMoreClick = { navController.navigate(Route.Upcoming()) },
-                        connection = scrollBehavior.nestedScrollConnection,
-                        overlay = this
+                        connection = scrollBehavior.nestedScrollConnection
                     )
                 }
             },
@@ -572,15 +572,15 @@ fun NavGraphBuilder.favorite(
             }
         ) { innerPadding ->
             ListingScreen(
-                contentPadding = innerPadding,
-                state = rememberLazyStaggeredGridState(),
-                movies = movies,
                 promotions = persistentListOf(),
+                movies = movies,
+                state = rememberLazyStaggeredGridState(),
+                overlay = this,
                 onClick = { navController.navigate(Route.Movie(it.id, true)) },
                 onFavoriteClick = viewModel::remove,
                 onHideClick = viewModel::hide,
-                connection = scrollBehavior.nestedScrollConnection,
-                overlay = this
+                contentPadding = innerPadding,
+                connection = scrollBehavior.nestedScrollConnection
             )
         }
     }
