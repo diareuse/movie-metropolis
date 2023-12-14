@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
@@ -67,6 +68,7 @@ fun CardContentBack(
     logo: @Composable () -> Unit,
     name: @Composable () -> Unit,
     code: @Composable () -> Unit,
+    number: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     background: @Composable () -> Unit = { CardBackgroundBack() },
 ) = Box(modifier = modifier) {
@@ -94,15 +96,28 @@ fun CardContentBack(
             name()
         }
     }
-    Box(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth()
-            .height(64.dp)
-            .align(Alignment.BottomCenter),
-        propagateMinConstraints = true
+    Column(
+        modifier = Modifier.align(Alignment.BottomCenter),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        code()
+        ProvideTextStyle(
+            LocalTextStyle.current.copy(
+                letterSpacing = 3.sp,
+                fontFamily = FontFamily.Monospace,
+                fontWeight = FontWeight.Black
+            )
+        ) {
+            number()
+        }
+        Box(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .height(64.dp),
+            propagateMinConstraints = true
+        ) {
+            code()
+        }
     }
 }
 
@@ -145,6 +160,7 @@ private fun CardContentBackPreview() = PreviewLayout {
             )
         },
         name = { Text("Club".uppercase()) },
-        code = { Box(Modifier.background(Color.White)) }
+        code = { Box(Modifier.background(Color.White)) },
+        number = { Text("1230591239") }
     )
 }

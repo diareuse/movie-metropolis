@@ -126,27 +126,30 @@ fun CardScreen(
                                 stringResource(R.string.expires_at, membership.daysRemaining)
                             )
                         }
-
                     }
                     Text(
-                        "%s %s".format(user.firstName, user.lastName),
+                        text = "%s %s".format(user.firstName, user.lastName),
                         style = Theme.textStyle.title
                     )
                 })
             },
             back = {
-                CardContentBack(logo = logo, name = name, code = {
-                    var fullBrightness by remember { mutableStateOf(false) }
-                    Barcode(
-                        modifier = Modifier
-                            .surface(Color.White, Theme.container.poster)
-                            .padding(vertical = 8.dp)
-                            .screenBrightness(full = fullBrightness)
-                            .clickable { fullBrightness = !fullBrightness },
-                        code = membership.cardNumber,
-                        format = BarcodeFormat.CODE_128
-                    )
-                })
+                CardContentBack(
+                    logo = logo,
+                    name = name,
+                    number = { Text(membership.cardNumber) },
+                    code = {
+                        var fullBrightness by remember { mutableStateOf(false) }
+                        Barcode(
+                            modifier = Modifier
+                                .surface(Color.White, Theme.container.poster)
+                                .padding(vertical = 8.dp)
+                                .screenBrightness(full = fullBrightness)
+                                .clickable { fullBrightness = !fullBrightness },
+                            code = membership.cardNumber,
+                            format = BarcodeFormat.CODE_128
+                        )
+                    })
             }
         )
     }
