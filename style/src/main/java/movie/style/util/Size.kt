@@ -14,3 +14,5 @@ fun DpSize.toSize(density: Density) = with(density) {
 
 fun Size.toIntSize() =
     IntSize(width = width.roundToInt(), height = height.roundToInt())
+
+fun Offset.toDpOffset(density: Density) = with(density) { DpOffset(x.toDp(), y.toDp()) }

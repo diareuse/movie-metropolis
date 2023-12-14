@@ -73,11 +73,12 @@ import movie.metropolis.app.util.share
 import movie.style.CollapsingTopAppBar
 import movie.style.Container
 import movie.style.DialogBox
-import movie.style.OverlayContainer
+import movie.style.OverlayState
 import movie.style.action.actionView
 import movie.style.haptic.confirm
 import movie.style.haptic.reject
 import movie.style.layout.plus
+import movie.style.popOutBackground
 
 fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
     route = Route.Upcoming.route,
@@ -87,34 +88,34 @@ fun NavGraphBuilder.upcoming(navController: NavHostController) = composable(
     val promotions by listingVM.promotions.collectAsState()
     val movies by listingVM.movies.collectAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    OverlayContainer {
-        Scaffold(
-            topBar = {
-                CollapsingTopAppBar(
-                    scrollBehavior = scrollBehavior,
-                    title = { Text(stringResource(R.string.upcoming)) },
-                    navigationIcon = {
-                        IconButton(onClick = navController::navigateUp) {
-                            Icon(painterResource(R.drawable.ic_back), null)
-                        }
+    val overlay = remember { OverlayState() }
+    Scaffold(
+        modifier = Modifier.popOutBackground(overlay),
+        topBar = {
+            CollapsingTopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = { Text(stringResource(R.string.upcoming)) },
+                navigationIcon = {
+                    IconButton(onClick = navController::navigateUp) {
+                        Icon(painterResource(R.drawable.ic_back), null)
                     }
-                )
-            }
-        ) { padding ->
-            ListingScreen(
-                modifier = Modifier.fillMaxSize(),
-                promotions = promotions,
-                movies = movies,
-                state = rememberLazyStaggeredGridState(),
-                overlay = this,
-                onClick = { navController.navigate(Route.Movie(it.id, true)) },
-                onFavoriteClick = { listingVM.favorite(it) },
-                onHideClick = { listingVM.hide(it) },
-                contentPadding = padding,
-                onMoreClick = null,
-                connection = scrollBehavior.nestedScrollConnection
+                }
             )
         }
+    ) { padding ->
+        ListingScreen(
+            modifier = Modifier.fillMaxSize(),
+            promotions = promotions,
+            movies = movies,
+            state = rememberLazyStaggeredGridState(),
+            overlay = overlay,
+            onClick = { navController.navigate(Route.Movie(it.id, true)) },
+            onFavoriteClick = { listingVM.favorite(it) },
+            onHideClick = { listingVM.hide(it) },
+            contentPadding = padding,
+            onMoreClick = null,
+            connection = scrollBehavior.nestedScrollConnection
+        )
     }
 }
 
@@ -215,111 +216,111 @@ fun NavGraphBuilder.home(
     val user by viewModel.user.collectAsState()
     val membership by viewModel.membership.collectAsState()
     var showCard by remember { mutableStateOf(false) }
-    OverlayContainer {
-        HomeScreen(
-            loggedIn = viewModel.isLoggedIn,
-            user = user,
-            membership = membership,
-            startWith = args.screen?.let(HomeState.Companion::by),
-            showProfile = showCard,
-            onShowProfileChange = { showCard = it },
-            onNavigateToLogin = { navController.navigate(Route.Setup(SetupState.Login)) },
-            listing = { modifier, padding ->
-                val listingVM = hiltViewModel<ListingViewModel>()
-                val promotions by listingVM.promotions.collectAsState()
-                val movies by listingVM.movies.collectAsState()
-                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-                Scaffold(
-                    topBar = {
-                        CollapsingTopAppBar(
-                            title = { Text(stringResource(R.string.movies)) },
-                            scrollBehavior = scrollBehavior
-                        )
-                    }
-                ) { innerPadding ->
-                    ListingScreen(
-                        modifier = modifier,
-                        promotions = promotions,
-                        movies = movies,
-                        state = rememberLazyStaggeredGridState(),
-                        overlay = this,
-                        onClick = { navController.navigate(Route.Movie(it.id)) },
-                        onFavoriteClick = { listingVM.favorite(it) },
-                        onHideClick = { listingVM.hide(it) },
-                        contentPadding = innerPadding + padding,
-                        onMoreClick = { navController.navigate(Route.Upcoming()) },
-                        connection = scrollBehavior.nestedScrollConnection
+    val overlay = remember { OverlayState() }
+    HomeScreen(
+        modifier = Modifier.popOutBackground(overlay),
+        loggedIn = viewModel.isLoggedIn,
+        user = user,
+        membership = membership,
+        startWith = args.screen?.let(HomeState.Companion::by),
+        showProfile = showCard,
+        onShowProfileChange = { showCard = it },
+        onNavigateToLogin = { navController.navigate(Route.Setup(SetupState.Login)) },
+        listing = { modifier, padding ->
+            val listingVM = hiltViewModel<ListingViewModel>()
+            val promotions by listingVM.promotions.collectAsState()
+            val movies by listingVM.movies.collectAsState()
+            val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+            Scaffold(
+                topBar = {
+                    CollapsingTopAppBar(
+                        title = { Text(stringResource(R.string.movies)) },
+                        scrollBehavior = scrollBehavior
                     )
                 }
-            },
-            tickets = { modifier, padding ->
-                val viewModel = hiltViewModel<TicketViewModel>()
-                val tickets by viewModel.tickets.collectAsState()
-                val scope = rememberCoroutineScope()
-                val context = LocalContext.current
-                val (bookingState, bookingIndicatorState) = rememberMultiChildPagerState(childCount = 1) {
-                    when (val t = tickets) {
-                        is TicketContentState.Failure -> 0
-                        is TicketContentState.Success -> t.size
-                        TicketContentState.Loading -> 1
-                    }
-                }
-                LaunchedEffect(Unit) {
-                    viewModel.refresh()
-                }
-                TicketScreen(
-                    bookings = tickets,
-                    state = bookingState,
-                    indicatorState = bookingIndicatorState,
+            ) { innerPadding ->
+                ListingScreen(
                     modifier = modifier,
-                    contentPadding = padding,
-                    onShareClick = {
-                        scope.launch {
-                            viewModel.share(it).share(context)
-                        }
-                    }
-                )
-            },
-            cinemas = { modifier, padding ->
-                val state = rememberMultiplePermissionsState(
-                    listOf(
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
-                    )
-                )
-                val location by rememberLocation(state)
-                val cinemasVM = hiltViewModel<CinemasViewModel>()
-                val cinemas by cinemasVM.cinemas.collectAsState()
-                val context = LocalContext.current
-                LaunchedEffect(location) {
-                    cinemasVM.location.value = location
-                }
-                CinemasScreen(
-                    modifier = modifier,
-                    contentPadding = padding,
-                    cinemas = cinemas,
-                    permission = state,
-                    state = rememberLazyListState(),
-                    onClick = {
-                        context.createShortcut(it)
-                        navController.navigate(Route.Booking.Cinema(it.id))
-                    },
-                    onMapClick = actionView<CinemaView> { it.uri }
-                )
-            },
-            profile = { modifier, padding ->
-                ProfileScreen(
-                    user = user,
-                    modifier = modifier,
-                    contentPadding = padding,
-                    onClickCard = { showCard = true },
-                    onClickEdit = { navController.navigate(Route.UserEditor()) },
-                    onClickFavorite = { navController.navigate(Route.Favorite()) },
-                    onClickSettings = { navController.navigate(Route.Settings()) }
+                    promotions = promotions,
+                    movies = movies,
+                    state = rememberLazyStaggeredGridState(),
+                    overlay = overlay,
+                    onClick = { navController.navigate(Route.Movie(it.id)) },
+                    onFavoriteClick = { listingVM.favorite(it) },
+                    onHideClick = { listingVM.hide(it) },
+                    contentPadding = innerPadding + padding,
+                    onMoreClick = { navController.navigate(Route.Upcoming()) },
+                    connection = scrollBehavior.nestedScrollConnection
                 )
             }
-        )
-    }
+        },
+        tickets = { modifier, padding ->
+            val viewModel = hiltViewModel<TicketViewModel>()
+            val tickets by viewModel.tickets.collectAsState()
+            val scope = rememberCoroutineScope()
+            val context = LocalContext.current
+            val (bookingState, bookingIndicatorState) = rememberMultiChildPagerState(childCount = 1) {
+                when (val t = tickets) {
+                    is TicketContentState.Failure -> 0
+                    is TicketContentState.Success -> t.size
+                    TicketContentState.Loading -> 1
+                }
+            }
+            LaunchedEffect(Unit) {
+                viewModel.refresh()
+            }
+            TicketScreen(
+                bookings = tickets,
+                state = bookingState,
+                indicatorState = bookingIndicatorState,
+                modifier = modifier,
+                contentPadding = padding,
+                onShareClick = {
+                    scope.launch {
+                        viewModel.share(it).share(context)
+                    }
+                }
+            )
+        },
+        cinemas = { modifier, padding ->
+            val state = rememberMultiplePermissionsState(
+                listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+            val location by rememberLocation(state)
+            val cinemasVM = hiltViewModel<CinemasViewModel>()
+            val cinemas by cinemasVM.cinemas.collectAsState()
+            val context = LocalContext.current
+            LaunchedEffect(location) {
+                cinemasVM.location.value = location
+            }
+            CinemasScreen(
+                modifier = modifier,
+                contentPadding = padding,
+                cinemas = cinemas,
+                permission = state,
+                state = rememberLazyListState(),
+                onClick = {
+                    context.createShortcut(it)
+                    navController.navigate(Route.Booking.Cinema(it.id))
+                },
+                onMapClick = actionView<CinemaView> { it.uri }
+            )
+        },
+        profile = { modifier, padding ->
+            ProfileScreen(
+                user = user,
+                modifier = modifier,
+                contentPadding = padding,
+                onClickCard = { showCard = true },
+                onClickEdit = { navController.navigate(Route.UserEditor()) },
+                onClickFavorite = { navController.navigate(Route.Favorite()) },
+                onClickSettings = { navController.navigate(Route.Settings()) }
+            )
+        }
+    )
 }
 
 fun NavGraphBuilder.settings(
@@ -557,31 +558,31 @@ fun NavGraphBuilder.favorite(
     val viewModel = hiltViewModel<FavoriteViewModel>()
     val movies by viewModel.items.collectAsState()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
-    OverlayContainer {
-        Scaffold(
-            topBar = {
-                CollapsingTopAppBar(
-                    title = { Text(stringResource(R.string.favorite_movies)) },
-                    scrollBehavior = scrollBehavior,
-                    navigationIcon = {
-                        IconButton(onClick = navController::navigateUp) {
-                            Icon(painterResource(R.drawable.ic_back), null)
-                        }
+    val overlay = remember { OverlayState() }
+    Scaffold(
+        modifier = Modifier.popOutBackground(overlay),
+        topBar = {
+            CollapsingTopAppBar(
+                title = { Text(stringResource(R.string.favorite_movies)) },
+                scrollBehavior = scrollBehavior,
+                navigationIcon = {
+                    IconButton(onClick = navController::navigateUp) {
+                        Icon(painterResource(R.drawable.ic_back), null)
                     }
-                )
-            }
-        ) { innerPadding ->
-            ListingScreen(
-                promotions = persistentListOf(),
-                movies = movies,
-                state = rememberLazyStaggeredGridState(),
-                overlay = this,
-                onClick = { navController.navigate(Route.Movie(it.id, true)) },
-                onFavoriteClick = viewModel::remove,
-                onHideClick = viewModel::hide,
-                contentPadding = innerPadding,
-                connection = scrollBehavior.nestedScrollConnection
+                }
             )
         }
+    ) { innerPadding ->
+        ListingScreen(
+            promotions = persistentListOf(),
+            movies = movies,
+            state = rememberLazyStaggeredGridState(),
+            overlay = overlay,
+            onClick = { navController.navigate(Route.Movie(it.id, true)) },
+            onFavoriteClick = viewModel::remove,
+            onHideClick = viewModel::hide,
+            contentPadding = innerPadding,
+            connection = scrollBehavior.nestedScrollConnection
+        )
     }
 }

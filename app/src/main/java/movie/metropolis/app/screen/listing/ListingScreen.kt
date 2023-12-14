@@ -31,24 +31,23 @@ import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.util.rememberStoreable
 import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.BackgroundImage
-import movie.style.DialogClone
 import movie.style.Image
-import movie.style.OverlayContainer
-import movie.style.OverlayScope
+import movie.style.OverlayState
+import movie.style.PopOutBox
 import movie.style.action.actionView
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.layout.plus
-import movie.style.rememberDialogCloneState
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
+import movie.style.rememberPopOutState
 
 @Composable
 fun ListingScreen(
     promotions: ImmutableList<MovieView>,
     movies: ImmutableList<MovieView>,
     state: LazyStaggeredGridState,
-    overlay: OverlayScope,
+    overlay: OverlayState,
     onClick: (MovieView) -> Unit,
     onFavoriteClick: (MovieView) -> Unit,
     onHideClick: (MovieView) -> Unit,
@@ -91,8 +90,8 @@ fun ListingScreen(
             ) {
                 val it = promotions[it]
                 val state = rememberPaletteImageState(it.poster?.url)
-                val dialogState = overlay.rememberDialogCloneState()
-                DialogClone(
+                val dialogState = overlay.rememberPopOutState()
+                PopOutBox(
                     state = dialogState,
                     expansion = {
                         PosterActionColumn(
@@ -149,8 +148,8 @@ fun ListingScreen(
         }
         items(movies, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.poster?.url ?: it.posterLarge?.url)
-            val dialogState = overlay.rememberDialogCloneState()
-            DialogClone(
+            val dialogState = overlay.rememberPopOutState()
+            PopOutBox(
                 state = dialogState,
                 modifier = Modifier.animateItemPlacement(),
                 expansion = {
@@ -224,15 +223,13 @@ private fun ListingScreenPreview() = PreviewLayout {
     val content = MovieViewProvider().values
     val movies = content.toImmutableList()
     val promotions = content.shuffled().take(3).toImmutableList()
-    OverlayContainer {
-        ListingScreen(
-            promotions = promotions,
-            movies = movies,
-            state = rememberLazyStaggeredGridState(),
-            onClick = {},
-            onFavoriteClick = {},
-            onHideClick = {},
-            overlay = this
-        )
-    }
+    ListingScreen(
+        promotions = promotions,
+        movies = movies,
+        state = rememberLazyStaggeredGridState(),
+        onClick = {},
+        onFavoriteClick = {},
+        onHideClick = {},
+        overlay = remember { OverlayState() }
+    )
 }

@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
-import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.hapticfeedback.*
 import androidx.compose.ui.input.pointer.*
@@ -24,104 +23,31 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import movie.style.haptic.tick
 import movie.style.layout.PreviewLayout
+import movie.style.util.toDpOffset
 import movie.style.util.toDpSize
-import kotlin.math.roundToInt
 
-@Composable
-fun OverlayContainer(
-    modifier: Modifier = Modifier,
-    content: @Composable OverlayScope.() -> Unit,
-) {
-    val scope = remember { OverlayScopeImpl() }
-    val blur by animateDpAsState(targetValue = if (scope.expanded) 32.dp else 0.dp)
-    val alpha by animateFloatAsState(targetValue = if (scope.expanded) .5f else 1f)
-    Box(
-        modifier = modifier
-            .alpha(alpha)
-            .blur(blur),
-        propagateMinConstraints = true
-    ) {
-        content(scope)
-    }
+fun Modifier.popOutBackground(state: OverlayState) = composed {
+    val blur by animateDpAsState(targetValue = if (state.expanded) 32.dp else 0.dp)
+    val alpha by animateFloatAsState(targetValue = if (state.expanded) .5f else 1f)
+    alpha(alpha).blur(blur)
 }
 
 @Stable
-interface OverlayScope {
-    var expanded: Boolean
+class OverlayState {
+    var expanded: Boolean by mutableStateOf(false)
 }
-
-@Stable
-class OverlayScopeImpl : OverlayScope {
-    override var expanded: Boolean by mutableStateOf(false)
-}
-
-val Offset.Companion.Saver
-    get() = mapSaver(
-        { mapOf("x" to it.x, "y" to it.y) },
-        { Offset(it["x"] as Float, it["y"] as Float) }
-    )
-
-val IntSize.Companion.Saver
-    get() = mapSaver(
-        { mapOf("w" to it.width, "h" to it.height) },
-        { IntSize(it["w"] as Int, it["h"] as Int) }
-    )
-
-val Alignment.Companion.HorizontalSaver
-    get() = mapSaver(
-        {
-            mapOf(
-                "t" to when (this) {
-                    Start -> "Start"
-                    CenterHorizontally -> "CenterHorizontally"
-                    End -> "End"
-                    else -> "Start"
-                }
-            )
-        },
-        {
-            when (it["t"] as String) {
-                "Start" -> Start
-                "CenterHorizontally" -> CenterHorizontally
-                "End" -> End
-                else -> Start
-            }
-        }
-    )
-
-val Alignment.Companion.VerticalSaver
-    get() = mapSaver(
-        {
-            mapOf(
-                "t" to when (this) {
-                    Top -> "Top"
-                    CenterVertically -> "CenterVertically"
-                    Bottom -> "Bottom"
-                    else -> "Top"
-                }
-            )
-        },
-        {
-            when (it["t"] as String) {
-                "Top" -> Top
-                "CenterVertically" -> CenterVertically
-                "Bottom" -> Bottom
-                else -> Top
-            }
-        }
-    )
 
 @Composable
-fun OverlayScope.rememberDialogCloneState(): DialogCloneState {
+fun OverlayState.rememberPopOutState(): PopOutState {
     val haptics = LocalHapticFeedback.current
     return remember(this, haptics) {
-        DialogCloneState(this, haptics)
+        PopOutState(this, haptics)
     }
 }
 
 @Stable
-class DialogCloneState(
-    private val scope: OverlayScope,
+class PopOutState(
+    private val scope: OverlayState,
     private val haptics: HapticFeedback
 ) {
     var expanded by mutableStateOf(false)
@@ -132,6 +58,42 @@ class DialogCloneState(
         private set
     var shadowAlpha by mutableStateOf(1f)
         private set
+
+    var offset by mutableStateOf(DpOffset.Zero)
+        private set
+    var size by mutableStateOf(DpSize.Zero)
+        private set
+    var horizontalAlignment by mutableStateOf(Alignment.CenterHorizontally)
+        private set
+    var verticalAlignment by mutableStateOf(Alignment.Top)
+        private set
+
+    internal fun updatePosition(
+        it: LayoutCoordinates,
+        direction: LayoutDirection,
+        density: Density
+    ) {
+        val rootSize = it.findRootCoordinates().size.toDpSize(density)
+        offset = it.positionInWindow().toDpOffset(density)
+        size = it.size.toDpSize(density)
+        verticalAlignment = when (offset.y) {
+            in 0.dp..(rootSize.height / 2) -> Alignment.Top
+            else -> Alignment.Bottom
+        }
+        horizontalAlignment = when (offset.x + 2.dp) {
+            in 0.dp..((rootSize.width / 2) - (size.width / 2)) -> when (direction) {
+                LayoutDirection.Ltr -> Alignment.Start
+                LayoutDirection.Rtl -> Alignment.End
+            }
+
+            in ((rootSize.width / 2) + (size.width / 2))..rootSize.width -> when (direction) {
+                LayoutDirection.Ltr -> Alignment.End
+                LayoutDirection.Rtl -> Alignment.Start
+            }
+
+            else -> Alignment.CenterHorizontally
+        }
+    }
 
     suspend fun open() {
         expanded = true
@@ -155,52 +117,29 @@ class DialogCloneState(
         delay(100)
         expanded = false
     }
+
+    companion object {
+        val Saver = mapSaver({ buildMap { } }, { })
+    }
+
 }
 
 @Composable
-fun DialogClone(
-    state: DialogCloneState,
+fun PopOutBox(
+    state: PopOutState,
     modifier: Modifier = Modifier,
     expansion: @Composable () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    var offset by rememberSaveable(stateSaver = Offset.Saver) { mutableStateOf(Offset.Zero) }
-    var size by rememberSaveable(stateSaver = IntSize.Saver) { mutableStateOf(IntSize.Zero) }
-    var horizontalAlignment by rememberSaveable(stateSaver = Alignment.HorizontalSaver) {
-        mutableStateOf(Alignment.CenterHorizontally)
-    }
-    var verticalAlignment by rememberSaveable(stateSaver = Alignment.VerticalSaver) {
-        mutableStateOf(Alignment.Top)
-    }
     Box(
         modifier = modifier,
         propagateMinConstraints = true
     ) {
         val direction = LocalLayoutDirection.current
+        val density = LocalDensity.current
         Box(
             modifier = Modifier
-                .onGloballyPositioned {
-                    val rootSize = it.findRootCoordinates().size
-                    offset = it.positionInWindow()
-                    size = it.size
-                    verticalAlignment = when (offset.y.roundToInt()) {
-                        in 0..(rootSize.height / 2) -> Alignment.Top
-                        else -> Alignment.Bottom
-                    }
-                    horizontalAlignment = when (offset.x.roundToInt() + 2) {
-                        in 0..((rootSize.width / 2) - (size.width / 2)) -> when (direction) {
-                            LayoutDirection.Ltr -> Alignment.Start
-                            LayoutDirection.Rtl -> Alignment.End
-                        }
-
-                        in ((rootSize.width / 2) + (size.width / 2))..rootSize.width -> when (direction) {
-                            LayoutDirection.Ltr -> Alignment.End
-                            LayoutDirection.Rtl -> Alignment.Start
-                        }
-
-                        else -> Alignment.CenterHorizontally
-                    }
-                }
+                .onGloballyPositioned { state.updatePosition(it, direction, density) }
                 .alpha(state.shadowAlpha),
             propagateMinConstraints = true
         ) {
@@ -239,8 +178,6 @@ fun DialogClone(
                     state.close()
                 }
             }
-            val density = LocalDensity.current
-            val offset = with(density) { DpOffset(offset.x.toDp(), offset.y.toDp()) }
             val expansion = @Composable {
                 Box(
                     modifier = Modifier
@@ -250,18 +187,18 @@ fun DialogClone(
                     expansion()
                 }
             }
-            val top = if (verticalAlignment === Alignment.Bottom) expansion else null
-            val bottom = if (verticalAlignment === Alignment.Top) expansion else null
+            val top = if (state.verticalAlignment === Alignment.Bottom) expansion else null
+            val bottom = if (state.verticalAlignment === Alignment.Top) expansion else null
             AnchoredLayout(
                 modifier = Modifier
-                    .offset(offset.x, offset.y - statusBars.calculateTopPadding()),
-                horizontalAlignment = horizontalAlignment,
+                    .offset(state.offset.x, state.offset.y - statusBars.calculateTopPadding()),
+                horizontalAlignment = state.horizontalAlignment,
                 top = top,
                 bottom = bottom
             ) {
                 Box(
                     modifier = Modifier
-                        .size(size.toDpSize(density))
+                        .size(state.size)
                         .scale(state.scale),
                     propagateMinConstraints = true
                 ) {
@@ -307,10 +244,11 @@ fun AnchoredLayout(
 
 @Preview(showBackground = true)
 @Composable
-private fun DialogClonePreview() = PreviewLayout {
-    OverlayContainer(modifier = Modifier.fillMaxSize()) {
-        val state = rememberDialogCloneState()
-        DialogClone(
+private fun DialogClonePreview() {
+    val overlay = remember { OverlayState() }
+    PreviewLayout(modifier = Modifier.popOutBackground(overlay)) {
+        val state = overlay.rememberPopOutState()
+        PopOutBox(
             state = state,
             modifier = Modifier
                 .padding(100.dp, 200.dp)
@@ -330,5 +268,4 @@ private fun DialogClonePreview() = PreviewLayout {
             )
         }
     }
-    //DialogClone()
 }
