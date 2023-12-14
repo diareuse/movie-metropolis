@@ -20,6 +20,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import androidx.core.view.WindowCompat
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import movie.style.haptic.tick
 import movie.style.layout.PreviewLayout
@@ -125,28 +126,33 @@ class DialogCloneState(
 ) {
     var expanded by mutableStateOf(false)
         private set
-    var alpha by mutableStateOf(0f)
+    var expansionAlpha by mutableStateOf(0f)
         private set
     var scale by mutableStateOf(0f)
+        private set
+    var shadowAlpha by mutableStateOf(1f)
         private set
 
     suspend fun open() {
         expanded = true
+        shadowAlpha = 0f
         scope.expanded = true
         animate(scale, 1.1f) { it, _ -> scale = it }
         haptics.tick()
         animate(1.1f, 1f) { it, _ -> scale = it }
         haptics.tick()
-        animate(alpha, 1f) { it, _ -> alpha = it }
+        animate(expansionAlpha, 1f) { it, _ -> expansionAlpha = it }
     }
 
     suspend fun close() {
-        animate(alpha, 0f) { it, _ -> alpha = it }
+        animate(expansionAlpha, 0f) { it, _ -> expansionAlpha = it }
         scope.expanded = false
         animate(scale, 1.1f) { it, _ -> scale = it }
         haptics.tick()
         animate(1.1f, 1f) { it, _ -> scale = it }
         haptics.tick()
+        shadowAlpha = 1f
+        delay(100)
         expanded = false
     }
 }
@@ -172,28 +178,30 @@ fun DialogClone(
     ) {
         val direction = LocalLayoutDirection.current
         Box(
-            modifier = Modifier.onGloballyPositioned {
-                val rootSize = it.findRootCoordinates().size
-                offset = it.positionInWindow()
-                size = it.size
-                verticalAlignment = when (offset.y.roundToInt()) {
-                    in 0..(rootSize.height / 2) -> Alignment.Top
-                    else -> Alignment.Bottom
-                }
-                horizontalAlignment = when (offset.x.roundToInt() + 2) {
-                    in 0..((rootSize.width / 2) - (size.width / 2)) -> when (direction) {
-                        LayoutDirection.Ltr -> Alignment.Start
-                        LayoutDirection.Rtl -> Alignment.End
+            modifier = Modifier
+                .onGloballyPositioned {
+                    val rootSize = it.findRootCoordinates().size
+                    offset = it.positionInWindow()
+                    size = it.size
+                    verticalAlignment = when (offset.y.roundToInt()) {
+                        in 0..(rootSize.height / 2) -> Alignment.Top
+                        else -> Alignment.Bottom
                     }
+                    horizontalAlignment = when (offset.x.roundToInt() + 2) {
+                        in 0..((rootSize.width / 2) - (size.width / 2)) -> when (direction) {
+                            LayoutDirection.Ltr -> Alignment.Start
+                            LayoutDirection.Rtl -> Alignment.End
+                        }
 
-                    in ((rootSize.width / 2) + (size.width / 2))..rootSize.width -> when (direction) {
-                        LayoutDirection.Ltr -> Alignment.End
-                        LayoutDirection.Rtl -> Alignment.Start
+                        in ((rootSize.width / 2) + (size.width / 2))..rootSize.width -> when (direction) {
+                            LayoutDirection.Ltr -> Alignment.End
+                            LayoutDirection.Rtl -> Alignment.Start
+                        }
+
+                        else -> Alignment.CenterHorizontally
                     }
-
-                    else -> Alignment.CenterHorizontally
                 }
-            },
+                .alpha(state.shadowAlpha),
             propagateMinConstraints = true
         ) {
             content()
@@ -236,7 +244,7 @@ fun DialogClone(
             val expansion = @Composable {
                 Box(
                     modifier = Modifier
-                        .alpha(state.alpha)
+                        .alpha(state.expansionAlpha)
                         .scale(state.scale)
                 ) {
                     expansion()
