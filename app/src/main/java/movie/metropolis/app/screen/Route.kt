@@ -9,8 +9,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import movie.metropolis.app.screen.home.HomeState
 import movie.metropolis.app.screen.setup.SetupState
-import movie.metropolis.app.util.decodeBase64
-import movie.metropolis.app.util.encodeBase64
+import movie.style.util.decodeBase64
+import movie.style.util.encodeBase64
 
 @Immutable
 sealed class Route(

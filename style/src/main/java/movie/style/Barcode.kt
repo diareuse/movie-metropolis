@@ -1,73 +1,93 @@
 package movie.style
 
 import android.graphics.Bitmap
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
+import coil.compose.AsyncImage
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import movie.style.util.encodeBase64
+import java.io.File
 
 @Composable
 fun Barcode(
     code: String,
     modifier: Modifier = Modifier,
-    format: BarcodeFormat = BarcodeFormat.QR_CODE,
-    color: Color = Color.Black
+    format: BarcodeFormat = BarcodeFormat.QR_CODE
+) = BoxWithConstraints(
+    modifier = modifier,
+    propagateMinConstraints = true
 ) {
-    val (size, onSizeChanged) = remember { mutableStateOf(IntSize.Zero) }
-    val image by rememberBarcodeAsState(color = color, size = size, code = code, format = format)
-    val bitmap = image
-    if (bitmap != null) BarcodeViewer(
-        modifier = modifier.onSizeChanged(onSizeChanged),
-        bitmap = bitmap
-    )
-    else Box(
-        modifier = modifier.onSizeChanged(onSizeChanged),
+    val context = LocalContext.current
+    val file = remember(this, format, code) {
+        val name = "%dx%d-%s-%s".format(
+            maxWidth.value.toInt(),
+            maxHeight.value.toInt(),
+            format.name,
+            code.encodeBase64()
+        ).take(255) + ".png"
+        val dir = File(context.cacheDir, "barcodes")
+        val file = File(dir, name)
+        CachedCodeWriter(file)
+    }
+    val density = LocalDensity.current
+    if (!file.exists) LaunchedEffect(maxWidth, maxHeight, code, format) {
+        file.write(maxWidth, maxHeight, density, format, code)
+    }
+    if (file.exists) AsyncImage(
+        model = file.file,
+        contentDescription = null
+    ) else Box(
         contentAlignment = Alignment.Center
     ) {
         CircularProgressIndicator(strokeCap = StrokeCap.Round)
     }
 }
 
-@Composable
-private fun BarcodeViewer(
-    bitmap: ImageBitmap,
-    modifier: Modifier = Modifier
-) {
-    Canvas(modifier) {
-        drawImage(bitmap)
-    }
-}
+@Stable
+private class CachedCodeWriter(val file: File) {
 
-@Composable
-private fun rememberBarcodeAsState(
-    color: Color,
-    size: IntSize,
-    code: String,
-    format: BarcodeFormat
-): State<ImageBitmap?> {
-    val image = remember { mutableStateOf(null as ImageBitmap?) }
-    LaunchedEffect(size, code, format, color) {
-        val writer = MultiFormatWriter()
-        image.value = withContext(Dispatchers.Default) {
-            val w = size.width
-            val h = size.height
-            if (w * h <= 0) return@withContext null
-            val matrix = writer.encode(code, format, w, h)
+    private val writer = MultiFormatWriter()
+
+    var exists by mutableStateOf(file.exists())
+        private set
+
+    suspend fun write(
+        maxWidth: Dp,
+        maxHeight: Dp,
+        density: Density,
+        type: BarcodeFormat,
+        data: String
+    ) = withContext(Dispatchers.Default) {
+        with(density) {
+            val w = maxWidth.roundToPx()
+            val h = maxHeight.roundToPx()
+            if (w * h <= 0) return@withContext
+            val matrix = writer.encode(data, type, w, h)
             val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
             for (x in 0 until matrix.width) for (y in 0 until matrix.height) {
-                val pixel = if (matrix.get(x, y)) color.toArgb() else Color.Transparent.toArgb()
+                val pixel = when {
+                    matrix.get(x, y) -> Color.Black.toArgb()
+                    else -> Color.Transparent.toArgb()
+                }
                 bitmap.setPixel(x, y, pixel)
             }
-            bitmap.asImageBitmap()
+            if (file.parentFile?.exists()?.not() == true) file.parentFile?.mkdirs()
+            if (!file.exists()) file.createNewFile()
+            file.outputStream().use {
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+            }
+            bitmap.recycle()
         }
+    }.also {
+        exists = file.exists()
     }
-    return image
+
 }

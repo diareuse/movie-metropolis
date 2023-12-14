@@ -1,4 +1,4 @@
-package movie.metropolis.app.util
+package movie.style.util
 
 import android.util.Base64
 

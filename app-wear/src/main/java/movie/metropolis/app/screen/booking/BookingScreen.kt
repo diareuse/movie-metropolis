@@ -31,12 +31,11 @@ fun BookingScreen(
         }
     }
     Barcode(
+        code = viewModel.id,
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .screenBrightness(true),
-        code = viewModel.id,
-        format = BarcodeFormat.QR_CODE,
-        color = Color.Black
+        format = BarcodeFormat.QR_CODE
     )
 }

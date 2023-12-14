@@ -141,12 +141,12 @@ fun CardScreen(
                     code = {
                         var fullBrightness by remember { mutableStateOf(false) }
                         Barcode(
+                            code = membership.cardNumber,
                             modifier = Modifier
                                 .surface(Color.White, Theme.container.poster)
                                 .padding(vertical = 8.dp)
                                 .screenBrightness(full = fullBrightness)
                                 .clickable { fullBrightness = !fullBrightness },
-                            code = membership.cardNumber,
                             format = BarcodeFormat.CODE_128
                         )
                     })

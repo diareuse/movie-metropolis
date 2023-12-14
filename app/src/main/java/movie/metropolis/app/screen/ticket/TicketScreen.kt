@@ -143,10 +143,10 @@ fun TicketScreen(
                         },
                         code = {
                             Barcode(
+                                code = it.id,
                                 modifier = Modifier
                                     .background(Color.White)
-                                    .clickable { fullBrightness = !fullBrightness },
-                                code = it.id
+                                    .clickable { fullBrightness = !fullBrightness }
                             )
                         }
                     )
