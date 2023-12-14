@@ -30,6 +30,7 @@ dependencies {
     api libs.google.navigation.animation
     api libs.google.pager
     api libs.google.placeholder
+    api libs.google.haze
 
     debugApi libs.compose.ui.test
 

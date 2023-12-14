@@ -4,6 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -18,6 +19,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.screen.card.CardScreen
@@ -28,8 +32,7 @@ import movie.metropolis.app.util.getStoreable
 import movie.style.haptic.ClickOnChange
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.VerticalGravity
-import movie.style.modifier.verticalOverlay
+import movie.style.theme.Theme
 
 @Composable
 fun HomeScreen(
@@ -67,12 +70,15 @@ fun HomeScreen(
             }
         }
     }
+    val haze = remember { HazeState() }
     Scaffold(
         modifier = modifier,
         contentWindowInsets = WindowInsets.navigationBars,
         bottomBar = {
             TransparentBottomNavigation(
-                modifier = Modifier.alignForLargeScreen()
+                modifier = Modifier
+                    .alignForLargeScreen()
+                    .hazeChild(haze, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
             ) {
                 for (state in HomeState.entries)
                     TransparentBottomNavigationItem(
@@ -85,10 +91,6 @@ fun HomeScreen(
         }
     ) { padding ->
         val overlayModifier = Modifier
-            .verticalOverlay(
-                height = padding.calculateBottomPadding() + 32.dp,
-                gravity = VerticalGravity.Bottom
-            )
         val destinationTab = getStoreable("home-tab", HomeState.Listing.name) {
             currentState.name
         }
@@ -101,7 +103,12 @@ fun HomeScreen(
         }
         NavHost(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .haze(
+                    state = haze,
+                    backgroundColor = Theme.color.container.background,
+                    tint = Theme.color.container.background.copy(alpha = .5f)
+                ),
             navController = navController,
             startDestination = HomeState.Listing.name,
             enterTransition = {

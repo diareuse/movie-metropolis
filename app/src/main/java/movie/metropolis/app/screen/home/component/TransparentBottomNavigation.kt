@@ -18,7 +18,7 @@ fun TransparentBottomNavigation(
 ) = Row(
     modifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 24.dp)
+        .padding(horizontal = 24.dp, vertical = 12.dp)
         .navigationBarsPadding(),
     horizontalArrangement = Arrangement.SpaceAround,
     verticalAlignment = Alignment.CenterVertically
