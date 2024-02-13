@@ -50,8 +50,8 @@ fun TimeButton(
     val containerColor = if (hourOfDay in dayRange) colors.day else colors.night
     Box(
         modifier = modifier
-            .clip(Theme.container.button)
             .clickable(role = Role.Button, onClick = onClick)
+            .clip(Theme.container.button)
             .glow(Theme.container.button)
             .drawWithCache {
                 onDrawBehind {

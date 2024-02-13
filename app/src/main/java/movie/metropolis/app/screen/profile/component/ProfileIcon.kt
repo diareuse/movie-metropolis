@@ -5,7 +5,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.ripple.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -33,13 +32,11 @@ fun ProfileIcon(
             .let {
                 if (onClick == null) it
                 else {
-                    val interactionSource = remember { MutableInteractionSource() }
-                    val indication = rememberRipple(bounded = false)
                     it.clickable(
                         onClick = onClick,
                         role = Role.Image,
-                        interactionSource = interactionSource,
-                        indication = indication
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = LocalIndication.current
                     )
                 }
             }

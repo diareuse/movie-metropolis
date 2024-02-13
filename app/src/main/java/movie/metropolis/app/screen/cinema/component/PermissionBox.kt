@@ -50,13 +50,13 @@ fun PermissionBox(
                 .size(iconSize)
                 .padding(start = 8.dp, bottom = 8.dp)
                 .align(Alignment.TopEnd)
+                .clickable(onClick = onClick, role = Role.Button)
                 .surface(
                     Theme.color.container.error,
                     CircleShape,
                     16.dp,
                     Theme.color.emphasis.error
                 )
-                .clickable(onClick = onClick, role = Role.Button)
                 .glow(CircleShape, Theme.color.emphasis.error, lightSource = LightSource.BottomLeft)
                 .padding(8.dp),
             propagateMinConstraints = true
@@ -65,8 +65,8 @@ fun PermissionBox(
         }
         Row(
             modifier = Modifier
-                .surface(Theme.color.container.error, shape, 16.dp, Theme.color.emphasis.error)
                 .clickable(onClick = onClick, role = Role.Button)
+                .surface(Theme.color.container.error, shape, 16.dp, Theme.color.emphasis.error)
                 .glow(shape, Theme.color.emphasis.error)
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.Bottom,

@@ -27,9 +27,9 @@ fun ProfileItem(
     enabled: Boolean = true
 ) = Row(
     modifier = modifier
+        .clickable(role = Role.Button, onClick = onClick, enabled = enabled)
         .clip(Theme.container.button)
         .glow(Theme.container.button, alpha = .1f)
-        .clickable(role = Role.Button, onClick = onClick, enabled = enabled)
         .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     verticalAlignment = Alignment.CenterVertically

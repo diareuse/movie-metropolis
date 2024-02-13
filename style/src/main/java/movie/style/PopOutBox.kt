@@ -7,7 +7,6 @@ import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
@@ -116,10 +115,6 @@ class PopOutState(
         shadowAlpha = 1f
         delay(100)
         expanded = false
-    }
-
-    companion object {
-        val Saver = mapSaver({ buildMap { } }, { })
     }
 
 }

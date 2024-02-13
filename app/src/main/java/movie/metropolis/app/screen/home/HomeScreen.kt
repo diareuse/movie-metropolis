@@ -4,7 +4,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -19,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
@@ -78,7 +78,9 @@ fun HomeScreen(
             TransparentBottomNavigation(
                 modifier = Modifier
                     .alignForLargeScreen()
-                    .hazeChild(haze, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                    .padding(24.dp)
+                    .navigationBarsPadding()
+                    .hazeChild(haze, Theme.container.card)
             ) {
                 for (state in HomeState.entries)
                     TransparentBottomNavigationItem(
@@ -106,8 +108,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .haze(
                     state = haze,
-                    backgroundColor = Theme.color.container.background,
-                    tint = Theme.color.container.background.copy(alpha = .5f)
+                    style = HazeDefaults.style(Theme.color.container.background.copy(alpha = .5f))
                 ),
             navController = navController,
             startDestination = HomeState.Listing.name,

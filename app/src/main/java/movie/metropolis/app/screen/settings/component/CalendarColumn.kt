@@ -72,9 +72,9 @@ private fun CalendarRow(
 ) = Row(
     modifier = modifier
         .fillMaxWidth()
+        .clickable(role = Role.Button, onClick = onClick)
         .glow(Theme.container.button)
         .clip(Theme.container.button)
-        .clickable(role = Role.Button, onClick = onClick)
         .padding(horizontal = 16.dp)
         .minimumInteractiveComponentSize(),
     horizontalArrangement = Arrangement.spacedBy(8.dp),

@@ -3,12 +3,10 @@ package movie.metropolis.app.screen.home.component
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material.ripple.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -29,16 +27,13 @@ fun TransparentBottomNavigationItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
-    colors: TransparentBottomNavigationItemColors = TransparentBottomNavigationItemDefaults.colors(),
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    colors: TransparentBottomNavigationItemColors = TransparentBottomNavigationItemDefaults.colors()
 ) {
     Box(
         modifier = modifier
             .clickable(
                 role = Role.Tab,
                 onClick = onClick,
-                indication = rememberRipple(false),
-                interactionSource = interactionSource,
                 enabled = enabled
             )
             .minimumInteractiveComponentSize(),
@@ -83,10 +78,10 @@ private fun TransparentBottomNavigationItemPreview(
     selected: Boolean
 ) = PreviewLayout {
     TransparentBottomNavigationItem(
-        onClick = {},
         selected = selected,
         active = { Icon(Icons.Filled.Home, null) },
-        inactive = { Icon(Icons.Outlined.Home, null) }
+        inactive = { Icon(Icons.Outlined.Home, null) },
+        onClick = {}
     )
 }
 

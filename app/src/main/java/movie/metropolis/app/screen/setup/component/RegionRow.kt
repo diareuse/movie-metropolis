@@ -33,6 +33,7 @@ fun RegionRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .then(clickable)
             .surface(
                 shape = Theme.container.button,
                 color = Theme.color.container.background,
@@ -40,7 +41,6 @@ fun RegionRow(
                 shadowColor = color
             )
             .glow(Theme.container.button)
-            .then(clickable)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

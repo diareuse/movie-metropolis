@@ -18,8 +18,7 @@ fun TransparentBottomNavigation(
 ) = Row(
     modifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 24.dp, vertical = 12.dp)
-        .navigationBarsPadding(),
+        .padding(horizontal = 24.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.SpaceAround,
     verticalAlignment = Alignment.CenterVertically
 ) {
@@ -32,28 +31,28 @@ private fun TransparentBottomNavigationPreview() = PreviewLayout {
     var selected by remember { mutableIntStateOf(0) }
     TransparentBottomNavigation {
         TransparentBottomNavigationItem(
-            onClick = { selected = 0 },
             selected = selected == 0,
             active = { Icon(Icons.Filled.Home, null) },
-            inactive = { Icon(Icons.Outlined.Home, null) }
+            inactive = { Icon(Icons.Outlined.Home, null) },
+            onClick = { selected = 0 }
         )
         TransparentBottomNavigationItem(
-            onClick = { selected = 1 },
             selected = selected == 1,
             active = { Icon(Icons.Filled.Person, null) },
-            inactive = { Icon(Icons.Outlined.Person, null) }
+            inactive = { Icon(Icons.Outlined.Person, null) },
+            onClick = { selected = 1 }
         )
         TransparentBottomNavigationItem(
-            onClick = { selected = 2 },
             selected = selected == 2,
             active = { Icon(Icons.Filled.Build, null) },
-            inactive = { Icon(Icons.Outlined.Build, null) }
+            inactive = { Icon(Icons.Outlined.Build, null) },
+            onClick = { selected = 2 }
         )
         TransparentBottomNavigationItem(
-            onClick = { selected = 3 },
             selected = selected == 3,
             active = { Icon(Icons.Filled.Settings, null) },
-            inactive = { Icon(Icons.Outlined.Settings, null) }
+            inactive = { Icon(Icons.Outlined.Settings, null) },
+            onClick = { selected = 3 }
         )
     }
 }

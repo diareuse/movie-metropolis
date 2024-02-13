@@ -107,8 +107,8 @@ private fun RatedPoster(
     ) {
         Box(
             modifier = Modifier
-                .surface(containerColor, shape, 16.dp, color)
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
+                .surface(containerColor, shape, 16.dp, color)
                 .glow(shape, color)
                 .aspectRatio(DefaultPosterAspectRatio),
             propagateMinConstraints = true
@@ -128,8 +128,8 @@ private fun RatedPoster(
             modifier = Modifier
                 .size(32.dp)
                 .align(Alignment.TopStart)
-                .surface(color, CircleShape, 16.dp, color)
                 .clickable(onClick = onActionClick, role = Role.Button)
+                .surface(color, CircleShape, 16.dp, color)
                 .glow(CircleShape, contentColor, lightSource = LightSource.BottomRight)
                 .padding(6.dp),
             propagateMinConstraints = true

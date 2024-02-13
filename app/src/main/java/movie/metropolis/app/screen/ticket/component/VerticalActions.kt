@@ -2,6 +2,7 @@
 
 package movie.metropolis.app.screen.ticket.component
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
@@ -11,6 +12,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.*
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.coroutines.launch
@@ -106,13 +108,15 @@ fun <T : Any> rememberAnchoredDraggableState(
     initialValue: T,
     animationSpec: AnimationSpec<Float> = tween()
 ): AnchoredDraggableState<T> {
+    val density = LocalDensity.current
     return remember {
         AnchoredDraggableState(
             initialValue = initialValue,
             anchors = DraggableAnchors {},
             positionalThreshold = { distance -> distance * 0.5f },
             velocityThreshold = { 0.001f },
-            animationSpec = animationSpec
+            snapAnimationSpec = animationSpec,
+            decayAnimationSpec = splineBasedDecay(density)
         )
     }
 }

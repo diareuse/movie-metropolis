@@ -79,8 +79,8 @@ fun LargeMoviePoster(
             modifier = Modifier
                 .size(48.dp)
                 .align(Alignment.TopStart)
-                .surface(color, Theme.container.button, 16.dp, color)
                 .clickable(onClick = onOrderClick, role = Role.Button)
+                .surface(color, Theme.container.button, 16.dp, color)
                 .glow(Theme.container.button, contentColor, lightSource = LightSource.BottomRight)
                 .padding(12.dp),
             propagateMinConstraints = true

@@ -71,8 +71,8 @@ fun CinemaBox(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .surface(containerColor, shape, 16.dp, color)
                 .clickable(onClick = onClick, role = Role.Image)
+                .surface(containerColor, shape, 16.dp, color)
                 .glow(shape, color),
             propagateMinConstraints = true
         ) {
@@ -108,8 +108,8 @@ fun CinemaBox(
             modifier = Modifier
                 .size(32.dp)
                 .align(Alignment.TopStart)
-                .surface(color, CircleShape, 16.dp, color)
                 .clickable(onClick = onActionClick)
+                .surface(color, CircleShape, 16.dp, color)
                 .glow(
                     CircleShape,
                     lightSource = LightSource.BottomRight,

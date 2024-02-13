@@ -91,9 +91,9 @@ fun InAppColumn(
             modifier = Modifier
                 .onSizeChanged { buttonSize = it.toDpSize(density) }
                 .align(Alignment.BottomEnd)
+                .clickable(role = Role.Button, onClick = onClick)
                 .surface(color, baseShape)
                 .glow(baseShape)
-                .clickable(role = Role.Button, onClick = onClick)
                 .padding(12.dp, 6.dp)
         ) {
             Row(

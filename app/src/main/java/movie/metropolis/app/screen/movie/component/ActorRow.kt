@@ -67,8 +67,8 @@ fun ActorRow(
                         }
                     }
                 }
-                .surface(color, pictureShape, 16.dp)
-                .clickable(onClick = onClick, role = Role.Button),
+                .clickable(onClick = onClick, role = Role.Button)
+                .surface(color, pictureShape, 16.dp),
             propagateMinConstraints = true
         ) {
             image()
