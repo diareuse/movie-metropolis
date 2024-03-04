@@ -33,7 +33,7 @@ jobs:
           echo "MM_CAPTCHA=${{ secrets.CAPTCHA }}" >> secrets.properties
           echo "MM_TMDB=${{ secrets.TMDB }}" >> secrets.properties
 
-      - uses: lukasa1993/android-version-code-update@v2.0.5
+      - uses: lukasa1993/android-version-code-update@v2.0.8
         id: nextVersionCode
         with:
           serviceAccountJson: ./service-account.json
