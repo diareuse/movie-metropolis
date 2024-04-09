@@ -159,7 +159,7 @@ fun BookingScreen(
                 .verticalOverlay(48.dp, VerticalGravity.Top),
             state = statePage,
             pageSpacing = 32.dp,
-            outOfBoundsPageCount = 1,
+            beyondViewportPageCount = 1,
             pageNestedScrollConnection = scrollBehavior.nestedScrollConnection,
             verticalAlignment = Alignment.Top,
             contentPadding = largeScreenPadding
