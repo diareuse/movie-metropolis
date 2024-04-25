@@ -18,7 +18,6 @@ android {
         jvmTarget = '17'
         freeCompilerArgs = [
                 "-opt-in=kotlin.RequiresOptIn",
-                "-P", "plugin:androidx.compose.compiler.plugins.kotlin:suppressKotlinVersionCompatibilityCheck=true",
                 "-P", "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${rootProject.buildDir.absolutePath}/compose_metrics",
                 "-P", "plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=${rootProject.buildDir.absolutePath}/compose_metrics"
         ]
@@ -35,9 +34,7 @@ android {
 
 dependencies {
 
-    // lang
     implementation libs.kotlin.stdlib
-    implementation libs.kotlin.reflect
     implementation libs.kotlinx.coroutines.core
     implementation libs.kotlinx.coroutines.play.services
 

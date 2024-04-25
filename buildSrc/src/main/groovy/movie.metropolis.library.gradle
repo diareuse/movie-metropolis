@@ -1,4 +1,4 @@
 plugins {
     id 'com.android.library'
-    id 'common-conventions'
+    id 'movie.metropolis.android'
 }

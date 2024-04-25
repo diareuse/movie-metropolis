@@ -1,6 +1,6 @@
 plugins {
-    id 'library-conventions'
-    id 'di-conventions'
+    id 'movie.metropolis.library'
+    id 'movie.metropolis.di'
 }
 
 android {

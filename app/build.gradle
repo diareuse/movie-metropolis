@@ -1,8 +1,7 @@
 plugins {
-    id 'application-conventions'
-    id 'compose-conventions'
-    id 'di-conventions'
-    id 'google-conventions'
+    id 'movie.metropolis.app'
+    id 'movie.metropolis.compose'
+    id 'movie.metropolis.di'
 }
 
 android {
