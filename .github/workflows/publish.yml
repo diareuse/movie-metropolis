@@ -42,7 +42,7 @@ jobs:
       - run: |
           versionNumber=${{steps.nextVersionCode.outputs.version}}
           versionNumber=$(($versionNumber / 10 + 1))
-          sed -i "s/versionCode 1/versionCode $versionNumber/" buildSrc/src/main/groovy/application-conventions.gradle
+          sed -i "s/versionCode 1/versionCode $versionNumber/" buildSrc/src/main/groovy/movie.metropolis.app.gradle
 
       - name: Set up JDK
         uses: actions/setup-java@v4
