@@ -47,7 +47,7 @@ espresso-core = "3.5.1"
 uiautomator = "2.3.0"
 benchmark-macro-junit4 = "1.2.4"
 instant = "18.0.1"
-haze = "0.6.2"
+haze = "0.7.0"
 
 [libraries]
 android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
