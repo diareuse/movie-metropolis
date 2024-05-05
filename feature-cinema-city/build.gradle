@@ -1,0 +1,25 @@
+plugins {
+    id 'movie.metropolis.library'
+    id 'movie.metropolis.di'
+    id 'movie.metropolis.secrets'
+    id 'org.jetbrains.kotlin.plugin.serialization'
+}
+
+android {
+    namespace 'movie.cinema.city'
+    buildFeatures {
+        buildConfig true
+    }
+}
+
+dependencies {
+
+    implementation libs.ktor.client.cio
+    implementation libs.ktor.client.content.negotiation
+    implementation libs.ktor.client.core
+    implementation libs.ktor.client.auth
+    implementation libs.ktor.serialization.kotlinx.json
+
+    testImplementation libs.ktor.client.mock
+
+}
