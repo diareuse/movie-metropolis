@@ -22,13 +22,11 @@ android {
 
 dependencies {
 
-    implementation project(":feature-core")
+    implementation project(":feature-cinema-city")
     implementation project(":feature-calendar")
     implementation project(":style")
-    implementation project(":feature-log")
     implementation project(":feature-wear")
     implementation project(":feature-metadata")
-    implementation project(":feature-image-analysis")
 
     implementation libs.androidx.startup
     implementation libs.androidx.livedata
