@@ -1,6 +1,7 @@
 package movie.cinema.city
 
 import movie.cinema.city.model.BookingDetailResponse
+import movie.cinema.city.model.CinemaResponse
 import movie.cinema.city.model.ExtendedMovieResponse
 import movie.cinema.city.model.MovieDetailResponse
 import movie.cinema.city.model.MovieEventResponse
@@ -11,6 +12,7 @@ internal class CinemaCityClientCaching(
     private val origin: CinemaCityClient
 ) : CinemaCityClient by origin {
 
+    private var cinemas = null as List<CinemaResponse>?
     private val booking = lruCache<String, BookingDetailResponse>(maxSize = 10)
     private val events = lruCache<CinemaTarget, MovieEventResponse>(
         maxSize = 200,
@@ -21,6 +23,10 @@ internal class CinemaCityClientCaching(
         maxSize = 200,
         sizeOf = { _, v -> v.size }
     )
+
+    override suspend fun getCinemas(): List<CinemaResponse> {
+        return cinemas ?: origin.getCinemas().also { cinemas = it.takeUnless { it.isEmpty() } }
+    }
 
     override suspend fun getBooking(id: String) =
         booking.get(id) ?: origin.getBooking(id).also { booking.put(id, it) }
