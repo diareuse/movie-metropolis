@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import movie.cinema.city.CredentialsProvider
 import movie.cinema.city.RegionProvider
+import movie.cinema.city.TokenStore
 import movie.core.auth.UserAccount
 import movie.metropolis.app.feature.cinemacity.CredentialsProviderImpl
 import movie.metropolis.app.feature.cinemacity.RegionProviderImpl
+import movie.metropolis.app.feature.cinemacity.TokenStoreImpl
 import movie.settings.GlobalPreferences
 
 @Module
@@ -27,6 +29,13 @@ class CinemaCityModule {
         prefs: GlobalPreferences
     ): RegionProvider {
         return RegionProviderImpl(prefs)
+    }
+
+    @Provides
+    fun token(
+        user: UserAccount
+    ): TokenStore {
+        return TokenStoreImpl(user)
     }
 
 }

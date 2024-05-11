@@ -4,6 +4,7 @@ import movie.cinema.city.Credentials
 import movie.cinema.city.CredentialsProvider
 import movie.cinema.city.Region
 import movie.cinema.city.RegionProvider
+import movie.cinema.city.TokenStore
 import movie.core.auth.UserAccount
 import movie.settings.GlobalPreferences
 
@@ -25,4 +26,19 @@ class RegionProviderImpl(
     override fun setRegion(region: Region) {
         prefs.regionId = region.id
     }
+}
+
+class TokenStoreImpl(
+    private val user: UserAccount
+) : TokenStore {
+    override var token: String
+        get() = user.token
+        set(value) {
+            user.token = value
+        }
+    override var refreshToken: String
+        get() = user.refreshToken
+        set(value) {
+            user.refreshToken = value
+        }
 }
