@@ -41,4 +41,16 @@ internal class UserAccountImpl(
             manager.setUserData(account, "user-password", encrypted)
         }
 
+    override var token: String
+        get() = manager.getPassword(account).orEmpty()
+        set(value) {
+            manager.setPassword(account, value)
+        }
+
+    override var refreshToken: String
+        get() = manager.getUserData(account, "refresh").orEmpty()
+        set(value) {
+            manager.setUserData(account, "refresh", value)
+        }
+
 }

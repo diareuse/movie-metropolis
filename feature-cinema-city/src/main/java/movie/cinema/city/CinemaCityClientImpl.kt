@@ -56,10 +56,10 @@ import java.util.Locale
 internal class CinemaCityClientImpl(
     private val auth: CinemaCityAuth,
     private val provider: RegionProvider,
-    private val account: CredentialsProvider
+    private val account: CredentialsProvider,
+    private val tokenStore: TokenStore
 ) : CinemaCityClient {
 
-    private var tokens = BearerTokens("", "")
     private val client = httpClient {
         defaultRequest {
             url(provider.domain + "/")
@@ -75,12 +75,17 @@ internal class CinemaCityClientImpl(
         install(Auth) {
             bearer {
                 sendWithoutRequest {
-                    it.url.encodedPath.contains("group-customer-service")
+                    val path = it.url.encodedPath
+                    var matching = path.contains("group-customer-service")
+                    matching = matching and !path.contains("oauth/token")
+                    matching
                 }
-                loadTokens { tokens }
+                loadTokens { BearerTokens(tokenStore.token, tokenStore.refreshToken) }
                 refreshTokens {
-                    val request = when (val t =
-                        oldTokens?.takeUnless { it.accessToken.isBlank() || it.refreshToken.isBlank() }) {
+                    val t = oldTokens?.takeUnless {
+                        it.accessToken.isBlank() || it.refreshToken.isBlank()
+                    }
+                    val request = when (t) {
                         null -> account.get().run { TokenRequest.Login(username, password) }
                         else -> TokenRequest.Refresh(t.refreshToken, auth.captcha)
                     }
@@ -99,8 +104,9 @@ internal class CinemaCityClientImpl(
             basicAuth(auth.user, auth.pass)
             setBody(request)
         }.throwOnError().body<CustomerResponse>().also {
-            val token = it.token ?: return@also
-            tokens = BearerTokens(token.accessToken, token.refreshToken)
+            val response = it.token ?: return@also
+            tokenStore.token = response.accessToken
+            tokenStore.refreshToken = response.refreshToken
         }
     }
 
@@ -203,7 +209,8 @@ internal class CinemaCityClientImpl(
         }
         val token = response.throwOnError().body<TokenResponse>()
         return BearerTokens(token.accessToken, token.refreshToken).also {
-            tokens = it
+            tokenStore.token = it.accessToken
+            tokenStore.refreshToken = it.refreshToken
         }
     }
 

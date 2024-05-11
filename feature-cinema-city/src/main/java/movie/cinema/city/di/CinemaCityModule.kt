@@ -12,6 +12,7 @@ import movie.cinema.city.CinemaCityClientImpl
 import movie.cinema.city.CinemaCityComposition
 import movie.cinema.city.CredentialsProvider
 import movie.cinema.city.RegionProvider
+import movie.cinema.city.TokenStore
 import javax.inject.Singleton
 
 @Module
@@ -22,10 +23,11 @@ class CinemaCityModule {
     @Singleton
     fun cinemaCity(
         endpoint: RegionProvider,
-        credentials: CredentialsProvider
+        credentials: CredentialsProvider,
+        token: TokenStore
     ): CinemaCity {
         var client: CinemaCityClient
-        client = CinemaCityClientImpl(CinemaCityAuth, endpoint, credentials)
+        client = CinemaCityClientImpl(CinemaCityAuth, endpoint, credentials, token)
         client = CinemaCityClientCaching(client)
         return CinemaCityComposition(client)
     }
