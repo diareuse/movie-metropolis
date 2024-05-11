@@ -7,9 +7,9 @@ interface RegionProvider {
 
 fun RegionProvider.requireRegion() = requireNotNull(region)
 
-val RegionProvider.domain
+internal val RegionProvider.domain
     get() = requireRegion().domain
-val RegionProvider.id
+internal val RegionProvider.id
     get() = requireRegion().id
-val RegionProvider.tld
+internal val RegionProvider.tld
     get() = requireRegion().domain.substringAfterLast('.').substringBefore('/')
