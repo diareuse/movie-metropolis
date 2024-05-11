@@ -1,13 +1,13 @@
 package movie.settings.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import movie.settings.PreferenceStore
-import movie.settings.PreferenceStoreShared
+import movie.settings.GlobalPreferences
 import movie.settings.SharedPreferencesFactory
 import javax.inject.Singleton
 
@@ -21,9 +21,8 @@ class PreferenceModule {
     fun user(
         @ApplicationContext
         context: Context
-    ): PreferenceStore {
-        val prefs = SharedPreferencesFactory.user().create(context)
-        return PreferenceStoreShared(prefs)
+    ): SharedPreferences {
+        return SharedPreferencesFactory.user().create(context)
     }
 
     @Singleton
@@ -32,9 +31,16 @@ class PreferenceModule {
     fun functionality(
         @ApplicationContext
         context: Context
-    ): PreferenceStore {
-        val prefs = SharedPreferencesFactory.functionality().create(context)
-        return PreferenceStoreShared(prefs)
+    ): SharedPreferences {
+        return SharedPreferencesFactory.functionality().create(context)
+    }
+
+    @Provides
+    fun global(
+        @User
+        prefs: SharedPreferences
+    ): GlobalPreferences {
+        return GlobalPreferences(prefs)
     }
 
 }

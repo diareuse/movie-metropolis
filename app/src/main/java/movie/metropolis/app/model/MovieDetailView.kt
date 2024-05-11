@@ -1,7 +1,6 @@
 package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
-import movie.core.model.MovieDetail
 
 @Immutable
 interface MovieDetailView {
@@ -19,6 +18,4 @@ interface MovieDetailView {
     val backdrop: ImageView?
     val trailer: VideoView?
     val rating: String?
-
-    fun base(): MovieDetail
 }

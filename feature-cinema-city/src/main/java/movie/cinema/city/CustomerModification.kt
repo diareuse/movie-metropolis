@@ -4,7 +4,7 @@ import java.util.Locale
 
 data class CustomerModification(
     val email: String,
-    val cinema: Cinema,
+    val cinema: Cinema?,
     val name: Name,
     val phone: String,
     val locale: Locale,

@@ -9,6 +9,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
@@ -52,8 +53,9 @@ class ListingViewModel @Inject constructor(
         }
     }
 
-    fun hide(view: MovieView) {
-        settings.filters += view.name.substringBefore(":")
+    fun hide(view: MovieView) = viewModelScope.launch {
+        val filters = settings.filters.first()
+        settings.setFilters(filters + view.name.substringBefore(":"))
     }
 
 }

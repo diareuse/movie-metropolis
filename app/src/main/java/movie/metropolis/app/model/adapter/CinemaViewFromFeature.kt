@@ -1,7 +1,7 @@
 package movie.metropolis.app.model.adapter
 
 import android.net.Uri
-import movie.core.model.Cinema
+import movie.cinema.city.Cinema
 import movie.metropolis.app.model.CinemaView
 
 data class CinemaViewFromFeature(
@@ -12,19 +12,13 @@ data class CinemaViewFromFeature(
     override val name: String
         get() = cinema.name.substringAfterLast(',').trim()
     override val address: String
-        get() = cinema.address.filter { it !in name }.joinToString("\n")
+        get() = cinema.address.address.filter { it !in name }.joinToString("\n")
     override val city: String
-        get() = cinema.city
+        get() = cinema.address.city
     override val distance: String?
-        get() = cinema.distance?.let {
-            when {
-                it < 1.0 -> "%.2f km".format(it)
-                it < 10.0 -> "%.1f km".format(it)
-                else -> "%.0f km".format(it)
-            }
-        }
-    override val image: String?
-        get() = cinema.image
+        get() = null
+    override val image: String
+        get() = cinema.image.toString()
     override val uri: String
-        get() = "geo:${cinema.location.latitude},${cinema.location.longitude}?q=" + Uri.encode(name)
+        get() = "geo:${cinema.address.latitude},${cinema.address.longitude}?q=" + Uri.encode(name)
 }

@@ -4,13 +4,10 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNot
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flow
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.profile.ProfileFacade
-import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.membershipFlow
-import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.userFlow
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
@@ -22,10 +19,10 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isLoggedIn get() = home.email != null
-    val user = profile.userFlow(emptyFlow()).map { it.getOrNull() }
-        .filterNot { it?.email.isNullOrBlank() }
+    val user = flow { emit(profile.getUser()) }
+        .filterNot { it.email.isBlank() }
         .retainStateIn(viewModelScope, null)
-    val membership = profile.membershipFlow.map { it.getOrNull() }
+    val membership = flow { emit(profile.getMembership()) }
         .retainStateIn(viewModelScope, null)
 
 }

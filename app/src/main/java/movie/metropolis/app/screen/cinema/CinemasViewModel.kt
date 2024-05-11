@@ -8,9 +8,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import movie.metropolis.app.presentation.cinema.CinemasFacade
-import movie.metropolis.app.presentation.cinema.CinemasFacade.Companion.cinemasFlow
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
@@ -22,8 +22,8 @@ class CinemasViewModel @Inject constructor(
 
     val location = MutableStateFlow(null as Location?)
 
-    val cinemas = facade.cinemasFlow(location)
-        .map { it.getOrNull().orEmpty().toImmutableList() }
+    val cinemas = location.flatMapLatest { facade.cinemas(it) }
+        .map { it.toImmutableList() }
         .retainStateIn(viewModelScope, persistentListOf())
 
 }

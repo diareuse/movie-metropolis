@@ -1,5 +1,6 @@
 package movie.cinema.city
 
+import io.ktor.client.plugins.auth.providers.BearerTokens
 import movie.cinema.city.model.BookingDetailResponse
 import movie.cinema.city.model.BookingResponse
 import movie.cinema.city.model.CinemaResponse
@@ -28,4 +29,5 @@ internal interface CinemaCityClient {
     suspend fun getEventsInCinema(cinema: String, date: Date): MovieEventResponse
     suspend fun getDetail(id: String): MovieDetailResponse
     suspend fun getMoviesByType(type: ShowingType): List<ExtendedMovieResponse>
+    suspend fun getToken(): BearerTokens
 }

@@ -23,6 +23,7 @@ android {
 dependencies {
 
     implementation project(":feature-cinema-city")
+    implementation project(":feature-core-auth")
     implementation project(":feature-calendar")
     implementation project(":style")
     implementation project(":feature-wear")
@@ -50,5 +51,6 @@ dependencies {
     implementation libs.android.billing
 
     implementation libs.konfetti
+    implementation project(':feature-settings')
 
 }

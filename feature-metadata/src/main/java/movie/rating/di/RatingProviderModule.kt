@@ -47,6 +47,10 @@ internal class RatingProviderModule {
         return out
     }
 
+    @Provides
+    @Singleton
+    internal fun engine() = CIO.create()
+
     @Singleton
     @Provides
     @Rating

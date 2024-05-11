@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
-import movie.core.model.Region
+import movie.cinema.city.Region
 import movie.metropolis.app.R
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.model.adapter.RegionViewFromFeature
@@ -80,7 +80,7 @@ fun SetupRegionSelectionContent(
         items(regions, { it.name }) {
             val state = rememberPaletteImageState(url = it.icon)
             RegionRow(
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                 icon = { Image(state = state) },
                 label = { Text(it.name) },
                 onClick = { onRegionClick(it) },

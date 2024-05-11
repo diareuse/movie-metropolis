@@ -5,10 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import movie.metropolis.app.presentation.order.OrderFacade
-import movie.metropolis.app.presentation.order.OrderFacade.Companion.isCompletedFlow
-import movie.metropolis.app.presentation.order.OrderFacade.Companion.requestFlow
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
@@ -27,11 +26,11 @@ class PurchaseViewModel private constructor(
         factory.create(Route.Order.Arguments(handle).url)
     )
 
-    val request = facade.requestFlow
+    val request = flow { emit(facade.getRequest()) }
         .map { it.getOrNull() }
         .retainStateIn(viewModelScope, null)
 
-    val isCompleted = facade.isCompletedFlow
+    val isCompleted = facade.isCompleted
         .retainStateIn(viewModelScope, false)
 
     fun updateUrl(url: String?) {

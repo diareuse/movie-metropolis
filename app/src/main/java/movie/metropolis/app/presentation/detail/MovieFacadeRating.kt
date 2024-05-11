@@ -20,7 +20,7 @@ class MovieFacadeRating(
     override val movie: Flow<MovieDetailView> = origin.movie.flatMapLatest {
         flow {
             if (metadata == null) emit(it)
-            val year = Calendar.getInstance().apply { time = it.base().releasedAt }[Calendar.YEAR]
+            val year = Calendar.getInstance()[Calendar.YEAR]
             val descriptors = arrayOf(
                 MovieDescriptor.Original(it.nameOriginal, year),
                 MovieDescriptor.Local(it.name, year)

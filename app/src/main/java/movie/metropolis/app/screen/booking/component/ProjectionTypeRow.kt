@@ -62,6 +62,7 @@ fun ProjectionTypeRow(
     ProjectionType.DolbyAtmos -> ProjectionTypeRowDefaults.DolbyAtmos(modifier = modifier)
     ProjectionType.HighFrameRate -> ProjectionTypeRowDefaults.HighFrameRate(modifier = modifier)
     ProjectionType.VIP -> ProjectionTypeRowDefaults.VIP(modifier = modifier)
+    ProjectionType.Remaster -> ProjectionTypeRowDefaults.TypeOther("Remaster", modifier = modifier)
     is ProjectionType.Other -> ProjectionTypeRowDefaults.TypeOther(type.type, modifier = modifier)
 }
 
@@ -92,6 +93,7 @@ private fun ProjectionTypeRowPreview(
             ProjectionType.DolbyAtmos -> ProjectionTypeRowDefaults.DolbyAtmos()
             ProjectionType.HighFrameRate -> ProjectionTypeRowDefaults.HighFrameRate()
             ProjectionType.VIP -> ProjectionTypeRowDefaults.VIP()
+            ProjectionType.Remaster -> ProjectionTypeRowDefaults.TypeOther("Remaster")
             is ProjectionType.Other -> ProjectionTypeRowDefaults.TypeOther(p.type)
         }
     }

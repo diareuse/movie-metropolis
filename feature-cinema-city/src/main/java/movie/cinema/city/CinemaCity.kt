@@ -15,6 +15,7 @@ interface CinemaCity {
         suspend fun updateCustomer(modification: CustomerModification)
         suspend fun getCustomer(): Customer
         suspend fun getTickets(): List<Ticket>
+        suspend fun getToken(): String
     }
 
     interface Cinemas {
@@ -25,6 +26,7 @@ interface CinemaCity {
     interface Events {
         suspend fun getEvents(cinema: Cinema, date: Date): Map<Movie, List<Occurrence>>
         suspend fun getEvents(future: Boolean): List<Movie>
+        suspend fun getEvent(id: String): Movie
     }
 
 }

@@ -6,7 +6,7 @@ import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.presentation.cinema.BookingFilterable
 import java.util.Date
 
-interface MovieFacade {
+interface MovieFacade : BookingFilterable {
 
     val movie: Flow<MovieDetailView>
     val favorite: Flow<Boolean>
@@ -16,14 +16,12 @@ interface MovieFacade {
         date: Date,
         latitude: Double,
         longitude: Double
-    ): Flow<Result<List<CinemaBookingView>>>
+    ): Flow<List<CinemaBookingView>>
 
     suspend fun toggleFavorite()
 
-    interface Filterable : MovieFacade, BookingFilterable
-
     fun interface Factory {
-        fun create(id: String): Filterable
+        fun create(id: String): MovieFacade
     }
 
 }

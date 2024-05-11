@@ -11,17 +11,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.Calendars
 import movie.metropolis.app.presentation.settings.SettingsFacade
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.addToCalendarFlow
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.calendarFlow
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.clipRadiusFlow
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.filterSeenFlow
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.filtersFlow
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.onlyMoviesFlow
-import movie.metropolis.app.presentation.settings.SettingsFacade.Companion.selectedCalendarFlow
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
@@ -34,15 +28,15 @@ class SettingsViewModel @Inject constructor(
     private val refreshKey = Channel<Unit>()
 
     val calendars = refreshKey.consumeAsFlow()
-        .flatMapLatest { facade.calendarFlow }
+        .map { facade.getCalendars() }
         .retainStateIn(viewModelScope, Calendars())
     private val pendingFilter = MutableStateFlow("")
     val state = combine(
-        facade.filterSeenFlow,
-        facade.onlyMoviesFlow,
-        facade.addToCalendarFlow,
-        facade.clipRadiusFlow,
-        facade.selectedCalendarFlow
+        facade.filterSeen,
+        facade.onlyMovies,
+        facade.addToCalendar,
+        facade.clipRadius,
+        facade.selectedCalendar
     ) { filterSeen, onlyMovies, addToCalendar, clipRadius, calendar ->
         SettingsState(
             unseenOnly = filterSeen,
@@ -51,7 +45,7 @@ class SettingsViewModel @Inject constructor(
             nearbyCinemas = clipRadius.takeUnless { it <= 0 }?.toString().orEmpty(),
             selectedCalendar = calendar
         )
-    }.combine(facade.filtersFlow) { state, filters ->
+    }.combine(facade.filters) { state, filters ->
         state.copy(filters = filters)
     }.combine(pendingFilter) { state, filter ->
         state.copy(pendingFilter = filter)
@@ -59,10 +53,10 @@ class SettingsViewModel @Inject constructor(
 
     fun updateState(state: SettingsState) {
         pendingFilter.value = state.pendingFilter
-        facade.filterSeen = state.unseenOnly
-        facade.clipRadius = state.nearbyCinemas.toIntOrNull() ?: 0
-        facade.onlyMovies = state.moviesOnly
-        facade.selectedCalendar = state.selectedCalendar
+        facade.setFilterSeen(state.unseenOnly)
+        facade.setClipRadius(state.nearbyCinemas.toIntOrNull() ?: 0)
+        facade.setOnlyMovies(state.moviesOnly)
+        facade.setSelectedCalendar(state.selectedCalendar)
     }
 
     fun refreshCalendars() {
@@ -84,20 +78,18 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun addFilter() {
-        val pendingFilter = pendingFilter.value
-        if (pendingFilter.isNotEmpty()) {
-            facade.filters += pendingFilter
-            this.pendingFilter.value = ""
+    fun addFilter() = viewModelScope.launch {
+        val filter = pendingFilter.value
+        if (filter.isNotEmpty()) {
+            val current = facade.filters.first()
+            facade.setFilters(current + filter)
+            pendingFilter.value = ""
         }
     }
 
-    fun deleteFilter(filter: String) {
-        facade.filters -= filter
-    }
-
-    fun cleanup() = viewModelScope.launch {
-        facade.cleanTimestamps()
+    fun deleteFilter(filter: String) = viewModelScope.launch {
+        val current = facade.filters.first()
+        facade.setFilters(current - filter)
     }
 
 }

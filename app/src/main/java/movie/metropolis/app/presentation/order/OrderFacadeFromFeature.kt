@@ -1,26 +1,22 @@
 package movie.metropolis.app.presentation.order
 
 import kotlinx.collections.immutable.toImmutableMap
-import movie.core.UserCredentialFeature
-import movie.core.util.Listenable
-import movie.metropolis.app.presentation.OnChangedListener
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
+import movie.cinema.city.CinemaCity
 
 class OrderFacadeFromFeature(
     private val url: String,
-    private val user: UserCredentialFeature
+    private val cinemaCity: CinemaCity
 ) : OrderFacade {
 
-    private var currentUrl = ""
-    private val listenable = Listenable<OnChangedListener>()
+    private val currentUrl = MutableStateFlow("")
 
-    override val isCompleted: Boolean
-        get() = currentUrl.contains("OrderComplete", ignoreCase = true)
+    override val isCompleted = currentUrl.map { it.contains("OrderComplete", ignoreCase = true) }
 
     override suspend fun getRequest(): Result<RequestView> {
-        val token = user.getToken().getOrNull()
         val headers = buildMap {
-            if (token != null)
-                put("access-token", token)
+            put("access-token", cinemaCity.customers.getToken())
         }
         return RequestView(
             url = url,
@@ -29,17 +25,7 @@ class OrderFacadeFromFeature(
     }
 
     override fun setUrl(url: String) {
-        currentUrl = url
-        listenable.notify { onChanged() }
-    }
-
-    override fun addOnChangedListener(listener: OnChangedListener): OnChangedListener {
-        listenable += listener
-        return listener
-    }
-
-    override fun removeOnChangedListener(listener: OnChangedListener) {
-        listenable -= listener
+        currentUrl.value = url
     }
 
 }

@@ -7,17 +7,14 @@ import movie.metropolis.app.model.MovieBookingView
 import java.util.Date
 
 @Stable
-interface CinemaFacade {
+interface CinemaFacade : BookingFilterable {
 
-    val cinema: Flow<Result<CinemaView>>
+    val cinema: Flow<CinemaView>
 
-    fun showings(date: Date): Flow<Result<List<MovieBookingView>>>
-
-    @Stable
-    interface Filterable : CinemaFacade, BookingFilterable
+    fun showings(date: Date): Flow<List<MovieBookingView>>
 
     fun interface Factory {
-        fun create(id: String): Filterable
+        fun create(id: String): CinemaFacade
     }
 
 }

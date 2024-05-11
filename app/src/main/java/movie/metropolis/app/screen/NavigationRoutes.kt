@@ -373,8 +373,7 @@ fun NavGraphBuilder.settings(
             onClickBack = navController::navigateUp,
             onShowCalendarsRequest = { showCalendars = true },
             onAddFilterClick = viewModel::addFilter,
-            onDeleteFilterClick = viewModel::deleteFilter,
-            onClearTimestampClick = viewModel::cleanup
+            onDeleteFilterClick = viewModel::deleteFilter
         )
     }
 }
