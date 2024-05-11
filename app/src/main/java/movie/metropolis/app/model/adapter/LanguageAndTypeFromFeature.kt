@@ -1,14 +1,14 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.Showing
+import movie.cinema.city.Occurrence
 import movie.metropolis.app.model.AvailabilityView
 
 data class LanguageAndTypeFromFeature(
-    private val item: Showing
+    private val item: Occurrence
 ) : AvailabilityView.Type {
 
-    override val language get() = item.language.displayLanguage
-    override val types get() = item.types.toList()
+    override val language get() = item.dubbing.displayLanguage
+    override val types get() = item.flags.map { it.tag.uppercase() }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

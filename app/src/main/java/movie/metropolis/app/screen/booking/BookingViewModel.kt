@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import movie.core.model.Location
-import movie.metropolis.app.feature.location.toLocation
 import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.presentation.ticket.TicketFacade
@@ -47,8 +45,7 @@ class BookingViewModel private constructor(
 
     val location = MutableStateFlow(null as AndroidLocation?)
     private val facade = location
-        .map { it?.toLocation() ?: Location.Zero }
-        .map { factory.create(it) }
+        .map(factory::create)
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
     val poster = facade
         .filterNotNull()

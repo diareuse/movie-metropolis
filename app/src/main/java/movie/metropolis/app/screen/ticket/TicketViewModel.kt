@@ -11,12 +11,10 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.presentation.booking.BookingFacade
-import movie.metropolis.app.presentation.booking.BookingFacade.Companion.bookingsFlow
 import movie.metropolis.app.util.retainStateIn
 import movie.metropolis.app.util.writeTo
 import java.io.File
@@ -36,7 +34,7 @@ class TicketViewModel @Inject constructor(
     private val refreshFlow = Channel<Unit>(Channel.RENDEZVOUS)
 
     @Suppress("USELESS_CAST")
-    val tickets = facade.bookingsFlow(refreshFlow.consumeAsFlow().map { { facade.refresh() } })
+    val tickets = facade.bookings
         .map { TicketContentState.Success(it.toImmutableList()) as TicketContentState }
         .catch { emit(TicketContentState.Failure(it)) }
         .retainStateIn(viewModelScope, TicketContentState.Loading)

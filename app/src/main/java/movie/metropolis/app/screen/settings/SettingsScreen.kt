@@ -41,7 +41,6 @@ fun SettingsScreen(
     onStateChange: (SettingsState) -> Unit,
     onClickBack: () -> Unit,
     onShowCalendarsRequest: () -> Unit,
-    onClearTimestampClick: () -> Unit,
     onAddFilterClick: () -> Unit,
     onDeleteFilterClick: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -191,17 +190,6 @@ fun SettingsScreen(
                 keyboardActions = KeyboardActions(onDone = clearFocus())
             )
         }
-        SettingsSection(title = { Text(stringResource(R.string.storage)) }) {
-            SettingsItemRow(
-                title = { Text(stringResource(R.string.timestamp_title)) },
-                description = { Text(stringResource(R.string.timestamp_description)) },
-                value = {
-                    IconButton(onClick = onClearTimestampClick) {
-                        Icon(painterResource(R.drawable.ic_delete), null)
-                    }
-                }
-            )
-        }
     }
 
 }
@@ -217,7 +205,6 @@ private fun SettingsScreenPreview() = PreviewLayout {
         onClickBack = {},
         onShowCalendarsRequest = {},
         onAddFilterClick = {},
-        onDeleteFilterClick = {},
-        onClearTimestampClick = {}
+        onDeleteFilterClick = {}
     )
 }

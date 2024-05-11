@@ -1,15 +1,15 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.Media
+import movie.cinema.city.Movie
 import movie.metropolis.app.model.ImageView
 
 data class ImageViewFromFeature(
-    private val feature: Media.Image
+    private val image: Movie.Image
 ) : ImageView {
 
     override val aspectRatio: Float
-        get() = feature.aspectRatio
+        get() = 1f * image.width / image.height
     override val url: String
-        get() = feature.url
+        get() = image.url.toString()
 
 }

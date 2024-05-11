@@ -1,44 +1,48 @@
 package movie.metropolis.app.presentation.cinema
 
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.Filter
 
 class ShowingFilterable {
 
-    private val selected = mutableSetOf<String>()
-    private val languages = mutableSetOf<String>()
-    private val types = mutableSetOf<String>()
+    private val selected = MutableStateFlow(persistentListOf<String>())
+    private val languages = MutableStateFlow(persistentListOf<String>())
+    private val types = MutableStateFlow(persistentListOf<String>())
 
-    fun addFrom(types: Iterable<AvailabilityView.Type>): Boolean {
-        val elements = this.types + this.languages
-        this.types.clear()
-        this.languages.clear()
-        for (type in types) {
-            this.types.addAll(type.types)
-            this.languages.add(type.language)
+    val languageFilters
+        get() = languages.combine(selected) { languages, selected ->
+            languages.map { Filter(it in selected, it) }
         }
-        val updatedElements = this.types + this.languages
-        return elements.size != updatedElements.size || !elements.containsAll(updatedElements)
+    val typeFilters
+        get() = types.combine(selected) { languages, selected ->
+            languages.map { Filter(it in selected, it) }
+        }
+    val options = typeFilters.combine(languageFilters) { type, language ->
+        mapOf(Filter.Type.Language to language, Filter.Type.Projection to type)
     }
 
-    fun selectAll() {
-        selected.addAll(languages)
+    fun addFrom(types: Iterable<AvailabilityView.Type>) {
+        var newTypes = persistentListOf<String>()
+        var newLanguages = persistentListOf<String>()
+        for (type in types) {
+            newTypes = newTypes.addAll(type.types)
+            newLanguages = newLanguages.add(type.language)
+        }
+
+        this.types.value = newTypes
+        this.languages.value = newLanguages
+
+        if (selected.value.isEmpty())
+            selected.update { newLanguages }
     }
 
     fun toggle(filter: Filter) = when (val v = filter.value) {
-        in selected -> selected.remove(v)
-        else -> selected.add(v)
+        in selected.value -> selected.update { it.remove(v) }
+        else -> selected.update { it.add(v) }
     }
-
-    fun getLanguages() = languages
-        .map { Filter(it in selected, it) }
-        .sortedBy { it.value }
-
-    fun getTypes() = types
-        .map { Filter(it in selected, it) }
-        .sortedBy { it.value }
-
-    val selectedLanguages get() = selected.filter { it in languages }.toSet()
-    val selectedTypes get() = selected.filter { it in types }.toSet()
 
 }

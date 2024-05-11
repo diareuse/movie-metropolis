@@ -1,7 +1,7 @@
 package movie.metropolis.app.presentation.ticket
 
+import android.location.Location
 import kotlinx.coroutines.flow.Flow
-import movie.core.model.Location
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
 
@@ -16,7 +16,7 @@ interface TicketFacade {
     fun toggle(type: FiltersView.Type)
 
     fun interface LocationFactory {
-        fun create(location: Location): TicketFacade
+        fun create(location: Location?): TicketFacade
     }
 
     interface Factory {

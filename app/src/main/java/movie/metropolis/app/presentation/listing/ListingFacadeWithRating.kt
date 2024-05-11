@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import movie.core.EventDetailFeature
-import movie.core.model.Movie
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.MovieViewWithRating
 import movie.rating.MetadataProvider
@@ -20,8 +18,7 @@ import java.util.Calendar
 
 class ListingFacadeWithRating(
     private val origin: ListingFacade,
-    private val rating: MetadataProvider,
-    private val detail: EventDetailFeature
+    private val rating: MetadataProvider
 ) : ListingFacade by origin {
 
     private val cache = mutableMapOf<String, MovieMetadata>()
@@ -41,8 +38,7 @@ class ListingFacadeWithRating(
         val writeLock = Mutex()
         val movies = movies.toMutableList()
         for ((index, movie) in movies.withIndex()) launch {
-            val base = movie.getBase()
-            val rating = getRating(base) ?: return@launch
+            val rating = getRating(movie) ?: return@launch
             val updated = MovieViewWithRating(movie, rating)
             val output = writeLock.withLock {
                 movies[index] = updated
@@ -52,16 +48,10 @@ class ListingFacadeWithRating(
         }
     }
 
-    private suspend fun getRating(movie: Movie): MovieMetadata? = cache.getOrPut(movie.id) {
-        val detail = try {
-            detail.get(movie)
-        } catch (e: Throwable) {
-            return null
-        }
-        val year = Calendar.getInstance().apply { time = detail.releasedAt }[Calendar.YEAR]
+    private suspend fun getRating(movie: MovieView): MovieMetadata? = cache.getOrPut(movie.id) {
+        val year = Calendar.getInstance()[Calendar.YEAR]
         val descriptors = listOf(
-            MovieDescriptor.Original(detail.originalName, year),
-            MovieDescriptor.Local(detail.name, year)
+            MovieDescriptor.Original(movie.name, year)
         )
         for (descriptor in descriptors) {
             return@getOrPut rating.get(descriptor) ?: continue

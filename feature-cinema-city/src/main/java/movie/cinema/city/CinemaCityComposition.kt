@@ -50,7 +50,7 @@ internal class CinemaCityComposition(
                 email = modification.email,
                 firstName = modification.name.first,
                 lastName = modification.name.last,
-                favoriteCinema = modification.cinema.id,
+                favoriteCinema = modification.cinema?.id,
                 phone = modification.phone,
                 locale = modification.locale
             )
@@ -77,7 +77,7 @@ internal class CinemaCityComposition(
             val cinemas = async { cinemas.getCinemas() }
             client.getBookings().parallelMap { booking ->
                 val detail = async { client.getBooking(booking.id) }
-                val movie = async { client.getDetail(booking.movieId).let(::MovieFromResponse) }
+                val movie = async { events.getEvent(booking.movieId) }
                 val cinema = async { cinemas.await().first { it.id == booking.cinemaId } }
                 TicketFromResponse(
                     booking = booking,
@@ -86,6 +86,10 @@ internal class CinemaCityComposition(
                     cinema = cinema.await()
                 )
             }
+        }
+
+        override suspend fun getToken(): String {
+            return client.getToken().accessToken
         }
     }
 
@@ -105,8 +109,7 @@ internal class CinemaCityComposition(
             val events = response.events
             val movies = response.movies
             return movies.parallelMap { m ->
-                val movie = client.getDetail(m.id).let(::MovieFromResponse)
-                movie to events.asSequence()
+                getEvent(m.id) to events.asSequence()
                     .filter { it.movieId == m.id }
                     .filterNot { it.soldOut }
                     .mapTo(mutableListOf()) { OccurrenceFromResponse(it, cinema) }
@@ -119,8 +122,12 @@ internal class CinemaCityComposition(
                 else -> ShowingType.Current
             }
             return client.getMoviesByType(type).parallelMap {
-                client.getDetail(it.id.key).let(::MovieFromResponse)
+                getEvent(it.id.key)
             }
+        }
+
+        override suspend fun getEvent(id: String): Movie {
+            return client.getDetail(id).let(::MovieFromResponse)
         }
     }
 

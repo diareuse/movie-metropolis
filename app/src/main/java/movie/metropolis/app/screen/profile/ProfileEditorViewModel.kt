@@ -9,8 +9,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.adapter.UserViewFromView
 import movie.metropolis.app.presentation.profile.ProfileFacade
-import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.getMembership
-import movie.metropolis.app.presentation.profile.ProfileFacade.Companion.getUser
 import javax.inject.Inject
 
 @Stable
@@ -26,7 +24,7 @@ class ProfileEditorViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val user = facade.getUser().getOrNull() ?: return@launch
+                val user = facade.getUser()
                 state.update {
                     ProfileEditorState(
                         firstName = user.firstName,
@@ -54,8 +52,8 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun saveState() = viewModelScope.launch {
-        val user = facade.getUser().getOrNull() ?: return@launch
-        val membership = facade.getMembership().getOrNull()
+        val user = facade.getUser()
+        val membership = facade.getMembership()
         try {
             facade.save(UserViewFromView(user, membership, this@ProfileEditorViewModel))
             state.update { it.copy(original = null) }

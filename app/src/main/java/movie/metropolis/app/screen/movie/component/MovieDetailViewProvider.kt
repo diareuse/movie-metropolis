@@ -1,7 +1,6 @@
 package movie.metropolis.app.screen.movie.component
 
 import androidx.compose.ui.tooling.preview.datasource.*
-import movie.core.model.MovieDetail
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.PersonView
@@ -39,9 +38,7 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
         override val backdrop: ImageView? = ImageViewPreview(),
         override val trailer: VideoView? = null,
         override val rating: String? = "78%"
-    ) : MovieDetailView {
-        override fun base(): MovieDetail = throw NotImplementedError()
-    }
+    ) : MovieDetailView
 
     private data class Person(
         override val name: String,

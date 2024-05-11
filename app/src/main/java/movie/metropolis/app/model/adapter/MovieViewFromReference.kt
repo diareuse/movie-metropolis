@@ -1,28 +1,26 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.Movie
-import movie.core.model.MovieReference
+import movie.cinema.city.Movie
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.util.toStringComponents
-import movie.style.layout.DefaultPosterAspectRatio
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 data class MovieViewFromReference(
-    private val ref: MovieReference
+    private val ref: Movie
 ) : MovieView {
 
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
     override val id: String
         get() = ref.id
     override val name: String
-        get() = ref.name
+        get() = ref.name.localized
     override val releasedAt: String
         get() = yearFormat.format(ref.releasedAt)
     override val duration: String
-        get() = ref.duration.toStringComponents()
+        get() = ref.length?.toStringComponents().orEmpty()
     override val availableFrom: String
         get() = releasedAt
     override val directors: List<String>
@@ -36,25 +34,12 @@ data class MovieViewFromReference(
     override val rating: String?
         get() = null
     override val poster: ImageView
-        get() = object : ImageView {
-            override val aspectRatio: Float
-                get() = DefaultPosterAspectRatio
-            override val url: String
-                get() = ref.posterUrl
-        }
+        get() = ref.images.first().let(::ImageViewFromFeature)
     override val posterLarge: ImageView
         get() = poster
     override val video: VideoView?
-        get() = ref.videoUrl?.let {
-            object : VideoView {
-                override val url: String
-                    get() = it
-            }
-        }
+        get() = ref.videos.firstOrNull()?.let(Any::toString)?.let(::VideoViewFromFeature)
     override val url: String
-        get() = ref.url
+        get() = ref.link.toString()
 
-    override fun getBase(): Movie {
-        return ref
-    }
 }

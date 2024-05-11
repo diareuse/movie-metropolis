@@ -1,17 +1,17 @@
 package movie.metropolis.app.presentation.setup
 
-import movie.core.SetupFeature
-import movie.core.model.Region
+import movie.cinema.city.Region
+import movie.cinema.city.RegionProvider
 import movie.metropolis.app.model.RegionView
 import movie.metropolis.app.model.adapter.RegionViewFromFeature
 import java.util.Locale
 
 class SetupFacadeFromFeature(
-    private val feature: SetupFeature
+    private val feature: RegionProvider
 ) : SetupFacade {
 
     override val requiresSetup: Boolean
-        get() = feature.requiresSetup
+        get() = feature.region == null
 
     override suspend fun getRegions() = buildList {
         this += RegionViewFromFeature(Region.Czechia, Locale("cs", "CZ"))
@@ -23,6 +23,6 @@ class SetupFacadeFromFeature(
 
     override suspend fun select(view: RegionView) {
         require(view is RegionViewFromFeature)
-        feature.region = view.region
+        feature.setRegion(view.region)
     }
 }

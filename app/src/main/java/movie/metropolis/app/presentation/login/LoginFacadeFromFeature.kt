@@ -1,30 +1,37 @@
 package movie.metropolis.app.presentation.login
 
-import movie.core.PosterFeature
-import movie.core.SetupFeature
-import movie.core.UserCredentialFeature
-import movie.core.model.SignInMethod
+import movie.cinema.city.CinemaCity
+import movie.cinema.city.RegionProvider
+import movie.cinema.city.UserDetails
+import movie.cinema.city.requireRegion
+import movie.core.auth.UserAccount
 
 class LoginFacadeFromFeature(
-    private val user: UserCredentialFeature,
-    private val setup: SetupFeature,
-    private val poster: PosterFeature
+    private val user: UserAccount,
+    private val cinemaCity: CinemaCity,
+    private val region: RegionProvider
 ) : LoginFacade {
 
     override val currentUserEmail get() = user.email
     override val domain: String
-        get() = setup.region.domain
+        get() = region.requireRegion().domain
 
     override suspend fun getPosters(): List<String> {
-        return poster.get()
+        return emptyList()
     }
 
     override suspend fun login(
         email: String,
         password: String
     ): Result<Unit> {
-        val method = SignInMethod.Login(email, password)
-        return user.signIn(method)
+        user.email = email
+        user.password = password
+        return cinemaCity.runCatching { customers.getCustomer() }
+            .map {}
+            .onFailure {
+                user.email = null
+                user.password = null
+            }
     }
 
     override suspend fun register(
@@ -34,8 +41,21 @@ class LoginFacadeFromFeature(
         lastName: String,
         phone: String
     ): Result<Unit> {
-        val method = SignInMethod.Registration(email, password, firstName, lastName, phone)
-        return user.signIn(method)
+        val details = UserDetails(
+            email = email,
+            firstName = firstName,
+            lastName = lastName,
+            password = password,
+            phone = phone,
+            marketing = false,
+            premium = false
+        )
+        return cinemaCity.runCatching { create(details) }
+            .map {}
+            .onSuccess {
+                user.email = email
+                user.password = password
+            }
     }
 
 }

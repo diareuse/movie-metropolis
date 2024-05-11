@@ -5,18 +5,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
-import movie.core.EventShowingsFeature
+import movie.cinema.city.Cinema
+import movie.cinema.city.CinemaCity
 import movie.metropolis.app.model.LazyTimeView
 import movie.metropolis.app.model.TimeView
 import movie.metropolis.app.model.adapter.TimeViewMovieFromFeature
 import java.util.Date
 
 class LazyTimeViewCinema(
+    private val cinema: Cinema,
     override val date: Date,
-    showings: EventShowingsFeature.Cinema
+    cinemaCity: CinemaCity
 ) : LazyTimeView {
     override val content: Flow<List<TimeView>> = flow {
-        val showings = showings.get(date).getOrThrow().map { (movie, showings) ->
+        val showings = cinemaCity.events.getEvents(cinema, date).map { (movie, showings) ->
             TimeViewMovieFromFeature(movie, showings)
         }
         emit(showings)

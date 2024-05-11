@@ -1,12 +1,12 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.Showing
+import movie.cinema.city.Occurrence
 import movie.metropolis.app.model.AvailabilityView
 import java.text.DateFormat
 import java.util.Date
 
 data class AvailabilityFromFeature(
-    private val showing: Showing
+    private val showing: Occurrence
 ) : AvailabilityView {
 
     private val timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT)
@@ -14,10 +14,10 @@ data class AvailabilityFromFeature(
     override val id: String
         get() = showing.id
     override val url: String
-        get() = showing.bookingUrl
+        get() = showing.booking.toString()
     override val startsAt: String
         get() = timeFormat.format(showing.startsAt)
     override val isEnabled: Boolean
-        get() = showing.isEnabled && Date().before(showing.startsAt)
+        get() = Date().before(showing.startsAt)
 
 }

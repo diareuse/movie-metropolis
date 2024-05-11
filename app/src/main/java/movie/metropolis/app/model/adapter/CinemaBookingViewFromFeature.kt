@@ -1,14 +1,14 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.Cinema
-import movie.core.model.Showing
+import movie.cinema.city.Cinema
+import movie.cinema.city.Occurrence
 import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaBookingView
 import movie.metropolis.app.model.CinemaView
 
 data class CinemaBookingViewFromFeature(
     private val location: Cinema,
-    private val booking: Iterable<Showing>
+    private val booking: Iterable<Occurrence>
 ) : CinemaBookingView {
     override val cinema: CinemaView
         get() = CinemaViewFromFeature(location)

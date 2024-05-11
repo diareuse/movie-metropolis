@@ -1,6 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import movie.core.model.Region
+import movie.cinema.city.Region
 import movie.metropolis.app.R
 import movie.metropolis.app.model.RegionView
 import java.util.Locale

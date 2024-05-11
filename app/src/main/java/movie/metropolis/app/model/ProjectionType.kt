@@ -8,6 +8,7 @@ sealed class ProjectionType {
     data object DolbyAtmos : ProjectionType()
     data object HighFrameRate : ProjectionType()
     data object VIP : ProjectionType()
+    data object Remaster : ProjectionType()
     data class Other(val type: String) : ProjectionType()
 
     companion object {
@@ -16,9 +17,10 @@ sealed class ProjectionType {
             "2d" -> Plane2D
             "3d" -> Plane3D
             "4dx" -> Plane4DX
-            "dolby atmos" -> DolbyAtmos
-            "high frame rate" -> HighFrameRate
+            "dolby-atmos" -> DolbyAtmos
+            "hfr" -> HighFrameRate
             "vip" -> VIP
+            "dmr" -> Remaster
             else -> Other(value)
         }
     }

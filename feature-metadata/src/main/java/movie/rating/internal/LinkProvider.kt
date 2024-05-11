@@ -1,6 +1,5 @@
 package movie.rating.internal
 
-import movie.log.log
 import movie.rating.MovieDescriptor
 import movie.rating.ResultNotFoundException
 
@@ -12,7 +11,7 @@ internal interface LinkProvider {
 }
 
 internal suspend fun LinkProvider.getLinkOrNull(descriptor: MovieDescriptor) =
-    runCatching { getLink(descriptor) }.log().getOrNull()
+    runCatching { getLink(descriptor) }.getOrNull()
 
 internal suspend fun LinkProvider.getLinkOrNull(vararg descriptors: MovieDescriptor) = descriptors
     .distinct()

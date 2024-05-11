@@ -12,7 +12,6 @@ import com.android.billingclient.api.PurchasesUpdatedListener
 import com.android.billingclient.api.QueryProductDetailsParams
 import com.android.billingclient.api.consumePurchase
 import com.android.billingclient.api.queryProductDetails
-import movie.core.util.Listenable
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -44,10 +43,10 @@ class BillingClientWrapper(
 
     class Listener : PurchasesUpdatedListener {
 
-        private val listenable = Listenable<PurchasesUpdatedListener>()
+        private val listenable = mutableSetOf<PurchasesUpdatedListener>()
 
         override fun onPurchasesUpdated(result: BillingResult, purchases: MutableList<Purchase>?) {
-            listenable.notify { onPurchasesUpdated(result, purchases) }
+            listenable.forEach { it.onPurchasesUpdated(result, purchases) }
         }
 
         fun setListener(listener: PurchasesUpdatedListener) {
