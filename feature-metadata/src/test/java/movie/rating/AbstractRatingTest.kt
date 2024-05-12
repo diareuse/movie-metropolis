@@ -11,8 +11,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runTest
-import movie.log.Logger
-import movie.log.PlatformLogger
 import movie.rating.database.RatingDao
 import movie.rating.database.RatingStored
 import movie.rating.di.RatingProviderModule
@@ -33,7 +31,6 @@ abstract class AbstractRatingTest {
 
     @Before
     fun prepareInternal() {
-        Logger.setLogger(PlatformLogger())
         val config = MockEngineConfig().apply {
             addHandler {
                 try {
@@ -46,7 +43,7 @@ abstract class AbstractRatingTest {
                 }
             }
         }
-        val client = RatingProviderModule().client(MockEngine(config))
+        val client = RatingProviderModule().client { MockEngine(config) }
         val module = RatingProviderModule()
         dao = mock()
         provider = {
