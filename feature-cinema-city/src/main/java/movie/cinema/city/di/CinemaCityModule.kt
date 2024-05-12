@@ -16,6 +16,7 @@ import movie.cinema.city.CinemaCityClient
 import movie.cinema.city.CinemaCityClientCaching
 import movie.cinema.city.CinemaCityClientImpl
 import movie.cinema.city.CinemaCityStorage
+import movie.cinema.city.CinemaCityThreads
 import movie.cinema.city.CredentialsProvider
 import movie.cinema.city.RegionProvider
 import movie.cinema.city.TokenStore
@@ -38,7 +39,10 @@ class CinemaCityModule {
         var client: CinemaCityClient
         client = CinemaCityClientImpl(CinemaCityAuth, endpoint, credentials, token)
         client = CinemaCityClientCaching(client)
-        return CinemaCityStorage(client, database.movie())
+        var out: CinemaCity
+        out = CinemaCityStorage(client, database.movie())
+        out = CinemaCityThreads(out)
+        return out
     }
 
     @Provides
