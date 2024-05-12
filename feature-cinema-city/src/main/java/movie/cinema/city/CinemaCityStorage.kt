@@ -71,8 +71,9 @@ internal class CinemaCityStorage(
     ) : CinemaCity.Customers by origin {
         // fixme this is gonna cache them forever though and they're never gonna update
         override suspend fun getTickets(): List<Ticket> = try {
+            val tickets = ticket.selectTickets().ifEmpty { error("empty") }
             val cinemas = cinemas.getCinemas()
-            ticket.selectTickets().parallelMap {
+            tickets.parallelMap {
                 TicketFromDatabase(
                     ticket = it,
                     ticketReservations = ticket.selectReservations(it.id),
