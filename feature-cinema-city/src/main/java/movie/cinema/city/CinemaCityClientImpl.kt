@@ -8,9 +8,6 @@ import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.basicAuth
 import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
@@ -70,14 +67,6 @@ internal class CinemaCityClientImpl(
             defaultRequest {
                 contentType(ContentType.Application.Json)
                 url(provider.domain + "/")
-            }
-            Logging {
-                level = LogLevel.ALL
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        println(message)
-                    }
-                }
             }
             install(Auth) {
                 bearer {
