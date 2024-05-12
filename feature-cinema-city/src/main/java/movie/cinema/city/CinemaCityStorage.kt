@@ -1,32 +1,50 @@
 package movie.cinema.city
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import movie.cinema.city.adapter.MovieFromDatabase
+import movie.cinema.city.adapter.TicketFromDatabase
 import movie.cinema.city.persistence.MovieDao
 import movie.cinema.city.persistence.MovieStored
+import movie.cinema.city.persistence.TicketDao
+import movie.cinema.city.persistence.TicketStored
 
 internal class CinemaCityStorage(
     client: CinemaCityClient,
-    private val dao: MovieDao
+    private val movie: MovieDao,
+    private val ticket: TicketDao
 ) : CinemaCityComposition(client) {
 
-    override val events: CinemaCity.Events by lazy { Events(super.events) }
+    override val events: CinemaCity.Events
+        get() = Events(super.events)
+    override val customers: CinemaCity.Customers
+        get() = Customers(super.customers)
 
     private inner class Events(
         private val origin: CinemaCity.Events
     ) : CinemaCity.Events by origin {
         override suspend fun getEvent(id: String): Movie = try {
-            MovieFromDatabase(
-                storedMovie = dao.selectMovie(id),
-                storedCast = dao.selectCast(id),
-                storedDirectors = dao.selectDirector(id),
-                storedGenre = dao.selectGenre(id),
-                storedImage = dao.selectImage(id),
-                storedVideo = dao.selectVideo(id)
-            )
+            coroutineScope {
+                val storedMovie = async { movie.selectMovie(id) }
+                val storedCast = async { movie.selectCast(id) }
+                val storedDirectors = async { movie.selectDirector(id) }
+                val storedGenre = async { movie.selectGenre(id) }
+                val storedImage = async { movie.selectImage(id) }
+                val storedVideo = async { movie.selectVideo(id) }
+                MovieFromDatabase(
+                    storedMovie = storedMovie.await(),
+                    storedCast = storedCast.await(),
+                    storedDirectors = storedDirectors.await(),
+                    storedGenre = storedGenre.await(),
+                    storedImage = storedImage.await(),
+                    storedVideo = storedVideo.await()
+                )
+            }
         } catch (ignore: Throwable) {
-            ignore.printStackTrace()
             origin.getEvent(id).also {
-                dao.insert(MovieStored(it))
+                movie.insert(MovieStored(it))
                 val cast = it.cast
                     .map { i -> MovieStored.Cast(it.id, i) }
                 val director = it.directors
@@ -37,11 +55,39 @@ internal class CinemaCityStorage(
                     .map { i -> MovieStored.Image(it.id, i.width, i.height, i.url) }
                 val video = it.videos
                     .map { i -> MovieStored.Video(it.id, i) }
-                dao.insertCast(cast)
-                dao.insertDirector(director)
-                dao.insertGenre(genre)
-                dao.insertImage(images)
-                dao.insertVideo(video)
+                supervisorScope {
+                    launch { movie.insertCast(cast) }
+                    launch { movie.insertDirector(director) }
+                    launch { movie.insertGenre(genre) }
+                    launch { movie.insertImage(images) }
+                    launch { movie.insertVideo(video) }
+                }
+            }
+        }
+    }
+
+    private inner class Customers(
+        private val origin: CinemaCity.Customers
+    ) : CinemaCity.Customers by origin {
+        // fixme this is gonna cache them forever though and they're never gonna update
+        override suspend fun getTickets(): List<Ticket> = try {
+            val cinemas = cinemas.getCinemas()
+            ticket.selectTickets().parallelMap {
+                TicketFromDatabase(
+                    ticket = it,
+                    ticketReservations = ticket.selectReservations(it.id),
+                    cinema = cinemas.first { c -> c.id == it.cinema },
+                    movie = events.getEvent(it.id)
+                )
+            }
+        } catch (ignore: Throwable) {
+            origin.getTickets().also { tickets ->
+                ticket.insertTickets(tickets.map(::TicketStored))
+                ticket.insertReservations(tickets.flatMap { ticket ->
+                    ticket.venue.reservations.map {
+                        TicketStored.Reservation(ticket.id, it.row, it.seat)
+                    }
+                })
             }
         }
     }
