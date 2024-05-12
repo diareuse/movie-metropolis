@@ -13,7 +13,7 @@ import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
 import movie.metropolis.app.model.ProjectionType
-import movie.metropolis.app.model.adapter.MovieDetailViewFromFeature
+import movie.metropolis.app.model.adapter.MovieDetailViewFromMovie
 import java.util.Date
 import java.util.Locale
 import kotlin.math.max
@@ -45,7 +45,7 @@ class TicketFacadeMovieCinemaCity(
     }
 
     override val poster: Flow<String?> = movie.map {
-        MovieDetailViewFromFeature(it).backdrop?.url
+        MovieDetailViewFromMovie(it).backdrop.url
     }
     override val name: Flow<String> = movie.map { it.name.localized }
     override val filters = _filters.activate(activeLanguages, activeTypes)

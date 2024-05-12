@@ -14,7 +14,7 @@ data class TimeViewCinemaFromFeature(
     private val showings: Iterable<Occurrence>
 ) : TimeView.Cinema {
     override val cinema: CinemaView
-        get() = CinemaViewFromFeature(model)
+        get() = CinemaViewFromCinema(model)
     override val times: Map<ShowingTag, List<SpecificTimeView>>
         get() = showings.groupBy {
             ShowingTag(

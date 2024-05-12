@@ -11,7 +11,7 @@ data class CinemaBookingViewFromFeature(
     private val booking: Iterable<Occurrence>
 ) : CinemaBookingView {
     override val cinema: CinemaView
-        get() = CinemaViewFromFeature(location)
+        get() = CinemaViewFromCinema(location)
     override val availability: Map<AvailabilityView.Type, List<AvailabilityView>>
         get() = booking.groupBy(::LanguageAndTypeFromFeature)
             .mapValues { (_, values) -> values.map(::AvailabilityFromFeature) }

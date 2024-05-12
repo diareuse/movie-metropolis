@@ -9,8 +9,8 @@ import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.ListingView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.VideoView
-import movie.metropolis.app.presentation.booking.ImageViewFromMovie
-import movie.metropolis.app.presentation.booking.VideoViewFromMovie
+import movie.metropolis.app.model.adapter.ImageViewFromMovie
+import movie.metropolis.app.model.adapter.VideoViewFromMovie
 
 class ListingFacadeCinemaCity(
     private val future: Boolean,

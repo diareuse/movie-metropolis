@@ -14,8 +14,8 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.adapter.CinemaBookingViewFilter
-import movie.metropolis.app.presentation.booking.CinemaViewFromCinema
-import movie.metropolis.app.presentation.booking.MovieDetailViewFromMovie
+import movie.metropolis.app.model.adapter.CinemaViewFromCinema
+import movie.metropolis.app.model.adapter.MovieDetailViewFromMovie
 import movie.metropolis.app.presentation.cinema.ShowingFilterable
 import java.util.Date
 
