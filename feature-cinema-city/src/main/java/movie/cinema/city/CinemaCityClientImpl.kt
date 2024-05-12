@@ -1,7 +1,6 @@
 package movie.cinema.city
 
 import io.ktor.client.HttpClient
-import io.ktor.client.HttpClientConfig
 import io.ktor.client.call.body
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
@@ -48,7 +47,6 @@ import movie.cinema.city.model.ResultsResponse
 import movie.cinema.city.model.ShowingType
 import movie.cinema.city.model.TokenRequest
 import movie.cinema.city.model.TokenResponse
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -61,8 +59,16 @@ internal class CinemaCityClientImpl(
 ) : CinemaCityClient {
 
     private val client by lazy {
-        httpClient {
+        HttpClient {
+            install(ContentNegotiation) {
+                json(Json {
+                    ignoreUnknownKeys = true
+                    explicitNulls = false
+                })
+            }
+            install(HttpCache)
             defaultRequest {
+                contentType(ContentType.Application.Json)
                 url(provider.domain + "/")
             }
             Logging {
@@ -97,7 +103,7 @@ internal class CinemaCityClientImpl(
         }
     }
 
-    private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+    private val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     override suspend fun register(request: RegistrationRequest): CustomerResponse {
         return this.client.post {
@@ -232,29 +238,4 @@ internal class CinemaCityClientImpl(
         }
     }
 
-    // ---
-
-    private fun httpClient(builder: HttpClientConfig<*>.() -> Unit) = HttpClient {
-        install(ContentNegotiation) {
-            json(Json {
-                ignoreUnknownKeys = true
-                explicitNulls = false
-            })
-        }
-        install(HttpCache)
-        defaultRequest {
-            contentType(ContentType.Application.Json)
-        }
-        builder()
-    }
-
-}
-
-class HttpException(
-    val status: Int,
-    val url: String,
-    val body: String
-) : IOException() {
-    override val message: String
-        get() = "$status $url\n$body"
 }
