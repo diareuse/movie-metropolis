@@ -22,7 +22,6 @@ import movie.rating.MetadataProviderInvalidateRating
 import movie.rating.MetadataProviderStoring
 import movie.rating.MetadataProviderTMDB
 import movie.rating.database.RatingDao
-import movie.rating.internal.LazyHttpClient
 import javax.inject.Provider
 import javax.inject.Singleton
 
@@ -33,7 +32,7 @@ internal class RatingProviderModule {
     @Provides
     @Reusable
     fun rating(
-        @Rating client: LazyHttpClient,
+        @Rating client: Provider<HttpClient>,
         dao: RatingDao
     ): MetadataProvider {
         var out: MetadataProvider
@@ -55,16 +54,14 @@ internal class RatingProviderModule {
     @Singleton
     @Provides
     @Rating
-    internal fun client(engine: Provider<HttpClientEngine>): LazyHttpClient = LazyHttpClient {
-        HttpClient(engine.get()) {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-            defaultRequest {
-                bearerAuth(BuildConfig.TMDBToken)
-            }
+    internal fun client(engine: HttpClientEngine): HttpClient = HttpClient(engine) {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+            })
+        }
+        defaultRequest {
+            bearerAuth(BuildConfig.TMDBToken)
         }
     }
 

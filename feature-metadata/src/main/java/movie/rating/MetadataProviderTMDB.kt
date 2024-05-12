@@ -3,16 +3,16 @@ package movie.rating
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import movie.rating.internal.LazyHttpClient
 import movie.rating.model.ListResponse
 import movie.rating.model.SearchData
+import javax.inject.Provider
 
 class MetadataProviderTMDB(
-    private val client: LazyHttpClient
+    private val client: Provider<HttpClient>
 ) : MetadataProvider {
 
     override suspend fun get(descriptor: MovieDescriptor): MovieMetadata? {
-        val data = client.getOrCreate().search(descriptor) ?: return null
+        val data = client.get().search(descriptor) ?: return null
         return MovieMetadata(
             id = data.id,
             rating = (data.rating * 10).toInt().toByte(),

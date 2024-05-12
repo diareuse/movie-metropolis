@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
 import movie.rating.ActorProvider
 import movie.rating.ActorProviderDatabase
 import movie.rating.ActorProviderFold
@@ -13,7 +14,7 @@ import movie.rating.ActorProviderTMDB
 import movie.rating.database.ActorDao
 import movie.rating.database.ActorReferenceConnectionDao
 import movie.rating.database.ActorReferenceDao
-import movie.rating.internal.LazyHttpClient
+import javax.inject.Provider
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -22,7 +23,7 @@ internal class ActorProviderModule {
     @Provides
     @Reusable
     fun actor(
-        @Rating client: LazyHttpClient,
+        @Rating client: Provider<HttpClient>,
         actor: ActorDao,
         connection: ActorReferenceConnectionDao,
         reference: ActorReferenceDao

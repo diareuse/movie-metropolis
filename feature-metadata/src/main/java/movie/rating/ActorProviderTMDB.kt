@@ -3,19 +3,19 @@ package movie.rating
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import movie.rating.internal.LazyHttpClient
 import movie.rating.model.ActorReference
 import movie.rating.model.ActorResponse
 import movie.rating.model.ListResponse
 import java.util.Date
 import java.util.Locale
+import javax.inject.Provider
 
 internal class ActorProviderTMDB(
-    private val client: LazyHttpClient
+    private val client: Provider<HttpClient>
 ) : ActorProvider {
 
     override suspend fun get(query: String): Actor {
-        val actor = client.getOrCreate().search(query) ?: error("Couldn't find '$query'")
+        val actor = client.get().search(query) ?: error("Couldn't find '$query'")
         return Actor(
             id = actor.id,
             name = actor.name,
