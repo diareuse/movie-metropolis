@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
@@ -36,7 +35,6 @@ class ListingViewModel @Inject constructor(
 
     private val items = facade.get()
         .throttleWithTimeout(100.milliseconds)
-        .catch { it.printStackTrace() }
         .shareIn(viewModelScope, SharingStarted.WhileSubscribed(), 1)
 
     val promotions = items
