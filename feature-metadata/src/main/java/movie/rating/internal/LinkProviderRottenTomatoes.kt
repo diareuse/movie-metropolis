@@ -1,20 +1,22 @@
 package movie.rating.internal
 
+import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
 import movie.rating.MovieDescriptor
 import movie.rating.ResultNotFoundException
 import movie.rating.internal.Correlation.Companion.correlate
+import javax.inject.Provider
 
 internal class LinkProviderRottenTomatoes(
-    private val client: LazyHttpClient
+    private val client: Provider<HttpClient>
 ) : LinkProvider {
 
     override suspend fun getLink(descriptor: MovieDescriptor): String {
         val (name, year) = descriptor
         val query = name.encodeURLParameter()
-        val response = client.getOrCreate()
+        val response = client.get()
             .get("https://www.rottentomatoes.com/search?search=$query")
         val body = response.bodyAsText()
         for (result in results.findAll(body)) {
