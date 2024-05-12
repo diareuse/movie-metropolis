@@ -4,7 +4,7 @@ import android.net.Uri
 import movie.cinema.city.Cinema
 import movie.metropolis.app.model.CinemaView
 
-data class CinemaViewFromFeature(
+data class CinemaViewFromCinema(
     private val cinema: Cinema
 ) : CinemaView {
     override val id: String

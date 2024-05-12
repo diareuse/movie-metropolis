@@ -10,8 +10,8 @@ import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
+import movie.metropolis.app.model.adapter.CinemaViewFromCinema
 import movie.metropolis.app.model.adapter.MovieBookingViewFilter
-import movie.metropolis.app.presentation.booking.CinemaViewFromCinema
 import java.util.Date
 
 class CinemaFacadeCinemaCity(

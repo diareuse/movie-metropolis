@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import movie.cinema.city.CinemaCity
 import movie.metropolis.app.model.CinemaView
-import movie.metropolis.app.presentation.booking.CinemaViewFromCinema
+import movie.metropolis.app.model.adapter.CinemaViewFromCinema
 
 class CinemasFacadeCinemaCity(
     private val cinemaCity: CinemaCity

@@ -34,7 +34,7 @@ data class MovieViewFromReference(
     override val rating: String?
         get() = null
     override val poster: ImageView
-        get() = ref.images.first().let(::ImageViewFromFeature)
+        get() = ref.images.first().let(::ImageViewFromMovie)
     override val posterLarge: ImageView
         get() = poster
     override val video: VideoView?

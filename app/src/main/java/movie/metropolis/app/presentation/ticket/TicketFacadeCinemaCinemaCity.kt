@@ -13,7 +13,7 @@ import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
 import movie.metropolis.app.model.ProjectionType
-import movie.metropolis.app.model.adapter.CinemaViewFromFeature
+import movie.metropolis.app.model.adapter.CinemaViewFromCinema
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration.Companion.days
@@ -43,7 +43,7 @@ class TicketFacadeCinemaCinemaCity(
         }
     }
     override val poster: Flow<String?> = cinema.map { it.image.toString() }
-    override val name: Flow<String> = cinema.map { CinemaViewFromFeature(it).name }
+    override val name: Flow<String> = cinema.map { CinemaViewFromCinema(it).name }
     override val filters = _filters.activate(activeLanguages, activeTypes)
 
     override fun toggle(language: FiltersView.Language) {

@@ -10,12 +10,12 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-data class MovieDetailViewFromFeature(
+data class MovieDetailViewFromMovie(
     private val movie: Movie
 ) : MovieDetailView {
 
     private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-    private val dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
+    private val dateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 
     override val id: String
         get() = movie.id
@@ -37,22 +37,13 @@ data class MovieDetailViewFromFeature(
         get() = movie.synopsis
     override val availableFrom: String
         get() = dateFormat.format(movie.screeningFrom)
-    override val poster: ImageView?
-        get() = movie.images.firstOrNull()?.let(::ImageViewFromFeature)
-    override val backdrop: ImageView?
-        get() = poster
+    override val poster: ImageView
+        get() = movie.images.maxBy { it.height * it.width }.let(::ImageViewFromMovie)
+    override val backdrop: ImageView
+        get() = movie.images.maxBy { it.height * it.width }.let(::ImageViewFromMovie)
     override val trailer: VideoView?
-        get() = movie.videos.firstOrNull()?.let(Any::toString)?.let(::VideoViewFromFeature)
+        get() = movie.videos.firstOrNull()?.let(::VideoViewFromMovie)
     override val rating: String?
-        get() = null//if (movie.rating == 0.toByte()) null else "%d%%".format(movie.rating)
-
-    data class PersonViewFromName(
-        override val name: String
-    ) : PersonView {
-        override val url = ""
-        override val popularity: Int = -1
-        override val image: String = ""
-        override val starredInMovies: Int = -1
-    }
+        get() = null
 
 }
