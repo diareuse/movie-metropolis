@@ -3,6 +3,7 @@ plugins {
     id 'movie.metropolis.di'
     id 'movie.metropolis.secrets'
     id 'org.jetbrains.kotlin.plugin.serialization'
+    id 'androidx.room'
 }
 
 android {
@@ -10,6 +11,10 @@ android {
     buildFeatures {
         buildConfig true
     }
+}
+
+room {
+    schemaDirectory "$projectDir/schemas"
 }
 
 dependencies {
@@ -20,6 +25,9 @@ dependencies {
     implementation libs.ktor.client.auth
     implementation libs.ktor.client.logging
     implementation libs.ktor.serialization.kotlinx.json
+    implementation libs.androidx.room.ktx
+
+    ksp libs.androidx.room.compiler
 
     testImplementation libs.ktor.client.mock
 
