@@ -60,36 +60,38 @@ internal class CinemaCityClientImpl(
     private val tokenStore: TokenStore
 ) : CinemaCityClient {
 
-    private val client = httpClient {
-        defaultRequest {
-            url(provider.domain + "/")
-        }
-        Logging {
-            level = LogLevel.ALL
-            logger = object : Logger {
-                override fun log(message: String) {
-                    println(message)
+    private val client by lazy {
+        httpClient {
+            defaultRequest {
+                url(provider.domain + "/")
+            }
+            Logging {
+                level = LogLevel.ALL
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        println(message)
+                    }
                 }
             }
-        }
-        install(Auth) {
-            bearer {
-                sendWithoutRequest {
-                    val path = it.url.encodedPath
-                    var matching = path.contains("group-customer-service")
-                    matching = matching and !path.contains("oauth/token")
-                    matching
-                }
-                loadTokens { BearerTokens(tokenStore.token, tokenStore.refreshToken) }
-                refreshTokens {
-                    val t = oldTokens?.takeUnless {
-                        it.accessToken.isBlank() || it.refreshToken.isBlank()
+            install(Auth) {
+                bearer {
+                    sendWithoutRequest {
+                        val path = it.url.encodedPath
+                        var matching = path.contains("group-customer-service")
+                        matching = matching and !path.contains("oauth/token")
+                        matching
                     }
-                    val request = when (t) {
-                        null -> account.get().run { TokenRequest.Login(username, password) }
-                        else -> TokenRequest.Refresh(t.refreshToken, auth.captcha)
+                    loadTokens { BearerTokens(tokenStore.token, tokenStore.refreshToken) }
+                    refreshTokens {
+                        val t = oldTokens?.takeUnless {
+                            it.accessToken.isBlank() || it.refreshToken.isBlank()
+                        }
+                        val request = when (t) {
+                            null -> account.get().run { TokenRequest.Login(username, password) }
+                            else -> TokenRequest.Refresh(t.refreshToken, auth.captcha)
+                        }
+                        client.getToken(request)
                     }
-                    client.getToken(request)
                 }
             }
         }
