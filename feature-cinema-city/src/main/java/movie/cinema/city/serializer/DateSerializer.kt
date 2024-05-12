@@ -6,6 +6,6 @@ import java.util.Locale
 internal class DateSerializer : KDateSerializer() {
 
     override val type = "date"
-    override val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.ROOT)
+    override val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
 }

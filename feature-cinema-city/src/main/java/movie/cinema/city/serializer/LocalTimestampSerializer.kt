@@ -7,7 +7,7 @@ import java.util.TimeZone
 internal class LocalTimestampSerializer : KDateSerializer() {
 
     override val type = "timestamp"
-    override val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.ROOT).apply {
+    override val formatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("Europe/Prague")
     }
 
