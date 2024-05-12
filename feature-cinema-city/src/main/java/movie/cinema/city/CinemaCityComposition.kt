@@ -15,7 +15,7 @@ import movie.cinema.city.model.RegistrationRequest
 import movie.cinema.city.model.ShowingType
 import java.util.Date
 
-internal class CinemaCityComposition(
+internal open class CinemaCityComposition(
     private val client: CinemaCityClient
 ) : CinemaCity {
 
@@ -106,10 +106,10 @@ internal class CinemaCityComposition(
     private inner class Events : CinemaCity.Events {
         override suspend fun getEvents(cinema: Cinema, date: Date): Map<Movie, List<Occurrence>> {
             val response = client.getEventsInCinema(cinema.id, date)
-            val events = response.events
+            val occurrences = response.events
             val movies = response.movies
             return movies.parallelMap { m ->
-                getEvent(m.id) to events.asSequence()
+                events.getEvent(m.id) to occurrences.asSequence()
                     .filter { it.movieId == m.id }
                     .filterNot { it.soldOut }
                     .mapTo(mutableListOf()) { OccurrenceFromResponse(it, cinema) }
@@ -122,7 +122,7 @@ internal class CinemaCityComposition(
                 else -> ShowingType.Current
             }
             return client.getMoviesByType(type).parallelMap {
-                getEvent(it.id.key)
+                events.getEvent(it.id.key)
             }
         }
 
