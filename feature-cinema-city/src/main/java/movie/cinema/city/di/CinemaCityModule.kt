@@ -40,7 +40,7 @@ class CinemaCityModule {
         client = CinemaCityClientImpl(CinemaCityAuth, endpoint, credentials, token)
         client = CinemaCityClientCaching(client)
         var out: CinemaCity
-        out = CinemaCityStorage(client, database.movie(), database.tickets())
+        out = CinemaCityStorage(client, database.movie(), database.tickets(), database.cinemas())
         out = CinemaCityThreads(out)
         return out
     }

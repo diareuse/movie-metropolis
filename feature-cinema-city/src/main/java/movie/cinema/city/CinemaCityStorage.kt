@@ -6,6 +6,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import movie.cinema.city.adapter.MovieFromDatabase
 import movie.cinema.city.adapter.TicketFromDatabase
+import movie.cinema.city.persistence.CinemaDao
+import movie.cinema.city.persistence.CinemaFromDatabase
+import movie.cinema.city.persistence.CinemaStored
 import movie.cinema.city.persistence.MovieDao
 import movie.cinema.city.persistence.MovieStored
 import movie.cinema.city.persistence.TicketDao
@@ -14,13 +17,16 @@ import movie.cinema.city.persistence.TicketStored
 internal class CinemaCityStorage(
     client: CinemaCityClient,
     private val movie: MovieDao,
-    private val ticket: TicketDao
+    private val ticket: TicketDao,
+    private val cinema: CinemaDao
 ) : CinemaCityComposition(client) {
 
     override val events: CinemaCity.Events
         get() = Events(super.events)
     override val customers: CinemaCity.Customers
         get() = Customers(super.customers)
+    override val cinemas: CinemaCity.Cinemas
+        get() = Cinemas(super.cinemas)
 
     private inner class Events(
         private val origin: CinemaCity.Events
@@ -89,6 +95,18 @@ internal class CinemaCityStorage(
                         TicketStored.Reservation(ticket.id, it.row, it.seat)
                     }
                 })
+            }
+        }
+    }
+
+    private inner class Cinemas(
+        private val origin: CinemaCity.Cinemas
+    ) : CinemaCity.Cinemas by origin {
+        override suspend fun getCinemas(): List<Cinema> = try {
+            cinema.select().ifEmpty { error("empty") }.map(::CinemaFromDatabase)
+        } catch (ignore: Throwable) {
+            origin.getCinemas().also { cinemas ->
+                cinema.insert(cinemas.map(::CinemaStored))
             }
         }
     }

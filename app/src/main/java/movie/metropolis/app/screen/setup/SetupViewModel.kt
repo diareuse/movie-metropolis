@@ -7,7 +7,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.RegionView
@@ -26,7 +28,11 @@ class SetupViewModel @Inject constructor(
     private val login: LoginFacade
 ) : ViewModel() {
 
-    val requiresSetup = facade.requiresSetupFlow
+    val requiresSetup = facade.requiresSetupFlow.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        facade.requiresSetup
+    )
     val regions = facade.regionsFlow
         .map { it.getOrNull().orEmpty().toImmutableList() }
         .retainStateIn(viewModelScope, persistentListOf())

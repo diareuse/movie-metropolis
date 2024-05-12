@@ -8,6 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import movie.metropolis.app.screen.setup.SetupViewModel
 
@@ -18,7 +19,8 @@ fun Navigation(
     val setupViewModel = hiltViewModel<SetupViewModel>()
     LaunchedEffect(setupViewModel) {
         setupViewModel.requiresSetup.collect {
-            if (it) navController.navigate(Route.Setup()) {
+            val route = if (it) Route.Setup() else Route.Home()
+            navController.navigate(route) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     inclusive = true
                 }
@@ -28,12 +30,13 @@ fun Navigation(
     NavHost(
         modifier = Modifier.fillMaxSize(),
         navController = navController,
-        startDestination = Route.Home.route,
+        startDestination = Route.None.route,
         enterTransition = { slideInHorizontally { it } },
         exitTransition = { fadeOut() + slideOutHorizontally() },
         popEnterTransition = { fadeIn() + slideInHorizontally() },
         popExitTransition = { slideOutHorizontally { it } }
     ) {
+        composable("null") {}
         setup(navController)
         home(navController)
         settings(navController)

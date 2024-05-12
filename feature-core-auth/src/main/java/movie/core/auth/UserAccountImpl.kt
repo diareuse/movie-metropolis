@@ -42,15 +42,19 @@ internal class UserAccountImpl(
         }
 
     override var token: String
-        get() = manager.getPassword(account).orEmpty()
+        get() {
+            return manager.getPassword(account ?: return "").orEmpty()
+        }
         set(value) {
-            manager.setPassword(account, value)
+            manager.setPassword(account ?: return, value)
         }
 
     override var refreshToken: String
-        get() = manager.getUserData(account, "refresh").orEmpty()
+        get() {
+            return manager.getUserData(account ?: return "null", "refresh").orEmpty()
+        }
         set(value) {
-            manager.setUserData(account, "refresh", value)
+            manager.setUserData(account ?: return, "refresh", value)
         }
 
 }
