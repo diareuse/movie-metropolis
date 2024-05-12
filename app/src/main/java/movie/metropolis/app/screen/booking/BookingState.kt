@@ -1,7 +1,6 @@
 package movie.metropolis.app.screen.booking
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import movie.metropolis.app.model.TimeView
@@ -24,7 +23,6 @@ sealed class BookingState {
 
         fun Flow<List<TimeView>>.asBookingState() =
             map { if (it.all { it.times.isEmpty() }) Empty else Value(it) }
-                .catch { emit(error(it)) }
                 .onStart { emit(loading()) }
     }
 }

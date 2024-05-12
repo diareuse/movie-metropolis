@@ -10,7 +10,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import movie.metropolis.app.model.BookingView
@@ -36,7 +35,6 @@ class TicketViewModel @Inject constructor(
     @Suppress("USELESS_CAST")
     val tickets = facade.bookings
         .map { TicketContentState.Success(it.toImmutableList()) as TicketContentState }
-        .catch { emit(TicketContentState.Failure(it)) }
         .retainStateIn(viewModelScope, TicketContentState.Loading)
 
     fun refresh() {

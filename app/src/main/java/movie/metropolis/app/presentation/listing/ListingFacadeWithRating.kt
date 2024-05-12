@@ -2,7 +2,6 @@ package movie.metropolis.app.presentation.listing
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -26,7 +25,6 @@ class ListingFacadeWithRating(
     override fun get() = origin.get().flatMapLatest {
         flow {
             withRating(it.items)
-                .catch { _ -> emit(it.items) }
                 .collect { items ->
                     emit(it.copy(items = items))
                 }
