@@ -23,6 +23,7 @@ import movie.rating.MetadataProviderStoring
 import movie.rating.MetadataProviderTMDB
 import movie.rating.database.RatingDao
 import movie.rating.internal.LazyHttpClient
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Module
@@ -54,8 +55,8 @@ internal class RatingProviderModule {
     @Singleton
     @Provides
     @Rating
-    internal fun client(engine: HttpClientEngine = CIO.create()): LazyHttpClient = LazyHttpClient {
-        HttpClient(engine) {
+    internal fun client(engine: Provider<HttpClientEngine>): LazyHttpClient = LazyHttpClient {
+        HttpClient(engine.get()) {
             install(ContentNegotiation) {
                 json(Json {
                     ignoreUnknownKeys = true
