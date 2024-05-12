@@ -204,8 +204,16 @@ internal class CinemaCityClientImpl(
                 append("reCaptcha", auth.captcha)
         }
         val response = submitForm(params) {
+            headers.remove("Authorization")
             url("${provider.tld}/group-customer-service/oauth/token")
             basicAuth(auth.user, auth.pass)
+        }
+        if (!response.status.isSuccess() && request is TokenRequest.Refresh) {
+            // how retarded must you be to provide refresh token which expires? spec clearly says
+            // that very presence of the refresh token guarantees getting new token, not getting
+            // a fucking 401 when trying to using it after access token expires. what's the fucking
+            // point of the refresh token then…?
+            return getToken(account.get().run { TokenRequest.Login(username, password) })
         }
         val token = response.throwOnError().body<TokenResponse>()
         return BearerTokens(token.accessToken, token.refreshToken).also {
