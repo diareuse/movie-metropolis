@@ -12,10 +12,13 @@ import androidx.room.TypeConverters
         MovieStored.Director::class,
         MovieStored.Genre::class,
         MovieStored.Video::class,
-        MovieStored.Image::class
+        MovieStored.Image::class,
+        TicketStored::class,
+        TicketStored.Reservation::class,
     ],
     version = 1
 )
 internal abstract class MovieStorage : RoomDatabase() {
     abstract fun movie(): MovieDao
+    abstract fun tickets(): TicketDao
 }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "52edcfa937a5e6fa2474eca619b81f2d",
+    "identityHash": "ffe5c4a7ea29c00e66b10fef93f49413",
     "entities": [
       {
         "tableName": "movies",
@@ -80,7 +80,7 @@
       },
       {
         "tableName": "movies-cast",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`movie`, `name`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`movie`, `name`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "movie",
@@ -103,11 +103,23 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "movies",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "movie"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "movies-director",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`movie`, `name`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `name` TEXT NOT NULL, PRIMARY KEY(`movie`, `name`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "movie",
@@ -130,11 +142,23 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "movies",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "movie"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "movies-genre",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `genre` TEXT NOT NULL, PRIMARY KEY(`movie`, `genre`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `genre` TEXT NOT NULL, PRIMARY KEY(`movie`, `genre`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "movie",
@@ -157,11 +181,23 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "movies",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "movie"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "movies-video",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`movie`, `url`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`movie`, `url`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "movie",
@@ -184,11 +220,23 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "movies",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "movie"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       },
       {
         "tableName": "movies-image",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `width` INTEGER NOT NULL, `height` INTEGER NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`movie`, `url`, `width`, `height`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`movie` TEXT NOT NULL, `width` INTEGER NOT NULL, `height` INTEGER NOT NULL, `url` TEXT NOT NULL, PRIMARY KEY(`movie`, `url`, `width`, `height`), FOREIGN KEY(`movie`) REFERENCES `movies`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "movie",
@@ -225,13 +273,127 @@
           ]
         },
         "indices": [],
+        "foreignKeys": [
+          {
+            "table": "movies",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "movie"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "tickets",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `startsAt` INTEGER NOT NULL, `paidAt` INTEGER, `movie` TEXT NOT NULL, `cinema` TEXT NOT NULL, `venue` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startsAt",
+            "columnName": "startsAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paidAt",
+            "columnName": "paidAt",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "movie",
+            "columnName": "movie",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cinema",
+            "columnName": "cinema",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "venue",
+            "columnName": "venue",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "tickets-reservation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ticket` TEXT NOT NULL, `row` TEXT NOT NULL, `seat` TEXT NOT NULL, PRIMARY KEY(`ticket`, `row`, `seat`), FOREIGN KEY(`ticket`) REFERENCES `tickets`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "ticket",
+            "columnName": "ticket",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "row",
+            "columnName": "row",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "seat",
+            "columnName": "seat",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "ticket",
+            "row",
+            "seat"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "tickets",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ticket"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '52edcfa937a5e6fa2474eca619b81f2d')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ffe5c4a7ea29c00e66b10fef93f49413')"
     ]
   }
 }

@@ -2,6 +2,7 @@ package movie.cinema.city.persistence
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import movie.cinema.city.Movie
 import java.net.URL
@@ -37,49 +38,54 @@ internal data class MovieStored(
 
     @Entity(
         tableName = "movies-cast",
-        primaryKeys = ["movie", "name"]
+        primaryKeys = ["movie", "name"],
+        foreignKeys = [ForeignKey(MovieStored::class, ["id"], ["movie"], ForeignKey.CASCADE)]
     )
     data class Cast(
-        val movie: String,
-        val name: String
+        @ColumnInfo("movie") val movie: String,
+        @ColumnInfo("name") val name: String
     )
 
     @Entity(
         tableName = "movies-director",
-        primaryKeys = ["movie", "name"]
+        primaryKeys = ["movie", "name"],
+        foreignKeys = [ForeignKey(MovieStored::class, ["id"], ["movie"], ForeignKey.CASCADE)]
     )
     data class Director(
-        val movie: String,
-        val name: String
+        @ColumnInfo("movie") val movie: String,
+        @ColumnInfo("name") val name: String
     )
 
     @Entity(
         tableName = "movies-genre",
-        primaryKeys = ["movie", "genre"]
+        primaryKeys = ["movie", "genre"],
+        foreignKeys = [ForeignKey(MovieStored::class, ["id"], ["movie"], ForeignKey.CASCADE)]
     )
     data class Genre(
-        val movie: String,
-        val genre: String
+        @ColumnInfo("movie") val movie: String,
+        @ColumnInfo("genre") val genre: String
     )
 
     @Entity(
         tableName = "movies-video",
-        primaryKeys = ["movie", "url"]
+        primaryKeys = ["movie", "url"],
+        foreignKeys = [ForeignKey(MovieStored::class, ["id"], ["movie"], ForeignKey.CASCADE)]
     )
     data class Video(
-        val movie: String,
-        val url: URL
+        @ColumnInfo("movie") val movie: String,
+        @ColumnInfo("url") val url: URL
     )
 
     @Entity(
         tableName = "movies-image",
-        primaryKeys = ["movie", "url", "width", "height"]
+        primaryKeys = ["movie", "url", "width", "height"],
+        foreignKeys = [ForeignKey(MovieStored::class, ["id"], ["movie"], ForeignKey.CASCADE)]
     )
     data class Image(
-        val movie: String,
-        val width: Int,
-        val height: Int,
-        val url: URL
+        @ColumnInfo("movie") val movie: String,
+        @ColumnInfo("width") val width: Int,
+        @ColumnInfo("height") val height: Int,
+        @ColumnInfo("url") val url: URL
     )
 
 }
