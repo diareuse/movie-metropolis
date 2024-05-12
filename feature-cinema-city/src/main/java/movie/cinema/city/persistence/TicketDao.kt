@@ -7,10 +7,10 @@ import androidx.room.Query
 
 @Dao
 internal interface TicketDao {
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTickets(item: List<TicketStored>)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertReservations(items: List<TicketStored.Reservation>)
 
     @Query("select * from tickets order by startsAt desc")

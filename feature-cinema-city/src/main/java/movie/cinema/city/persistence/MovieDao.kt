@@ -7,22 +7,22 @@ import androidx.room.Query
 
 @Dao
 internal interface MovieDao {
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: MovieStored)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCast(items: List<MovieStored.Cast>)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertDirector(items: List<MovieStored.Director>)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertGenre(items: List<MovieStored.Genre>)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertImage(items: List<MovieStored.Image>)
 
-    @Insert(onConflict = OnConflictStrategy.NONE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertVideo(items: List<MovieStored.Video>)
 
 
