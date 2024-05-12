@@ -27,6 +27,8 @@ sealed class Route(
         navDeepLink { uriPattern = "$InternalUri/$route" }
     )
 
+    data object None : Route("null")
+
     data object Setup : Route("setup?startWith={startWith}") {
         operator fun invoke(startWith: SetupState = SetupState.Initial) =
             route.replace("{startWith}", startWith.name)

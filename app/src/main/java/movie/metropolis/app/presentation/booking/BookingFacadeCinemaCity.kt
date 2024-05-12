@@ -1,6 +1,7 @@
 package movie.metropolis.app.presentation.booking
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import movie.cinema.city.CinemaCity
 import movie.metropolis.app.model.BookingView
@@ -13,7 +14,7 @@ class BookingFacadeCinemaCity(
 
     override val bookings: Flow<List<BookingView>> = flow {
         emit(cinemaCity.customers.getTickets().map(::BookingViewFromTicket))
-    }
+    }.catch { it.printStackTrace() }
 
     override suspend fun getShareImage(view: BookingView): Image {
         TODO("Not yet implemented")
