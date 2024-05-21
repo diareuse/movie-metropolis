@@ -29,8 +29,6 @@ data class MovieViewFromReference(
         get() = emptyList()
     override val countryOfOrigin: String
         get() = ""
-    override val favorite: Boolean
-        get() = false
     override val rating: String?
         get() = null
     override val poster: ImageView

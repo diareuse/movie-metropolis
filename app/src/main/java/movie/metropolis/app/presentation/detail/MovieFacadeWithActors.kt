@@ -8,6 +8,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.PersonView
+import movie.metropolis.app.util.retryOnNetworkError
 import movie.rating.Actor
 import movie.rating.ActorProvider
 
@@ -42,7 +43,7 @@ class MovieFacadeWithActors(
                 }
                 send(it.copy(cast = out))
             }
-        }
+        }.retryOnNetworkError()
     }
 
     class ActorProviderCaching(

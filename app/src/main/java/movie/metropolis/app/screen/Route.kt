@@ -172,8 +172,4 @@ sealed class Route(
         operator fun invoke() = route
     }
 
-    data object Favorite : Route("movies/favorites") {
-        operator fun invoke() = route
-    }
-
 }

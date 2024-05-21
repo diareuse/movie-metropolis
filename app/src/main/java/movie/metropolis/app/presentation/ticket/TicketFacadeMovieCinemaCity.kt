@@ -14,6 +14,7 @@ import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.model.adapter.MovieDetailViewFromMovie
+import movie.metropolis.app.util.retryOnNetworkError
 import java.util.Date
 import java.util.Locale
 import kotlin.math.max
@@ -28,6 +29,7 @@ class TicketFacadeMovieCinemaCity(
     private val activeTypes = MutableStateFlow(setOf<ProjectionType>())
     private val _filters = MutableStateFlow(DataFiltersView())
     private val movie = flow { emit(cinema.events.getEvent(id)) }
+        .retryOnNetworkError()
         .shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 
     override val times: Flow<List<LazyTimeView>> = movie.map { detail ->

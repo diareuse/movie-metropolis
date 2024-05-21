@@ -1,17 +1,15 @@
 package movie.metropolis.app.presentation.profile
 
-import movie.cinema.city.Cinema
 import movie.cinema.city.CinemaCity
-import movie.cinema.city.Customer
 import movie.cinema.city.CustomerModification
 import movie.core.auth.UserAccount
 import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
-import java.util.Date
+import movie.metropolis.app.model.adapter.CinemaSimpleViewFromCinema
+import movie.metropolis.app.model.adapter.MembershipViewFromCustomer
+import movie.metropolis.app.model.adapter.UserViewFromCustomer
 import java.util.Locale
-import kotlin.time.Duration.Companion.days
-import kotlin.time.DurationUnit
 
 class ProfileFacadeCinemaCity(
     private val cinemaCity: CinemaCity,
@@ -55,58 +53,5 @@ class ProfileFacadeCinemaCity(
             user.password = passwordNew
         }
     }
-
-}
-
-data class UserViewFromCustomer(
-    private val customer: Customer,
-) : UserView {
-    override val firstName: String
-        get() = customer.name.first
-    override val lastName: String
-        get() = customer.name.last
-    override val email: String
-        get() = customer.email
-    override val phone: String
-        get() = customer.phone
-    override val favorite: CinemaSimpleView?
-        get() = customer.cinema?.let(::CinemaSimpleViewFromCinema)
-    override val consent: UserView.ConsentView = Consent()
-
-    private inner class Consent : UserView.ConsentView {
-        override val marketing: Boolean
-            get() = customer.consent.marketing
-        override val premium: Boolean
-            get() = customer.consent.premium
-    }
-}
-
-data class MembershipViewFromCustomer(
-    private val membership: Customer.Membership
-) : MembershipView {
-    override val isExpired: Boolean
-        get() = membership.expiration.before(Date())
-    override val cardNumber: String
-        get() = membership.number
-    override val memberFrom: String
-        get() = membership.inception.toString()
-    override val memberUntil: String
-        get() = membership.expiration.toString()
-    override val daysRemaining: String
-        get() = (membership.expiration.time - Date().time).days.toString(DurationUnit.DAYS)
-    override val points: String
-        get() = membership.points.total.toString()
-}
-
-data class CinemaSimpleViewFromCinema(
-    val cinema: Cinema
-) : CinemaSimpleView {
-
-    override val id: String
-        get() = cinema.id
-    override val name: String
-        get() = cinema.name
-    override val city: String
-        get() = cinema.address.city
 
 }

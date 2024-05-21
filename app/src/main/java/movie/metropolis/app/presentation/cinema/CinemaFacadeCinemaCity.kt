@@ -4,14 +4,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import movie.cinema.city.CinemaCity
-import movie.cinema.city.Movie
-import movie.cinema.city.Occurrence
-import movie.metropolis.app.model.AvailabilityView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.Filter
 import movie.metropolis.app.model.MovieBookingView
 import movie.metropolis.app.model.adapter.CinemaViewFromCinema
 import movie.metropolis.app.model.adapter.MovieBookingViewFilter
+import movie.metropolis.app.model.adapter.MovieBookingViewFromEvents
+import movie.metropolis.app.util.retryOnNetworkError
 import java.util.Date
 
 class CinemaFacadeCinemaCity(
@@ -51,7 +50,7 @@ class CinemaFacadeCinemaCity(
                 }
                 .filterNot { it.availability.isEmpty() }
                 .toList()
-        }
+        }.retryOnNetworkError()
     }
 
     override fun toggle(filter: Filter) {
@@ -62,57 +61,4 @@ class CinemaFacadeCinemaCity(
 
     private suspend fun cinema() = cinemaCity.cinemas.getCinemas().first { it.id == id }
 
-}
-
-data class MovieBookingViewFromEvents(
-    private val _movie: Movie,
-    private val _occurrences: List<Occurrence>
-) : MovieBookingView {
-
-    override val movie: MovieBookingView.Movie = MovieImpl()
-    override val availability: Map<AvailabilityView.Type, List<AvailabilityView>>
-        get() = _occurrences.groupBy(
-            keySelector = {
-                Type(
-                    it.flags.map { it.tag },
-                    it.dubbing.toString() + "/" + (it.subtitles?.toString() ?: "-")
-                )
-            },
-            valueTransform = {
-                Availability(it)
-            }
-        )
-
-    private data class Availability(
-        private val occurrence: Occurrence
-    ) : AvailabilityView {
-        override val id: String
-            get() = occurrence.id
-        override val url: String
-            get() = occurrence.booking.toString()
-        override val startsAt: String
-            get() = occurrence.startsAt.toString()
-        override val isEnabled: Boolean
-            get() = Date().before(occurrence.startsAt)
-    }
-
-    private data class Type(
-        override val types: List<String>,
-        override val language: String
-    ) : AvailabilityView.Type
-
-    private inner class MovieImpl : MovieBookingView.Movie {
-        override val id: String
-            get() = _movie.id
-        override val name: String
-            get() = _movie.name.localized
-        override val releasedAt: String
-            get() = _movie.releasedAt.toString()
-        override val duration: String
-            get() = _movie.length?.toString().orEmpty()
-        override val poster: String
-            get() = _movie.images.maxBy { it.height * it.width }.url.toString()
-        override val video: String?
-            get() = _movie.videos.firstOrNull()?.toString()
-    }
 }
