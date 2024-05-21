@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.adapter.MovieDetailViewWithRating
+import movie.metropolis.app.util.retryOnNetworkError
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
 import movie.rating.MovieMetadata
@@ -30,7 +31,7 @@ class MovieFacadeRating(
             }
             metadata = rating
             emit(MovieDetailViewWithRating(it, rating))
-        }
+        }.retryOnNetworkError()
     }
 
 }

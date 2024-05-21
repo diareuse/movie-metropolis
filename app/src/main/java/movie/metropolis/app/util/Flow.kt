@@ -10,9 +10,11 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.retryWhen
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import movie.metropolis.app.presentation.Loadable
+import java.net.UnknownHostException
 import kotlin.time.Duration
 
 fun <T> Flow<T>.throttleWithTimeout(timeout: Duration) = channelFlow {
@@ -46,3 +48,14 @@ inline fun <T> Flow<Result<T>>.flatMapResult(crossinline body: suspend (value: T
     flatMapLatest { result ->
         result.fold({ body(it) }, { _ -> flowOf(result) })
     }
+
+fun <T> Flow<T>.retryOnNetworkError(
+    debounce: suspend (attempt: Long) -> Unit = { delay(it * 1000) }
+) = retryWhen { cause, attempt ->
+    if (cause is UnknownHostException) {
+        debounce(attempt)
+        true
+    } else {
+        false
+    }
+}

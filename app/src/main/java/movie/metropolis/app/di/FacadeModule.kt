@@ -19,12 +19,7 @@ import movie.metropolis.app.presentation.cinema.CinemasFacadeCinemaCity
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.presentation.detail.MovieFacadeCinemaCity
 import movie.metropolis.app.presentation.detail.MovieFacadeRating
-import movie.metropolis.app.presentation.detail.MovieFacadeReactive
 import movie.metropolis.app.presentation.detail.MovieFacadeWithActors
-import movie.metropolis.app.presentation.favorite.FavoriteFacade
-import movie.metropolis.app.presentation.favorite.FavoriteFacadeCinemaCity
-import movie.metropolis.app.presentation.favorite.FavoriteFacadeRating
-import movie.metropolis.app.presentation.favorite.FavoriteFacadeReactive
 import movie.metropolis.app.presentation.home.HomeFacade
 import movie.metropolis.app.presentation.home.HomeFacadeFromFeature
 import movie.metropolis.app.presentation.listing.ListingFacade
@@ -87,7 +82,6 @@ class FacadeModule {
         facade = MovieFacadeCinemaCity(it, cinemaCity)
         facade = MovieFacadeRating(facade, rating)
         facade = MovieFacadeWithActors(facade, actors)
-        facade = MovieFacadeReactive(facade)
         facade
     }
 
@@ -200,18 +194,6 @@ class FacadeModule {
                 out
             }
         }
-    }
-
-    @Provides
-    @Reusable
-    fun favorite(
-        rating: MetadataProvider
-    ): FavoriteFacade {
-        var out: FavoriteFacade
-        out = FavoriteFacadeCinemaCity()
-        out = FavoriteFacadeReactive(out)
-        out = FavoriteFacadeRating(out, rating)
-        return out
     }
 
 }

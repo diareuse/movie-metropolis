@@ -14,6 +14,7 @@ import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.model.adapter.CinemaViewFromCinema
+import movie.metropolis.app.util.retryOnNetworkError
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration.Companion.days
@@ -27,6 +28,7 @@ class TicketFacadeCinemaCinemaCity(
     private val activeTypes = MutableStateFlow(setOf<ProjectionType>())
     private val _filters = MutableStateFlow(DataFiltersView())
     private val cinema = flow { emit(cinemaCity.cinemas.getCinemas().first { it.id == id }) }
+        .retryOnNetworkError()
         .shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 
     override val times: Flow<List<LazyTimeView>> = cinema.map { cinema ->

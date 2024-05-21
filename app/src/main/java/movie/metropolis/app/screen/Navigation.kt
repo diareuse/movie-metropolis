@@ -46,6 +46,5 @@ fun Navigation(
         booking(navController)
         upcoming(navController)
         editor(navController)
-        favorite(navController)
     }
 }
