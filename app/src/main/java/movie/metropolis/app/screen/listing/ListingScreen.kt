@@ -21,11 +21,8 @@ import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.screen.booking.component.rememberMultiChildPagerState
 import movie.metropolis.app.screen.listing.component.PosterActionColumn
 import movie.metropolis.app.screen.listing.component.PosterColumn
-import movie.metropolis.app.screen.listing.component.PromotionColumn
-import movie.metropolis.app.screen.listing.component.PromotionHorizontalPager
 import movie.metropolis.app.screen.listing.component.RatingBox
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.util.rememberStoreable
@@ -56,7 +53,7 @@ fun ListingScreen(
     propagateMinConstraints = true
 ) {
     val scope = rememberCoroutineScope()
-    var zoom by rememberStoreable(key = "listing-zoom", default = 100f)
+    var zoom by rememberStoreable(key = "listing-zoom", default = 75f)
     val gridModifier = if (connection != null) Modifier.nestedScroll(connection) else Modifier
     LazyVerticalStaggeredGrid(
         modifier = gridModifier
@@ -67,60 +64,11 @@ fun ListingScreen(
                 }
             },
         state = state,
-        contentPadding = contentPadding + PaddingValues(24.dp),
+        contentPadding = contentPadding + PaddingValues(12.dp),
         columns = StaggeredGridCells.Adaptive(zoom.dp),
         verticalItemSpacing = 12.dp,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        item(span = StaggeredGridItemSpan.FullLine) {
-            val (state, indicator) = rememberMultiChildPagerState(childCount = 1) { promotions.size }
-            PromotionHorizontalPager(
-                modifier = Modifier.animateItem(),
-                state = state,
-                indicatorState = indicator
-            ) {
-                val it = promotions[it]
-                val state = rememberPaletteImageState(it.poster?.url)
-                val dialogState = overlay.rememberPopOutState()
-                PopOutBox(
-                    state = dialogState,
-                    expansion = {
-                        PosterActionColumn(
-                            modifier = Modifier.padding(vertical = 16.dp),
-                            color = state.palette.color,
-                            contentColor = state.palette.textColor,
-                            onHideClick = {
-                                scope.launch {
-                                    dialogState.close()
-                                    onHideClick(it)
-                                }
-                            },
-                            onOpenClick = actionView {
-                                scope.launch { dialogState.close() }
-                                it.url
-                            }
-                        )
-                    }
-                ) {
-                    PromotionColumn(
-                        color = state.palette.color,
-                        contentColor = state.palette.textColor,
-                        name = { Text(it.name) },
-                        rating = {
-                            val rating = it.rating
-                            if (rating != null) RatingBox(
-                                color = state.palette.color,
-                                rating = { Text(rating) },
-                                offset = PaddingValues(start = 4.dp, bottom = 4.dp)
-                            )
-                        },
-                        poster = { Image(state, alignment = Alignment.TopCenter) },
-                        onClick = { onClick(it) },
-                        onLongClick = { scope.launch { dialogState.open() } }
-                    )
-                }
-            }
-        }
         items(movies, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.poster?.url ?: it.posterLarge?.url)
             val dialogState = overlay.rememberPopOutState()
