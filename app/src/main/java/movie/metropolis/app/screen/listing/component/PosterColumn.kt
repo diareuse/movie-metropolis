@@ -10,9 +10,8 @@ import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.semantics.*
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.*
@@ -22,11 +21,13 @@ import androidx.compose.ui.unit.*
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
+import dev.chrisbanes.haze.HazeDefaults
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.surface
-import movie.style.shape.CompositeShape
-import movie.style.shape.CutoutShape
 import movie.style.theme.Theme
 
 @Composable
@@ -38,29 +39,15 @@ fun PosterColumn(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
-) = Column(
+) = RatedPoster(
     modifier = modifier,
-    verticalArrangement = Arrangement.spacedBy(8.dp),
-    horizontalAlignment = Alignment.CenterHorizontally
-) {
-    RatedPoster(
-        color = color,
-        poster = poster,
-        rating = rating,
-        onClick = onClick,
-        onLongClick = onLongClick
-    )
-    ProvideTextStyle(
-        Theme.textStyle.caption.copy(
-            textAlign = TextAlign.Center,
-            fontSize = 10.sp,
-            lineHeight = 10.sp,
-            fontWeight = FontWeight.Medium
-        )
-    ) {
-        name()
-    }
-}
+    color = color,
+    poster = poster,
+    rating = rating,
+    onClick = onClick,
+    onLongClick = onLongClick,
+    name = name
+)
 
 fun Color.vivid(): Color {
     val rgb = this.toArgb()
@@ -77,47 +64,96 @@ private fun RatedPoster(
     color: Color,
     poster: @Composable () -> Unit,
     rating: @Composable () -> Unit,
+    name: @Composable () -> Unit,
     onClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val density = LocalDensity.current
-    var cutoutSize by remember { mutableStateOf(DpSize.Zero) }
     val baseline = Theme.container.poster
-    val cornerSize = baseline.topStart
-    val shape = CompositeShape(cutoutSize) {
-        setBaseline(baseline)
-        addShape(
-            shape = CutoutShape(cornerSize, CutoutShape.Orientation.BottomRight),
-            size = cutoutSize,
-            alignment = Alignment.BottomEnd,
-            operation = PathOperation.Difference
-        )
-    }
     val containerColor = Theme.color.container.background
     Box(
         modifier = modifier
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
+            .surface(containerColor, baseline, 16.dp, color.vivid())
+            .aspectRatio(DefaultPosterAspectRatio),
+        propagateMinConstraints = true
     ) {
+        val haze = remember { HazeState() }
         Box(
-            modifier = Modifier
-                .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
-                .surface(containerColor, shape, 16.dp, color.vivid())
-                .aspectRatio(DefaultPosterAspectRatio),
-            propagateMinConstraints = true
+            modifier = Modifier.haze(
+                state = haze,
+                style = HazeDefaults.style(
+                    backgroundColor = color.copy(.25f),
+                    blurRadius = 10.dp,
+                    noiseFactor = 5f
+                )
+            ), propagateMinConstraints = true
         ) {
             poster()
         }
         Box(
             modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .onSizeChanged {
-                    cutoutSize = with(density) { DpSize(it.width.toDp(), it.height.toDp()) }
-                }
+                .wrapContentSize(Alignment.TopEnd)
+                .padding(4.dp)
+                .hazeChild(haze, MaterialTheme.shapes.medium)
         ) {
             rating()
         }
+        Box(
+            modifier = Modifier
+                .wrapContentHeight(Alignment.Bottom)
+                .heightIn(min = 32.dp)
+                .padding(4.dp)
+                .hazeChild(haze, MaterialTheme.shapes.medium)
+                .padding(vertical = 8.dp, horizontal = 4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            ProvideTextStyle(
+                Theme.textStyle.caption.copy(
+                    textAlign = TextAlign.Center,
+                    fontSize = 10.sp,
+                    lineHeight = 10.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            ) {
+                CompositionLocalProvider(LocalContentColor provides color.contentColor) {
+                    name()
+                }
+            }
+        }
     }
 }
+
+@Stable
+private fun Modifier.fadingEdge(
+    topEdgeMaxHeight: Dp = 0.dp,
+    bottomEdgeMaxHeight: Dp = 0.dp
+) = then(
+    Modifier
+        .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+        .drawWithContent {
+            drawContent()
+
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.Transparent, Color.Black),
+                    startY = 0f,
+                    endY = topEdgeMaxHeight.toPx(),
+                ),
+                blendMode = BlendMode.DstIn,
+            )
+
+            val bottomEdgeHeightPx = bottomEdgeMaxHeight.toPx()
+            drawRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.Black, Color.Transparent),
+                    startY = size.height - bottomEdgeHeightPx,
+                    endY = size.height,
+                ),
+                blendMode = BlendMode.DstIn,
+            )
+        }
+)
 
 val Color.contentColor inline get() = if (luminance() > .5f) Color.Black else Color.White
 
@@ -132,8 +168,8 @@ fun RatingBox(
     shape: Shape = CircleShape
 ) = Box(
     modifier = modifier
-        .padding(offset)
-        .surface(color, shape, 16.dp, color)
+        //.padding(offset)
+        //.surface(color, shape, 16.dp, color)
         .padding(padding)
 ) {
     ProvideTextStyle(textStyle) {
@@ -153,7 +189,7 @@ private fun PosterColumnPreview() = PreviewLayout(
 ) {
     PosterColumn(
         color = Color.Gray,
-        poster = { Box(Modifier.background(Color.Gray)) },
+        poster = { Box(Modifier.background(Color.Green)) },
         name = { Text("Movie name") },
         rating = {
             RatingBox(

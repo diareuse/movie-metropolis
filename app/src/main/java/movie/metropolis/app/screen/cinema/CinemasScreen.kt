@@ -82,7 +82,8 @@ fun CinemasScreen(
         items(cinemas, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.image)
             CinemaBox(
-                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
+                modifier = Modifier
+                    .animateItem(fadeInSpec = null, fadeOutSpec = null)
                     .fillMaxWidth()
                     .heightIn(min = 128.dp),
                 color = state.palette.color,
