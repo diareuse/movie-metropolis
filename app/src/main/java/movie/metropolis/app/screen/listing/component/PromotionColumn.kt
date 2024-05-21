@@ -5,8 +5,6 @@ package movie.metropolis.app.screen.listing.component
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -18,8 +16,6 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
@@ -32,16 +28,13 @@ fun PromotionColumn(
     name: @Composable () -> Unit,
     rating: @Composable () -> Unit,
     poster: @Composable () -> Unit,
-    action: @Composable () -> Unit,
     onClick: () -> Unit,
-    onActionClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     var ratingSize by remember { mutableStateOf(DpSize.Zero) }
     var nameSize by remember { mutableStateOf(DpSize.Zero) }
-    val favoriteSize = DpSize(36.dp, 36.dp)
     val baseline = Theme.container.poster
     val cornerSize = baseline.topStart
     val shape = CompositeShape(ratingSize, nameSize) {
@@ -50,12 +43,6 @@ fun PromotionColumn(
             shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopRight),
             size = ratingSize,
             alignment = Alignment.TopEnd,
-            operation = PathOperation.Difference
-        )
-        addShape(
-            shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopLeft),
-            size = favoriteSize,
-            alignment = Alignment.TopStart,
             operation = PathOperation.Difference
         )
         addShape(
@@ -71,8 +58,7 @@ fun PromotionColumn(
             modifier = Modifier
                 .matchParentSize()
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
-                .surface(containerColor, shape, 0.dp, color)
-                .glow(shape, color),
+                .surface(containerColor, shape, 0.dp, color),
             propagateMinConstraints = true
         ) {
             poster()
@@ -85,7 +71,6 @@ fun PromotionColumn(
                 .padding(top = 4.dp, end = 4.dp)
                 .align(Alignment.BottomStart)
                 .surface(color, CircleShape, 0.dp, color)
-                .glow(CircleShape, color, lightSource = LightSource.Top)
                 .padding(8.dp, 4.dp)
         ) {
             ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
@@ -103,18 +88,6 @@ fun PromotionColumn(
         ) {
             rating()
         }
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.TopStart)
-                .clickable(onClick = onActionClick, role = Role.Button)
-                .surface(color, CircleShape, 0.dp, color)
-                .glow(CircleShape, contentColor, lightSource = LightSource.BottomRight)
-                .padding(6.dp),
-            propagateMinConstraints = true
-        ) {
-            action()
-        }
     }
 }
 
@@ -131,18 +104,15 @@ private fun PromotionColumnPreview(
         color = Color.Green,
         contentColor = Color.Red,
         poster = { Box(Modifier.background(Color.Green)) },
-        action = { Icon(Icons.Rounded.Favorite, null) },
         name = { Text("Movie name") },
         rating = {
             RatingBox(
                 color = Color.Green,
-                contentColor = Color.Black,
                 rating = { Text("86%") },
                 offset = PaddingValues(start = 4.dp, bottom = 4.dp)
             )
         },
         onClick = {},
-        onActionClick = {},
         onLongClick = {},
     )
 }

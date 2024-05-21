@@ -22,7 +22,6 @@ import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
@@ -63,8 +62,7 @@ fun SetupInitialContent(
                             color = Theme.color.container.background,
                             elevation = elevation,
                             shadowColor = color
-                        )
-                        .glow(Theme.container.poster),
+                        ),
                     state = state
                 )
             }

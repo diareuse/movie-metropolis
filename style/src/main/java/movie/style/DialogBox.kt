@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.*
 import androidx.compose.ui.window.*
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 
@@ -53,8 +52,7 @@ fun DialogScope.Container(
         modifier = modifier
             .padding(24.dp)
             .alignForLargeScreen()
-            .surface(1.dp, Theme.container.card)
-            .glow(Theme.container.card),
+            .surface(1.dp, Theme.container.card),
         propagateMinConstraints = true
     ) {
         content()

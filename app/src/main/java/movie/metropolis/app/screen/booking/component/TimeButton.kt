@@ -15,7 +15,6 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.theme.Theme
 import java.text.DateFormat
 import java.util.Calendar
@@ -52,7 +51,6 @@ fun TimeButton(
         modifier = modifier
             .clickable(role = Role.Button, onClick = onClick)
             .clip(Theme.container.button)
-            .glow(Theme.container.button)
             .drawWithCache {
                 onDrawBehind {
                     val timeAngle = time % 86400000f / 86400000f * 360f + 270f

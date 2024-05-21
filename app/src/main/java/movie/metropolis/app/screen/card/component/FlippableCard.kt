@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.util.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.overlay
 import movie.style.modifier.surface
 import movie.style.modifier.vertical
@@ -101,8 +100,7 @@ private fun FlippableCardPreview() = PreviewLayout(modifier = Modifier.padding(1
         container = {
             Box(
                 modifier = Modifier
-                    .surface(Color.Gray, Theme.container.card, 16.dp, Color.Gray)
-                    .glow(Theme.container.card),
+                    .surface(Color.Gray, Theme.container.card, 16.dp, Color.Gray),
                 Alignment.Center
             ) {
                 it()

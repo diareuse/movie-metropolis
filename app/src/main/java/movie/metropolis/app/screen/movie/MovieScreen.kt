@@ -81,8 +81,7 @@ fun MovieScreen(
                 order = { Icon(painterResource(R.drawable.ic_cart), null) },
                 rating = {
                     if (movie?.rating != null) LargeRatingBox(
-                        color = poster.palette.color,
-                        contentColor = poster.palette.textColor
+                        color = poster.palette.color
                     ) {
                         Text(movie.rating.orEmpty())
                     }

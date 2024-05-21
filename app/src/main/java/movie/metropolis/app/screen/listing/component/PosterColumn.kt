@@ -7,8 +7,6 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
@@ -21,10 +19,11 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import androidx.core.graphics.blue
+import androidx.core.graphics.green
+import androidx.core.graphics.red
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
@@ -33,13 +32,10 @@ import movie.style.theme.Theme
 @Composable
 fun PosterColumn(
     color: Color,
-    contentColor: Color,
     poster: @Composable () -> Unit,
-    favorite: @Composable () -> Unit,
     name: @Composable () -> Unit,
     rating: @Composable () -> Unit,
     onClick: () -> Unit,
-    onActionClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) = Column(
@@ -49,41 +45,44 @@ fun PosterColumn(
 ) {
     RatedPoster(
         color = color,
-        contentColor = contentColor,
         poster = poster,
         rating = rating,
-        action = favorite,
         onClick = onClick,
-        onActionClick = onActionClick,
         onLongClick = onLongClick
     )
     ProvideTextStyle(
         Theme.textStyle.caption.copy(
             textAlign = TextAlign.Center,
             fontSize = 10.sp,
-            lineHeight = 10.sp
+            lineHeight = 10.sp,
+            fontWeight = FontWeight.Medium
         )
     ) {
         name()
     }
 }
 
+fun Color.vivid(): Color {
+    val rgb = this.toArgb()
+    val red = rgb.red
+    val green = rgb.green
+    val blue = rgb.blue
+    val hsv = FloatArray(3)
+    android.graphics.Color.RGBToHSV(red, green, blue, hsv)
+    return Color.hsv(hsv[0], 1f, 1f)
+}
 
 @Composable
 private fun RatedPoster(
     color: Color,
-    contentColor: Color,
     poster: @Composable () -> Unit,
     rating: @Composable () -> Unit,
-    action: @Composable () -> Unit,
     onClick: () -> Unit,
-    onActionClick: () -> Unit,
     onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
     var cutoutSize by remember { mutableStateOf(DpSize.Zero) }
-    val favoriteSize = DpSize(36.dp, 36.dp)
     val baseline = Theme.container.poster
     val cornerSize = baseline.topStart
     val shape = CompositeShape(cutoutSize) {
@@ -94,12 +93,6 @@ private fun RatedPoster(
             alignment = Alignment.BottomEnd,
             operation = PathOperation.Difference
         )
-        addShape(
-            shape = CutoutShape(cornerSize, CutoutShape.Orientation.TopLeft),
-            size = favoriteSize,
-            alignment = Alignment.TopStart,
-            operation = PathOperation.Difference
-        )
     }
     val containerColor = Theme.color.container.background
     Box(
@@ -108,8 +101,7 @@ private fun RatedPoster(
         Box(
             modifier = Modifier
                 .combinedClickable(onClick = onClick, onLongClick = onLongClick, role = Role.Image)
-                .surface(containerColor, shape, 16.dp, color)
-                .glow(shape, color)
+                .surface(containerColor, shape, 16.dp, color.vivid())
                 .aspectRatio(DefaultPosterAspectRatio),
             propagateMinConstraints = true
         ) {
@@ -124,27 +116,14 @@ private fun RatedPoster(
         ) {
             rating()
         }
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .align(Alignment.TopStart)
-                .clickable(onClick = onActionClick, role = Role.Button)
-                .surface(color, CircleShape, 16.dp, color)
-                .glow(CircleShape, contentColor, lightSource = LightSource.BottomRight)
-                .padding(6.dp),
-            propagateMinConstraints = true
-        ) {
-            CompositionLocalProvider(LocalContentColor provides contentColor) {
-                action()
-            }
-        }
     }
 }
+
+val Color.contentColor inline get() = if (luminance() > .5f) Color.Black else Color.White
 
 @Composable
 fun RatingBox(
     color: Color,
-    contentColor: Color,
     rating: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium),
@@ -155,11 +134,10 @@ fun RatingBox(
     modifier = modifier
         .padding(offset)
         .surface(color, shape, 16.dp, color)
-        .glow(shape, contentColor, width = 2.dp)
         .padding(padding)
 ) {
     ProvideTextStyle(textStyle) {
-        CompositionLocalProvider(LocalContentColor provides contentColor) {
+        CompositionLocalProvider(LocalContentColor provides color.contentColor) {
             rating()
         }
     }
@@ -175,25 +153,15 @@ private fun PosterColumnPreview() = PreviewLayout(
 ) {
     PosterColumn(
         color = Color.Gray,
-        contentColor = Color.White,
         poster = { Box(Modifier.background(Color.Gray)) },
-        favorite = { Icon(Icons.Rounded.Favorite, null) },
         name = { Text("Movie name") },
         rating = {
             RatingBox(
                 color = Color.Gray,
-                contentColor = Color.White,
                 rating = { Text("86%") }
             )
         },
         onClick = {},
-        onActionClick = {},
         onLongClick = {}
     )
-}
-
-private class PosterColumnParameter : PreviewParameterProvider<PosterColumnParameter.Data> {
-    override val values = sequence { yield(Data()) }
-
-    class Data
 }

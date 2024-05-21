@@ -15,7 +15,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.theme.Theme
 
 @Composable
@@ -29,7 +28,6 @@ fun ProfileItem(
     modifier = modifier
         .clickable(role = Role.Button, onClick = onClick, enabled = enabled)
         .clip(Theme.container.button)
-        .glow(Theme.container.button, alpha = .1f)
         .padding(horizontal = 16.dp, vertical = 12.dp),
     horizontalArrangement = Arrangement.spacedBy(16.dp),
     verticalAlignment = Alignment.CenterVertically

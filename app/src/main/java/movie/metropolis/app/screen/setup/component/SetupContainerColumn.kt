@@ -10,7 +10,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
 import movie.style.theme.Theme
 
 @Composable
@@ -64,7 +63,7 @@ private fun SetupContainerColumnPreview() = PreviewLayout {
                 selectedItem = 0,
                 state = rememberLazyStaggeredGridState()
             ) {
-                Box(Modifier.glow(Theme.container.poster, alpha = .3f))
+                Box(Modifier)
             }
         },
         title = { Text("Welcome back!") },

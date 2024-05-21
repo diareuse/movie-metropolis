@@ -28,7 +28,6 @@ import movie.style.BackgroundImage
 import movie.style.action.actionView
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberImageState
 import movie.style.textPlaceholder
@@ -39,7 +38,6 @@ fun ProfileScreen(
     user: UserView?,
     onClickSettings: () -> Unit,
     onClickEdit: () -> Unit,
-    onClickFavorite: () -> Unit,
     onClickCard: () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -106,7 +104,6 @@ fun ProfileScreen(
                     color = Theme.color.container.background,
                     shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
                 )
-                .glow(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp), alpha = .1f)
                 .padding(24.dp)
                 .padding(bottom = contentPadding.calculateBottomPadding())
                 .weight(1f),
@@ -121,11 +118,6 @@ fun ProfileScreen(
                 icon = { Icon(painterResource(R.drawable.ic_edit), null) },
                 title = { Text(stringResource(R.string.edit_profile)) },
                 onClick = onClickEdit
-            )
-            ProfileItem(
-                icon = { Icon(painterResource(R.drawable.ic_favorite_fill), null) },
-                title = { Text(stringResource(R.string.favorite_movies)) },
-                onClick = onClickFavorite
             )
             ProfileItem(
                 enabled = user != null,
@@ -144,7 +136,7 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenPreview() = PreviewLayout {
     val user = remember { UserViewParameter().values.first() }
-    ProfileScreen(user, {}, {}, {}, {})
+    ProfileScreen(user, {}, {}, {})
 }
 
 
@@ -152,5 +144,5 @@ private fun ProfileScreenPreview() = PreviewLayout {
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun ProfileScreenEmptyPreview() = PreviewLayout {
-    ProfileScreen(null, {}, {}, {}, {})
+    ProfileScreen(null, {}, {}, {})
 }

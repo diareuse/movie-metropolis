@@ -23,7 +23,6 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.CalendarView
 import movie.metropolis.app.screen.profile.component.ProfileIcon
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.theme.Theme
 import java.util.Locale
 import kotlin.random.Random.Default.nextLong
@@ -73,7 +72,6 @@ private fun CalendarRow(
     modifier = modifier
         .fillMaxWidth()
         .clickable(role = Role.Button, onClick = onClick)
-        .glow(Theme.container.button)
         .clip(Theme.container.button)
         .padding(horizontal = 16.dp)
         .minimumInteractiveComponentSize(),

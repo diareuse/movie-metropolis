@@ -29,8 +29,6 @@ import movie.metropolis.app.screen.listing.component.PromotionHorizontalPager
 import movie.metropolis.app.screen.listing.component.RatingBox
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.util.rememberStoreable
-import movie.metropolis.app.util.rememberVisibleItemAsState
-import movie.style.BackgroundImage
 import movie.style.Image
 import movie.style.OverlayState
 import movie.style.PopOutBox
@@ -38,7 +36,6 @@ import movie.style.action.actionView
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.layout.plus
-import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
 import movie.style.rememberPopOutState
 
@@ -49,7 +46,6 @@ fun ListingScreen(
     state: LazyStaggeredGridState,
     overlay: OverlayState,
     onClick: (MovieView) -> Unit,
-    onFavoriteClick: (MovieView) -> Unit,
     onHideClick: (MovieView) -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -59,12 +55,7 @@ fun ListingScreen(
     modifier = modifier,
     propagateMinConstraints = true
 ) {
-    val selectedItem by state.rememberVisibleItemAsState()
     val scope = rememberCoroutineScope()
-    BackgroundImage(
-        modifier = Modifier.fillMaxSize(),
-        state = rememberImageState(movies.getOrNull(selectedItem)?.posterLarge?.url)
-    )
     var zoom by rememberStoreable(key = "listing-zoom", default = 100f)
     val gridModifier = if (connection != null) Modifier.nestedScroll(connection) else Modifier
     LazyVerticalStaggeredGrid(
@@ -84,7 +75,7 @@ fun ListingScreen(
         item(span = StaggeredGridItemSpan.FullLine) {
             val (state, indicator) = rememberMultiChildPagerState(childCount = 1) { promotions.size }
             PromotionHorizontalPager(
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(),
                 state = state,
                 indicatorState = indicator
             ) {
@@ -96,15 +87,8 @@ fun ListingScreen(
                     expansion = {
                         PosterActionColumn(
                             modifier = Modifier.padding(vertical = 16.dp),
-                            favorite = it.favorite,
                             color = state.palette.color,
                             contentColor = state.palette.textColor,
-                            onFavoriteClick = {
-                                scope.launch {
-                                    dialogState.close()
-                                    onFavoriteClick(it)
-                                }
-                            },
                             onHideClick = {
                                 scope.launch {
                                     dialogState.close()
@@ -126,21 +110,12 @@ fun ListingScreen(
                             val rating = it.rating
                             if (rating != null) RatingBox(
                                 color = state.palette.color,
-                                contentColor = state.palette.textColor,
                                 rating = { Text(rating) },
                                 offset = PaddingValues(start = 4.dp, bottom = 4.dp)
                             )
                         },
                         poster = { Image(state, alignment = Alignment.TopCenter) },
-                        action = {
-                            val icon = when (it.favorite) {
-                                true -> painterResource(R.drawable.ic_favorite_fill)
-                                else -> painterResource(R.drawable.ic_favorite_outline)
-                            }
-                            Icon(icon, null)
-                        },
                         onClick = { onClick(it) },
-                        onActionClick = { onFavoriteClick(it) },
                         onLongClick = { scope.launch { dialogState.open() } }
                     )
                 }
@@ -151,19 +126,12 @@ fun ListingScreen(
             val dialogState = overlay.rememberPopOutState()
             PopOutBox(
                 state = dialogState,
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(),
                 expansion = {
                     PosterActionColumn(
                         modifier = Modifier.padding(vertical = 16.dp),
-                        favorite = it.favorite,
                         color = state.palette.color,
                         contentColor = state.palette.textColor,
-                        onFavoriteClick = {
-                            scope.launch {
-                                dialogState.close()
-                                onFavoriteClick(it)
-                            }
-                        },
                         onHideClick = {
                             scope.launch {
                                 dialogState.close()
@@ -179,26 +147,16 @@ fun ListingScreen(
             ) {
                 PosterColumn(
                     color = state.palette.color,
-                    contentColor = state.palette.textColor,
                     poster = { Image(state) },
-                    favorite = {
-                        val icon = when (it.favorite) {
-                            true -> painterResource(R.drawable.ic_favorite_fill)
-                            else -> painterResource(R.drawable.ic_favorite_outline)
-                        }
-                        Icon(icon, null)
-                    },
                     name = { Text(it.name) },
                     rating = {
                         val rating = it.rating
                         if (rating != null) RatingBox(
                             color = state.palette.color,
-                            contentColor = state.palette.textColor,
                             rating = { Text(rating) }
                         )
                     },
                     onClick = { onClick(it) },
-                    onActionClick = { onFavoriteClick(it) },
                     onLongClick = { scope.launch { dialogState.open() } }
                 )
             }
@@ -228,7 +186,6 @@ private fun ListingScreenPreview() = PreviewLayout {
         movies = movies,
         state = rememberLazyStaggeredGridState(),
         onClick = {},
-        onFavoriteClick = {},
         onHideClick = {},
         overlay = remember { OverlayState() }
     )

@@ -72,7 +72,7 @@ fun CinemasScreen(
     ) {
         if (!permission.allPermissionsGranted) item(key = "permission") {
             PermissionBox(
-                modifier = Modifier.animateItemPlacement(),
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                 icon = { Icon(painterResource(R.drawable.ic_location), null) },
                 title = { Text(stringResource(R.string.permission_location_title)) },
                 message = { Text(stringResource(R.string.permission_location_description)) },
@@ -82,8 +82,7 @@ fun CinemasScreen(
         items(cinemas, key = { it.id }) {
             val state = rememberPaletteImageState(url = it.image)
             CinemaBox(
-                modifier = Modifier
-                    .animateItemPlacement()
+                modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null)
                     .fillMaxWidth()
                     .heightIn(min = 128.dp),
                 color = state.palette.color,
@@ -93,7 +92,6 @@ fun CinemasScreen(
                     val distance = it.distance
                     if (distance != null) RatingBox(
                         color = state.palette.color,
-                        contentColor = state.palette.textColor,
                         rating = { Text(distance) },
                         offset = PaddingValues(start = 4.dp, bottom = 4.dp)
                     )

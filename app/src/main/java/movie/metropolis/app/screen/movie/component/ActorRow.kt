@@ -20,8 +20,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.theme.Theme
@@ -91,7 +89,6 @@ fun ActorRow(
             modifier = Modifier
                 .fillMaxSize()
                 .surface(surfaceColor, shape)
-                .glow(shape, color, LightSource.Left, fillAlpha = .4f, alpha = .2f)
                 .clickable(onClick = onClick, role = Role.Button)
         )
     }
