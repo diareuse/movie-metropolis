@@ -10,7 +10,6 @@ import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 
@@ -29,7 +28,6 @@ fun DateBox(
         Box(
             modifier = Modifier
                 .surface(color, Theme.container.button, 16.dp)
-                .glow(Theme.container.button, contentColor)
                 .padding(16.dp)
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {

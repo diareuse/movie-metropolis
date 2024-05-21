@@ -19,8 +19,6 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.listing.component.RatingBox
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberPaletteImageState
 import movie.style.shape.CompositeShape
@@ -72,8 +70,7 @@ fun CinemaBox(
             modifier = Modifier
                 .matchParentSize()
                 .clickable(onClick = onClick, role = Role.Image)
-                .surface(containerColor, shape, 16.dp, color)
-                .glow(shape, color),
+                .surface(containerColor, shape, 16.dp, color),
             propagateMinConstraints = true
         ) {
             poster()
@@ -86,7 +83,6 @@ fun CinemaBox(
                 .padding(top = 4.dp, end = 4.dp)
                 .align(Alignment.BottomStart)
                 .surface(color, CircleShape, 16.dp, color)
-                .glow(CircleShape, color, lightSource = LightSource.Top)
                 .padding(8.dp, 4.dp)
         ) {
             ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {
@@ -110,13 +106,6 @@ fun CinemaBox(
                 .align(Alignment.TopStart)
                 .clickable(onClick = onActionClick)
                 .surface(color, CircleShape, 16.dp, color)
-                .glow(
-                    CircleShape,
-                    lightSource = LightSource.BottomRight,
-                    color = contentColor,
-                    width = 2.dp,
-                    alpha = .4f
-                )
                 .padding(6.dp),
             propagateMinConstraints = true
         ) {
@@ -145,7 +134,6 @@ private fun CinemaBoxPreview(
             val distance = parameter.distance
             if (distance != null) RatingBox(
                 color = state.palette.color,
-                contentColor = state.palette.textColor,
                 rating = { Text(distance) },
                 offset = PaddingValues(start = 4.dp, bottom = 4.dp)
             )

@@ -18,8 +18,6 @@ import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
@@ -57,7 +55,6 @@ fun PermissionBox(
                     16.dp,
                     Theme.color.emphasis.error
                 )
-                .glow(CircleShape, Theme.color.emphasis.error, lightSource = LightSource.BottomLeft)
                 .padding(8.dp),
             propagateMinConstraints = true
         ) {
@@ -67,7 +64,6 @@ fun PermissionBox(
             modifier = Modifier
                 .clickable(onClick = onClick, role = Role.Button)
                 .surface(Theme.color.container.error, shape, 16.dp, Theme.color.emphasis.error)
-                .glow(shape, Theme.color.emphasis.error)
                 .padding(horizontal = 24.dp, vertical = 20.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.spacedBy(16.dp)

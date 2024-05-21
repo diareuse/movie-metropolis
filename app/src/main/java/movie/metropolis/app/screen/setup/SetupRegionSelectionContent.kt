@@ -29,7 +29,6 @@ import movie.metropolis.app.util.rememberVisibleItemAsState
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
@@ -66,8 +65,7 @@ fun SetupRegionSelectionContent(
                     color = Theme.color.container.background,
                     elevation = elevation,
                     shadowColor = color
-                )
-                .glow(Theme.container.poster),
+                ),
             state = state
         )
     }

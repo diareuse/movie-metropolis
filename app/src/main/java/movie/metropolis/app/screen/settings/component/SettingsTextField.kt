@@ -11,7 +11,6 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.tooling.preview.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.theme.Theme
 
 @Composable
@@ -25,8 +24,7 @@ fun SettingsTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) = TextField(
     modifier = modifier
-        .fillMaxWidth()
-        .glow(Theme.container.button),
+        .fillMaxWidth(),
     value = value,
     onValueChange = onValueChange,
     shape = Theme.container.button,

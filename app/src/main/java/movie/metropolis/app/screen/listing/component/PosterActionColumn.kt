@@ -13,26 +13,17 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.theme.Theme
 
 @Composable
 fun PosterActionColumn(
-    favorite: Boolean,
     color: Color,
     contentColor: Color,
     onHideClick: () -> Unit,
     onOpenClick: () -> Unit,
-    onFavoriteClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) = Surface(
-    modifier = modifier.glow(
-        Theme.container.button,
-        lightSource = LightSource.Bottom,
-        width = 1.dp,
-        color = contentColor
-    ),
+    modifier = modifier,
     color = color.copy(.8f),
     shape = Theme.container.button,
     contentColor = contentColor
@@ -52,23 +43,6 @@ fun PosterActionColumn(
         ) {
             Icon(painterResource(id = R.drawable.ic_link), null)
             Text(stringResource(R.string.open_in_browser))
-        }
-        HorizontalDivider(Modifier.padding(horizontal = 16.dp), color = contentColor.copy(.5f))
-        TextButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onFavoriteClick
-        ) {
-            when (favorite) {
-                true -> {
-                    Icon(painterResource(id = R.drawable.ic_favorite_fill), null)
-                    Text(stringResource(R.string.remove_favorite))
-                }
-
-                else -> {
-                    Icon(painterResource(id = R.drawable.ic_favorite_outline), null)
-                    Text(stringResource(R.string.mark_favorite))
-                }
-            }
         }
     }
 }
@@ -95,5 +69,5 @@ fun TextButton(
 @Preview
 @Composable
 private fun PosterActionColumnPreview() = PreviewLayout {
-    PosterActionColumn(false, Color.Green, Color.White, {}, {}, {})
+    PosterActionColumn(Color.Green, Color.White, {}, {})
 }

@@ -19,7 +19,6 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.model.ShowingTag
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 import java.util.Locale
@@ -360,7 +359,6 @@ private fun ProjectionTypeBadge(
             elevation = if (emphasize) 8.dp else 0.dp,
             shadowColor = color
         )
-        .glow(shape, color)
         .padding(4.dp, 2.dp)
 ) {
     CompositionLocalProvider(LocalContentColor provides contentColor) {

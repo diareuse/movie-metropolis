@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.stroke
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
@@ -43,7 +42,6 @@ fun TicketColumn(
     Column(
         modifier = modifier
             .surface(color, shape, 0.dp, color)
-            .glow(shape, contentColor)
     ) {
         CompositionLocalProvider(LocalContentColor provides contentColor) {
             if (note != null) Box(
@@ -65,7 +63,6 @@ fun TicketColumn(
                 modifier = Modifier
                     .padding(16.dp)
                     .clip(innerShape)
-                    .glow(innerShape, contentColor)
                     .fillMaxWidth()
                     .weight(1f),
                 propagateMinConstraints = true

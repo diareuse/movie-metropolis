@@ -25,7 +25,6 @@ class MovieViewProvider :
         override val countryOfOrigin: String = "USA",
         override val poster: ImageView? = PreviewImage(),
         override val video: VideoView? = PreviewVideo(),
-        override val favorite: Boolean = Random.nextBoolean(),
         override val rating: String? = "75%",
         override val posterLarge: ImageView? = PreviewImage(),
         override val url: String = ""

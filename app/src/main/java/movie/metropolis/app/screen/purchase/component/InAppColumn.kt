@@ -17,8 +17,6 @@ import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
@@ -63,7 +61,6 @@ fun InAppColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .surface(2.dp, shape)
-                .glow(shape)
                 .padding(horizontal = 20.dp, vertical = 16.dp)
                 .padding(end = 16.dp, bottom = 16.dp)
                 .padding(bottom = buttonSize.height),
@@ -81,7 +78,6 @@ fun InAppColumn(
                 .size(iconSize)
                 .align(Alignment.TopEnd)
                 .surface(color, baseShape)
-                .glow(baseShape, lightSource = LightSource.BottomLeft)
                 .padding(12.dp),
             propagateMinConstraints = true
         ) {
@@ -93,7 +89,6 @@ fun InAppColumn(
                 .align(Alignment.BottomEnd)
                 .clickable(role = Role.Button, onClick = onClick)
                 .surface(color, baseShape)
-                .glow(baseShape)
                 .padding(12.dp, 6.dp)
         ) {
             Row(

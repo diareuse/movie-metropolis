@@ -29,7 +29,6 @@ import movie.style.Barcode
 import movie.style.haptic.TickOnChange
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
-import movie.style.modifier.glow
 import movie.style.modifier.screenBrightness
 import movie.style.modifier.surface
 import movie.style.modifier.vertical
@@ -105,8 +104,7 @@ fun CardScreen(
                             shape = shape,
                             elevation = 16.dp,
                             shadowColor = CinemaCityColor
-                        )
-                        .glow(shape, Color.Black),
+                        ),
                     propagateMinConstraints = true
                 ) {
                     CompositionLocalProvider(LocalContentColor provides Color.White) {

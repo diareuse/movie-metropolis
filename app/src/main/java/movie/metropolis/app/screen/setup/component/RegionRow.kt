@@ -12,8 +12,6 @@ import androidx.compose.ui.unit.*
 import movie.metropolis.app.R
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.rememberPaletteImageState
 import movie.style.theme.Theme
@@ -40,7 +38,6 @@ fun RegionRow(
                 elevation = 8.dp,
                 shadowColor = color
             )
-            .glow(Theme.container.button)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -54,8 +51,7 @@ fun RegionRow(
                     color = Theme.color.container.background,
                     elevation = 8.dp,
                     shadowColor = color
-                )
-                .glow(Theme.container.buttonSmall, lightSource = LightSource.BottomRight),
+                ),
             propagateMinConstraints = true
         ) {
             icon()

@@ -192,7 +192,10 @@ fun BookingScreen(
                         ) {
                             val state = rememberPaletteImageState(url = view.cinema.image)
                             CinemaTimeContainer(
-                                modifier = Modifier.animateItemPlacement(),
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = null,
+                                    fadeOutSpec = null
+                                ),
                                 color = state.palette.color,
                                 contentColor = state.palette.textColor,
                                 name = { Text(view.cinema.name) }
@@ -204,10 +207,12 @@ fun BookingScreen(
                         is TimeView.Movie -> item(key = view.movie.id) {
                             val state = rememberPaletteImageState(url = view.movie.poster?.url)
                             MovieTimeContainer(
-                                modifier = Modifier.animateItemPlacement(),
                                 color = state.palette.color,
-                                contentColor = state.palette.textColor,
-                                name = { Text(view.movie.name) }
+                                name = { Text(view.movie.name) },
+                                modifier = Modifier.animateItem(
+                                    fadeInSpec = null,
+                                    fadeOutSpec = null
+                                )
                             ) {
                                 Image(state)
                             }
@@ -219,7 +224,7 @@ fun BookingScreen(
                     }
                     for ((type, times) in view.times) item(key = "$id-${type.hashCode()}") {
                         Column(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             ProjectionTypeRow(
@@ -259,7 +264,7 @@ fun BookingScreen(
                         span = StaggeredGridItemSpan.FullLine
                     ) {
                         CinemaTimeContainer(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                             color = Theme.color.container.background,
                             contentColor = Theme.color.content.background,
                             name = { Text("#".repeat(10), Modifier.textPlaceholder()) }
@@ -270,7 +275,7 @@ fun BookingScreen(
                     item {
                         val count = remember { nextInt(1, 5) }
                         for (ignore in 0 until count) Column(
-                            modifier = Modifier.animateItemPlacement(),
+                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             ProjectionTypeRow(

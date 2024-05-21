@@ -45,12 +45,6 @@ class ListingViewModel @Inject constructor(
         .map { it.items.toImmutableList() }
         .retainStateIn(viewModelScope, persistentListOf())
 
-    fun favorite(view: MovieView) {
-        viewModelScope.launch {
-            facade.toggle(view)
-        }
-    }
-
     fun hide(view: MovieView) = viewModelScope.launch {
         val filters = settings.filters.first()
         settings.setFilters(filters + view.name.substringBefore(":"))

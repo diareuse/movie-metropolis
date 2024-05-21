@@ -9,16 +9,15 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.metropolis.app.screen.listing.component.contentColor
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 
 @Composable
 fun MovieTimeContainer(
     color: Color,
-    contentColor: Color,
     name: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
@@ -30,8 +29,7 @@ fun MovieTimeContainer(
     Box(
         modifier = Modifier
             .aspectRatio(DefaultPosterAspectRatio)
-            .surface(0.dp, Theme.container.poster, 16.dp, color)
-            .glow(Theme.container.poster, contentColor),
+            .surface(0.dp, Theme.container.poster, 16.dp, color),
         propagateMinConstraints = true
     ) {
         content()
@@ -43,7 +41,12 @@ fun MovieTimeContainer(
             lineHeight = 10.sp
         )
     ) {
-        name()
+        CompositionLocalProvider(
+            LocalContentColor provides LocalContentColor.current.copy(.5f)
+                .compositeOver(color.contentColor)
+        ) {
+            name()
+        }
     }
 }
 
@@ -51,10 +54,9 @@ fun MovieTimeContainer(
 @Composable
 private fun MovieTimeContainerPreview() = PreviewLayout {
     MovieTimeContainer(
-        modifier = Modifier.width(100.dp),
         color = Color.Black,
-        contentColor = Color.White,
-        name = { Text("Foo bar") }
+        name = { Text("Foo bar") },
+        modifier = Modifier.width(100.dp)
     ) {
         Box(Modifier.background(Color.Blue))
     }

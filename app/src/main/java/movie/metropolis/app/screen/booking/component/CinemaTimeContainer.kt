@@ -13,8 +13,6 @@ import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
@@ -46,8 +44,7 @@ fun CinemaTimeContainer(
         Box(
             modifier = Modifier
                 .matchParentSize()
-                .surface(containerColor, shape, 16.dp, color)
-                .glow(shape, color),
+                .surface(containerColor, shape, 16.dp, color),
             propagateMinConstraints = true
         ) {
             poster()
@@ -60,7 +57,6 @@ fun CinemaTimeContainer(
                 .padding(top = 4.dp, end = 4.dp)
                 .align(Alignment.BottomStart)
                 .surface(color, CircleShape, 16.dp, color)
-                .glow(CircleShape, color, lightSource = LightSource.Top)
                 .padding(8.dp, 4.dp)
         ) {
             ProvideTextStyle(Theme.textStyle.caption.copy(fontWeight = FontWeight.Medium)) {

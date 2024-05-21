@@ -16,8 +16,6 @@ import androidx.compose.ui.unit.*
 import movie.metropolis.app.screen.listing.component.RatingBox
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.LightSource
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.CutoutShape
@@ -60,7 +58,6 @@ fun LargeMoviePoster(
         Box(
             modifier = Modifier
                 .surface(containerColor, shape, 16.dp, color)
-                .glow(shape, color)
                 .aspectRatio(DefaultPosterAspectRatio),
             propagateMinConstraints = true
         ) {
@@ -81,7 +78,6 @@ fun LargeMoviePoster(
                 .align(Alignment.TopStart)
                 .clickable(onClick = onOrderClick, role = Role.Button)
                 .surface(color, Theme.container.button, 16.dp, color)
-                .glow(Theme.container.button, contentColor, lightSource = LightSource.BottomRight)
                 .padding(12.dp),
             propagateMinConstraints = true
         ) {
@@ -95,18 +91,16 @@ fun LargeMoviePoster(
 @Composable
 fun LargeRatingBox(
     color: Color,
-    contentColor: Color,
     modifier: Modifier = Modifier,
     rating: @Composable () -> Unit,
 ) = RatingBox(
-    modifier = modifier,
     color = color,
-    contentColor = contentColor,
+    rating = rating,
+    modifier = modifier,
     textStyle = Theme.textStyle.title,
-    padding = PaddingValues(16.dp, 6.dp),
     offset = PaddingValues(top = 8.dp, start = 8.dp),
-    shape = Theme.container.poster,
-    rating = rating
+    padding = PaddingValues(16.dp, 6.dp),
+    shape = Theme.container.poster
 )
 
 @Preview(showBackground = true)
@@ -118,8 +112,7 @@ private fun LargeMoviePosterPreview() = PreviewLayout {
         order = { Icon(Icons.Rounded.ShoppingCart, null) },
         rating = {
             LargeRatingBox(
-                color = Color.Blue,
-                contentColor = Color.White
+                color = Color.Blue
             ) {
                 Text("86%")
             }

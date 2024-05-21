@@ -10,7 +10,6 @@ import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
-import movie.style.modifier.glow
 import movie.style.modifier.surface
 import movie.style.theme.Theme
 
@@ -39,8 +38,7 @@ fun MovieMetadataRow(
                     color
                         .copy(.2f)
                         .compositeOver(background), shape, 16.dp
-                )
-                .glow(shape, contentColor),
+                ),
             contentAlignment = Alignment.Center
         ) {
             time()
@@ -51,8 +49,7 @@ fun MovieMetadataRow(
                 .zIndex(1f)
                 .fillMaxHeight()
                 .aspectRatio(1f)
-                .surface(color, shape, 16.dp)
-                .glow(shape, contentColor),
+                .surface(color, shape, 16.dp),
             contentAlignment = Alignment.Center
         ) {
             CompositionLocalProvider(LocalContentColor provides contentColor) {
@@ -69,8 +66,7 @@ fun MovieMetadataRow(
                     color
                         .copy(.2f)
                         .compositeOver(background), shape, 16.dp
-                )
-                .glow(shape, contentColor),
+                ),
             contentAlignment = Alignment.Center
         ) {
             year()
