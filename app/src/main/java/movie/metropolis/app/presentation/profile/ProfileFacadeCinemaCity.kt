@@ -21,11 +21,13 @@ class ProfileFacadeCinemaCity(
     }
 
     override suspend fun getMembership(): MembershipView? {
-        return cinemaCity.customers.getCustomer().membership?.let(::MembershipViewFromCustomer)
+        return cinemaCity.customers.runCatching { getCustomer().membership!! }
+            .map(::MembershipViewFromCustomer).getOrNull()
     }
 
-    override suspend fun getUser(): UserView {
-        return cinemaCity.customers.getCustomer().let(::UserViewFromCustomer)
+    override suspend fun getUser(): UserView? {
+        return cinemaCity.customers.runCatching { getCustomer() }
+            .map(::UserViewFromCustomer).getOrNull()
     }
 
     override suspend fun isLoggedIn(): Boolean {

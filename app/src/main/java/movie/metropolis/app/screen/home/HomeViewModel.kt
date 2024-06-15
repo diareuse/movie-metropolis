@@ -21,7 +21,7 @@ class HomeViewModel @Inject constructor(
 
     val isLoggedIn get() = home.email != null
     val user = flow { emit(profile.getUser()) }
-        .filterNot { it.email.isBlank() }
+        .filterNot { it?.email.isNullOrBlank() }
         .retryOnNetworkError()
         .retainStateIn(viewModelScope, null)
     val membership = flow { emit(profile.getMembership()) }

@@ -75,7 +75,7 @@ internal open class CinemaCityComposition(
 
         override suspend fun getTickets(): List<Ticket> = coroutineScope {
             val cinemas = async { cinemas.getCinemas() }
-            client.getBookings().parallelMap { booking ->
+            client.runCatching { getBookings() }.getOrDefault(emptyList()).parallelMap { booking ->
                 val detail = async { client.getBooking(booking.id) }
                 val movie = async { events.getEvent(booking.movieId) }
                 val cinema = async { cinemas.await().first { it.id == booking.cinemaId } }

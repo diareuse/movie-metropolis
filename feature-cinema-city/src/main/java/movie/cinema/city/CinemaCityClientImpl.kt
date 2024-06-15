@@ -82,7 +82,12 @@ internal class CinemaCityClientImpl(
                             it.accessToken.isBlank() || it.refreshToken.isBlank()
                         }
                         val request = when (t) {
-                            null -> account.get().run { TokenRequest.Login(username, password) }
+                            null -> try {
+                                account.get().run { TokenRequest.Login(username, password) }
+                            } catch (e: Throwable) {
+                                return@refreshTokens null
+                            }
+
                             else -> TokenRequest.Refresh(t.refreshToken, auth.captcha)
                         }
                         client.getToken(request)

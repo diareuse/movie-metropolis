@@ -24,7 +24,7 @@ class ProfileEditorViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val user = facade.getUser()
+                val user = facade.getUser() ?: return@launch
                 state.update {
                     ProfileEditorState(
                         firstName = user.firstName,
@@ -52,7 +52,7 @@ class ProfileEditorViewModel @Inject constructor(
     }
 
     fun saveState() = viewModelScope.launch {
-        val user = facade.getUser()
+        val user = facade.getUser() ?: return@launch
         val membership = facade.getMembership()
         try {
             facade.save(UserViewFromView(user, membership, this@ProfileEditorViewModel))

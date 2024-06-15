@@ -8,7 +8,7 @@ interface ProfileFacade {
 
     suspend fun getCinemas(): List<CinemaSimpleView>
     suspend fun getMembership(): MembershipView?
-    suspend fun getUser(): UserView
+    suspend fun getUser(): UserView?
     suspend fun isLoggedIn(): Boolean
 
     suspend fun save(view: UserView)

@@ -64,6 +64,7 @@ fun HomeScreen(
         val entry = entry ?: return@LaunchedEffect
         val destination = entry.destination
         when (destination.route) {
+            HomeState.Tickets.name,
             HomeState.Profile.name -> {
                 onNavigateToLogin()
                 navController.navigateBottomNav(HomeState.Listing.name)
