@@ -85,7 +85,7 @@ internal class CinemaCityClientImpl(
                             null -> try {
                                 account.get().run { TokenRequest.Login(username, password) }
                             } catch (e: Throwable) {
-                                return@refreshTokens null
+                                return@refreshTokens BearerTokens("", "")
                             }
 
                             else -> TokenRequest.Refresh(t.refreshToken, auth.captcha)
