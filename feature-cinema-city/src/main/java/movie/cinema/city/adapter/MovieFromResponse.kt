@@ -17,7 +17,7 @@ internal data class MovieFromResponse(
     override val link: URL
         get() = URL(movie.url)
     override val releasedAt: Date
-        get() = movie.releasedAt
+        get() = movie.releasedAt ?: Date()
     override val originCountry: String?
         get() = movie.countryOfOrigin
     override val cast: List<String>

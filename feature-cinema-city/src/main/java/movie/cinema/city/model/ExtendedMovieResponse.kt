@@ -17,7 +17,7 @@ internal data class ExtendedMovieResponse(
     @SerialName("key") val id: Key,
     @SerialName("link") val url: String,
     @Serializable(YearSerializer::class)
-    @SerialName("releaseYear") val releasedAt: Date,
+    @SerialName("releaseYear") val releasedAt: Date?,
     @Serializable(LocalTimestampSerializer::class)
     @SerialName("dateStarted") val screeningFrom: Date,
     @Serializable(MinutesDurationSerializer::class)
