@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class BookingDetailResponse(
     @SerialName("venueName") val hall: String,
-    @SerialName("tickets") val tickets: List<Ticket>
+    @SerialName("tickets") val tickets: List<Ticket> = emptyList()
 ) {
 
     @Serializable
