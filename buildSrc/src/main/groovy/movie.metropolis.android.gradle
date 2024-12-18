@@ -26,9 +26,6 @@ android {
         debug {
             enableUnitTestCoverage true
         }
-        release {
-            minifyEnabled true
-        }
     }
 }
 

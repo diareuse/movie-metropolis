@@ -1,6 +1,8 @@
 -keepattributes SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 -flattenpackagehierarchy ''
+-allowaccessmodification
+-overloadaggressively
 
 # Keep `Companion` object fields of serializable classes.
 # This avoids serializer lookup through `getDeclaredClasses` as done for named companion objects.

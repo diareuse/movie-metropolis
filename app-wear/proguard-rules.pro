@@ -1,0 +1,13 @@
+-dontwarn movie.style.BarcodeKt
+-dontwarn movie.style.PlaceholderKt
+-dontwarn movie.style.modifier.BrightnessKt
+-dontwarn movie.style.theme.Theme$Container
+-dontwarn movie.style.theme.Theme$Text
+-dontwarn movie.style.theme.Theme
+-dontwarn movie.style.theme.ThemeKt
+-dontwarn movie.style.util.ActivityKt
+-dontwarn movie.wear.WearService$OnChangedListener
+-dontwarn movie.wear.WearService
+-dontwarn movie.wear.di.WearModule
+-dontwarn movie.wear.di.WearModule_Client$feature_wear_releaseFactory
+-dontwarn movie.wear.di.WearModule_ServiceFactory

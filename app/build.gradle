@@ -9,14 +9,6 @@ android {
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        benchmark {
-            initWith release
-            signingConfig signingConfigs.debug
-            matchingFallbacks = ['release']
-            debuggable false
-        }
-    }
 
 }
 
