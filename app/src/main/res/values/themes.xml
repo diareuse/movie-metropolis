@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="Theme.MovieMetropolis.Foundation" parent="android:Theme.DeviceDefault.Light">
+    <style name="Theme.MovieMetropolis.Foundation" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:statusBarColor">@color/color_status_bar</item>
         <item name="android:navigationBarColor">@color/color_navigation_bar</item>
     </style>

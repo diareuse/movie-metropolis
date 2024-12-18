@@ -12,9 +12,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import movie.metropolis.app.feature.play.PlayRating
-import movie.metropolis.app.screen.Navigation
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.home.HomeState
+import movie.metropolis.app.ui.Navigation
 import movie.style.theme.Theme
 
 @AndroidEntryPoint
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             Theme {
                 Surface {
                     val controller = rememberNavController()
-                    Navigation(controller)
+                    Navigation()
                     LaunchedEffect(Unit) {
                         navigateIfNecessary(controller)
                     }
