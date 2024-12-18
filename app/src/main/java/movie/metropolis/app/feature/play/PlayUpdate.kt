@@ -5,8 +5,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
@@ -90,9 +89,9 @@ fun PlayUpdateInProgress(
     ) {
         LinearProgressIndicator(
             modifier = Modifier.fillMaxSize(),
-            progress = progressValue,
+            progress = { progressValue },
             color = Theme.color.container.primary,
-            backgroundColor = Theme.color.container.primary.copy(alpha = .4f)
+            trackColor = Theme.color.container.primary.copy(alpha = .4f)
         )
         Text(
             modifier = Modifier.padding(16.dp),

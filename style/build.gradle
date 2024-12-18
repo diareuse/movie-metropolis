@@ -15,7 +15,6 @@ dependencies {
     api libs.compose.ui.tooling
     api libs.compose.ui.window
     api libs.compose.foundation
-    api libs.compose.material3
     api libs.compose.material
     api libs.compose.activity
     api libs.compose.navigation
@@ -26,10 +25,8 @@ dependencies {
 
     api libs.kotlinx.collections
 
-    api libs.google.material
     api libs.google.navigation.animation
     api libs.google.pager
-    api libs.google.placeholder
     api libs.google.haze
 
     debugApi libs.compose.ui.test

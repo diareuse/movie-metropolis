@@ -19,8 +19,12 @@ dependencies {
     implementation project(":feature-wear")
 
     implementation libs.compose.wear.material
-    implementation libs.compose.wear.foundation
-    implementation libs.compose.wear.navigation
+    implementation(libs.compose.wear.foundation) {
+        exclude group: "androidx.wear.compose", module: "compose-material"
+    }
+    implementation(libs.compose.wear.navigation) {
+        exclude group: "androidx.wear.compose", module: "compose-material"
+    }
     implementation libs.androidx.work
     implementation libs.androidx.splash
 

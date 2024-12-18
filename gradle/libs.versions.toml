@@ -10,12 +10,12 @@ androidx-room = "2.6.1"
 androidx-appcompat = "1.7.0"
 androidx-compose = "1.7.6"
 androidx-wear = "1.4.0"
+androidx-wear3 = "1.0.0-alpha30"
 androidx-navigation = "2.8.5"
 androidx-palette = "1.0.0"
 androidx-process = "2.8.7"
 androidx-splash = "1.2.0-alpha02"
 google-auth = "21.3.0"
-google-material = "1.13.0-alpha08"
 google-update = "2.1.0"
 google-location = "21.3.0"
 google-review = "2.0.2"
@@ -62,14 +62,12 @@ google-review = { module = "com.google.android.play:review-ktx", version.ref = "
 google-wearable = { module = "com.google.android.gms:play-services-wearable", version.ref = "google-wearable" }
 google-navigation-animation = { module = "com.google.accompanist:accompanist-navigation-animation", version.ref = "accompanist" }
 google-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
-google-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 google-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 google-instant = { module = "com.google.android.gms:play-services-instantapps", version.ref = "instant" }
 google-haze = { module = "dev.chrisbanes.haze:haze-jetpack-compose", version.ref = "haze" }
 compose-ui-core = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
-compose-material = { module = "androidx.compose.material:material", version.ref = "androidx-compose" }
-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-material = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "androidx-compose" }
 compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 compose-ui-test = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidx-compose" }
@@ -77,7 +75,7 @@ compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = 
 compose-ui-window = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "compose-material3" }
 compose-wear-navigation = { module = "androidx.wear.compose:compose-navigation", version.ref = "androidx-wear" }
 compose-wear-foundation = { module = "androidx.wear.compose:compose-foundation", version.ref = "androidx-wear" }
-compose-wear-material = { module = "androidx.wear.compose:compose-material", version.ref = "androidx-wear" }
+compose-wear-material = { module = "androidx.wear.compose:compose-material3", version.ref = "androidx-wear3" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-navigation" }
 hilt-compiler2 = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
@@ -97,7 +95,6 @@ ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "k
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-google-material = { module = "com.google.android.material:material", version.ref = "google-material" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito-core" }
 slf4j-android = { module = "org.slf4j:slf4j-android", version.ref = "slf4j-android" }
@@ -122,7 +119,6 @@ compose = [
     "compose-ui-core",
     "compose-activity",
     "compose-material",
-    "compose-material3",
     "compose-foundation",
     "compose-navigation",
     "compose-ui-test",

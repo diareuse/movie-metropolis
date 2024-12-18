@@ -16,7 +16,6 @@ import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.core.text.htmlEncode
-import com.google.accompanist.placeholder.placeholder
 import movie.metropolis.app.R
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.screen.card.UserViewParameter
@@ -64,12 +63,7 @@ fun ProfileScreen(
             ProfileIcon(
                 modifier = Modifier
                     .padding(24.dp)
-                    .size(128.dp)
-                    .placeholder(
-                        shape = CircleShape,
-                        color = LocalContentColor.current.copy(.1f),
-                        visible = user == null
-                    ),
+                    .size(128.dp),
                 email = user?.email.orEmpty(),
                 onClick = actionView { "https://gravatar.com/connect/?user_email=${user?.email?.htmlEncode()}" }
             )
