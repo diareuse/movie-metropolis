@@ -18,7 +18,7 @@ jobs:
       - uses: diareuse/movie-metropolis/.github/actions/android@master
       - uses: gradle/actions/dependency-submission@v4
         with:
-          dependency-graph-exclude-projects: ':buildSrc', 'movie-metropolis'
+          dependency-graph-exclude-projects: 'movie-metropolis'
           dependency-graph-exclude-configurations: '.*[Tt]est(Compile|Runtime)Classpath'
           dependency-resolution-task: assemble
           build-scan-publish: true
