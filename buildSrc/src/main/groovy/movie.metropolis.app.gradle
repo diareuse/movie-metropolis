@@ -2,8 +2,6 @@ plugins {
     id 'com.android.application'
     id 'movie.metropolis.android'
     id 'movie.metropolis.signing'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
 }
 
 def calendar = Calendar.getInstance()
