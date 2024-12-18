@@ -1,0 +1,27 @@
+name: i18n
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - '**/values/strings.xml'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: diareuse/movie-metropolis/.github/actions/translate@master
+        secrets: inherit
+        with:
+          filePath: "app/src/main/res/values/strings.xml"

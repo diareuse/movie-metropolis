@@ -1,0 +1,26 @@
+name: Health Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  perform-health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: diareuse/movie-metropolis/.github/actions/android@master
+      - uses: gradle/actions/dependency-submission@v4
+        with:
+          dependency-graph-exclude-projects: ':buildSrc', 'movie-metropolis'
+          dependency-graph-exclude-configurations: '.*[Tt]est(Compile|Runtime)Classpath'
+          dependency-resolution-task: assemble
+          build-scan-publish: true
+          build-scan-terms-of-use-url: "https://gradle.com/help/legal-terms-of-use"
+          build-scan-terms-of-use-agree: "yes"

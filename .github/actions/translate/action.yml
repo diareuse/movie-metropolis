@@ -1,0 +1,12 @@
+name: Translate Android Resources
+description: Uses Gemini LLM to use default english resources and translates them to all languages
+inputs:
+  geminiApiKey:
+    required: true
+  filePath:
+    required: true
+    description: "Path to the originating file without any affix. Preferably this would be an English file"
+
+runs:
+  using: "docker"
+  image: "Dockerfile"

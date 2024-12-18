@@ -1,0 +1,11 @@
+{
+  "always-update": true,
+  "include-v-in-tag": false,
+  "release-type": "simple",
+  "packages": {
+    ".": {
+      "changelog-path": "CHANGELOG.md"
+    }
+  },
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
+}

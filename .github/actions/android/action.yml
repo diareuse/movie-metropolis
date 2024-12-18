@@ -1,0 +1,25 @@
+name: Android Action
+description: Prepares Android runtime (ie. installs java and sets everything up)
+
+runs:
+  using: composite
+  steps:
+    - name: Set Java
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: temurin
+
+    - name: Enable cache
+      uses: actions/cache@v4
+      id: cache-android
+      with:
+        path: |
+          ~/.android
+        key: ${{ runner.os }}-android
+
+    - name: Setup Android
+      uses: android-actions/setup-android@v3
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4

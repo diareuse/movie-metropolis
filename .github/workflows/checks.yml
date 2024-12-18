@@ -7,41 +7,34 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     permissions:
       checks: write
       pull-requests: write
-
     steps:
       - uses: actions/checkout@v4
-
-      - run: |
-          chmod +x setup.sh
-          ./setup.sh
-
-      - name: Set Java
-        uses: actions/setup-java@v4
+      - uses: diareuse/movie-metropolis/.github/actions/android@master
+      - uses: gradle/gradle-build-action@v3
         with:
-          java-version: 17
-          distribution: temurin
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: test
-
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+          arguments: check
+      - uses: dorny/test-reporter@v1
         if: always()
         with:
-          junit_files: "**/test-results/**/*.xml"
-
-  dependabot:
+          name: Tests
+          path: "**/test-results/**/*.xml"
+          reporter: java-junit
+          fail-on-empty: false
+  builds:
     runs-on: ubuntu-latest
-    needs: [ test ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: diareuse/movie-metropolis/.github/actions/android@master
+      - uses: gradle/gradle-build-action@v3
+        with:
+          arguments: assemble
+
+  merge:
+    runs-on: ubuntu-latest
+    needs: [ check, builds ]
     permissions:
       pull-requests: write
       issues: write
