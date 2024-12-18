@@ -34,7 +34,7 @@ jobs:
 
   merge:
     runs-on: ubuntu-latest
-    needs: [ check, builds ]
+    needs: [ test, builds ]
     permissions:
       pull-requests: write
       issues: write
