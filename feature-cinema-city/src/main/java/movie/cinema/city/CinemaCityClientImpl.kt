@@ -79,7 +79,7 @@ internal class CinemaCityClientImpl(
                     loadTokens { BearerTokens(tokenStore.token, tokenStore.refreshToken) }
                     refreshTokens {
                         val t = oldTokens?.takeUnless {
-                            it.accessToken.isBlank() || it.refreshToken.isBlank()
+                            it.accessToken.isBlank() || it.refreshToken.isNullOrBlank()
                         }
                         val request = when (t) {
                             null -> try {
@@ -88,7 +88,7 @@ internal class CinemaCityClientImpl(
                                 return@refreshTokens BearerTokens("", "")
                             }
 
-                            else -> TokenRequest.Refresh(t.refreshToken, auth.captcha)
+                            else -> TokenRequest.Refresh(t.refreshToken.orEmpty(), auth.captcha)
                         }
                         client.getToken(request)
                     }
@@ -220,7 +220,7 @@ internal class CinemaCityClientImpl(
         val token = response.throwOnError().body<TokenResponse>()
         return BearerTokens(token.accessToken, token.refreshToken).also {
             tokenStore.token = it.accessToken
-            tokenStore.refreshToken = it.refreshToken
+            tokenStore.refreshToken = it.refreshToken.orEmpty()
         }
     }
 

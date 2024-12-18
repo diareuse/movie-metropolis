@@ -1,15 +1,12 @@
 plugins {
     id 'movie.metropolis.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 android {
 
     buildFeatures {
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.compiler.get()
     }
 
 }

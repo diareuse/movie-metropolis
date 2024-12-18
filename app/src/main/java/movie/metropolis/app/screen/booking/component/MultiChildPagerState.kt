@@ -78,7 +78,7 @@ fun rememberMultiChildPagerState(
 
 @Composable
 fun rememberMultiChildPagerStateSaver(children: Array<out PagerState>) = remember(children) {
-    listSaver(
+    listSaver<MultiChildPagerState, Any>(
         save = {
             listOf(
                 it.currentPage,
@@ -90,7 +90,7 @@ fun rememberMultiChildPagerStateSaver(children: Array<out PagerState>) = remembe
             MultiChildPagerState(
                 initialPage = it[0] as Int,
                 initialPageOffsetFraction = it[1] as Float,
-                updatedPageCount = { it[2] },
+                updatedPageCount = { it[2] as Int },
                 children = children
             )
         }
