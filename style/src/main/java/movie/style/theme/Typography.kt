@@ -7,10 +7,15 @@ import androidx.compose.ui.unit.*
 import movie.style.R
 
 private val AppFontFamily = FontFamily(
-    Font(R.font.sora_extra_bold, weight = FontWeight.ExtraBold),
-    Font(R.font.sora_bold, weight = FontWeight.Medium),
-    Font(R.font.sora_medium, weight = FontWeight.Normal),
-    Font(R.font.sora_extra_bold, weight = FontWeight.Bold)
+    Font(R.font.dmsans_black, weight = FontWeight.Black),
+    Font(R.font.dmsans_bold, weight = FontWeight.Bold),
+    Font(R.font.dmsans_extrabold, weight = FontWeight.ExtraBold),
+    Font(R.font.dmsans_extralight, weight = FontWeight.ExtraLight),
+    Font(R.font.dmsans_light, weight = FontWeight.Light),
+    Font(R.font.dmsans_medium, weight = FontWeight.Medium),
+    Font(R.font.dmsans_regular, weight = FontWeight.Normal),
+    Font(R.font.dmsans_semibold, weight = FontWeight.SemiBold),
+    Font(R.font.dmsans_thin, weight = FontWeight.Thin)
 )
 
 internal val ThemeTypography = Typography(
