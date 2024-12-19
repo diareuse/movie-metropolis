@@ -16,8 +16,10 @@ import movie.style.rememberImageState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieScreen(
+    showPurchase: Boolean,
     detail: MovieDetailView,
     onBackClick: () -> Unit,
+    onBuyClick: () -> Unit,
     onLinkClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) = MovieScreenScaffold(
@@ -61,6 +63,11 @@ fun MovieScreen(
     rating = {
         val r = detail.rating
         if (r != null) Text(r)
+    },
+    purchase = {
+        if (showPurchase) IconButton(onBuyClick) {
+            Icon(Icons.Default.ShoppingCart, null)
+        }
     }
 )
 
@@ -68,5 +75,5 @@ fun MovieScreen(
 @PreviewFontScale
 @Composable
 private fun MovieScreenPreview() = PreviewLayout {
-    MovieScreen(MovieDetailViewProvider().values.first(), {}, {})
+    MovieScreen(true, MovieDetailViewProvider().values.first(), {}, {}, {})
 }

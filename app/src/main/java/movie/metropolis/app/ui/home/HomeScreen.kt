@@ -19,7 +19,7 @@ import movie.style.util.pc
 @Composable
 fun HomeScreen(
     state: HomeScreenState,
-    onMovieClick: (id: String) -> Unit,
+    onMovieClick: (id: String, upcoming: Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) = Scaffold(modifier = modifier) { padding ->
     LazyVerticalStaggeredGrid(
@@ -34,7 +34,7 @@ fun HomeScreen(
         }
         items(state.current) {
             MovieBox(
-                onClick = { onMovieClick(it.id) },
+                onClick = { onMovieClick(it.id, false) },
                 aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
                 name = { Text(it.name) },
                 poster = { Image(rememberImageState(it.poster?.url)) },
@@ -50,7 +50,7 @@ fun HomeScreen(
         }
         items(state.upcoming) {
             MovieBox(
-                onClick = { onMovieClick(it.id) },
+                onClick = { onMovieClick(it.id, true) },
                 aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
                 name = { Text(it.name) },
                 poster = { Image(rememberImageState(it.poster?.url)) },
@@ -78,5 +78,5 @@ private fun HomeScreenPreview() = PreviewLayout {
     LaunchedEffect(Unit) {
         state.current.addAll(MovieViewProvider().values)
     }
-    HomeScreen(state, {})
+    HomeScreen(state, { _, _ -> })
 }

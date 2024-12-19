@@ -86,12 +86,13 @@ fun Navigation(
                     onExitClick = ::navigateHome
                 )
             }
-            composable(Route.Upcoming.route) { Text("Upcoming") }
             composable(Route.Home.route, arguments = Route.Home.arguments) {
                 val vm = hiltViewModel<HomeViewModel>()
                 HomeScreen(
                     state = vm.state,
-                    onMovieClick = { navController.navigate(Route.Movie(it)) }
+                    onMovieClick = { id, upcoming ->
+                        navController.navigate(Route.Movie(id, upcoming))
+                    }
                 )
             }
             composable(Route.UserEditor.route) { Text("UserEditor") }
@@ -100,13 +101,15 @@ fun Navigation(
                 val state = vm.state
                 val context = LocalContext.current
                 MovieScreen(
+                    showPurchase = !vm.upcoming,
                     detail = state.detail,
                     onBackClick = navController::navigateUp,
                     onLinkClick = {
                         var intent = Intent(Intent.ACTION_VIEW).setData(it.toUri())
                         intent = Intent.createChooser(intent, it)
                         context.startActivity(intent)
-                    }
+                    },
+                    onBuyClick = { navController.navigate(Route.Booking.Movie(state.detail.id)) }
                 )
             }
             composable(Route.Booking.Movie.route) { Text("Booking.Movie") }

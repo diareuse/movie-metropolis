@@ -32,6 +32,7 @@ fun MovieScreenScaffold(
     trailer: @Composable () -> Unit,
     link: @Composable () -> Unit,
     rating: @Composable () -> Unit,
+    purchase: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) = Scaffold(
@@ -75,6 +76,7 @@ fun MovieScreenScaffold(
             ) {
                 poster()
             }
+            purchase()
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(1.pc),
                 verticalArrangement = Arrangement.spacedBy(1.pc)
@@ -117,6 +119,7 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
         description = { Text(LoremIpsum().values.first()) },
         trailer = {},
         link = {},
+        purchase = {},
         rating = { Text("74%") }
     )
 }

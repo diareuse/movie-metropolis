@@ -14,8 +14,8 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 class MovieViewModel private constructor(
-    id: String,
-    facade: MovieFacade
+    facade: MovieFacade,
+    val upcoming: Boolean
 ) : ViewModel() {
 
     @Inject
@@ -31,8 +31,8 @@ class MovieViewModel private constructor(
         args: Route.Movie.Arguments,
         facade: MovieFacade.Factory,
     ) : this(
-        args.movie,
-        facade.create(args.movie)
+        facade.create(args.movie),
+        args.upcoming
     )
 
     val state = MovieDetailState()
