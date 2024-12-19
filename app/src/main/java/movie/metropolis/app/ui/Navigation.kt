@@ -1,10 +1,13 @@
 package movie.metropolis.app.ui
 
+import android.content.Intent
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.*
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -17,6 +20,8 @@ import movie.metropolis.app.screen.setup.component.rememberOneTapSaving
 import movie.metropolis.app.screen.setup.component.requestOneTapAsState
 import movie.metropolis.app.ui.home.HomeScreen
 import movie.metropolis.app.ui.home.HomeViewModel
+import movie.metropolis.app.ui.movie.MovieScreen
+import movie.metropolis.app.ui.movie.MovieViewModel
 import movie.metropolis.app.ui.setup.SetupScreen
 import movie.metropolis.app.ui.setup.SetupViewModel
 
@@ -82,7 +87,7 @@ fun Navigation(
                 )
             }
             composable(Route.Upcoming.route) { Text("Upcoming") }
-            composable(Route.Home.route) {
+            composable(Route.Home.route, arguments = Route.Home.arguments) {
                 val vm = hiltViewModel<HomeViewModel>()
                 HomeScreen(
                     state = vm.state,
@@ -90,7 +95,20 @@ fun Navigation(
                 )
             }
             composable(Route.UserEditor.route) { Text("UserEditor") }
-            composable(Route.Movie.route) { Text("Movie") }
+            composable(Route.Movie.route, arguments = Route.Movie.arguments) {
+                val vm = hiltViewModel<MovieViewModel>()
+                val state = vm.state
+                val context = LocalContext.current
+                MovieScreen(
+                    detail = state.detail,
+                    onBackClick = navController::navigateUp,
+                    onLinkClick = {
+                        var intent = Intent(Intent.ACTION_VIEW).setData(it.toUri())
+                        intent = Intent.createChooser(intent, it)
+                        context.startActivity(intent)
+                    }
+                )
+            }
             composable(Route.Booking.Movie.route) { Text("Booking.Movie") }
             composable(Route.Booking.Cinema.route) { Text("Booking.Cinema") }
             composable(Route.OrderComplete.route) { Text("OrderComplete") }
