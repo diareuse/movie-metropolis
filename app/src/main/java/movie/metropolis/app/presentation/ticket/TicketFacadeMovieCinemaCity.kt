@@ -47,7 +47,7 @@ class TicketFacadeMovieCinemaCity(
     }
 
     override val poster: Flow<String?> = movie.map {
-        MovieDetailViewFromMovie(it).backdrop.url
+        MovieDetailViewFromMovie(it).backdrop?.url
     }
     override val name: Flow<String> = movie.map { it.name.localized }
     override val filters = _filters.activate(activeLanguages, activeTypes)

@@ -2,20 +2,21 @@ package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
 
-@Immutable
-interface MovieDetailView {
+@Stable
+data class MovieDetailView(
     val id: String
-    val name: String
-    val nameOriginal: String
-    val releasedAt: String
-    val duration: String
-    val countryOfOrigin: String
-    val cast: List<PersonView>
-    val directors: List<PersonView>
-    val description: String
-    val availableFrom: String
-    val poster: ImageView?
-    val backdrop: ImageView?
-    val trailer: VideoView?
-    val rating: String?
+) {
+    var name: String by mutableStateOf("")
+    var nameOriginal: String by mutableStateOf("")
+    var releasedAt: String by mutableStateOf("")
+    var duration: String by mutableStateOf("")
+    var countryOfOrigin: String by mutableStateOf("")
+    var cast: List<PersonView> by mutableStateOf(emptyList())
+    var directors: List<PersonView> by mutableStateOf(emptyList())
+    var description: String by mutableStateOf("")
+    var availableFrom: String by mutableStateOf("")
+    var poster: ImageView? by mutableStateOf(null)
+    var backdrop: ImageView? by mutableStateOf(null)
+    var trailer: VideoView? by mutableStateOf(null)
+    var rating: String? by mutableStateOf(null)
 }

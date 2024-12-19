@@ -3,11 +3,13 @@ package movie.metropolis.app.util
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.retryWhen
@@ -16,6 +18,14 @@ import kotlinx.coroutines.launch
 import movie.metropolis.app.presentation.Loadable
 import java.net.UnknownHostException
 import kotlin.time.Duration
+
+@OptIn(ExperimentalCoroutinesApi::class)
+fun <T> Flow<T>.onEachLaunch(body: suspend CoroutineScope.(T) -> Unit) = flatMapLatest {
+    flow {
+        emit(it)
+        coroutineScope { body(it) }
+    }
+}
 
 fun <T> Flow<T>.throttleWithTimeout(timeout: Duration) = channelFlow {
     var emissionJob: Job? = null

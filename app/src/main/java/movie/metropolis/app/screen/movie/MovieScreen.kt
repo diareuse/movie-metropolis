@@ -145,7 +145,7 @@ fun MovieScreen(
                                 },
                                 name = { Text(it.name) },
                                 popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
-                                movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
+                                movieCount = { Text(if (it.movies.size > 0) it.movies.joinToString { it.name } else "n/a") },
                                 color = state.palette.color,
                                 onClick = actionView { it.url }
                             )
@@ -185,7 +185,7 @@ fun MovieScreen(
                                 },
                                 name = { Text(it.name) },
                                 popularity = { Text(if (it.popularity > 0) it.popularity.toString() else "n/a") },
-                                movieCount = { Text(if (it.starredInMovies > 0) it.starredInMovies.toString() else "n/a") },
+                                movieCount = { Text(if (it.movies.size > 0) it.movies.joinToString { it.name } else "n/a") },
                                 color = state.palette.color,
                                 onClick = actionView { it.url }
                             )
