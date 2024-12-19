@@ -1,18 +1,16 @@
 package movie.metropolis.app.presentation.listing
 
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
+import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
-import movie.metropolis.app.model.adapter.MovieViewWithRating
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
 import movie.rating.MovieMetadata
+import movie.style.layout.DefaultPosterAspectRatio
 import java.util.Calendar
 
 class ListingFacadeWithRating(
@@ -33,16 +31,19 @@ class ListingFacadeWithRating(
 
     private fun withRating(movies: ImmutableList<MovieView>) = channelFlow {
         if (cache.isEmpty()) send(movies)
-        val writeLock = Mutex()
         val movies = movies.toMutableList()
-        for ((index, movie) in movies.withIndex()) launch {
+        for (movie in movies) launch {
             val rating = getRating(movie) ?: return@launch
-            val updated = MovieViewWithRating(movie, rating)
-            val output = writeLock.withLock {
-                movies[index] = updated
-                movies.toPersistentList()
+            movie.rating = rating.rating.takeIf { it > 0 }?.let { "%d%%".format(it) }
+            movie.url = rating.url
+            movie.poster = rating.posterImageUrl.takeUnless { it.isBlank() }?.let {
+                object : ImageView {
+                    override val aspectRatio: Float
+                        get() = DefaultPosterAspectRatio
+                    override val url: String
+                        get() = it
+                }
             }
-            send(output)
         }
     }
 

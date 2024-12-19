@@ -5,7 +5,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import movie.cinema.city.CinemaCity
 import movie.metropolis.app.model.ListingView
-import movie.metropolis.app.model.adapter.MovieViewFromMovie
+import movie.metropolis.app.model.MovieView
+import movie.metropolis.app.model.adapter.ImageViewFromMovie
+import movie.metropolis.app.model.adapter.VideoViewFromMovie
 import movie.metropolis.app.util.retryOnNetworkError
 
 class ListingFacadeCinemaCity(
@@ -15,7 +17,25 @@ class ListingFacadeCinemaCity(
 
     override fun get(): Flow<ListingView> = flow {
         val events = cinemaCity.events.getEvents(future)
-            .map(::MovieViewFromMovie).toImmutableList().let(::ListingView)
+            .map { movie ->
+                MovieView(movie.id).apply {
+                    name = movie.name.localized
+                    releasedAt = movie.releasedAt.toString()
+                    duration = movie.length?.toString().orEmpty()
+                    availableFrom = movie.screeningFrom.toString()
+                    directors = movie.directors
+                    cast = movie.cast
+                    countryOfOrigin = movie.originCountry.orEmpty()
+                    url = movie.link.toString()
+                    poster =
+                        movie.images.minByOrNull { it.width * it.height }?.let(::ImageViewFromMovie)
+                    posterLarge =
+                        movie.images.maxByOrNull { it.width * it.height }?.let(::ImageViewFromMovie)
+                    video = movie.videos.firstOrNull()?.let(::VideoViewFromMovie)
+                }
+            }
+            .toImmutableList()
+            .let(::ListingView)
         emit(events)
     }.retryOnNetworkError()
 
