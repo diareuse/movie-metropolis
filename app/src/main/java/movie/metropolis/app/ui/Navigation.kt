@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.screen.setup.component.rememberOneTapSaving
 import movie.metropolis.app.screen.setup.component.requestOneTapAsState
+import movie.metropolis.app.ui.home.HomeScreen
+import movie.metropolis.app.ui.home.HomeViewModel
 import movie.metropolis.app.ui.setup.SetupScreen
 import movie.metropolis.app.ui.setup.SetupViewModel
 
@@ -80,7 +82,13 @@ fun Navigation(
                 )
             }
             composable(Route.Upcoming.route) { Text("Upcoming") }
-            composable(Route.Home.route) { Text("Home") }
+            composable(Route.Home.route) {
+                val vm = hiltViewModel<HomeViewModel>()
+                HomeScreen(
+                    state = vm.state,
+                    onMovieClick = { navController.navigate(Route.Movie(it)) }
+                )
+            }
             composable(Route.UserEditor.route) { Text("UserEditor") }
             composable(Route.Movie.route) { Text("Movie") }
             composable(Route.Booking.Movie.route) { Text("Booking.Movie") }
