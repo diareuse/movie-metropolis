@@ -26,6 +26,7 @@ class MovieFacadeRating(
             emit(it)
             val m = getMetadata(it)
             if (m != null) {
+                it.url = m.url
                 it.rating = m.rating.takeIf { it > 0 }?.let { "%d%%".format(it) }
                 it.poster = m.posterImageUrl.let {
                     object : ImageView {

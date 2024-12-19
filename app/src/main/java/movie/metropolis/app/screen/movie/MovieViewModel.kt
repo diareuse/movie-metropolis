@@ -5,6 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.presentation.detail.MovieFacade
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
@@ -13,7 +14,8 @@ import javax.inject.Inject
 @Stable
 @HiltViewModel
 class MovieViewModel private constructor(
-    private val facade: MovieFacade,
+    id: String,
+    facade: MovieFacade,
     val hideShowings: Boolean
 ) : ViewModel() {
 
@@ -30,11 +32,12 @@ class MovieViewModel private constructor(
         args: Route.Movie.Arguments,
         facade: MovieFacade.Factory,
     ) : this(
+        args.movie,
         facade.create(args.movie),
         args.upcoming
     )
 
     val movie = facade.movie
-        .retainStateIn(viewModelScope, null)
+        .retainStateIn(viewModelScope, MovieDetailView(id))
 
 }

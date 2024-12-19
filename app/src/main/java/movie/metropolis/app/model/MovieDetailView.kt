@@ -19,4 +19,5 @@ data class MovieDetailView(
     var backdrop: ImageView? by mutableStateOf(null)
     var trailer: VideoView? by mutableStateOf(null)
     var rating: String? by mutableStateOf(null)
+    var url: String by mutableStateOf("")
 }
