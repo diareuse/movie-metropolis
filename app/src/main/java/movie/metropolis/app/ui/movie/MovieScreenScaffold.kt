@@ -39,6 +39,13 @@ fun MovieScreenScaffold(
     modifier = modifier,
     topBar = {
         LargeTopAppBar(
+            modifier = Modifier
+                .windowInsetsPadding(
+                    WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
+                )
+                .padding(1.pc)
+                .clip(MaterialTheme.shapes.medium),
+            windowInsets = WindowInsets(0),
             scrollBehavior = scrollBehavior,
             title = title,
             navigationIcon = navigationIcon,
