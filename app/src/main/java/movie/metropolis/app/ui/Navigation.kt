@@ -94,9 +94,13 @@ fun Navigation(
                     state = vm.state,
                     onMovieClick = { id, upcoming ->
                         navController.navigate(Route.Movie(id, upcoming))
+                    },
+                    onProfileClick = {
+                        navController.navigate(Route.User())
                     }
                 )
             }
+            composable(Route.User.route) { Text("User") }
             composable(Route.UserEditor.route) { Text("UserEditor") }
             composable(Route.Movie.route, arguments = Route.Movie.arguments) {
                 val vm = hiltViewModel<MovieViewModel>()

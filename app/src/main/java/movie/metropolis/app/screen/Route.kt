@@ -62,7 +62,11 @@ sealed class Route(
 
     }
 
-    data object UserEditor : Route("users/me") {
+    data object UserEditor : Route("users/me/edit") {
+        operator fun invoke() = route
+    }
+
+    data object User : Route("users/me") {
         operator fun invoke() = route
     }
 
