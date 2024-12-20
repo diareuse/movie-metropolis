@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -22,22 +21,20 @@ fun MovieBox(
     category: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     aspectRatio: Float = DefaultPosterAspectRatio,
-) = Surface(
+) = Card(
     modifier = modifier,
-    onClick = onClick,
-    shape = MaterialTheme.shapes.medium,
-    tonalElevation = 1.pc
+    onClick = onClick
 ) {
-    Column(modifier = Modifier.padding(1.pc)) {
+    Card {
         Box(
             modifier = Modifier
-                .aspectRatio(aspectRatio)
-                .clip(MaterialTheme.shapes.small),
+                .aspectRatio(aspectRatio),
             propagateMinConstraints = true
         ) {
             poster()
         }
-        Spacer(Modifier.height(1.pc))
+    }
+    Column(modifier = Modifier.padding(1.pc)) {
         name()
         category()
         rating()
