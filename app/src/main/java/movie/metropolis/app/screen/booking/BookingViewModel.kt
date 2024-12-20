@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.presentation.ticket.TicketFacade
 import movie.metropolis.app.screen.Route
@@ -62,15 +61,19 @@ class BookingViewModel private constructor(
         .retainStateIn(viewModelScope, persistentListOf())
     val filters = facade
         .filterNotNull()
-        .flatMapLatest { it.filters }
-        .retainStateIn(viewModelScope, DataFiltersView())
+        .map { it.filters }
+        .retainStateIn(viewModelScope, FiltersView())
 
     fun toggle(filter: FiltersView.Type) {
-        facade.value?.toggle(filter)
+        filters.value.types.forEach {
+            if (it.type == filter.type) it.selected = !it.selected
+        }
     }
 
     fun toggle(filter: FiltersView.Language) {
-        facade.value?.toggle(filter)
+        filters.value.languages.forEach {
+            if (it.locale == filter.locale) it.selected = !it.selected
+        }
     }
 
 }

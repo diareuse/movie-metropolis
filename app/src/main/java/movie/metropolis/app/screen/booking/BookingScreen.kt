@@ -14,23 +14,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
-import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import movie.metropolis.app.R
-import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
-import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.model.ShowingTag
 import movie.metropolis.app.model.SpecificTimeView
 import movie.metropolis.app.model.TimeView
-import movie.metropolis.app.screen.booking.BookingState.Companion.asBookingState
 import movie.metropolis.app.screen.booking.component.CinemaTimeContainer
 import movie.metropolis.app.screen.booking.component.DateBox
 import movie.metropolis.app.screen.booking.component.MovieTimeContainer
@@ -45,7 +40,6 @@ import movie.style.BackgroundImage
 import movie.style.CollapsingTopAppBar
 import movie.style.Image
 import movie.style.haptic.TickOnChange
-import movie.style.imagePlaceholder
 import movie.style.layout.PreviewLayout
 import movie.style.layout.alignForLargeScreen
 import movie.style.layout.largeScreenPadding
@@ -55,7 +49,6 @@ import movie.style.modifier.surface
 import movie.style.modifier.verticalOverlay
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
-import movie.style.textPlaceholder
 import movie.style.theme.Theme
 import java.text.DateFormat
 import java.util.Date
@@ -164,7 +157,7 @@ fun BookingScreen(
             verticalAlignment = Alignment.Top,
             contentPadding = largeScreenPadding
         ) {
-            val page by items[it].content.asBookingState().collectAsState(BookingState.loading())
+            val page = items[it].content
             val bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.interpolatePage(
@@ -183,7 +176,7 @@ fun BookingScreen(
                 ) + PaddingValues(24.dp)
             ) {
                 val page = page
-                if (page is BookingState.Value) for (view in page.value) {
+                for (view in page) {
                     if (view.times.isEmpty()) continue
                     when (view) {
                         is TimeView.Cinema -> item(
@@ -259,68 +252,6 @@ fun BookingScreen(
                         Spacer(modifier = Modifier.fillMaxWidth())
                     }
                 }
-                else if (page is BookingState.Loading) {
-                    item(
-                        span = StaggeredGridItemSpan.FullLine
-                    ) {
-                        CinemaTimeContainer(
-                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
-                            color = Theme.color.container.background,
-                            contentColor = Theme.color.content.background,
-                            name = { Text("#".repeat(10), Modifier.textPlaceholder()) }
-                        ) {
-                            Box(modifier = Modifier.imagePlaceholder())
-                        }
-                    }
-                    item {
-                        val count = remember { nextInt(1, 5) }
-                        for (ignore in 0 until count) Column(
-                            modifier = Modifier.animateItem(fadeInSpec = null, fadeOutSpec = null),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            ProjectionTypeRow(
-                                modifier = Modifier.fillMaxWidth(),
-                                language = {
-                                    ProjectionTypeRowDefaults.Speech {
-                                        Text("#".repeat(5), Modifier.textPlaceholder())
-                                    }
-                                },
-                                subtitle = {}
-                            ) {
-                                ProjectionTypeRowDefaults.TypeOther(
-                                    "#".repeat(5),
-                                    Modifier.textPlaceholder()
-                                )
-                            }
-                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                                val count2 = remember { nextInt(1, 5) }
-                                for (ignore in 0 until count2) TimeButton(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    time = 0,
-                                    onClick = {}
-                                ) {
-                                    Text("#".repeat(5), Modifier.textPlaceholder())
-                                }
-                            }
-                        }
-                    }
-                } else if (page is BookingState.Empty) {
-                    item(span = StaggeredGridItemSpan.FullLine) {
-                        Text(
-                            text = stringResource(R.string.no_projections),
-                            style = Theme.textStyle.emphasis,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                } else if (page is BookingState.Error) {
-                    item(span = StaggeredGridItemSpan.FullLine) {
-                        Text(
-                            page.exception.stackTraceToString(),
-                            style = Theme.textStyle.emphasis,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
             }
         }
     }
@@ -345,82 +276,70 @@ private fun TimeScreenPreview(
 }
 
 class LazyTimeViewProvider : PreviewParameterProvider<LazyTimeView> {
-    override val values = sequence<LazyTimeView> {
-        yield(InstantTimeView(TimeViewMovie(), TimeViewCinema()))
+    override val values = sequence {
+        yield(LazyTimeView(Date()).apply {
+            content += TimeView.Movie(MovieViewProvider().values.first(), FiltersView()).apply {
+                times += mapOf(
+                    ShowingTag(
+                        language = listOf(
+                            Locale.FRENCH,
+                            Locale.ENGLISH,
+                            Locale.ITALIAN,
+                            Locale.KOREAN
+                        ).random(),
+                        subtitles = listOf(
+                            Locale.ENGLISH,
+                            Locale.CHINESE,
+                            Locale.GERMAN,
+                            Locale.JAPANESE,
+                            null
+                        ).random(),
+                        projection = listOf(
+                            ProjectionType.Imax,
+                            ProjectionType.Plane3D,
+                            ProjectionType.Plane2D,
+                            ProjectionType.Other("Foo")
+                        ).shuffled().take(nextInt(1, 3)).toImmutableList()
+                    ) to listOf(
+                        FormattedTimeView(1672560000000),
+                        FormattedTimeView(1672570800000),
+                        FormattedTimeView(1672588800000),
+                        FormattedTimeView(1672599600000),
+                    )
+                )
+            }
+            content += TimeView.Cinema(CinemaViewParameter().values.first(), FiltersView()).apply {
+                times += mapOf(
+                    ShowingTag(
+                        language = listOf(
+                            Locale.FRENCH,
+                            Locale.ENGLISH,
+                            Locale.ITALIAN,
+                            Locale.KOREAN
+                        ).random(),
+                        subtitles = listOf(
+                            Locale.ENGLISH,
+                            Locale.CHINESE,
+                            Locale.GERMAN,
+                            Locale.JAPANESE,
+                            null
+                        ).random(),
+                        projection = listOf(
+                            ProjectionType.Imax,
+                            ProjectionType.Plane3D,
+                            ProjectionType.Plane2D,
+                            ProjectionType.Other("Foo")
+                        ).shuffled().take(nextInt(1, 3)).toImmutableList()
+                    ) to listOf(
+                        FormattedTimeView(1672560000000),
+                        FormattedTimeView(1672570800000),
+                        FormattedTimeView(1672588800000),
+                        FormattedTimeView(1672599600000),
+                    )
+                )
+            }
+        })
     }
-
-    private class InstantTimeView(
-        items: List<TimeView>
-    ) : LazyTimeView {
-        constructor(vararg items: TimeView) : this(items.toList())
-
-        override val content: Flow<List<TimeView>> = flowOf(items)
-        override val date: Date = Date()
-    }
-
-    private data class TimeViewMovie(
-        override val movie: MovieView = MovieViewProvider().values.first(),
-        override val times: Map<ShowingTag, List<SpecificTimeView>> = mapOf(
-            ShowingTag(
-                language = listOf(
-                    Locale.FRENCH,
-                    Locale.ENGLISH,
-                    Locale.ITALIAN,
-                    Locale.KOREAN
-                ).random(),
-                subtitles = listOf(
-                    Locale.ENGLISH,
-                    Locale.CHINESE,
-                    Locale.GERMAN,
-                    Locale.JAPANESE,
-                    null
-                ).random(),
-                projection = listOf(
-                    ProjectionType.Imax,
-                    ProjectionType.Plane3D,
-                    ProjectionType.Plane2D,
-                    ProjectionType.Other("Foo")
-                ).shuffled().take(nextInt(1, 3)).toImmutableList()
-            ) to listOf(
-                FormattedTimeView(1672560000000),
-                FormattedTimeView(1672570800000),
-                FormattedTimeView(1672588800000),
-                FormattedTimeView(1672599600000),
-            )
-        )
-    ) : TimeView.Movie
-
-    private data class TimeViewCinema(
-        override val cinema: CinemaView = CinemaViewParameter().values.first(),
-        override val times: Map<ShowingTag, List<SpecificTimeView>> = mapOf(
-            ShowingTag(
-                language = listOf(
-                    Locale.FRENCH,
-                    Locale.ENGLISH,
-                    Locale.ITALIAN,
-                    Locale.KOREAN
-                ).random(),
-                subtitles = listOf(
-                    Locale.ENGLISH,
-                    Locale.CHINESE,
-                    Locale.GERMAN,
-                    Locale.JAPANESE,
-                    null
-                ).random(),
-                projection = listOf(
-                    ProjectionType.Imax,
-                    ProjectionType.Plane3D,
-                    ProjectionType.Plane2D,
-                    ProjectionType.Other("Foo")
-                ).shuffled().take(nextInt(1, 3)).toImmutableList()
-            ) to listOf(
-                FormattedTimeView(1672560000000),
-                FormattedTimeView(1672570800000),
-                FormattedTimeView(1672588800000),
-                FormattedTimeView(1672599600000),
-            )
-        )
-    ) : TimeView.Cinema
 
     private data class FormattedTimeView(
         override val time: Long,

@@ -39,7 +39,6 @@ import movie.metropolis.app.presentation.setup.SetupFacade
 import movie.metropolis.app.presentation.setup.SetupFacadeFromFeature
 import movie.metropolis.app.presentation.ticket.TicketFacade
 import movie.metropolis.app.presentation.ticket.TicketFacadeCinemaCinemaCity
-import movie.metropolis.app.presentation.ticket.TicketFacadeFilter
 import movie.metropolis.app.presentation.ticket.TicketFacadeMovieCinemaCity
 import movie.rating.ActorProvider
 import movie.rating.MetadataProvider
@@ -179,19 +178,13 @@ class FacadeModule {
     ) = object : TicketFacade.Factory {
         override fun movie(id: String): TicketFacade.LocationFactory {
             return TicketFacade.LocationFactory { _ ->
-                var out: TicketFacade
-                out = TicketFacadeMovieCinemaCity(id, cinema)
-                out = TicketFacadeFilter(out)
-                out
+                TicketFacadeMovieCinemaCity(id, cinema)
             }
         }
 
         override fun cinema(id: String): TicketFacade.LocationFactory {
             return TicketFacade.LocationFactory { _ ->
-                var out: TicketFacade
-                out = TicketFacadeCinemaCinemaCity(id, cinema)
-                out = TicketFacadeFilter(out)
-                out
+                TicketFacadeCinemaCinemaCity(id, cinema)
             }
         }
     }

@@ -1,20 +1,29 @@
 package movie.metropolis.app.presentation.ticket
 
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import movie.cinema.city.CinemaCity
-import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.LazyTimeView
+import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.ProjectionType
+import movie.metropolis.app.model.ShowingTag
+import movie.metropolis.app.model.TimeView
 import movie.metropolis.app.model.adapter.CinemaViewFromCinema
+import movie.metropolis.app.model.adapter.ImageViewFromMovie
+import movie.metropolis.app.model.adapter.SpecificTimeViewFromFeature
+import movie.metropolis.app.model.adapter.VideoViewFromFeature
 import movie.metropolis.app.util.retryOnNetworkError
+import movie.metropolis.app.util.toStringComponents
+import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration.Companion.days
@@ -24,36 +33,57 @@ class TicketFacadeCinemaCinemaCity(
     private val cinemaCity: CinemaCity
 ) : TicketFacade {
 
-    private val activeLanguages = MutableStateFlow(setOf<Locale>())
-    private val activeTypes = MutableStateFlow(setOf<ProjectionType>())
-    private val _filters = MutableStateFlow(DataFiltersView())
     private val cinema = flow { emit(cinemaCity.cinemas.getCinemas().first { it.id == id }) }
         .retryOnNetworkError()
         .shareIn(GlobalScope, SharingStarted.Lazily, replay = 1)
 
-    override val times: Flow<List<LazyTimeView>> = cinema.map { cinema ->
+    private val dates = flow {
         val startTime = Date().time
         val day = 1.days
-        List(7) {
+        val list = List(7) {
             val offset = (day * it).inWholeMilliseconds
-            var out: LazyTimeView
-            out = LazyTimeViewCinema(cinema, Date(startTime + offset), cinemaCity)
-            out = LazyTimeViewCinemaUpdating(out) {
-                _filters.update { _ -> it.toFiltersView() }
+            LazyTimeView(Date(startTime + offset))
+        }
+        emit(list)
+    }
+
+    override val filters = FiltersView()
+    override val times = combineTransform(dates, cinema) { times, cinema ->
+        emit(times)
+        coroutineScope {
+            for (t in times) launch {
+                t.content += cinemaCity.events.getEvents(cinema, t.date)
+                    .map { (ref, showings) ->
+                        val m = MovieView(ref.id).apply {
+                            val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+                            name = ref.name.localized
+                            releasedAt = yearFormat.format(ref.releasedAt)
+                            duration = ref.length?.toStringComponents().orEmpty()
+                            availableFrom = releasedAt
+                            poster = ref.images.first().let(::ImageViewFromMovie)
+                            posterLarge = poster
+                            video = ref.videos.firstOrNull()?.let(Any::toString)
+                                ?.let(::VideoViewFromFeature)
+                            url = ref.link.toString()
+                        }
+                        TimeView.Movie(m, filters).apply {
+                            this.times += showings.groupBy {
+                                ShowingTag(
+                                    it.dubbing,
+                                    it.subtitles,
+                                    it.flags.map { ProjectionType(it.tag) }.toImmutableList()
+                                )
+                            }.mapValues { (_, items) ->
+                                items.map(::SpecificTimeViewFromFeature)
+                            }.apply {
+                                filters.addAll(keys)
+                            }
+                        }
+                    }
             }
-            out
         }
     }
     override val poster: Flow<String?> = cinema.map { it.image.toString() }
     override val name: Flow<String> = cinema.map { CinemaViewFromCinema(it).name }
-    override val filters = _filters.activate(activeLanguages, activeTypes)
-
-    override fun toggle(language: FiltersView.Language) {
-        activeLanguages.toggle(language.locale)
-    }
-
-    override fun toggle(type: FiltersView.Type) {
-        activeTypes.toggle(type.type)
-    }
 
 }

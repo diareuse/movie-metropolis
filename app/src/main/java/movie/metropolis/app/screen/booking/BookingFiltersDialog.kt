@@ -9,9 +9,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import kotlinx.collections.immutable.persistentListOf
 import movie.metropolis.app.R
-import movie.metropolis.app.model.DataFiltersView
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.model.ProjectionType
 import movie.metropolis.app.screen.booking.component.FilterBox
@@ -56,15 +54,15 @@ fun BookingFiltersDialog(
 @Preview(showBackground = true)
 @Composable
 private fun BookingFiltersDialogPreview() = PreviewLayout {
-    val filters = DataFiltersView(
-        languages = persistentListOf(
+    val filters = FiltersView().apply {
+        languages += listOf(
             FiltersView.Language(Locale.ENGLISH),
-            FiltersView.Language(Locale.FRENCH, true)
-        ),
-        types = persistentListOf(
-            FiltersView.Type(ProjectionType.Plane4DX),
-            FiltersView.Type(ProjectionType.Plane3D, true)
+            FiltersView.Language(Locale.FRENCH).apply { selected = true }
         )
-    )
+        types += listOf(
+            FiltersView.Type(ProjectionType.Plane4DX),
+            FiltersView.Type(ProjectionType.Plane3D).apply { selected = true }
+        )
+    }
     BookingFiltersDialog(filters, {}, {})
 }

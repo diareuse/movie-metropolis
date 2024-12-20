@@ -1,20 +1,21 @@
 package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
-import kotlinx.coroutines.flow.Flow
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-@Immutable
-interface LazyTimeView {
-
+@Stable
+class LazyTimeView(
     val date: Date
-    val content: Flow<List<TimeView>>
-    val dateString get() = format.format(date)
+) {
+
+    val content = mutableStateListOf<TimeView>()
+    val dateString by derivedStateOf { format.format(date).orEmpty() }
+    val isEmpty by derivedStateOf { content.isEmpty() || content.all { it.filteredTimes.isEmpty() } }
 
     companion object {
-        private val format = SimpleDateFormat("EEE\ndd\nMMM", Locale.getDefault())
+        private val format get() = SimpleDateFormat("EEE\ndd\nMMM", Locale.getDefault())
     }
 
 }

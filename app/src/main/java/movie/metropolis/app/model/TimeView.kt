@@ -2,17 +2,30 @@ package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
 
-@Immutable
-sealed interface TimeView {
+@Stable
+sealed class TimeView {
 
-    val times: Map<ShowingTag, List<SpecificTimeView>>
-
-    interface Cinema : TimeView {
-        val cinema: CinemaView
+    abstract val filters: FiltersView
+    val times = mutableStateMapOf<ShowingTag, List<SpecificTimeView>>()
+    val filteredTimes by derivedStateOf {
+        times.filterKeys { t ->
+            var hasLanguage = filters.languages.none { it.selected }
+            hasLanguage = hasLanguage or (t.language in filters)
+            hasLanguage = hasLanguage or (t.subtitles in filters)
+            hasLanguage && t.projection in filters
+        }
     }
 
-    interface Movie : TimeView {
-        val movie: MovieView
-    }
+    @Stable
+    data class Cinema(
+        val cinema: CinemaView,
+        override val filters: FiltersView
+    ) : TimeView()
+
+    @Stable
+    data class Movie(
+        val movie: MovieView,
+        override val filters: FiltersView
+    ) : TimeView()
 
 }

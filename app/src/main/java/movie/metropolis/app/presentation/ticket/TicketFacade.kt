@@ -10,10 +10,7 @@ interface TicketFacade {
     val times: Flow<List<LazyTimeView>>
     val poster: Flow<String?>
     val name: Flow<String>
-    val filters: Flow<FiltersView>
-
-    fun toggle(language: FiltersView.Language)
-    fun toggle(type: FiltersView.Type)
+    val filters: FiltersView
 
     fun interface LocationFactory {
         fun create(location: Location?): TicketFacade

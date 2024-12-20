@@ -1,30 +1,36 @@
 package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
-import kotlinx.collections.immutable.ImmutableList
 import java.util.Locale
 
 @Stable
-interface FiltersView {
+class FiltersView {
 
-    val activeCount: Int get() = languages.count { it.selected } + types.count { it.selected }
-    val languages: ImmutableList<Language>
-    val types: ImmutableList<Type>
-    val isEmpty: Boolean
+    val activeCount by derivedStateOf { languages.count { it.selected } + types.count { it.selected } }
+    val languages = mutableStateListOf<Language>()
+    val types = mutableStateListOf<Type>()
+    val isEmpty by derivedStateOf { languages.none { it.selected } && types.none { it.selected } }
 
-    operator fun contains(other: List<ProjectionType>): Boolean
-    operator fun contains(other: Locale?): Boolean
+    operator fun contains(other: List<ProjectionType>): Boolean {
+        return types.filter { it.selected }.all { it.type in other }
+    }
 
-    @Immutable
+    operator fun contains(other: Locale?): Boolean {
+        return other != null && languages.any { it.selected && it.locale == other }
+    }
+
+    @Stable
     data class Language(
-        val locale: Locale,
-        val selected: Boolean = false
-    )
+        val locale: Locale
+    ) {
+        var selected by mutableStateOf(false)
+    }
 
     @Immutable
     data class Type(
-        val type: ProjectionType,
-        val selected: Boolean = false
-    )
+        val type: ProjectionType
+    ) {
+        var selected by mutableStateOf(false)
+    }
 
 }
