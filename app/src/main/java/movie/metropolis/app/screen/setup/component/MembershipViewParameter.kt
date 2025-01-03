@@ -9,12 +9,13 @@ class MembershipViewParameter : CollectionPreviewParameterProvider<MembershipVie
         Data(isExpired = true)
     )
 ) {
-    data class Data(
-        override val isExpired: Boolean = false,
-        override val cardNumber: String = "123456789",
-        override val memberFrom: String = "Jan 1 2005",
-        override val memberUntil: String = "Jan 1 2024",
-        override val daysRemaining: String = "30 days",
-        override val points: String = "100"
-    ) : MembershipView
+    companion object {
+        fun Data(isExpired: Boolean = false) = MembershipView("123456789").apply {
+            memberFrom = "Jan 1 2005"
+            memberUntil = "Jan 1 2024"
+            daysRemaining = "30 days"
+            points = "100"
+            this.isExpired = isExpired
+        }
+    }
 }

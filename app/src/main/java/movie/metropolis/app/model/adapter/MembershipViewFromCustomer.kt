@@ -6,19 +6,12 @@ import java.util.Date
 import kotlin.time.Duration.Companion.days
 import kotlin.time.DurationUnit
 
-data class MembershipViewFromCustomer(
-    private val membership: Customer.Membership
-) : MembershipView {
-    override val isExpired: Boolean
-        get() = membership.expiration.before(Date())
-    override val cardNumber: String
-        get() = membership.number
-    override val memberFrom: String
-        get() = membership.inception.toString()
-    override val memberUntil: String
-        get() = membership.expiration.toString()
-    override val daysRemaining: String
-        get() = (membership.expiration.time - Date().time).days.toString(DurationUnit.DAYS)
-    override val points: String
-        get() = membership.points.total.toString()
+fun MembershipViewFromCustomer(
+    membership: Customer.Membership
+) = MembershipView(membership.number).apply {
+    isExpired = membership.expiration.before(Date())
+    memberFrom = membership.inception.toString()
+    memberUntil = membership.expiration.toString()
+    daysRemaining = (membership.expiration.time - Date().time).days.toString(DurationUnit.DAYS)
+    points = membership.points.total.toString()
 }

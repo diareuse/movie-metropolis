@@ -2,20 +2,21 @@ package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
 
-@Immutable
-interface UserView {
-
-    val firstName: String
-    val lastName: String
+@Stable
+data class UserView(
     val email: String
-    val phone: String
-    val favorite: CinemaSimpleView?
-    val consent: ConsentView
+) {
 
-    @Immutable
-    interface ConsentView {
-        val marketing: Boolean
-        val premium: Boolean
+    var firstName by mutableStateOf("")
+    var lastName by mutableStateOf("")
+    var phone by mutableStateOf("")
+    var favorite by mutableStateOf(null as CinemaSimpleView?)
+    val consent = ConsentView()
+
+    @Stable
+    class ConsentView {
+        var marketing by mutableStateOf(false)
+        var premium by mutableStateOf(false)
     }
 
 }

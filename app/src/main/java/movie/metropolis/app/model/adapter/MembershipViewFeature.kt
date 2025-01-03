@@ -1,12 +1,6 @@
 package movie.metropolis.app.model.adapter
 
-import movie.cinema.city.Customer
-import movie.metropolis.app.model.MembershipView
-import java.text.DateFormat
-import java.text.NumberFormat
-import java.util.Date
-import kotlin.time.Duration.Companion.milliseconds
-
+/*
 data class MembershipViewFeature(
     private val user: Customer
 ) : MembershipView {
@@ -29,4 +23,4 @@ data class MembershipViewFeature(
     override val points: String
         get() = number.format(user.membership?.points ?: 0)
 
-}
+}*/

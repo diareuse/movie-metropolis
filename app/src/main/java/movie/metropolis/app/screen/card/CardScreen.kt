@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.*
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.launch
 import movie.metropolis.app.R
-import movie.metropolis.app.model.CinemaSimpleView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.screen.card.component.CardContentBack
@@ -178,20 +177,6 @@ private fun CardScreenBackPreview() = PreviewLayout {
 
 class UserViewParameter : PreviewParameterProvider<UserView> {
     override val values = sequence<UserView> {
-        yield(Data())
+        yield(UserView("john.doe@email.com"))
     }
-
-    private data class Data(
-        override val firstName: String = "John",
-        override val lastName: String = "Doe",
-        override val email: String = "joh.doe@email.com",
-        override val phone: String = "+1 234 2344233",
-        override val favorite: CinemaSimpleView? = null,
-        override val consent: UserView.ConsentView = Consent()
-    ) : UserView
-
-    private data class Consent(
-        override val marketing: Boolean = false,
-        override val premium: Boolean = false
-    ) : UserView.ConsentView
 }

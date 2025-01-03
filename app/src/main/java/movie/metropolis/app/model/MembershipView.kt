@@ -2,12 +2,14 @@ package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
 
-@Immutable
-interface MembershipView {
-    val isExpired: Boolean
+data class MembershipView(
     val cardNumber: String
-    val memberFrom: String
-    val memberUntil: String
-    val daysRemaining: String
-    val points: String
+) {
+
+    var isExpired by mutableStateOf(true)
+    var memberFrom by mutableStateOf("")
+    var memberUntil by mutableStateOf("")
+    var daysRemaining by mutableStateOf("")
+    var points by mutableStateOf("")
+
 }
