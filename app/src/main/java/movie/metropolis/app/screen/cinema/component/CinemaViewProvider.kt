@@ -4,7 +4,7 @@ import androidx.compose.ui.tooling.preview.datasource.*
 import movie.metropolis.app.model.CinemaView
 import kotlin.random.Random.Default.nextLong
 
-class CinemaViewParameter : CollectionPreviewParameterProvider<CinemaView>(
+class CinemaViewProvider : CollectionPreviewParameterProvider<CinemaView>(
     listOf(Data(), Data(distance = "2.3km"))
 ) {
     data class Data(

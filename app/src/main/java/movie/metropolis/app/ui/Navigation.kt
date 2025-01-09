@@ -97,6 +97,9 @@ fun Navigation(
                     },
                     onProfileClick = {
                         navController.navigate(Route.User())
+                    },
+                    onCinemaClick = {
+                        navController.navigate(Route.Booking.Cinema(it))
                     }
                 )
             }

@@ -24,7 +24,8 @@ fun HomeScreenScaffold(
     movies: @Composable (PaddingValues) -> Unit,
     cinemas: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
-    pagerState: PagerState = rememberPagerState { 2 },
+    initialPage: Int = 0,
+    pagerState: PagerState = rememberPagerState(initialPage) { 2 },
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 ) = Scaffold(
     modifier = modifier,
@@ -54,7 +55,8 @@ fun HomeScreenScaffold(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            propagateMinConstraints = true
         ) {
             when (it) {
                 0 -> movies(padding)

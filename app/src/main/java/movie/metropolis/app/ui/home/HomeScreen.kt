@@ -1,6 +1,7 @@
 package movie.metropolis.app.ui.home
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
@@ -9,7 +10,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
+import movie.metropolis.app.ui.home.component.CinemaBox
 import movie.metropolis.app.ui.home.component.MovieBox
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
@@ -22,10 +25,13 @@ import movie.style.util.pc
 fun HomeScreen(
     state: HomeScreenState,
     onMovieClick: (id: String, upcoming: Boolean) -> Unit,
+    onCinemaClick: (id: String) -> Unit,
     onProfileClick: () -> Unit,
     modifier: Modifier = Modifier,
+    initialPage: Int = 0
 ) = HomeScreenScaffold(
     modifier = modifier,
+    initialPage = initialPage,
     titleMovies = { Text("Movies") },
     titleCinemas = { Text("Cinemas") },
     profile = {
@@ -75,20 +81,58 @@ fun HomeScreen(
             }
         }
     },
-    cinemas = {}
+    cinemas = { padding ->
+        LazyColumn(
+            modifier = Modifier.padding(horizontal = 1.pc),
+            contentPadding = padding,
+            verticalArrangement = Arrangement.spacedBy(1.pc)
+        ) {
+            items(state.cinemas) { view ->
+                CinemaBox(
+                    onClick = { onCinemaClick(view.id) },
+                    name = { Text(view.name) },
+                    city = { Text(view.city) },
+                    distance = {
+                        val d = view.distance
+                        if (d != null) Text(d)
+                    },
+                    image = { Image(rememberImageState(view.image)) }
+                )
+            }
+        }
+    }
 )
 
 @PreviewLightDark
-@PreviewFontScale
 @Composable
-private fun HomeScreenPreview() = PreviewLayout {
-    val state = remember { HomeScreenState() }
-    LaunchedEffect(Unit) {
-        state.current.addAll(MovieViewProvider().values)
+private fun HomeScreenMoviesPreview() = PreviewLayout {
+    val state = remember {
+        HomeScreenState().apply {
+            current.addAll(MovieViewProvider().values)
+            upcoming.addAll(MovieViewProvider().values)
+        }
     }
     HomeScreen(
         state = state,
         onMovieClick = { _, _ -> },
+        onCinemaClick = {},
         onProfileClick = {}
+    )
+}
+
+@PreviewLightDark
+@Composable
+private fun HomeScreenCinemasPreview() = PreviewLayout {
+    val state = remember {
+        HomeScreenState().apply {
+            cinemas.addAll(CinemaViewProvider().values)
+        }
+    }
+    HomeScreen(
+        state = state,
+        onMovieClick = { _, _ -> },
+        onProfileClick = {},
+        onCinemaClick = {},
+        initialPage = 1
     )
 }

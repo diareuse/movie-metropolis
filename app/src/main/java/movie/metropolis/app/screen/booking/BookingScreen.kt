@@ -33,7 +33,7 @@ import movie.metropolis.app.screen.booking.component.ProjectionTypeRow
 import movie.metropolis.app.screen.booking.component.ProjectionTypeRowDefaults
 import movie.metropolis.app.screen.booking.component.TimeButton
 import movie.metropolis.app.screen.booking.component.rememberMultiChildPagerState
-import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
+import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.util.interpolatePage
 import movie.style.BackgroundImage
@@ -308,7 +308,7 @@ class LazyTimeViewProvider : PreviewParameterProvider<LazyTimeView> {
                     )
                 )
             }
-            content += TimeView.Cinema(CinemaViewParameter().values.first(), FiltersView()).apply {
+            content += TimeView.Cinema(CinemaViewProvider().values.first(), FiltersView()).apply {
                 times += mapOf(
                     ShowingTag(
                         language = listOf(

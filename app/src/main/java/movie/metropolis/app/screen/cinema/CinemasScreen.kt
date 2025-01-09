@@ -25,7 +25,7 @@ import kotlinx.collections.immutable.toImmutableList
 import movie.metropolis.app.R
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.cinema.component.CinemaBox
-import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
+import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.cinema.component.PermissionBox
 import movie.metropolis.app.screen.listing.component.RatingBox
 import movie.metropolis.app.util.rememberVisibleItemAsState
@@ -110,7 +110,7 @@ fun CinemasScreen(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_NO)
 @Composable
 private fun CinemasScreenPreview() = PreviewLayout {
-    val cinemas = CinemaViewParameter().values.toImmutableList()
+    val cinemas = CinemaViewProvider().values.toImmutableList()
     CinemasScreen(
         cinemas = cinemas,
         state = rememberLazyListState(),

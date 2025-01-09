@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
+import movie.metropolis.app.presentation.cinema.CinemasFacade
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade
 import javax.inject.Inject
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     factory: ListingFacade.Factory,
-    private val settings: SettingsFacade
+    private val settings: SettingsFacade,
+    cinema: CinemasFacade
 ) : ViewModel() {
 
     private val upcoming = factory.upcoming()
@@ -36,6 +38,12 @@ class HomeViewModel @Inject constructor(
             .onEach { current ->
                 state.current.clear()
                 state.current.addAll(current.items)
+            }
+            .launchIn(viewModelScope)
+        cinema.cinemas(null)
+            .onEach {
+                state.cinemas.clear()
+                state.cinemas.addAll(it)
             }
             .launchIn(viewModelScope)
     }

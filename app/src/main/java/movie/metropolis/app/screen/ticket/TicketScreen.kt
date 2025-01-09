@@ -19,7 +19,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MovieDetailView
-import movie.metropolis.app.screen.cinema.component.CinemaViewParameter
+import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.movie.component.MovieDetailViewProvider
 import movie.metropolis.app.screen.ticket.component.CardCarousel
 import movie.metropolis.app.screen.ticket.component.PageIndicator
@@ -217,7 +217,7 @@ private class BookingParameter(override val count: Int) :
         override val time: String = "12:30",
         override val isPaid: Boolean = true,
         override val movie: MovieDetailView = MovieDetailViewProvider().values.first(),
-        override val cinema: CinemaView = CinemaViewParameter().values.first(),
+        override val cinema: CinemaView = CinemaViewProvider().values.first(),
         override val hall: String = "5",
         override val seats: List<BookingView.Seat> = listOf(Seat()),
         override val expired: Boolean = false

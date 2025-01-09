@@ -119,7 +119,7 @@ fun CinemaBox(
 @Preview(showBackground = true)
 @Composable
 private fun CinemaBoxPreview(
-    @PreviewParameter(CinemaViewParameter::class)
+    @PreviewParameter(CinemaViewProvider::class)
     parameter: CinemaView
 ) = PreviewLayout {
     val state = rememberPaletteImageState(url = parameter.image)
