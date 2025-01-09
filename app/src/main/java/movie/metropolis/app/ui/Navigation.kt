@@ -129,7 +129,14 @@ fun Navigation(
                     onTimeClick = { navController.navigate(Route.Order(it)) }
                 )
             }
-            composable(Route.Booking.Cinema.route) { Text("Booking.Cinema") }
+            composable(Route.Booking.Cinema.route) {
+                val vm = hiltViewModel<BookingViewModel>()
+                BookingScreen(
+                    state = vm.state,
+                    onBackClick = navController::navigateUp,
+                    onTimeClick = { navController.navigate(Route.Order(it)) }
+                )
+            }
             composable(Route.OrderComplete.route) { Text("OrderComplete") }
             composable(Route.Order.route) { Text("Order") }
             composable(Route.Settings.route) { Text("Settings") }
