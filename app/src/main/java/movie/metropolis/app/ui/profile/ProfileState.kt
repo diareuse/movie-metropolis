@@ -8,8 +8,13 @@ import movie.metropolis.app.model.UserView
 @Stable
 class ProfileState {
 
+    var saving by mutableStateOf(SaveState.Idle)
     var user: UserView? by mutableStateOf(null)
     var cinemas = mutableStateListOf<CinemaSimpleView>()
     var membership: MembershipView? by mutableStateOf(null)
+
+    enum class SaveState {
+        Saving, Idle, Fail
+    }
 
 }

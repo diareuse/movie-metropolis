@@ -24,6 +24,8 @@ import movie.metropolis.app.ui.home.HomeScreen
 import movie.metropolis.app.ui.home.HomeViewModel
 import movie.metropolis.app.ui.movie.MovieScreen
 import movie.metropolis.app.ui.movie.MovieViewModel
+import movie.metropolis.app.ui.profile.ProfileScreen
+import movie.metropolis.app.ui.profile.ProfileViewModel
 import movie.metropolis.app.ui.setup.SetupScreen
 import movie.metropolis.app.ui.setup.SetupViewModel
 
@@ -103,7 +105,17 @@ fun Navigation(
                     }
                 )
             }
-            composable(Route.User.route) { Text("User") }
+            composable(Route.User.route) {
+                val vm = hiltViewModel<ProfileViewModel>()
+                ProfileScreen(
+                    state = vm.state,
+                    onBackClick = navController::navigateUp,
+                    onPhoneChange = vm::onPhoneChange,
+                    onFirstNameChange = vm::onFirstNameChange,
+                    onLastNameChange = vm::onLastNameChange,
+                    onConsentChange = vm::onConsentChange
+                )
+            }
             composable(Route.UserEditor.route) { Text("UserEditor") }
             composable(Route.Movie.route, arguments = Route.Movie.arguments) {
                 val vm = hiltViewModel<MovieViewModel>()
