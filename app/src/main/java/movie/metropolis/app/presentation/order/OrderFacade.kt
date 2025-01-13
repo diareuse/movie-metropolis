@@ -4,9 +4,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface OrderFacade {
 
+    val url: String
     val isCompleted: Flow<Boolean>
 
-    suspend fun getRequest(): Result<RequestView>
+    suspend fun getHeaders(): Map<String, String>
     fun setUrl(url: String)
 
     fun interface Factory {

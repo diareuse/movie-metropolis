@@ -24,6 +24,8 @@ import movie.metropolis.app.ui.home.HomeScreen
 import movie.metropolis.app.ui.home.HomeViewModel
 import movie.metropolis.app.ui.movie.MovieScreen
 import movie.metropolis.app.ui.movie.MovieViewModel
+import movie.metropolis.app.ui.order.OrderScreen
+import movie.metropolis.app.ui.order.OrderViewModel
 import movie.metropolis.app.ui.profile.ProfileScreen
 import movie.metropolis.app.ui.profile.ProfileViewModel
 import movie.metropolis.app.ui.setup.SetupScreen
@@ -116,7 +118,6 @@ fun Navigation(
                     onConsentChange = vm::onConsentChange
                 )
             }
-            composable(Route.UserEditor.route) { Text("UserEditor") }
             composable(Route.Movie.route, arguments = Route.Movie.arguments) {
                 val vm = hiltViewModel<MovieViewModel>()
                 val state = vm.state
@@ -150,7 +151,14 @@ fun Navigation(
                 )
             }
             composable(Route.OrderComplete.route) { Text("OrderComplete") }
-            composable(Route.Order.route) { Text("Order") }
+            composable(Route.Order.route) {
+                val vm = hiltViewModel<OrderViewModel>()
+                OrderScreen(
+                    state = vm.state,
+                    onBackClick = navController::navigateUp,
+                    onUrlChanged = vm::updateUrl
+                )
+            }
             composable(Route.Settings.route) { Text("Settings") }
         }
     }

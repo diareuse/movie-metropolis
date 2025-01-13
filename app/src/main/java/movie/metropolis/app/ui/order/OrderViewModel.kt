@@ -1,20 +1,18 @@
-package movie.metropolis.app.screen.purchase
+package movie.metropolis.app.ui.order
 
-import androidx.compose.runtime.*
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 import movie.metropolis.app.presentation.order.OrderFacade
 import movie.metropolis.app.presentation.order.RequestView
 import movie.metropolis.app.screen.Route
 import movie.metropolis.app.util.retainStateIn
 import javax.inject.Inject
 
-@Stable
 @HiltViewModel
-class PurchaseViewModel private constructor(
+class OrderViewModel private constructor(
     private val facade: OrderFacade
 ) : ViewModel() {
 
@@ -26,9 +24,14 @@ class PurchaseViewModel private constructor(
         factory.create(Route.Order.Arguments(handle).url)
     )
 
-    val request = flowOf<RequestView?>()/*flow { emit(facade.getRequest()) }
-        .map { it.getOrNull() }*/
-        .retainStateIn(viewModelScope, null)
+    val state = RequestView()
+
+    init {
+        viewModelScope.launch {
+            state.headers.putAll(facade.getHeaders())
+            state.url = facade.url
+        }
+    }
 
     val isCompleted = facade.isCompleted
         .retainStateIn(viewModelScope, false)
