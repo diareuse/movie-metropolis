@@ -21,6 +21,7 @@ fun HomeScreenScaffold(
     titleMovies: @Composable () -> Unit,
     titleCinemas: @Composable () -> Unit,
     profile: @Composable () -> Unit,
+    tickets: @Composable () -> Unit,
     movies: @Composable (PaddingValues) -> Unit,
     cinemas: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
@@ -46,6 +47,7 @@ fun HomeScreenScaffold(
             },
             scrollBehavior = scrollBehavior,
             actions = {
+                tickets()
                 profile()
             }
         )
@@ -77,6 +79,11 @@ private fun HomeScreenScaffoldPreview() = PreviewLayout {
         profile = {
             IconButton({}) {
                 Icon(Icons.Default.AccountCircle, null)
+            }
+        },
+        tickets = {
+            IconButton({}) {
+                Icon(Icons.Default.Email, null)
             }
         },
         movies = {

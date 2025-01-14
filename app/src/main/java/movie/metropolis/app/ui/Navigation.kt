@@ -30,6 +30,8 @@ import movie.metropolis.app.ui.profile.ProfileScreen
 import movie.metropolis.app.ui.profile.ProfileViewModel
 import movie.metropolis.app.ui.setup.SetupScreen
 import movie.metropolis.app.ui.setup.SetupViewModel
+import movie.metropolis.app.ui.ticket.TicketScreen
+import movie.metropolis.app.ui.ticket.TicketViewModel
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -104,6 +106,9 @@ fun Navigation(
                     },
                     onCinemaClick = {
                         navController.navigate(Route.Booking.Cinema(it))
+                    },
+                    onTicketsClick = {
+                        navController.navigate(Route.Tickets())
                     }
                 )
             }
@@ -160,6 +165,13 @@ fun Navigation(
                 )
             }
             composable(Route.Settings.route) { Text("Settings") }
+            composable(Route.Tickets.route) {
+                val vm = hiltViewModel<TicketViewModel>()
+                TicketScreen(
+                    state = vm.state,
+                    onBackClick = navController::navigateUp
+                )
+            }
         }
     }
 }

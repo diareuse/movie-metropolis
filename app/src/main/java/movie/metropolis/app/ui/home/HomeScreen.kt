@@ -27,6 +27,7 @@ fun HomeScreen(
     onMovieClick: (id: String, upcoming: Boolean) -> Unit,
     onCinemaClick: (id: String) -> Unit,
     onProfileClick: () -> Unit,
+    onTicketsClick: () -> Unit,
     modifier: Modifier = Modifier,
     initialPage: Int = 0
 ) = HomeScreenScaffold(
@@ -37,6 +38,11 @@ fun HomeScreen(
     profile = {
         IconButton(onProfileClick) {
             Icon(Icons.Default.AccountCircle, null)
+        }
+    },
+    tickets = {
+        IconButton(onTicketsClick) {
+            Icon(Icons.Default.Email, null)
         }
     },
     movies = { padding ->
@@ -116,7 +122,8 @@ private fun HomeScreenMoviesPreview() = PreviewLayout {
         state = state,
         onMovieClick = { _, _ -> },
         onCinemaClick = {},
-        onProfileClick = {}
+        onProfileClick = {},
+        onTicketsClick = {}
     )
 }
 
@@ -133,6 +140,7 @@ private fun HomeScreenCinemasPreview() = PreviewLayout {
         onMovieClick = { _, _ -> },
         onProfileClick = {},
         onCinemaClick = {},
-        initialPage = 1
+        initialPage = 1,
+        onTicketsClick = {}
     )
 }

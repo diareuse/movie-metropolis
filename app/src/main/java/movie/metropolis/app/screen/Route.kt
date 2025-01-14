@@ -70,6 +70,10 @@ sealed class Route(
         operator fun invoke() = route
     }
 
+    data object Tickets : Route("users/me/tickets") {
+        operator fun invoke() = route
+    }
+
     data object Movie : Route("movies/{movie}?upcoming={upcoming}") {
         val arguments = listOf(
             navArgument("movie") {
