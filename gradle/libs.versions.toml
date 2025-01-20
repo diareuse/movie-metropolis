@@ -1,7 +1,7 @@
 [versions]
 accompanist = "0.34.0"
 android-billing = "7.1.1"
-androidx-activity = "1.9.3"
+androidx-activity = "1.10.0"
 androidx-livedata = "2.8.7"
 androidx-profileinstaller = "1.4.1"
 androidx-startup = "1.2.0"
@@ -10,7 +10,7 @@ androidx-room = "2.6.1"
 androidx-appcompat = "1.7.0"
 androidx-compose = "1.7.6"
 androidx-wear = "1.4.0"
-androidx-wear3 = "1.0.0-alpha30"
+androidx-wear3 = "1.0.0-alpha31"
 androidx-navigation = "2.8.5"
 androidx-palette = "1.0.0"
 androidx-process = "2.8.7"
@@ -28,18 +28,18 @@ kotlin = "2.1.0"
 collections = "0.3.8"
 android = "8.6.1"
 coil = "2.7.0"
-hilt = "2.53.1"
-json = "1.7.3"
-coroutines = "1.9.0"
+hilt = "2.55"
+json = "1.8.0"
+coroutines = "1.10.1"
 ktor = "3.0.1"
 mockito-kotlin = "5.4.0"
-mockito-core = "5.14.2"
+mockito-core = "5.15.2"
 slf4j-android = "1.7.36"
 zxing = "3.5.3"
 zxing-embed = "4.3.0"
 ksp = "2.1.0-1.0.29"
 instant = "18.1.0"
-haze = "0.7.0"
+haze = "1.2.2"
 
 [libraries]
 android-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "android-billing" }
@@ -64,7 +64,7 @@ google-navigation-animation = { module = "com.google.accompanist:accompanist-nav
 google-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanist" }
 google-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 google-instant = { module = "com.google.android.gms:play-services-instantapps", version.ref = "instant" }
-google-haze = { module = "dev.chrisbanes.haze:haze-jetpack-compose", version.ref = "haze" }
+google-haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 compose-ui-core = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 compose-material = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }

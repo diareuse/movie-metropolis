@@ -23,8 +23,8 @@ import androidx.core.graphics.green
 import androidx.core.graphics.red
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.modifier.surface
@@ -80,14 +80,7 @@ private fun RatedPoster(
     ) {
         val haze = remember { HazeState() }
         Box(
-            modifier = Modifier.haze(
-                state = haze,
-                style = HazeDefaults.style(
-                    backgroundColor = color.copy(.25f),
-                    blurRadius = 10.dp,
-                    noiseFactor = 5f
-                )
-            ), propagateMinConstraints = true
+            modifier = Modifier.hazeSource(haze), propagateMinConstraints = true
         ) {
             poster()
         }
@@ -95,7 +88,13 @@ private fun RatedPoster(
             modifier = Modifier
                 .wrapContentSize(Alignment.TopEnd)
                 .padding(4.dp)
-                .hazeChild(haze, MaterialTheme.shapes.medium)
+                .hazeEffect(
+                    haze, HazeDefaults.style(
+                        backgroundColor = color.copy(.25f),
+                        blurRadius = 10.dp,
+                        noiseFactor = 5f
+                    )
+                )
         ) {
             rating()
         }
@@ -104,7 +103,13 @@ private fun RatedPoster(
                 .wrapContentHeight(Alignment.Bottom)
                 .heightIn(min = 32.dp)
                 .padding(4.dp)
-                .hazeChild(haze, MaterialTheme.shapes.medium)
+                .hazeEffect(
+                    haze, HazeDefaults.style(
+                        backgroundColor = color.copy(.25f),
+                        blurRadius = 10.dp,
+                        noiseFactor = 5f
+                    )
+                )
                 .padding(vertical = 8.dp, horizontal = 4.dp),
             contentAlignment = Alignment.Center
         ) {

@@ -18,10 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.UserView
 import movie.metropolis.app.screen.card.CardScreen
@@ -81,7 +80,8 @@ fun HomeScreen(
                     .alignForLargeScreen()
                     .padding(24.dp)
                     .navigationBarsPadding()
-                    .hazeChild(haze, Theme.container.card)
+                    .clip(Theme.container.card)
+                    .hazeEffect(haze)
             ) {
                 for (state in HomeState.entries)
                     TransparentBottomNavigationItem(
@@ -107,10 +107,7 @@ fun HomeScreen(
         NavHost(
             modifier = Modifier
                 .fillMaxSize()
-                .haze(
-                    state = haze,
-                    style = HazeDefaults.style(Theme.color.container.background.copy(alpha = .5f))
-                ),
+                .hazeSource(state = haze),
             navController = navController,
             startDestination = HomeState.Listing.name,
             enterTransition = {
