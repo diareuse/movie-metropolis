@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
+import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.cinema.CinemasFacade
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.profile.ProfileFacade
@@ -21,7 +22,8 @@ class HomeViewModel @Inject constructor(
     factory: ListingFacade.Factory,
     private val settings: SettingsFacade,
     cinema: CinemasFacade,
-    profile: ProfileFacade
+    profile: ProfileFacade,
+    booking: BookingFacade
 ) : ViewModel() {
 
     private val upcoming = factory.upcoming()
@@ -31,6 +33,12 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            launch {
+                booking.bookings.collect {
+                    state.tickets.tickets.clear()
+                    state.tickets.tickets.addAll(it)
+                }
+            }
             launch {
                 state.profile.user = profile.getUser()
             }

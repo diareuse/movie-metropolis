@@ -20,10 +20,12 @@ import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.ui.home.component.CinemaBox
 import movie.metropolis.app.ui.home.component.LoyaltyCard
 import movie.metropolis.app.ui.home.component.MovieBox
+import movie.metropolis.app.ui.home.component.TicketBox
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.rememberImageState
+import movie.style.rememberPaletteImageState
 import movie.style.util.pc
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +34,7 @@ fun HomeScreen(
     state: HomeScreenState,
     onMovieClick: (id: String, upcoming: Boolean) -> Unit,
     onCinemaClick: (id: String) -> Unit,
+    onTicketClick: (id: String) -> Unit,
     onProfileClick: () -> Unit,
     onTicketsClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -87,6 +90,28 @@ fun HomeScreen(
                         name = { Text("%s %s".format(user.firstName, user.lastName)) },
                         number = { Text(membership?.cardNumber ?: "") }
                     )
+                }
+                item(span = StaggeredGridItemSpan.FullLine) {
+                    Text("Tickets", style = MaterialTheme.typography.titleMedium)
+                }
+                item(span = StaggeredGridItemSpan.FullLine) {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy((-2).pc)
+                    ) {
+                        itemsIndexed(state.tickets.tickets) { index, it ->
+                            val image = rememberPaletteImageState(it.movie.poster?.url)
+                            TicketBox(
+                                modifier = Modifier.zIndex(state.tickets.tickets.size - index * 1f),
+                                expired = it.expired,
+                                onClick = { onTicketClick(it.id) },
+                                date = { Text(it.date) },
+                                time = { Text(it.time) },
+                                poster = { Image(image) },
+                                contentColor = image.palette.textColor,
+                                color = image.palette.color
+                            )
+                        }
+                    }
                 }
                 item(span = StaggeredGridItemSpan.FullLine) {
                     Text("Currently showing", style = MaterialTheme.typography.titleMedium)
@@ -159,6 +184,7 @@ private fun HomeScreenMoviesPreview() = PreviewLayout {
         onMovieClick = { _, _ -> },
         onCinemaClick = {},
         onProfileClick = {},
+        onTicketClick = {},
         onTicketsClick = {}
     )
 }
@@ -177,6 +203,7 @@ private fun HomeScreenCinemasPreview() = PreviewLayout {
         onProfileClick = {},
         onCinemaClick = {},
         initialPage = 1,
+        onTicketClick = {},
         onTicketsClick = {}
     )
 }

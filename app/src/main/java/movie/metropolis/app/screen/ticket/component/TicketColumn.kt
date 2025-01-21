@@ -9,6 +9,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.*
@@ -21,6 +22,7 @@ import movie.style.modifier.surface
 import movie.style.shape.CompositeShape
 import movie.style.shape.TicketShape
 import movie.style.theme.Theme
+import movie.style.util.toDpSize
 
 @Composable
 fun TicketColumn(
@@ -32,7 +34,7 @@ fun TicketColumn(
     color: Color = Theme.color.container.background,
     contentColor: Color = Theme.color.content.background,
 ) {
-    var codeSize by remember { mutableStateOf(IntSize.Zero) }
+    var codeSize by remember { mutableStateOf(DpSize.Zero) }
     val baselineShape = RoundedCornerShape(32.dp)
     val innerShape = RoundedCornerShape(24.dp)
     val shape = CompositeShape(codeSize) {
@@ -77,11 +79,12 @@ fun TicketColumn(
             ) {
                 metadata()
             }
+            val density = LocalDensity.current
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
-                    .onSizeChanged { codeSize = it },
+                    .onSizeChanged { codeSize = it.toDpSize(density) },
                 propagateMinConstraints = true
             ) {
                 code()

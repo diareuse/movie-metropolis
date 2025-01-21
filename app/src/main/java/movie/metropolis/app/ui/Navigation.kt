@@ -109,6 +109,9 @@ fun Navigation(
                     },
                     onTicketsClick = {
                         navController.navigate(Route.Tickets())
+                    },
+                    onTicketClick = {
+                        TODO()
                     }
                 )
             }
