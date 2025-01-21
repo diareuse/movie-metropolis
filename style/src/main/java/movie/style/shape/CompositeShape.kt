@@ -31,11 +31,18 @@ class CompositeShape private constructor(
         size: Size,
         layoutDirection: LayoutDirection,
         density: Density
-    ): Outline {
+    ): Outline = with(density) {
         val path = Path()
         path.addOutline(baseline.createOutline(size, layoutDirection, density))
         for ((shape, preferredSize, alignment, operation) in shapes) {
-            val childSize = preferredSize.takeIf { it.isSpecified }?.toSize(density) ?: size
+            val childSize = preferredSize.takeIf { it.isSpecified }
+                ?.run {
+                    copy(
+                        if (width == Dp.Infinity) size.width.toDp() else width,
+                        if (height == Dp.Infinity) size.height.toDp() else height
+                    )
+                }
+                ?.toSize(density) ?: size
             val childPath = shape.createOutline(childSize, layoutDirection, density).toPath()
             val offset = alignment.align(childSize.toIntSize(), size.toIntSize(), layoutDirection)
             childPath.translate(offset.toOffset())
@@ -125,7 +132,7 @@ private fun CompositeShapePreview() {
     val rect = RoundedCornerShape(16.dp)
     val ticket = TicketShape(
         cutoutSize = 8.dp,
-        bottomOffset = 150
+        bottomOffset = 15.dp
     )
     val cutout = CutoutShape(
         cornerSize = CornerSize(16.dp),

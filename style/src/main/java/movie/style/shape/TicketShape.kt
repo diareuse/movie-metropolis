@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.*
 
 class TicketShape(
     private val cutoutSize: Dp,
-    private val bottomOffset: Int
+    private val bottomOffset: Dp
 ) : Shape {
 
     override fun createOutline(
@@ -22,7 +22,8 @@ class TicketShape(
         val path = Path()
         val rect = Rect(Offset.Zero, size)
         path.addRect(rect)
-        if (bottomOffset.toFloat() !in 0f..<size.height) {
+        val bottomOffset = with(density) { bottomOffset.toPx() }
+        if (bottomOffset !in 0f..<size.height) {
             return Outline.Generic(path)
         }
 
@@ -78,7 +79,7 @@ class TicketShape(
 private fun TicketShapePreview() {
     val shape = TicketShape(
         cutoutSize = 8.dp,
-        bottomOffset = 150
+        bottomOffset = 16.dp
     )
     Box(
         modifier = Modifier
