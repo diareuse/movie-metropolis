@@ -27,51 +27,79 @@ import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
 
-private fun Modifier.touchResponsive() = composed {
-    var center by remember { mutableStateOf(Offset.Unspecified) }
-    var position by remember { mutableStateOf(center) }
+class TouchResponsiveState {
+    var center by mutableStateOf(Offset.Unspecified)
+    var position by mutableStateOf(center)
+    var size by mutableStateOf(Size.Zero)
+    val offsetMagnitudeX by derivedStateOf { if (size.isEmpty()) .5f else position.x / size.width }
+}
+
+private fun Modifier.touchResponsive(
+    state: TouchResponsiveState,
+    shape: Shape? = null,
+    contentColor: Color = Color.Unspecified
+) = composed {
     val scope = rememberCoroutineScope()
+    val cc = contentColor.takeOrElse { LocalContentColor.current }
+    val shape = shape ?: MaterialTheme.shapes.large
     pointerInput(Unit) {
         awaitEachGesture {
             val p = awaitFirstDown()
             val start = p.position
             val job = scope.launch {
-                animate(Offset.VectorConverter, position, start) { it, _ ->
-                    position = it
+                animate(Offset.VectorConverter, state.position, start) { it, _ ->
+                    state.position = it
                 }
             }
             while (true) {
                 val e = awaitPointerEvent()
                 job.cancel()
                 e.changes.forEach {
-                    position = it.position
+                    state.position = it.position
                 }
                 if (e.type == PointerEventType.Release) {
                     scope.launch {
-                        animate(Offset.VectorConverter, position, center) { it, _ ->
-                            position = it
+                        animate(Offset.VectorConverter, state.position, state.center) { it, _ ->
+                            state.position = it
                         }
                     }
                     break
                 }
             }
         }
-    }.graphicsLayer {
-        if (position.isUnspecified || center.isUnspecified) {
-            position = size.center
-            center = position
-        }
-        rotationX = -(180f * (position.y - size.height / 2f) / size.height)
-            .squeezeInto(-180f..180f, -5f..5f)
-        rotationY = (180f * (position.x - size.width / 2f) / size.width)
-            .squeezeInto(-180f..180f, -5f..5f)
-        translationX =
-            (position.x - size.width / 2f).squeezeInto(size.width / 2f..-size.width / 2f, -20f..20f)
-        translationY = (position.y - size.width / 2f).squeezeInto(
-            size.height / 2f..-size.height / 2f,
-            -20f..20f
-        )
     }
+        .graphicsLayer {
+            if (state.position.isUnspecified || state.center.isUnspecified) {
+                state.position = size.center
+                state.center = state.position
+            }
+            if (state.size != size) {
+                state.size = size
+            }
+            rotationX = -(180f * (state.position.y - size.height / 2f) / size.height)
+                .squeezeInto(-180f..180f, -5f..5f)
+            rotationY = (180f * (state.position.x - size.width / 2f) / size.width)
+                .squeezeInto(-180f..180f, -5f..5f)
+            translationX = (state.position.x - size.width / 2f)
+                .squeezeInto(size.width / 2f..-size.width / 2f, -20f..20f)
+            translationY = (state.position.y - size.width / 2f)
+                .squeezeInto(size.height / 2f..-size.height / 2f, -20f..20f)
+        }
+        .drawWithCache {
+            onDrawWithContent {
+                drawContent()
+                val offset = state.position.x / size.width
+                val brush = Brush.linearGradient(
+                    0f to Color.Transparent,
+                    offset to cc.copy(.2f),
+                    1f to Color.Transparent,
+                    start = Offset.Infinite.copy(y = 0f),
+                    end = Offset.Infinite.copy(x = 0f)
+                )
+                val outline = shape.createOutline(size, layoutDirection, this)
+                drawOutline(outline, brush, blendMode = BlendMode.Color)
+            }
+        }
 }
 
 fun Float.squeezeInto(
@@ -92,28 +120,31 @@ fun LoyaltyCard(
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.large,
     color: Color = MaterialTheme.colorScheme.surface,
-    tint: HazeTint = HazeTint(MaterialTheme.colorScheme.surface.copy(.1f)),//HazeDefaults.tint(color),
-    contentColor: Color = tint.color.copy(1f)
+    tint: HazeTint = HazeTint(MaterialTheme.colorScheme.surface.copy(.1f)),
+    imageHighlightColor: Color = Color(0xffE8873D),
+    contentColor: Color = tint.color.copy(1f),
+    shadowColor: Color = LocalContentColor.current,
+    overlayColor: Color = Color.White,
+    state: TouchResponsiveState = remember { TouchResponsiveState() }
 ) = Box(
     modifier = modifier
-        .touchResponsive()
+        .touchResponsive(state)
         .clip(shape)
         .drawWithContent {
             drawContent()
-            val outline = shape.createOutline(size, layoutDirection, this)
-            val bm = tint.blendMode
-            val tint = tint.color
             drawOutline(
-                outline = outline,
+                outline = shape.createOutline(size, layoutDirection, this),
                 brush = Brush.linearGradient(
                     listOf(
-                        tint.copy(.8f),
-                        tint.copy(.05f),
+                        imageHighlightColor.copy(.25f),
+                        imageHighlightColor.copy(.05f).compositeOver(contentColor).copy(.25f),
+                        imageHighlightColor.copy(0f).compositeOver(contentColor).copy(.25f),
                         Color.Transparent
-                    )
+                    ),
+                    start = Offset.Infinite.copy(y = 0f),
+                    end = Offset.Infinite.copy(x = 0f)
                 ),
-                style = Stroke(width = 2.dp.toPx()),
-                blendMode = bm
+                style = Stroke(width = 4.dp.toPx())
             )
         }
         .hazeEffect(
@@ -128,7 +159,23 @@ fun LoyaltyCard(
         .aspectRatio(3.37f / 2.125f)
 ) {
     CompositionLocalProvider(LocalContentColor provides contentColor) {
-        ProvideTextStyle(MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)) {
+        ProvideTextStyle(
+            MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                shadow = Shadow(
+                    shadowColor.copy(1f),
+                    Offset(2f, 2f) * -(state.offsetMagnitudeX - .5f),
+                    2f
+                ),
+                brush = Brush.linearGradient(
+                    0f to Color.Black.copy(.2f).compositeOver(overlayColor),
+                    state.offsetMagnitudeX to overlayColor,
+                    1f to Color.Black.copy(.2f).compositeOver(overlayColor),
+                    start = Offset.Infinite.copy(y = 0f),
+                    end = Offset.Infinite.copy(x = 0f)
+                )
+            )
+        ) {
             Column(
                 modifier = Modifier
                     .padding(2.pc)
