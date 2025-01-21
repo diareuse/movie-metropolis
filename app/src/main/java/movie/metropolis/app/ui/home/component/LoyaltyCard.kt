@@ -79,13 +79,14 @@ private fun Modifier.touchResponsive(
                 state.size = size
             }
             rotationX = -(180f * (state.position.y - size.height / 2f) / size.height)
-                .squeezeInto(-180f..180f, -5f..5f)
+                .squeezeInto(-180f..180f, -45f..45f)
             rotationY = (180f * (state.position.x - size.width / 2f) / size.width)
-                .squeezeInto(-180f..180f, -5f..5f)
+                .squeezeInto(-180f..180f, -45f..45f)
             translationX = (state.position.x - size.width / 2f)
                 .squeezeInto(size.width / 2f..-size.width / 2f, -20f..20f)
             translationY = (state.position.y - size.width / 2f)
                 .squeezeInto(size.height / 2f..-size.height / 2f, -20f..20f)
+            cameraDistance = maxOf(size.width, size.height)
         }
         .drawWithCache {
             onDrawWithContent {
