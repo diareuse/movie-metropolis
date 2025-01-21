@@ -53,7 +53,7 @@ fun HomeScreenScaffold(
         )
     }
 ) { padding ->
-    HorizontalPager(pagerState) {
+    HorizontalPager(pagerState, userScrollEnabled = false) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
