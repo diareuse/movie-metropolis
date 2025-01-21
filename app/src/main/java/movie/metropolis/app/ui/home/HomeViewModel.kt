@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.cinema.CinemasFacade
 import movie.metropolis.app.presentation.listing.ListingFacade
+import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade
 import javax.inject.Inject
 
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     factory: ListingFacade.Factory,
     private val settings: SettingsFacade,
-    cinema: CinemasFacade
+    cinema: CinemasFacade,
+    profile: ProfileFacade
 ) : ViewModel() {
 
     private val upcoming = factory.upcoming()
@@ -28,6 +30,18 @@ class HomeViewModel @Inject constructor(
     val state = HomeScreenState()
 
     init {
+        viewModelScope.launch {
+            launch {
+                state.profile.user = profile.getUser()
+            }
+            launch {
+                state.profile.cinemas.clear()
+                state.profile.cinemas.addAll(profile.getCinemas())
+            }
+            launch {
+                state.profile.membership = profile.getMembership()
+            }
+        }
         upcoming.get()
             .onEach { upcoming ->
                 state.upcoming.clear()
