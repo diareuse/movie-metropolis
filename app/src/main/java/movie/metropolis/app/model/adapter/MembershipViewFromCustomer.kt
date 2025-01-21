@@ -8,7 +8,7 @@ import kotlin.time.DurationUnit
 
 fun MembershipViewFromCustomer(
     membership: Customer.Membership
-) = MembershipView(membership.number).apply {
+) = MembershipView(membership.number.windowed(4, 4).joinToString(" ")).apply {
     isExpired = membership.expiration.before(Date())
     memberFrom = membership.inception.toString()
     memberUntil = membership.expiration.toString()
