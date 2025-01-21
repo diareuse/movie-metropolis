@@ -45,6 +45,7 @@ private fun Modifier.touchResponsive(
     pointerInput(Unit) {
         awaitEachGesture {
             val p = awaitFirstDown()
+            p.consume()
             val start = p.position
             val job = scope.launch {
                 animate(Offset.VectorConverter, state.position, start) { it, _ ->
@@ -55,6 +56,7 @@ private fun Modifier.touchResponsive(
                 val e = awaitPointerEvent()
                 job.cancel()
                 e.changes.forEach {
+                    it.consume()
                     state.position = it.position
                 }
                 if (e.type == PointerEventType.Release) {
