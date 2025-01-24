@@ -35,7 +35,7 @@ fun TicketBox(
 ) {
     var contentSize by remember { mutableStateOf(DpSize.Zero) }
     Card(
-        modifier = modifier.widthIn(max = 100.dp),
+        modifier = modifier,
         onClick = onClick,
         shape = CompositeShape(contentSize) {
             setBaseline(shape)

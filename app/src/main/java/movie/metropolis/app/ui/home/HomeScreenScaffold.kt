@@ -8,12 +8,9 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.input.nestedscroll.*
 import androidx.compose.ui.tooling.preview.*
 import movie.style.layout.PreviewLayout
-import movie.style.util.pc
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,38 +23,21 @@ fun HomeScreenScaffold(
     cinemas: @Composable (PaddingValues) -> Unit,
     modifier: Modifier = Modifier,
     initialPage: Int = 0,
-    pagerState: PagerState = rememberPagerState(initialPage) { 2 },
-    scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    pagerState: PagerState = rememberPagerState(initialPage) { 2 }
 ) = Scaffold(
     modifier = modifier,
     topBar = {
-        LargeTopAppBar(
+        Spacer(
             modifier = Modifier
                 .windowInsetsPadding(
                     WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
                 )
-                .padding(1.pc)
-                .clip(MaterialTheme.shapes.medium),
-            windowInsets = WindowInsets(0),
-            title = {
-                when (pagerState.currentPage) {
-                    0 -> titleMovies()
-                    1 -> titleCinemas()
-                }
-            },
-            scrollBehavior = scrollBehavior,
-            actions = {
-                tickets()
-                profile()
-            }
         )
     }
 ) { padding ->
     HorizontalPager(pagerState, userScrollEnabled = false) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            modifier = Modifier.fillMaxSize(),
             propagateMinConstraints = true
         ) {
             when (it) {

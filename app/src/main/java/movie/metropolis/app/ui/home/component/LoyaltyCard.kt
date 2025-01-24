@@ -100,7 +100,7 @@ private fun Modifier.touchResponsive(
                     end = Offset.Infinite.copy(x = 0f)
                 )
                 val outline = shape.createOutline(size, layoutDirection, this)
-                drawOutline(outline, brush, blendMode = BlendMode.Color)
+                drawOutline(outline, brush)
             }
         }
 }

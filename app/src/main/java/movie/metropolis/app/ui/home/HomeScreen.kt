@@ -1,14 +1,19 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package movie.metropolis.app.ui.home
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.lazy.staggeredgrid.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -20,15 +25,20 @@ import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.ui.home.component.CinemaBox
 import movie.metropolis.app.ui.home.component.LoyaltyCard
 import movie.metropolis.app.ui.home.component.MovieBox
+import movie.metropolis.app.ui.home.component.ScreenTitle
+import movie.metropolis.app.ui.home.component.SectionTitle
 import movie.metropolis.app.ui.home.component.TicketBox
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
+import movie.style.layout.plus
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
 import movie.style.util.pc
 
-@OptIn(ExperimentalMaterial3Api::class)
+val CardSize = 10.pc
+val CarouselItemInfo.fraction get() = (size - minSize) / (maxSize - minSize)
+
 @Composable
 fun HomeScreen(
     state: HomeScreenState,
@@ -57,32 +67,53 @@ fun HomeScreen(
     },
     movies = { padding ->
         Box(modifier = Modifier.fillMaxSize(), propagateMinConstraints = true) {
+            val background = rememberPaletteImageState(
+                state.tickets.tickets.firstOrNull()?.movie?.poster?.url
+                    ?: state.current.firstOrNull()?.poster?.url
+            )
             Image(
                 modifier = Modifier
                     .hazeSource(haze)
                     .alpha(.5f)
-                    .blur(8.dp),
-                state = rememberImageState(state.current.firstOrNull()?.poster?.url)
+                    .blur(8.dp)
+                    .drawWithContent {
+                        drawContent()
+                        drawRect(
+                            Brush.verticalGradient(
+                                listOf(
+                                    background.palette.color.copy(alpha = 0f),
+                                    background.palette.color
+                                )
+                            )
+                        )
+                    },
+                state = background
             )
-            LazyVerticalStaggeredGrid(
-                modifier = Modifier.padding(horizontal = 1.pc),
-                columns = StaggeredGridCells.Adaptive(150.dp),
-                contentPadding = padding,
-                horizontalArrangement = Arrangement.spacedBy(1.pc),
-                verticalItemSpacing = 1.pc
+            LazyColumn(
+                contentPadding = padding + PaddingValues(vertical = 2.pc),
+                verticalArrangement = Arrangement.spacedBy(0.5.pc)
             ) {
-                item(span = StaggeredGridItemSpan.FullLine) {
+                item {
+                    ScreenTitle(
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = 2.pc)
+                    ) {
+                        Text("Hello %s!".format(state.profile.user?.firstName))
+                    }
+                }
+                item(key = "card") {
                     val user = state.profile.user
                     val membership = state.profile.membership
                     if (user != null) LoyaltyCard(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = 2.pc)
+                            .padding(top = 2.pc)
+                            .systemGestureExclusion()
+                            .fillMaxWidth(),
                         haze = haze,
-                        logo = {
-                            androidx.compose.foundation.Image(
-                                painterResource(R.drawable.ic_logo_cinemacity),
-                                null
-                            )
-                        },
+                        logo = { Image(painterResource(R.drawable.ic_logo_cinemacity), null) },
                         title = {
                             if (membership != null && membership.isExpired.not()) Text("Premium")
                             else Text("Expired")
@@ -91,59 +122,115 @@ fun HomeScreen(
                         number = { Text(membership?.cardNumber ?: "") }
                     )
                 }
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    Text("Tickets", style = MaterialTheme.typography.titleMedium)
-                }
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy((-2).pc)
+                item(key = "tickets-title") {
+                    SectionTitle(
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = 2.pc)
+                            .padding(vertical = 2.pc)
                     ) {
-                        itemsIndexed(state.tickets.tickets) { index, it ->
-                            val image = rememberPaletteImageState(it.movie.poster?.url)
-                            TicketBox(
-                                modifier = Modifier.zIndex(state.tickets.tickets.size - index * 1f),
-                                expired = it.expired,
-                                onClick = { onTicketClick(it.id) },
-                                date = { Text(it.date) },
-                                time = { Text(it.time) },
-                                poster = { Image(image) },
-                                contentColor = image.palette.textColor,
-                                color = image.palette.color
-                            )
-                        }
+                        Text("Tickets")
                     }
                 }
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    Text("Currently showing", style = MaterialTheme.typography.titleMedium)
+                item(key = "tickets") {
+                    HorizontalMultiBrowseCarousel(
+                        modifier = Modifier
+                            .animateItem()
+                            .fillMaxWidth()
+                            .systemGestureExclusion(),
+                        state = rememberCarouselState { state.tickets.tickets.size },
+                        preferredItemWidth = CardSize,
+                        contentPadding = PaddingValues(horizontal = 2.pc),
+                        itemSpacing = 0.5.pc,
+                        flingBehavior = CarouselDefaults.noSnapFlingBehavior()
+                    ) { index ->
+                        val it = state.tickets.tickets[index]
+                        val image = rememberPaletteImageState(it.movie.poster?.url)
+                        val fraction = Modifier.alpha(carouselItemInfo.fraction)
+                        TicketBox(
+                            modifier = Modifier.maskClip(MaterialTheme.shapes.medium),
+                            expired = it.expired,
+                            onClick = { onTicketClick(it.id) },
+                            date = { Text(it.date, Modifier.then(fraction)) },
+                            time = { Text(it.time, Modifier.then(fraction)) },
+                            poster = { Image(image) },
+                            contentColor = image.palette.textColor,
+                            color = image.palette.color
+                        )
+                    }
                 }
-                items(state.current) {
-                    MovieBox(
-                        onClick = { onMovieClick(it.id, false) },
-                        aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
-                        name = { Text(it.name) },
-                        poster = { Image(rememberImageState(it.poster?.url)) },
-                        rating = {
-                            val r = it.rating
-                            if (r != null) Text(r)
-                        },
-                        category = {}
-                    )
+                item(key = "upcoming-title") {
+                    SectionTitle(
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = 2.pc)
+                            .padding(vertical = 2.pc)
+                    ) {
+                        Text("Upcoming")
+                    }
                 }
-                item(span = StaggeredGridItemSpan.FullLine) {
-                    Text("Upcoming", style = MaterialTheme.typography.titleMedium)
+                item(key = "upcoming") {
+                    HorizontalMultiBrowseCarousel(
+                        modifier = Modifier
+                            .animateItem()
+                            .fillMaxWidth()
+                            .systemGestureExclusion(),
+                        state = rememberCarouselState { state.upcoming.size },
+                        preferredItemWidth = CardSize,
+                        contentPadding = PaddingValues(horizontal = 2.pc),
+                        itemSpacing = 0.5.pc,
+                        flingBehavior = CarouselDefaults.noSnapFlingBehavior()
+                    ) { index ->
+                        val it = state.upcoming[index]
+                        val fraction = Modifier.alpha(carouselItemInfo.fraction)
+                        MovieBox(
+                            modifier = Modifier.maskClip(MaterialTheme.shapes.medium),
+                            onClick = { onMovieClick(it.id, true) },
+                            aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
+                            name = { Text(it.name, Modifier.then(fraction)) },
+                            poster = { Image(rememberImageState(it.poster?.url)) },
+                            rating = {
+                                val r = it.rating
+                                if (r != null) Text(r)
+                            },
+                            category = {}
+                        )
+                    }
                 }
-                items(state.upcoming) {
-                    MovieBox(
-                        onClick = { onMovieClick(it.id, true) },
-                        aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
-                        name = { Text(it.name) },
-                        poster = { Image(rememberImageState(it.poster?.url)) },
-                        rating = {
-                            val r = it.rating
-                            if (r != null) Text(r)
-                        },
-                        category = {}
-                    )
+                item(key = "showing") {
+                    SectionTitle(
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = 2.pc)
+                            .padding(vertical = 2.pc)
+                    ) {
+                        Text("Currently Showing")
+                    }
+                }
+                state.current.windowed(3, 3).forEach {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .animateItem()
+                                .padding(horizontal = 2.pc),
+                            horizontalArrangement = Arrangement.spacedBy(.5.pc)
+                        ) {
+                            for (it in it)
+                                MovieBox(
+                                    modifier = Modifier.weight(1f),
+                                    onClick = { onMovieClick(it.id, false) },
+                                    aspectRatio = it.poster?.aspectRatio
+                                        ?: DefaultPosterAspectRatio,
+                                    name = { Text(it.name) },
+                                    poster = { Image(rememberImageState(it.poster?.url)) },
+                                    rating = {
+                                        val r = it.rating
+                                        if (r != null) Text(r)
+                                    },
+                                    category = {}
+                                )
+                        }
+                    }
                 }
             }
         }

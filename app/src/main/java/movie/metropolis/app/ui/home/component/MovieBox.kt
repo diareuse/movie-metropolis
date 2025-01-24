@@ -2,15 +2,22 @@ package movie.metropolis.app.ui.home.component
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.*
+import androidx.compose.ui.platform.*
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
+import movie.style.shape.CompositeShape
+import movie.style.shape.CutoutShape
 import movie.style.util.pc
+import movie.style.util.toDpSize
 
 @Composable
 fun MovieBox(
@@ -21,23 +28,33 @@ fun MovieBox(
     category: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     aspectRatio: Float = DefaultPosterAspectRatio,
-) = Card(
-    modifier = modifier,
-    onClick = onClick
-) {
-    Card {
-        Box(
-            modifier = Modifier
-                .aspectRatio(aspectRatio),
-            propagateMinConstraints = true
-        ) {
-            poster()
+    shape: Shape = MaterialTheme.shapes.medium
+) = Box(modifier = modifier) {
+    var size by remember { mutableStateOf(DpSize.Zero) }
+    val density = LocalDensity.current
+    Box(modifier = Modifier
+        .onSizeChanged { size = it.toDpSize(density) }
+        .padding(bottom = .5.pc, end = 1.pc)) {
+        ProvideTextStyle(MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold)) {
+            rating()
         }
     }
-    Column(modifier = Modifier.padding(1.pc)) {
-        name()
-        category()
-        rating()
+    Surface(
+        modifier = Modifier
+            .aspectRatio(aspectRatio),
+        onClick = onClick,
+        shape = CompositeShape(shape, size) {
+            setBaseline(shape)
+            val cs = if (shape is CornerBasedShape) shape.topStart else CornerSize(1.pc)
+            addShape(
+                shape = CutoutShape(cs, CutoutShape.Orientation.TopLeft),
+                size = size,
+                alignment = Alignment.TopStart,
+                operation = PathOperation.Difference
+            )
+        }
+    ) {
+        poster()
     }
 }
 
