@@ -23,7 +23,7 @@ fun ScreenTitle(
     modifier: Modifier = Modifier,
     text: @Composable () -> Unit,
 ) = Box(modifier = modifier.fillMaxWidth(), propagateMinConstraints = true) {
-    ProvideTextStyle(MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)) {
+    ProvideTextStyle(MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.Bold)) {
         text()
     }
 }
