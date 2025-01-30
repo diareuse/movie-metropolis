@@ -25,6 +25,7 @@ import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.ui.home.component.CinemaBox
 import movie.metropolis.app.ui.home.component.LoyaltyCard
 import movie.metropolis.app.ui.home.component.MovieBox
+import movie.metropolis.app.ui.home.component.RatingBox
 import movie.metropolis.app.ui.home.component.ScreenTitle
 import movie.metropolis.app.ui.home.component.SectionTitle
 import movie.metropolis.app.ui.home.component.TicketBox
@@ -191,7 +192,7 @@ fun HomeScreen(
                             poster = { Image(rememberImageState(it.poster?.url)) },
                             rating = {
                                 val r = it.rating
-                                if (r != null) Text(r)
+                                if (r != null) RatingBox { Text(r) }
                             },
                             category = {}
                         )
@@ -225,7 +226,7 @@ fun HomeScreen(
                                     poster = { Image(rememberImageState(it.poster?.url)) },
                                     rating = {
                                         val r = it.rating
-                                        if (r != null) Text(r)
+                                        if (r != null) RatingBox { Text(r) }
                                     },
                                     category = {}
                                 )
