@@ -6,13 +6,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
+import movie.style.util.pc
 
 internal val ThemeShapes = Shapes(
-    extraSmall = RoundedCornerShape(4.dp),
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(16.dp),
-    large = RoundedCornerShape(32.dp),
-    extraLarge = RoundedCornerShape(0.dp),
+    extraSmall = RoundedCornerShape(.5.pc),
+    small = RoundedCornerShape(1.pc),
+    medium = RoundedCornerShape(1.5.pc),
+    large = RoundedCornerShape(2.pc),
+    extraLarge = RoundedCornerShape(3.pc),
 )
 
 @Composable

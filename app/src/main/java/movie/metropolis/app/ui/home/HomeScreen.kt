@@ -33,6 +33,7 @@ import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.layout.plus
+import movie.style.modifier.animateItemAppearance
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
 import movie.style.util.pc
@@ -75,8 +76,8 @@ fun HomeScreen(
             Image(
                 modifier = Modifier
                     .hazeSource(haze)
-                    .alpha(.5f)
-                    .blur(8.dp)
+                    .alpha(.1f)
+                    .blur(32.dp)
                     .drawWithContent {
                         drawContent()
                         drawRect(
@@ -97,6 +98,7 @@ fun HomeScreen(
                 item {
                     ScreenTitle(
                         modifier = Modifier
+                            .animateItemAppearance()
                             .animateItem()
                             .padding(horizontal = 2.pc)
                     ) {
@@ -108,6 +110,7 @@ fun HomeScreen(
                     val membership = state.profile.membership
                     if (user != null) LoyaltyCard(
                         modifier = Modifier
+                            .animateItemAppearance()
                             .animateItem()
                             .padding(horizontal = 2.pc)
                             .padding(top = 2.pc)
@@ -126,6 +129,7 @@ fun HomeScreen(
                 item(key = "tickets-title") {
                     SectionTitle(
                         modifier = Modifier
+                            .animateItemAppearance()
                             .animateItem()
                             .padding(horizontal = 2.pc)
                             .padding(vertical = 2.pc)
@@ -136,13 +140,14 @@ fun HomeScreen(
                 item(key = "tickets") {
                     HorizontalMultiBrowseCarousel(
                         modifier = Modifier
+                            .animateItemAppearance()
                             .animateItem()
                             .fillMaxWidth()
                             .systemGestureExclusion(),
                         state = rememberCarouselState { state.tickets.tickets.size },
                         preferredItemWidth = CardSize,
                         contentPadding = PaddingValues(horizontal = 2.pc),
-                        itemSpacing = 0.5.pc,
+                        itemSpacing = 1.pc,
                         flingBehavior = CarouselDefaults.noSnapFlingBehavior()
                     ) { index ->
                         val it = state.tickets.tickets[index]
@@ -163,6 +168,7 @@ fun HomeScreen(
                 item(key = "upcoming-title") {
                     SectionTitle(
                         modifier = Modifier
+                            .animateItemAppearance()
                             .animateItem()
                             .padding(horizontal = 2.pc)
                             .padding(vertical = 2.pc)
@@ -174,26 +180,33 @@ fun HomeScreen(
                     val items = state.upcoming
                     HorizontalMultiBrowseCarousel(
                         modifier = Modifier
+                            .animateItemAppearance()
                             .animateItem()
                             .fillMaxWidth()
                             .systemGestureExclusion(),
                         state = rememberCarouselState { items.size },
                         preferredItemWidth = CardSize,
                         contentPadding = PaddingValues(horizontal = 2.pc),
-                        itemSpacing = 0.5.pc,
+                        itemSpacing = 1.pc,
                         flingBehavior = CarouselDefaults.noSnapFlingBehavior()
                     ) { index ->
                         val it = items[index]
                         val fraction = Modifier.alpha(carouselItemInfo.fraction)
+                        val image = rememberPaletteImageState(it.poster?.url)
                         MovieBox(
-                            modifier = Modifier.maskClip(MaterialTheme.shapes.medium),
+                            modifier = Modifier
+                                .maskClip(MaterialTheme.shapes.medium),
                             onClick = { onMovieClick(it.id, true) },
                             aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
                             name = { Text(it.name, Modifier.then(fraction)) },
-                            poster = { Image(rememberImageState(it.poster?.url)) },
+                            poster = { Image(image) },
                             rating = {
                                 val r = it.rating
-                                if (r != null) RatingBox { Text(r) }
+                                if (r != null) RatingBox(
+                                    color = image.palette.color
+                                ) {
+                                    Text(r)
+                                }
                             },
                             category = {}
                         )
@@ -215,21 +228,27 @@ fun HomeScreen(
                         modifier = Modifier
                             .animateItem()
                             .padding(horizontal = 2.pc),
-                        horizontalArrangement = Arrangement.spacedBy(.5.pc)
+                        horizontalArrangement = Arrangement.spacedBy(1.pc)
                     ) {
-                        for (it in it) key(it.id) {
+                        for (it in it) {
                             // todo add pop-up animation on appear
+                            val image = rememberPaletteImageState(it.poster?.url)
                             MovieBox(
                                 modifier = Modifier
+                                    .animateItemAppearance()
                                     .weight(1f),
                                 onClick = { onMovieClick(it.id, false) },
                                 aspectRatio = it.poster?.aspectRatio
                                     ?: DefaultPosterAspectRatio,
                                 name = { Text(it.name) },
-                                poster = { Image(rememberImageState(it.poster?.url)) },
+                                poster = { Image(image) },
                                 rating = {
                                     val r = it.rating
-                                    if (r != null) RatingBox { Text(r) }
+                                    if (r != null) RatingBox(
+                                        color = image.palette.color
+                                    ) {
+                                        Text(r)
+                                    }
                                 },
                                 category = {}
                             )

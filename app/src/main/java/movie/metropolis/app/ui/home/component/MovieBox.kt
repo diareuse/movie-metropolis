@@ -2,19 +2,16 @@ package movie.metropolis.app.ui.home.component
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
-import movie.style.shape.CompositeShape
-import movie.style.shape.CutoutShape
 import movie.style.util.pc
 
 @Composable
@@ -44,15 +41,21 @@ fun MovieBox(
 
 @Composable
 fun RatingBox(
+    color: Color,
     modifier: Modifier = Modifier,
+    shape: Shape = MaterialTheme.shapes.small,
+    alpha: Float = .4f,
     rating: @Composable () -> Unit,
+) = Box(
+    modifier = modifier
+        .padding(.5.pc)
+        .shadow(8.dp, shape = shape, clip = false, spotColor = color, ambientColor = color)
+        .border(Dp.Hairline, color.copy(alpha), shape)
+        .background(MaterialTheme.colorScheme.surface, shape)
+        .padding(vertical = .25.pc, horizontal = .5.pc)
 ) {
-    Box(
-        modifier = modifier.padding(vertical = .5.pc, horizontal = 1.pc)
-    ) {
-        ProvideTextStyle(MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)) {
-            rating()
-        }
+    ProvideTextStyle(MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)) {
+        rating()
     }
 }
 
@@ -64,34 +67,19 @@ private fun MovieBoxLayout(
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.medium
 ) {
-    var size by remember { mutableStateOf(DpSize.Zero) }
-    Layout(
+    Box(
         modifier = modifier,
-        content = {
-            Box { rating() }
-            Surface(
-                onClick = onClick,
-                shape = CompositeShape(size) {
-                    setBaseline(shape)
-                    val cs = if (shape is CornerBasedShape) shape.topStart else CornerSize(1.pc)
-                    addShape(
-                        shape = CutoutShape(cs, CutoutShape.Orientation.TopLeft),
-                        size = size,
-                        alignment = Alignment.TopStart,
-                        operation = PathOperation.Difference
-                    )
-                }
-            ) {
-                poster()
-            }
+        contentAlignment = Alignment.TopCenter,
+        propagateMinConstraints = true
+    ) {
+        Surface(
+            shape = shape,
+            onClick = onClick
+        ) {
+            poster()
         }
-    ) { (rating, poster), c ->
-        val ratingP = rating.measure(c.copy(minWidth = 0, minHeight = 0))
-        val posterP = poster.measure(c.copy(minWidth = 0, minHeight = 0))
-        size = DpSize(ratingP.width.toDp(), ratingP.height.toDp())
-        layout(posterP.width, posterP.height) {
-            ratingP.place(0, 0)
-            posterP.place(0, 0)
+        Box(modifier = Modifier.wrapContentSize()) {
+            rating()
         }
     }
 }
@@ -102,11 +90,12 @@ private fun MovieBoxPreview() = PreviewLayout {
     MovieBox(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
-            .width(150.dp),
+            .padding(1.pc)
+            .width(10.pc),
         onClick = {},
         name = { Text("Captain America") },
         poster = { Box(modifier = Modifier.background(Color.Green)) },
-        rating = { RatingBox { Text("82%") } },
+        rating = { RatingBox(Color.Green) { Text("82%") } },
         category = { Text("Action/Adventure") }
     )
 }
