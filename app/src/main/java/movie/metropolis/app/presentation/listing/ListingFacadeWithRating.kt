@@ -44,11 +44,12 @@ class ListingFacadeWithRating(
                         get() = it
                 }
             }
+            movie.posterLarge = movie.poster
         }
     }
 
     private suspend fun getRating(movie: MovieView): MovieMetadata? = cache.getOrPut(movie.id) {
-        val year = Calendar.getInstance()[Calendar.YEAR]
+        val year = movie.releasedAt.toIntOrNull() ?: Calendar.getInstance()[Calendar.YEAR]
         val descriptors = listOf(
             MovieDescriptor.Original(movie.name, year)
         )

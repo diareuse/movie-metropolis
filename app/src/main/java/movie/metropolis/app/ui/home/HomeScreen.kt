@@ -171,18 +171,19 @@ fun HomeScreen(
                     }
                 }
                 item(key = "upcoming") {
+                    val items = state.upcoming
                     HorizontalMultiBrowseCarousel(
                         modifier = Modifier
                             .animateItem()
                             .fillMaxWidth()
                             .systemGestureExclusion(),
-                        state = rememberCarouselState { state.upcoming.size },
+                        state = rememberCarouselState { items.size },
                         preferredItemWidth = CardSize,
                         contentPadding = PaddingValues(horizontal = 2.pc),
                         itemSpacing = 0.5.pc,
                         flingBehavior = CarouselDefaults.noSnapFlingBehavior()
                     ) { index ->
-                        val it = state.upcoming[index]
+                        val it = items[index]
                         val fraction = Modifier.alpha(carouselItemInfo.fraction)
                         MovieBox(
                             modifier = Modifier.maskClip(MaterialTheme.shapes.medium),
@@ -208,28 +209,30 @@ fun HomeScreen(
                         Text("Currently Showing")
                     }
                 }
-                state.current.windowed(3, 3).forEach {
-                    item {
-                        Row(
-                            modifier = Modifier
-                                .animateItem()
-                                .padding(horizontal = 2.pc),
-                            horizontalArrangement = Arrangement.spacedBy(.5.pc)
-                        ) {
-                            for (it in it)
-                                MovieBox(
-                                    modifier = Modifier.weight(1f),
-                                    onClick = { onMovieClick(it.id, false) },
-                                    aspectRatio = it.poster?.aspectRatio
-                                        ?: DefaultPosterAspectRatio,
-                                    name = { Text(it.name) },
-                                    poster = { Image(rememberImageState(it.poster?.url)) },
-                                    rating = {
-                                        val r = it.rating
-                                        if (r != null) RatingBox { Text(r) }
-                                    },
-                                    category = {}
-                                )
+
+                items(state.current.windowed(3, 3)) {
+                    Row(
+                        modifier = Modifier
+                            .animateItem()
+                            .padding(horizontal = 2.pc),
+                        horizontalArrangement = Arrangement.spacedBy(.5.pc)
+                    ) {
+                        for (it in it) key(it.id) {
+                            // todo add pop-up animation on appear
+                            MovieBox(
+                                modifier = Modifier
+                                    .weight(1f),
+                                onClick = { onMovieClick(it.id, false) },
+                                aspectRatio = it.poster?.aspectRatio
+                                    ?: DefaultPosterAspectRatio,
+                                name = { Text(it.name) },
+                                poster = { Image(rememberImageState(it.poster?.url)) },
+                                rating = {
+                                    val r = it.rating
+                                    if (r != null) RatingBox { Text(r) }
+                                },
+                                category = {}
+                            )
                         }
                     }
                 }

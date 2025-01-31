@@ -43,7 +43,7 @@ class MovieFacadeRating(
     private suspend fun getMetadata(movie: MovieDetailView): MovieMetadata? {
         val m = metadata
         if (m != null) return m
-        val year = Calendar.getInstance()[Calendar.YEAR]
+        val year = movie.releasedAt.toIntOrNull() ?: Calendar.getInstance()[Calendar.YEAR]
         val descriptors = arrayOf(
             MovieDescriptor.Original(movie.nameOriginal, year),
             MovieDescriptor.Local(movie.name, year)
