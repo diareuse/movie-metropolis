@@ -6,7 +6,7 @@ class MetadataProviderCatch(
 
     override suspend fun get(descriptor: MovieDescriptor) = try {
         origin.get(descriptor)
-    } catch (ignore: Throwable) {
+    } catch (_: Throwable) {
         null
     }
 

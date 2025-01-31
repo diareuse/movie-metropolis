@@ -4,8 +4,8 @@ internal class MetadataProviderInvalidateRating(
     private val origin: MetadataProvider
 ) : MetadataProvider {
     override suspend fun get(descriptor: MovieDescriptor): MovieMetadata? {
-        return origin.get(descriptor)?.also {
-            require(it.rating > 0)
+        return origin.get(descriptor)?.takeIf {
+            it.rating > 0
         }
     }
 }
