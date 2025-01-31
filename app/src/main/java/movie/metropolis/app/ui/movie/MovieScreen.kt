@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package movie.metropolis.app.ui.movie
 
+import androidx.compose.animation.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material.icons.filled.*
@@ -15,7 +18,8 @@ import movie.style.rememberImageState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieScreen(
+fun SharedTransitionScope.MovieScreen(
+    animationScope: AnimatedContentScope,
     showPurchase: Boolean,
     detail: MovieDetailView,
     onBackClick: () -> Unit,
@@ -31,7 +35,16 @@ fun MovieScreen(
         }
     },
     backdrop = { Image(rememberImageState(detail.backdrop?.url)) },
-    poster = { Image(rememberImageState(detail.poster?.url)) },
+    poster = {
+        Image(
+            modifier = Modifier.sharedElement(
+                rememberSharedContentState("movie-${detail.id}"),
+                animationScope,
+                placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize
+            ),
+            state = rememberImageState(detail.poster?.url)
+        )
+    },
     name = { Text(detail.nameOriginal) },
     duration = { Text(detail.duration) },
     releasedAt = { Text(detail.releasedAt) },
@@ -75,5 +88,15 @@ fun MovieScreen(
 @PreviewFontScale
 @Composable
 private fun MovieScreenPreview() = PreviewLayout {
-    MovieScreen(true, MovieDetailViewProvider().values.first(), {}, {}, {})
+    SharedTransitionLayout {
+        AnimatedContent(true) {
+            MovieScreen(
+                animationScope = this,
+                showPurchase = it,
+                detail = MovieDetailViewProvider().values.first(),
+                onBackClick = {},
+                onBuyClick = {},
+                onLinkClick = {})
+        }
+    }
 }

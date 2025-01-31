@@ -2,6 +2,7 @@
 
 package movie.metropolis.app.ui.home
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -41,8 +42,10 @@ import movie.style.util.pc
 val CardSize = 10.pc
 val CarouselItemInfo.fraction get() = (size - minSize) / (maxSize - minSize)
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeScreen(
+fun SharedTransitionScope.HomeScreen(
+    animationScope: AnimatedContentScope,
     state: HomeScreenState,
     onMovieClick: (id: String, upcoming: Boolean) -> Unit,
     onCinemaClick: (id: String) -> Unit,
@@ -154,7 +157,12 @@ fun HomeScreen(
                         val image = rememberPaletteImageState(it.movie.poster?.url)
                         val fraction = Modifier.alpha(carouselItemInfo.fraction)
                         TicketBox(
-                            modifier = Modifier.maskClip(MaterialTheme.shapes.medium),
+                            modifier = Modifier
+                                .maskClip(MaterialTheme.shapes.medium)
+                                .sharedElement(
+                                    rememberSharedContentState("ticket-${it.id}"),
+                                    animationScope
+                                ),
                             expired = it.expired,
                             onClick = { onTicketClick(it.id) },
                             date = { Text(it.date, Modifier.then(fraction)) },
@@ -195,6 +203,10 @@ fun HomeScreen(
                         val image = rememberPaletteImageState(it.poster?.url)
                         MovieBox(
                             modifier = Modifier
+                                .sharedElement(
+                                    rememberSharedContentState("movie-${it.id}"),
+                                    animationScope
+                                )
                                 .maskClip(MaterialTheme.shapes.medium),
                             onClick = { onMovieClick(it.id, true) },
                             aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
@@ -235,6 +247,11 @@ fun HomeScreen(
                             val image = rememberPaletteImageState(it.poster?.url)
                             MovieBox(
                                 modifier = Modifier
+                                    .sharedElement(
+                                        rememberSharedContentState("movie-${it.id}"),
+                                        animationScope,
+                                        placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize
+                                    )
                                     .animateItemAppearance()
                                     .weight(1f),
                                 onClick = { onMovieClick(it.id, false) },
@@ -280,6 +297,7 @@ fun HomeScreen(
     }
 )
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark
 @Composable
 private fun HomeScreenMoviesPreview() = PreviewLayout {
@@ -289,16 +307,22 @@ private fun HomeScreenMoviesPreview() = PreviewLayout {
             upcoming.addAll(MovieViewProvider().values)
         }
     }
-    HomeScreen(
-        state = state,
-        onMovieClick = { _, _ -> },
-        onCinemaClick = {},
-        onProfileClick = {},
-        onTicketClick = {},
-        onTicketsClick = {}
-    )
+    SharedTransitionLayout {
+        AnimatedContent(state) { state ->
+            HomeScreen(
+                animationScope = this,
+                state = state,
+                onMovieClick = { _, _ -> },
+                onCinemaClick = {},
+                onProfileClick = {},
+                onTicketClick = {},
+                onTicketsClick = {}
+            )
+        }
+    }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark
 @Composable
 private fun HomeScreenCinemasPreview() = PreviewLayout {
@@ -307,13 +331,18 @@ private fun HomeScreenCinemasPreview() = PreviewLayout {
             cinemas.addAll(CinemaViewProvider().values)
         }
     }
-    HomeScreen(
-        state = state,
-        onMovieClick = { _, _ -> },
-        onProfileClick = {},
-        onCinemaClick = {},
-        initialPage = 1,
-        onTicketClick = {},
-        onTicketsClick = {}
-    )
+    SharedTransitionLayout {
+        AnimatedContent(state) { state ->
+            HomeScreen(
+                animationScope = this,
+                state = state,
+                onMovieClick = { _, _ -> },
+                onProfileClick = {},
+                onCinemaClick = {},
+                initialPage = 1,
+                onTicketClick = {},
+                onTicketsClick = {}
+            )
+        }
+    }
 }

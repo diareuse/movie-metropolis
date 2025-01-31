@@ -69,8 +69,7 @@ private fun MovieBoxLayout(
 ) {
     Box(
         modifier = modifier,
-        contentAlignment = Alignment.TopCenter,
-        propagateMinConstraints = true
+        contentAlignment = Alignment.TopCenter
     ) {
         Surface(
             shape = shape,

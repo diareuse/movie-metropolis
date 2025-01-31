@@ -97,6 +97,7 @@ fun Navigation(
             composable(Route.Home.route, arguments = Route.Home.arguments) {
                 val vm = hiltViewModel<HomeViewModel>()
                 HomeScreen(
+                    animationScope = this@composable,
                     state = vm.state,
                     onMovieClick = { id, upcoming ->
                         navController.navigate(Route.Movie(id, upcoming))
@@ -131,6 +132,7 @@ fun Navigation(
                 val state = vm.state
                 val context = LocalContext.current
                 MovieScreen(
+                    animationScope = this@composable,
                     showPurchase = !vm.upcoming,
                     detail = state.detail,
                     onBackClick = navController::navigateUp,
