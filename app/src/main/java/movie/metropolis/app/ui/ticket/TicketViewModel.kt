@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import movie.metropolis.app.presentation.booking.BookingFacade
+import movie.metropolis.app.util.updateWith
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,8 +18,7 @@ class TicketViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             facade.bookings.collect {
-                state.tickets.clear()
-                state.tickets.addAll(it)
+                state.tickets.updateWith(it)
             }
         }
     }

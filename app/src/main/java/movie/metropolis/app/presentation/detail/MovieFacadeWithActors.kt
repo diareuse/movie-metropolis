@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.withLock
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.model.PersonView
 import movie.metropolis.app.util.onEachLaunch
+import movie.metropolis.app.util.updateWith
 import movie.rating.Actor
 import movie.rating.ActorProvider
 
@@ -25,8 +26,7 @@ class MovieFacadeWithActors(
             p.url = "https://www.themoviedb.org/person/${actor.id}"
             p.popularity = actor.popularity
             p.image = actor.image
-            p.movies.clear()
-            p.movies.addAll(actor.movies.map { a ->
+            p.movies.updateWith(actor.movies.map { a ->
                 PersonView.Movie(
                     id = a.id,
                     name = a.name,

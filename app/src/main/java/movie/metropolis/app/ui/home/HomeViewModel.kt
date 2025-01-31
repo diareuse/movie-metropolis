@@ -14,6 +14,7 @@ import movie.metropolis.app.presentation.cinema.CinemasFacade
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade
+import movie.metropolis.app.util.updateWith
 import javax.inject.Inject
 
 @Stable
@@ -35,16 +36,14 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             launch {
                 booking.bookings.collect {
-                    state.tickets.tickets.clear()
-                    state.tickets.tickets.addAll(it)
+                    state.tickets.tickets.updateWith(it)
                 }
             }
             launch {
                 state.profile.user = profile.getUser()
             }
             launch {
-                state.profile.cinemas.clear()
-                state.profile.cinemas.addAll(profile.getCinemas())
+                state.profile.cinemas.updateWith(profile.getCinemas())
             }
             launch {
                 state.profile.membership = profile.getMembership()
@@ -52,20 +51,17 @@ class HomeViewModel @Inject constructor(
         }
         upcoming.get()
             .onEach { upcoming ->
-                state.upcoming.clear()
-                state.upcoming.addAll(upcoming.items)
+                state.upcoming.updateWith(upcoming.items)
             }
             .launchIn(viewModelScope)
         current.get()
             .onEach { current ->
-                state.current.clear()
-                state.current.addAll(current.items)
+                state.current.updateWith(current.items)
             }
             .launchIn(viewModelScope)
         cinema.cinemas(null)
             .onEach {
-                state.cinemas.clear()
-                state.cinemas.addAll(it)
+                state.cinemas.updateWith(it)
             }
             .launchIn(viewModelScope)
     }

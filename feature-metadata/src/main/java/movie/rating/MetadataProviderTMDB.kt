@@ -3,8 +3,6 @@ package movie.rating
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import movie.rating.model.ListResponse
 import movie.rating.model.SearchData
 import javax.inject.Provider
@@ -12,17 +10,14 @@ import javax.inject.Provider
 class MetadataProviderTMDB(
     private val client: Provider<HttpClient>
 ) : MetadataProvider {
-    private val mutex = Mutex()
 
     override suspend fun get(descriptor: MovieDescriptor): MovieMetadata? {
-        val data = mutex.withLock {
-            with(client.get()) {
-                var out = search(descriptor.name, descriptor.year.toString())
-                out = out ?: search(descriptor.name, null)
-                out = out ?: search(descriptor.name.substringAfter(':'), descriptor.year.toString())
-                out
-            } ?: return null
-        }
+        val data = with(client.get()) {
+            var out = search(descriptor.name, descriptor.year.toString())
+            out = out ?: search(descriptor.name, null)
+            out = out ?: search(descriptor.name.substringAfter(':'), descriptor.year.toString())
+            out
+        } ?: return null
         return MovieMetadata(
             id = data.id,
             rating = (data.rating * 10).toInt().toByte(),

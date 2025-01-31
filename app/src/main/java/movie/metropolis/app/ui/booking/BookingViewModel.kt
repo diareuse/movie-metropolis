@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import movie.metropolis.app.model.FiltersView
 import movie.metropolis.app.presentation.ticket.TicketFacade
 import movie.metropolis.app.screen.Route
+import movie.metropolis.app.util.updateWith
 import javax.inject.Inject
 import android.location.Location as AndroidLocation
 
@@ -55,9 +56,7 @@ class BookingViewModel private constructor(
                         .launchIn(this)
                     facade.times
                         .onEach {
-                            // fixme add more comprehensive updates
-                            state.items.clear()
-                            state.items.addAll(it)
+                            state.items.updateWith(it)
                         }
                         .launchIn(this)
                     state.filters = facade.filters

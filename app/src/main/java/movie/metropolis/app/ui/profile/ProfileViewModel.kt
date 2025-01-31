@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.ui.profile.ProfileState.SaveState
+import movie.metropolis.app.util.updateWith
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -31,8 +32,7 @@ class ProfileViewModel @Inject constructor(
                 state.user = facade.getUser()
             }
             launch {
-                state.cinemas.clear()
-                state.cinemas.addAll(facade.getCinemas())
+                state.cinemas.updateWith(facade.getCinemas())
             }
             launch {
                 state.membership = facade.getMembership()
