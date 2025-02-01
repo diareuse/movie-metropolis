@@ -2,49 +2,186 @@ package movie.metropolis.app.ui.home
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.pager.*
-import androidx.compose.material.icons.*
-import androidx.compose.material.icons.filled.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.lazy.*
 import androidx.compose.material3.*
+import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
+import movie.metropolis.app.model.BookingView
+import movie.metropolis.app.model.CinemaView
+import movie.metropolis.app.model.MembershipView
+import movie.metropolis.app.model.MovieView
+import movie.metropolis.app.model.UserView
 import movie.style.layout.PreviewLayout
+import movie.style.layout.StateLayout
+import movie.style.util.pc
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenScaffold(
-    titleMovies: @Composable () -> Unit,
-    titleCinemas: @Composable () -> Unit,
-    profile: @Composable () -> Unit,
-    tickets: @Composable () -> Unit,
-    movies: @Composable (PaddingValues) -> Unit,
-    cinemas: @Composable (PaddingValues) -> Unit,
-    modifier: Modifier = Modifier,
-    initialPage: Int = 0,
-    pagerState: PagerState = rememberPagerState(initialPage) { 2 }
+    state: HomeScreenState,
+    // --- main content
+    userAccount: @Composable (UserView, MembershipView?) -> Unit,
+    ticket: @Composable RowScope.(BookingView) -> Unit,
+    onShowAllTicketsClick: () -> Unit,
+    onShowAllRecommendedClick: () -> Unit,
+    onShowAllComingSoonClick: () -> Unit,
+    onShowAllCinemasClick: () -> Unit,
+    cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
+    movie: @Composable (MovieView) -> Unit,
+    // --- placeholders
+    userPlaceholder: @Composable () -> Unit,
+    ticketPlaceholder: @Composable () -> Unit,
+    moviePlaceholder: @Composable () -> Unit,
+    cinemaPlaceholder: @Composable () -> Unit,
+    // --- errors
+    userError: @Composable () -> Unit,
+    ticketError: @Composable () -> Unit,
+    movieError: @Composable () -> Unit,
+    cinemaError: @Composable () -> Unit,
+    // ---
+    modifier: Modifier = Modifier
 ) = Scaffold(
     modifier = modifier,
-    topBar = {
-        Spacer(
-            modifier = Modifier
-                .windowInsetsPadding(
-                    WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                )
-        )
-    }
+    contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
 ) { padding ->
-    HorizontalPager(pagerState, userScrollEnabled = false) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            propagateMinConstraints = true
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(padding)
+    ) {
+        StateLayout(
+            state = state.profile.user,
+            loaded = { userAccount(it, state.profile.membership.getOrNull()) },
+            error = userError,
+            loading = userPlaceholder
+        )
+
+        // --- tickets section
+        OpenableSection(
+            modifier = Modifier
+                .padding(horizontal = 2.pc)
+                .padding(top = 2.pc),
+            onClick = onShowAllTicketsClick
         ) {
-            when (it) {
-                0 -> movies(padding)
-                1 -> cinemas(padding)
+            Text("Tickets")
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(horizontal = 2.pc),
+            horizontalArrangement = Arrangement.spacedBy(1.pc),
+            verticalAlignment = Alignment.Top
+        ) {
+            StateLayout(
+                state = state.tickets.state,
+                loaded = { _ ->
+                    for (i in 0..<3) Box(
+                        modifier = Modifier.weight(1f), propagateMinConstraints = true
+                    ) {
+                        val item = state.tickets.tickets.getOrNull(i)
+                        if (item == null) ticketPlaceholder()
+                        else key(item.id) {
+                            ticket(this@Row, item)
+                        }
+                    }
+                },
+                error = { repeat(3) { ticketError() } },
+                loading = { repeat(3) { ticketPlaceholder() } })
+        }
+
+        // --- recommended section
+        OpenableSection(
+            modifier = Modifier
+                .padding(horizontal = 2.pc)
+                .padding(top = 2.pc),
+            onClick = onShowAllRecommendedClick
+        ) {
+            Text("Recommended")
+        }
+        val recommendedState = rememberCarouselState { maxOf(state.recommended.size, 5) }
+        HorizontalUncontainedCarousel(
+            state = recommendedState,
+            itemWidth = 10.pc,
+            itemSpacing = 1.pc,
+            flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(recommendedState),
+            contentPadding = PaddingValues(horizontal = 2.pc)
+        ) {
+            Box(modifier = Modifier.maskClip(MaterialTheme.shapes.medium)) {
+                val item = state.recommended.getOrNull(it)
+                if (item == null) moviePlaceholder()
+                else key(item.id) {
+                    movie(item)
+                }
             }
         }
+
+        // --- coming soon section
+        OpenableSection(
+            modifier = Modifier
+                .padding(horizontal = 2.pc)
+                .padding(top = 2.pc),
+            onClick = onShowAllComingSoonClick
+        ) {
+            Text("Coming Soon")
+        }
+        val comingSoonState = rememberCarouselState { maxOf(state.comingSoon.size, 5) }
+        HorizontalUncontainedCarousel(
+            state = comingSoonState,
+            itemWidth = 10.pc,
+            itemSpacing = 1.pc,
+            flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(comingSoonState),
+            contentPadding = PaddingValues(horizontal = 2.pc)
+        ) {
+            Box(modifier = Modifier.maskClip(MaterialTheme.shapes.medium)) {
+                val item = state.comingSoon.getOrNull(it)
+                if (item == null) moviePlaceholder()
+                else key(item.id) {
+                    movie(item)
+                }
+            }
+        }
+
+        // --- cinemas section
+        OpenableSection(
+            modifier = Modifier
+                .padding(horizontal = 2.pc)
+                .padding(top = 2.pc),
+            onClick = onShowAllCinemasClick
+        ) {
+            Text("Cinemas")
+        }
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 2.pc),
+            horizontalArrangement = Arrangement.spacedBy(1.pc)
+        ) {
+            state.cinemas.ifEmpty {
+                items(3) { cinemaPlaceholder() }
+            }
+            items(state.cinemas, key = { it.id }) {
+                cinema(it)
+            }
+        }
+    }
+}
+
+@Composable
+fun OpenableSection(
+    onClick: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit
+) = Row(
+    modifier = modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
+    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+        content()
+    }
+    TextButton(onClick) {
+        Text("Show all")
     }
 }
 
@@ -54,31 +191,22 @@ fun HomeScreenScaffold(
 @Composable
 private fun HomeScreenScaffoldPreview() = PreviewLayout {
     HomeScreenScaffold(
-        titleMovies = { Text("Movies") },
-        titleCinemas = { Text("Cinemas") },
-        profile = {
-            IconButton({}) {
-                Icon(Icons.Default.AccountCircle, null)
-            }
-        },
-        tickets = {
-            IconButton({}) {
-                Icon(Icons.Default.Email, null)
-            }
-        },
-        movies = {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Green)
-            )
-        },
-        cinemas = {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Yellow)
-            )
-        }
+        state = remember { HomeScreenState() },
+        userAccount = { _, _ -> },
+        ticket = {},
+        onShowAllTicketsClick = {},
+        onShowAllRecommendedClick = {},
+        onShowAllComingSoonClick = {},
+        onShowAllCinemasClick = {},
+        cinema = {},
+        movie = {},
+        userPlaceholder = {},
+        ticketPlaceholder = {},
+        moviePlaceholder = {},
+        cinemaPlaceholder = {},
+        userError = {},
+        ticketError = {},
+        movieError = {},
+        cinemaError = {},
     )
 }

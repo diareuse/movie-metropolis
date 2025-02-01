@@ -9,8 +9,8 @@ import movie.metropolis.app.ui.ticket.TicketScreenState
 @Stable
 class HomeScreenState {
     val profile = ProfileState()
-    val current = mutableStateListOf<MovieView>()
-    val upcoming = mutableStateListOf<MovieView>()
+    val recommended = mutableStateListOf<MovieView>()
+    val comingSoon = mutableStateListOf<MovieView>()
     val cinemas = mutableStateListOf<CinemaView>()
     val tickets = TicketScreenState()
 }

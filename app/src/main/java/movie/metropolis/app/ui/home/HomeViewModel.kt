@@ -15,6 +15,7 @@ import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade
 import movie.metropolis.app.util.updateWith
+import movie.style.layout.LayoutState
 import javax.inject.Inject
 
 @Stable
@@ -40,23 +41,23 @@ class HomeViewModel @Inject constructor(
                 }
             }
             launch {
-                state.profile.user = profile.getUser()
+                state.profile.user = LayoutState.result(profile.getUser())
             }
             launch {
                 state.profile.cinemas.updateWith(profile.getCinemas())
             }
             launch {
-                state.profile.membership = profile.getMembership()
+                state.profile.membership = LayoutState.result(profile.getMembership())
             }
         }
         upcoming.get()
             .onEach { upcoming ->
-                state.upcoming.updateWith(upcoming.items)
+                state.comingSoon.updateWith(upcoming.items)
             }
             .launchIn(viewModelScope)
         current.get()
             .onEach { current ->
-                state.current.updateWith(current.items)
+                state.recommended.updateWith(current.items)
             }
             .launchIn(viewModelScope)
         cinema.cinemas(null)

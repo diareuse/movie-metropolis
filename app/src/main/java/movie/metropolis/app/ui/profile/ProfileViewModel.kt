@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.ui.profile.ProfileState.SaveState
 import movie.metropolis.app.util.updateWith
+import movie.style.layout.LayoutState
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
 
@@ -29,17 +30,17 @@ class ProfileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                state.user = facade.getUser()
+                state.user = LayoutState.result(facade.getUser())
             }
             launch {
                 state.cinemas.updateWith(facade.getCinemas())
             }
             launch {
-                state.membership = facade.getMembership()
+                state.membership = LayoutState.result(facade.getMembership())
             }
             saveQueue.consumeAsFlow().debounce(5.seconds)
                 .onEach { state.saving = SaveState.Saving }
-                .onEach { facade.save(state.user ?: return@onEach) }
+                .onEach { facade.save(state.user.getOrNull() ?: return@onEach) }
                 .onEach { state.saving = SaveState.Idle }
                 .catch { state.saving = SaveState.Fail }
                 .launchIn(this)
@@ -47,22 +48,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun onPhoneChange(value: String) {
-        state.user?.phone = value
+        state.user.getOrNull()?.phone = value
         saveQueue.trySend(value)
     }
 
     fun onFirstNameChange(value: String) {
-        state.user?.firstName = value
+        state.user.getOrNull()?.firstName = value
         saveQueue.trySend(value)
     }
 
     fun onLastNameChange(value: String) {
-        state.user?.lastName = value
+        state.user.getOrNull()?.lastName = value
         saveQueue.trySend(value)
     }
 
     fun onConsentChange(value: Boolean) {
-        state.user?.consent?.marketing = value
+        state.user.getOrNull()?.consent?.marketing = value
         saveQueue.trySend(value)
     }
 

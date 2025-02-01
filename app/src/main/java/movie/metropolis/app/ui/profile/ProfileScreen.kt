@@ -21,18 +21,18 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
 ) = ProfileScreenScaffold(
     modifier = modifier,
-    firstName = { TextField(state.user?.firstName.orEmpty(), onFirstNameChange) },
-    lastName = { TextField(state.user?.lastName.orEmpty(), onLastNameChange) },
-    phone = { TextField(state.user?.phone.orEmpty(), onPhoneChange) },
-    cinema = { TextField(state.user?.favorite?.name.orEmpty(), {}, readOnly = true) },
+    firstName = { TextField(state.userOrNull?.firstName.orEmpty(), onFirstNameChange) },
+    lastName = { TextField(state.userOrNull?.lastName.orEmpty(), onLastNameChange) },
+    phone = { TextField(state.userOrNull?.phone.orEmpty(), onPhoneChange) },
+    cinema = { TextField(state.userOrNull?.favorite?.name.orEmpty(), {}, readOnly = true) },
     consent = {
         Row {
-            Checkbox(state.user?.consent?.marketing == true, onConsentChange)
+            Checkbox(state.userOrNull?.consent?.marketing == true, onConsentChange)
             Text("Consent")
         }
     },
     card = {
-        val m = state.membership
+        val m = state.membership.getOrNull()
         if (m != null) Column {
             Text(m.cardNumber)
             Text(m.daysRemaining)
