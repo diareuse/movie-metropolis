@@ -38,6 +38,7 @@ class HomeViewModel @Inject constructor(
             launch {
                 booking.bookings.collect {
                     state.tickets.tickets.updateWith(it)
+                    state.tickets.state = LayoutState.result(it.size)
                 }
             }
             launch {

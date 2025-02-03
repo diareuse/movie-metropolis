@@ -81,7 +81,8 @@ fun HomeScreenScaffold(
                 state = state.tickets.state,
                 loaded = { _ ->
                     for (i in 0..<3) Box(
-                        modifier = Modifier.weight(1f), propagateMinConstraints = true
+                        modifier = Modifier.weight(1f),
+                        propagateMinConstraints = true
                     ) {
                         val item = state.tickets.tickets.getOrNull(i)
                         if (item == null) ticketPlaceholder()

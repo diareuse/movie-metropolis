@@ -6,5 +6,5 @@ import movie.style.layout.LayoutState
 
 class TicketScreenState {
     val tickets = mutableStateListOf<BookingView>()
-    val state by mutableStateOf(LayoutState.loading<Int>())
+    var state by mutableStateOf(LayoutState.loading<Int>())
 }
