@@ -8,7 +8,9 @@ import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MembershipView
@@ -42,7 +44,8 @@ fun HomeScreenScaffold(
     movieError: @Composable () -> Unit,
     cinemaError: @Composable () -> Unit,
     // ---
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    ticketCount: Int = 4,
 ) = Scaffold(
     modifier = modifier,
     contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
@@ -52,6 +55,7 @@ fun HomeScreenScaffold(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(padding)
+            .systemBarsPadding()
     ) {
         StateLayout(
             state = state.profile.user,
@@ -74,14 +78,19 @@ fun HomeScreenScaffold(
                 .fillMaxWidth()
                 .horizontalScroll(rememberScrollState())
                 .padding(horizontal = 2.pc),
-            horizontalArrangement = Arrangement.spacedBy(1.pc),
+            horizontalArrangement = Arrangement.spacedBy(-(3).pc),
             verticalAlignment = Alignment.Top
         ) {
             StateLayout(
                 state = state.tickets.state,
                 loaded = { _ ->
-                    for (i in 0..<3) Box(
-                        modifier = Modifier.weight(1f),
+                    MaterialTheme.colorScheme.surface
+                    for (i in 0..<ticketCount) Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .zIndex(1f * ticketCount - i)
+                            .scale(1f - i * 0.05f)
+                            .blur(2.dp * i, edgeTreatment = BlurredEdgeTreatment.Unbounded),
                         propagateMinConstraints = true
                     ) {
                         val item = state.tickets.tickets.getOrNull(i)
