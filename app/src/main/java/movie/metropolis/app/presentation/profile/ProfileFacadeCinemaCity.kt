@@ -9,6 +9,7 @@ import movie.metropolis.app.model.UserView
 import movie.metropolis.app.model.adapter.CinemaSimpleViewFromCinema
 import movie.metropolis.app.model.adapter.MembershipViewFromCustomer
 import movie.metropolis.app.model.adapter.UserViewFromCustomer
+import java.text.DateFormat
 import java.util.Locale
 
 class ProfileFacadeCinemaCity(
@@ -22,7 +23,8 @@ class ProfileFacadeCinemaCity(
 
     override suspend fun getMembership(): MembershipView? {
         return cinemaCity.customers.runCatching { getCustomer().membership!! }
-            .map(::MembershipViewFromCustomer).getOrNull()
+            .map { membership -> MembershipViewFromCustomer(membership, ExpirationFormat) }
+            .getOrNull()
     }
 
     override suspend fun getUser(): UserView? {
@@ -54,6 +56,10 @@ class ProfileFacadeCinemaCity(
         } finally {
             user.password = passwordNew
         }
+    }
+
+    companion object {
+        private val ExpirationFormat = DateFormat.getDateInstance(DateFormat.MEDIUM)
     }
 
 }
