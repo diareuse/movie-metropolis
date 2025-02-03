@@ -14,10 +14,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.util.*
 import movie.metropolis.app.R
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
@@ -58,13 +60,12 @@ fun UserTopBar(
     subtitle: @Composable () -> Unit,
     card: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.inverseSurface
-) = Box(modifier = modifier.padding(.5.pc)) {
+    color: Color = MaterialTheme.colorScheme.inverseSurface,
+    ratio: Float = .7f
+) = Layout(modifier = modifier.padding(.5.pc), content = {
     Spacer(
         modifier = Modifier
             .fillMaxWidth()
-            .matchParentSize()
-            .padding(bottom = 5.pc)
             .background(LocalContentColor.current, rememberDisplayShape())
     )
     Column(
@@ -103,6 +104,18 @@ fun UserTopBar(
             }
         }
         card()
+    }
+}) { (backdrop, content), constraints ->
+    val contentP = content.measure(constraints)
+    val backdropP = backdrop.measure(
+        Constraints.fixed(
+            width = contentP.width,
+            height = (contentP.height * ratio).fastRoundToInt()
+        )
+    )
+    layout(contentP.width, contentP.height) {
+        backdropP.place(0, 0)
+        contentP.place(0, 0)
     }
 }
 
