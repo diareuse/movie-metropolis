@@ -9,6 +9,7 @@ import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.BookingView
@@ -16,6 +17,7 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.UserView
+import movie.metropolis.app.ui.home.component.windowBackground
 import movie.style.layout.PreviewLayout
 import movie.style.layout.StateLayout
 import movie.style.util.pc
@@ -47,8 +49,10 @@ fun HomeScreenScaffold(
     modifier: Modifier = Modifier,
     ticketCount: Int = 4,
 ) = Scaffold(
-    modifier = modifier,
-    contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
+    modifier = modifier.windowBackground(),
+    contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom),
+    containerColor = Color.Transparent,
+    contentColor = LocalContentColor.current
 ) { padding ->
     Column(
         modifier = Modifier

@@ -62,7 +62,7 @@ fun UserTopBar(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.inverseSurface,
     ratio: Float = .7f
-) = Layout(modifier = modifier.padding(.5.pc), content = {
+) = Layout(modifier = modifier.padding(1.pc), content = {
     Spacer(
         modifier = Modifier
             .fillMaxWidth()

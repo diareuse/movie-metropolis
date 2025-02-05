@@ -18,6 +18,7 @@ import movie.metropolis.app.ui.home.component.MovieBox
 import movie.metropolis.app.ui.home.component.RatingBox
 import movie.metropolis.app.ui.home.component.TicketBox
 import movie.metropolis.app.ui.home.component.UserTopBar
+import movie.metropolis.app.ui.home.component.windowBackground
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
@@ -42,7 +43,7 @@ fun SharedTransitionScope.HomeScreen(
     initialPage: Int = 0,
     haze: HazeState = remember { HazeState() }
 ) = HomeScreenScaffold(
-    modifier = modifier,
+    modifier = modifier.windowBackground(),
     state = state,
     userAccount = { user, membership ->
         UserTopBar(
