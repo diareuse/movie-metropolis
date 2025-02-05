@@ -4,9 +4,9 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.presentation.booking.BookingFacade
@@ -14,6 +14,7 @@ import movie.metropolis.app.presentation.cinema.CinemasFacade
 import movie.metropolis.app.presentation.listing.ListingFacade
 import movie.metropolis.app.presentation.profile.ProfileFacade
 import movie.metropolis.app.presentation.settings.SettingsFacade
+import movie.metropolis.app.util.onEachLaunch
 import movie.metropolis.app.util.updateWith
 import movie.style.layout.LayoutState
 import javax.inject.Inject
@@ -46,24 +47,40 @@ class HomeViewModel @Inject constructor(
             }
             launch {
                 state.profile.cinemas.updateWith(profile.getCinemas())
+                while (true) {
+                    state.profile.cinemas.sortBy { it.distance }
+                    delay(1000)
+                }
             }
             launch {
                 state.profile.membership = LayoutState.result(profile.getMembership())
             }
         }
         upcoming.get()
-            .onEach { upcoming ->
+            .onEachLaunch { upcoming ->
                 state.comingSoon.updateWith(upcoming.items)
+                while (true) {
+                    state.comingSoon.sortByDescending { it.rating }
+                    delay(1000)
+                }
             }
             .launchIn(viewModelScope)
         current.get()
-            .onEach { current ->
+            .onEachLaunch { current ->
                 state.recommended.updateWith(current.items)
+                while (true) {
+                    state.recommended.sortByDescending { it.rating }
+                    delay(1000)
+                }
             }
             .launchIn(viewModelScope)
         cinema.cinemas(null)
-            .onEach {
+            .onEachLaunch {
                 state.cinemas.updateWith(it)
+                while (true) {
+                    state.cinemas.sortBy { it.distance }
+                    delay(1000)
+                }
             }
             .launchIn(viewModelScope)
     }

@@ -13,5 +13,6 @@ data class CinemaSimpleViewFromFeature(
         get() = cinema.name
     override val city: String
         get() = cinema.address.city
-
+    override val distance: String
+        get() = "0km"
 }

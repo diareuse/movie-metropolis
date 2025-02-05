@@ -7,4 +7,5 @@ interface CinemaSimpleView {
     val id: String
     val name: String
     val city: String
+    val distance: String
 }
