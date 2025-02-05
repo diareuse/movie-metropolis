@@ -9,6 +9,7 @@ import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.adapter.ImageViewFromMovie
 import movie.metropolis.app.model.adapter.VideoViewFromMovie
 import movie.metropolis.app.util.retryOnNetworkError
+import java.util.Locale
 
 class ListingFacadeCinemaCity(
     private val future: Boolean,
@@ -19,7 +20,7 @@ class ListingFacadeCinemaCity(
         val events = cinemaCity.events.getEvents(future)
             .map { movie ->
                 MovieView(movie.id).apply {
-                    name = movie.name.localized
+                    name = movie.name.original
                     releasedAt = movie.releasedAt.toString()
                     duration = movie.length?.toString().orEmpty()
                     availableFrom = movie.screeningFrom.toString()
@@ -32,6 +33,9 @@ class ListingFacadeCinemaCity(
                     posterLarge =
                         movie.images.maxByOrNull { it.width * it.height }?.let(::ImageViewFromMovie)
                     video = movie.videos.firstOrNull()?.let(::VideoViewFromMovie)
+                    val locale = Locale.getDefault()
+                    genre =
+                        movie.genres.joinToString { it.replaceFirstChar { it.titlecase(locale) } }
                 }
             }
             .toImmutableList()

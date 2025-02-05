@@ -8,7 +8,6 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
 import kotlinx.coroutines.launch
-import movie.style.util.rememberSaveable
 
 @Composable
 fun Modifier.animateItemAppearance(
@@ -21,8 +20,10 @@ fun Modifier.animateItemAppearance(
     scaleAnimationSpec: AnimationSpec<Float> = tween()
 ): Modifier {
     val isEditMode = LocalView.current.isInEditMode
-    var offset by rememberSaveable(if (isEditMode) DpOffset.Zero else offset)
-    var scale by androidx.compose.runtime.saveable.rememberSaveable { mutableFloatStateOf(if (isEditMode) 1f else scale) }
+    //var offset by rememberSaveable(if (isEditMode) DpOffset.Zero else offset)
+    //var scale by androidx.compose.runtime.saveable.rememberSaveable { mutableFloatStateOf(if (isEditMode) 1f else scale) }
+    var offset by remember { mutableStateOf(if (isEditMode) DpOffset.Zero else offset) }
+    var scale by remember { mutableFloatStateOf(if (isEditMode) 1f else scale) }
     LaunchedEffect(Unit) {
         launch {
             animate(

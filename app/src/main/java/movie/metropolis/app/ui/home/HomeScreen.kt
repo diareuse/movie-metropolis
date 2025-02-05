@@ -7,6 +7,9 @@ import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import dev.chrisbanes.haze.HazeState
 import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
@@ -22,6 +25,7 @@ import movie.metropolis.app.ui.home.component.windowBackground
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
+import movie.style.modifier.animateItemAppearance
 import movie.style.rememberImageState
 import movie.style.rememberPaletteImageState
 import movie.style.util.pc
@@ -46,33 +50,29 @@ fun SharedTransitionScope.HomeScreen(
     modifier = modifier.windowBackground(),
     state = state,
     userAccount = { user, membership ->
-        UserTopBar(
-            icon = {
-                val image by rememberUserImage(user.email)
-                val state = rememberImageState(image)
-                Image(state)
-            },
-            title = { Text("Morning, ${user.firstName}.") },
-            subtitle = {
-                if (membership == null || membership.isExpired) Text("Free account")
-                else Text("Premium account")
-            },
-            card = {
-                LoyaltyCard(
-                    title = { if (membership?.isExpired == false) Text("Premium") else Text("Expired") },
-                    name = { Text("${user.firstName} ${user.lastName}") },
-                    number = { Text(membership?.cardNumber ?: "XXXX XXXX XXXX") },
-                    expiration = { Text(membership?.memberUntil ?: "n/a") }
-                )
-            }
-        )
+        UserTopBar(modifier = Modifier.animateItemAppearance(), icon = {
+            val image by rememberUserImage(user.email)
+            val state = rememberImageState(image)
+            Image(state)
+        }, title = { Text("Morning, ${user.firstName}.") }, subtitle = {
+            if (membership == null || membership.isExpired) Text("Free account")
+            else Text("Premium account")
+        }, card = {
+            LoyaltyCard(
+                title = { if (membership?.isExpired == false) Text("Premium") else Text("Expired") },
+                name = { Text("${user.firstName} ${user.lastName}") },
+                number = { Text(membership?.cardNumber ?: "XXXX XXXX XXXX") },
+                expiration = { Text(membership?.memberUntil ?: "n/a") })
+        })
     },
     ticket = {
         val image = rememberPaletteImageState(it.movie.poster?.url)
         TicketBox(
-            modifier = Modifier.sharedElement(
-                rememberSharedContentState("ticket-${it.id}"), animationScope
-            ),
+            modifier = Modifier
+                .animateItemAppearance()
+                .sharedElement(
+                    rememberSharedContentState("ticket-${it.id}"), animationScope
+                ),
             expired = it.expired,
             onClick = { onTicketClick(it.id) },
             date = { Text(it.date) },
@@ -88,6 +88,7 @@ fun SharedTransitionScope.HomeScreen(
     onShowAllCinemasClick = {},
     cinema = {
         CinemaBox(
+            modifier = Modifier.animateItemAppearance(),
             onClick = { onCinemaClick(it.id) },
             name = { Text(it.name) },
             city = { Text(it.city) },
@@ -95,31 +96,48 @@ fun SharedTransitionScope.HomeScreen(
                 val d = it.distance
                 if (d != null) Text(d)
             },
-            image = { Image(rememberImageState(it.image)) }
-        )
+            image = { Image(rememberImageState(it.image)) })
     },
-    movie = {
+    movie = { it, mask, fraction ->
         val image = rememberPaletteImageState(it.poster?.url)
         MovieBox(
             modifier = Modifier
+                .animateItemAppearance()
                 .sharedElement(
-                    rememberSharedContentState("movie-${it.id}"),
-                    animationScope
+                    rememberSharedContentState("movie-${it.id}"), animationScope
                 ),
             onClick = { onMovieClick(it.id, true) },
             haze = haze,
+            shape = mask,
             aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
-            name = { Text(it.name) },
-            poster = { Image(image) },
             rating = {
                 val r = it.rating
                 if (r != null) RatingBox(
-                    color = image.palette.color, haze = haze
+                    modifier = Modifier.graphicsLayer {
+                        translationY = -size.height + size.height * fraction
+                        alpha = fraction
+                    }, color = image.palette.color, haze = haze
                 ) {
                     Text(r)
                 }
             },
-            category = {})
+            poster = { Image(image, Modifier.clip(mask)) },
+            name = {
+                Text(
+                    modifier = Modifier.graphicsLayer { alpha = fraction },
+                    text = it.name,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            category = {
+                Text(
+                    modifier = Modifier.graphicsLayer { alpha = fraction },
+                    text = it.genre.orEmpty(),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            })
     },
     userPlaceholder = {},
     ticketPlaceholder = {},
@@ -128,8 +146,7 @@ fun SharedTransitionScope.HomeScreen(
     userError = {},
     ticketError = {},
     movieError = {},
-    cinemaError = {}
-)
+    cinemaError = {})
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark

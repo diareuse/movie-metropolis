@@ -18,4 +18,5 @@ data class MovieView(
     var poster: ImageView? by mutableStateOf(null)
     var posterLarge: ImageView? by mutableStateOf(null)
     var video: VideoView? by mutableStateOf(null)
+    var genre: String? by mutableStateOf(null)
 }

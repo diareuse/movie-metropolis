@@ -31,7 +31,11 @@ fun MovieBox(
     aspectRatio: Float = DefaultPosterAspectRatio,
     shape: Shape = MaterialTheme.shapes.medium
 ) = MovieBoxLayout(
-    modifier = modifier, onClick = onClick, shape = shape, rating = rating, poster = {
+    modifier = modifier,
+    onClick = onClick,
+    shape = shape,
+    rating = rating,
+    poster = {
         Box(
             modifier = Modifier
                 .aspectRatio(aspectRatio)
@@ -40,7 +44,10 @@ fun MovieBox(
         ) {
             poster()
         }
-    })
+    },
+    name = name,
+    category = category
+)
 
 @Composable
 fun RatingBox(
@@ -56,7 +63,7 @@ fun RatingBox(
         .clip(shape)
         .hazeEffect(
             state = haze, style = HazeStyle(
-                backgroundColor = color,
+                backgroundColor = MaterialTheme.colorScheme.surface,
                 tint = HazeTint(color.copy(.25f)),
                 blurRadius = 4.dp,
                 noiseFactor = 7f
@@ -76,19 +83,30 @@ private fun MovieBoxLayout(
     onClick: () -> Unit,
     rating: @Composable () -> Unit,
     poster: @Composable () -> Unit,
+    name: @Composable () -> Unit,
+    category: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     shape: Shape = MaterialTheme.shapes.medium
 ) {
-    Box(
-        modifier = modifier, contentAlignment = Alignment.TopCenter
-    ) {
-        Surface(
-            shape = shape, onClick = onClick
-        ) {
-            poster()
+    Column(modifier = modifier) {
+        Box(contentAlignment = Alignment.TopCenter) {
+            Surface(
+                shape = shape,
+                onClick = onClick
+            ) {
+                poster()
+            }
+            Box(modifier = Modifier.wrapContentSize()) {
+                rating()
+            }
         }
-        Box(modifier = Modifier.wrapContentSize()) {
-            rating()
+        Column(modifier = Modifier.padding(vertical = .5.pc, horizontal = .5.pc)) {
+            ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                name()
+                Box(modifier = Modifier.alpha(.5f)) {
+                    category()
+                }
+            }
         }
     }
 }

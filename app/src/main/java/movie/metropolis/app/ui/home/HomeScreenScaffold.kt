@@ -34,7 +34,7 @@ fun HomeScreenScaffold(
     onShowAllComingSoonClick: () -> Unit,
     onShowAllCinemasClick: () -> Unit,
     cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
-    movie: @Composable (MovieView) -> Unit,
+    movie: @Composable (MovieView, Shape, Float) -> Unit,
     // --- placeholders
     userPlaceholder: @Composable () -> Unit,
     ticketPlaceholder: @Composable () -> Unit,
@@ -125,12 +125,11 @@ fun HomeScreenScaffold(
             flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(recommendedState),
             contentPadding = PaddingValues(horizontal = 2.pc)
         ) {
-            Box(modifier = Modifier.maskClip(MaterialTheme.shapes.medium)) {
-                val item = state.recommended.getOrNull(it)
-                if (item == null) moviePlaceholder()
-                else key(item.id) {
-                    movie(item)
-                }
+            val item = state.recommended.getOrNull(it)
+            if (item == null) moviePlaceholder()
+            else key(item.id) {
+                val shape = rememberMaskShape(MaterialTheme.shapes.medium)
+                movie(item, shape, fraction)
             }
         }
 
@@ -151,12 +150,11 @@ fun HomeScreenScaffold(
             flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(comingSoonState),
             contentPadding = PaddingValues(horizontal = 2.pc)
         ) {
-            Box(modifier = Modifier.maskClip(MaterialTheme.shapes.medium)) {
-                val item = state.comingSoon.getOrNull(it)
-                if (item == null) moviePlaceholder()
-                else key(item.id) {
-                    movie(item)
-                }
+            val item = state.comingSoon.getOrNull(it)
+            if (item == null) moviePlaceholder()
+            else key(item.id) {
+                val shape = rememberMaskShape(MaterialTheme.shapes.medium)
+                movie(item, shape, fraction)
             }
         }
 
@@ -182,6 +180,9 @@ fun HomeScreenScaffold(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+val CarouselItemScope.fraction get() = with(carouselItemInfo) { (size - minSize) / (maxSize - minSize) }
 
 @Composable
 fun OpenableSection(
@@ -213,7 +214,7 @@ private fun HomeScreenScaffoldPreview() = PreviewLayout {
         onShowAllComingSoonClick = {},
         onShowAllCinemasClick = {},
         cinema = {},
-        movie = {},
+        movie = { _, _, _ -> },
         userPlaceholder = {},
         ticketPlaceholder = {},
         moviePlaceholder = {},
