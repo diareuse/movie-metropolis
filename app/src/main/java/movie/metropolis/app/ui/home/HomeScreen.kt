@@ -9,8 +9,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
+import androidx.compose.ui.util.*
 import dev.chrisbanes.haze.HazeState
 import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
@@ -113,10 +115,16 @@ fun SharedTransitionScope.HomeScreen(
             rating = {
                 val r = it.rating
                 if (r != null) RatingBox(
-                    modifier = Modifier.graphicsLayer {
-                        translationY = -size.height + size.height * fraction
-                        alpha = fraction
-                    }, color = image.palette.color, haze = haze
+                    modifier = Modifier
+                        .layout { m, c ->
+                            val p = m.measure(c)
+                            layout(p.width, p.height) {
+                                p.place(0, (-p.height + p.height * fraction).fastRoundToInt())
+                            }
+                        }
+                        .graphicsLayer {
+                            alpha = fraction
+                        }, color = image.palette.color, haze = haze
                 ) {
                     Text(r)
                 }
