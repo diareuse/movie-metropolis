@@ -26,7 +26,7 @@ fun Float.squeezeInto(
 }
 
 @Composable
-fun LoyaltyCard(
+fun LoyaltyCardFront(
     title: @Composable () -> Unit,
     name: @Composable () -> Unit,
     expiration: @Composable () -> Unit,
@@ -36,7 +36,6 @@ fun LoyaltyCard(
     shape: Shape = RoundedCornerShape(8)
 ) = Column(
     modifier = modifier
-        .aspectRatio(3.37f / 2.125f)
         .shadow(
             elevation = 16.dp,
             shape = shape,
@@ -167,10 +166,11 @@ fun LoyaltyCard(
 
 @PreviewFontScale
 @Composable
-private fun LoyaltyCardPreview() = PreviewLayout {
-    LoyaltyCard(
+private fun LoyaltyCardFrontPreview() = PreviewLayout {
+    LoyaltyCardFront(
         modifier = Modifier
             .padding(1.pc)
+            .aspectRatio(3.37f / 2.125f)
             .fillMaxWidth(),
         logo = {
             Icon(painterResource(R.drawable.ic_logo_cinemacity), null)

@@ -3,6 +3,7 @@
 package movie.metropolis.app.ui.home
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
@@ -18,7 +19,9 @@ import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
 import movie.metropolis.app.screen.profile.component.rememberUserImage
 import movie.metropolis.app.ui.home.component.CinemaBox
-import movie.metropolis.app.ui.home.component.LoyaltyCard
+import movie.metropolis.app.ui.home.component.Flippable
+import movie.metropolis.app.ui.home.component.LoyaltyCardBack
+import movie.metropolis.app.ui.home.component.LoyaltyCardFront
 import movie.metropolis.app.ui.home.component.MovieBox
 import movie.metropolis.app.ui.home.component.RatingBox
 import movie.metropolis.app.ui.home.component.TicketBox
@@ -60,11 +63,25 @@ fun SharedTransitionScope.HomeScreen(
             if (membership == null || membership.isExpired) Text("Free account")
             else Text("Premium account")
         }, card = {
-            LoyaltyCard(
-                title = { if (membership?.isExpired == false) Text("Premium") else Text("Expired") },
-                name = { Text("${user.firstName} ${user.lastName}") },
-                number = { Text(membership?.cardNumber ?: "XXXX XXXX XXXX") },
-                expiration = { Text(membership?.memberUntil ?: "n/a") })
+            Flippable(
+                modifier = Modifier
+                    .aspectRatio(3.37f / 2.125f)
+                    .fillMaxWidth(),
+                front = {
+                    LoyaltyCardFront(
+                        title = { if (membership?.isExpired == false) Text("Premium") else Text("Expired") },
+                        name = { Text("${user.firstName} ${user.lastName}") },
+                        number = { Text(membership?.cardNumber ?: "XXXX XXXX XXXX") },
+                        expiration = { Text(membership?.memberUntil ?: "n/a") }
+                    )
+                },
+                back = {
+                    LoyaltyCardBack(
+                        id = membership?.cardNumber?.replace(" ", "").orEmpty(),
+                        name = { Text("${user.firstName} ${user.lastName}") }
+                    )
+                }
+            )
         })
     },
     ticket = {

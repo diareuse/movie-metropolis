@@ -5,9 +5,14 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.util.*
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.set
+import androidx.core.util.lruCache
 import coil.compose.AsyncImage
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.MultiFormatWriter
@@ -51,6 +56,55 @@ fun Barcode(
     }
 }
 
+private val barcodeCache =
+    lruCache<BarcodeDefinition, Bitmap>(1_000_000, { _, v -> v.allocationByteCount })
+
+private data class BarcodeDefinition(
+    val width: Int,
+    val height: Int,
+    val format: BarcodeFormat,
+    val data: String
+)
+
+@Composable
+fun Barcode2(
+    code: String,
+    modifier: Modifier = Modifier,
+    format: BarcodeFormat = BarcodeFormat.QR_CODE
+) = Box(modifier = modifier.drawWithCache {
+    val definition = BarcodeDefinition(
+        width = size.width.fastRoundToInt(),
+        height = size.height.fastRoundToInt(),
+        format = format,
+        data = code
+    )
+    val cached = barcodeCache.get(definition)
+    val image = if (cached != null) {
+        cached.asImageBitmap()
+    } else {
+        val (w, h) = definition
+        val vertical = h > w
+        val writer = MultiFormatWriter()
+        val matrix = writer.encode(code, format, if (vertical) h else w, if (vertical) w else h)
+        val bitmap = createBitmap(w, h)
+        val black = Color.Black.toArgb()
+        val white = Color.White.toArgb()
+        if (vertical) matrix.rotate(90)
+        for (x in 0 until matrix.width) for (y in 0 until matrix.height) {
+            val pixel = when {
+                matrix.get(x, y) -> black
+                else -> white
+            }
+            bitmap[x, y] = pixel
+        }
+        barcodeCache.put(definition, bitmap)
+        bitmap.asImageBitmap()
+    }
+    onDrawWithContent {
+        drawImage(image)
+    }
+})
+
 @Stable
 private class CachedCodeWriter(val file: File) {
 
@@ -71,13 +125,13 @@ private class CachedCodeWriter(val file: File) {
             val h = maxHeight.roundToPx()
             if (w * h <= 0) return@withContext
             val matrix = writer.encode(data, type, w, h)
-            val bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888)
+            val bitmap = createBitmap(w, h)
             for (x in 0 until matrix.width) for (y in 0 until matrix.height) {
                 val pixel = when {
                     matrix.get(x, y) -> Color.Black.toArgb()
                     else -> Color.Transparent.toArgb()
                 }
-                bitmap.setPixel(x, y, pixel)
+                bitmap[x, y] = pixel
             }
             if (file.parentFile?.exists()?.not() == true) file.parentFile?.mkdirs()
             if (!file.exists()) file.createNewFile()

@@ -129,7 +129,7 @@ private fun UserTopBarPreview() = PreviewLayout {
         title = { Text("Morning, Viktor.") },
         subtitle = { Text("Premium account") },
         card = {
-            LoyaltyCard(
+            LoyaltyCardFront(
                 modifier = Modifier.fillMaxWidth(),
                 logo = {
                     Icon(painterResource(R.drawable.ic_logo_cinemacity), null)
