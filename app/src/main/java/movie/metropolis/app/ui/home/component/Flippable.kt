@@ -36,55 +36,69 @@ fun Flippable(
     val scope = rememberCoroutineScope()
     val density = LocalDensity.current
     Box(
-        modifier = modifier.pointerInput(Unit) {
-            var start = Offset.Zero
-            val velocity = VelocityTracker()
-            detectDragGestures(
-                onDragStart = { start = it },
-                onDrag = { c, o ->
-                    val dragDelta = c.position.y - start.y
-                    start = c.position
-                    velocity.addPosition(c.uptimeMillis, c.position)
-
-                    val sensitivity = 0.5f
-                    rotation = (rotation + dragDelta * sensitivity) % 360
-                    if (rotation < 0) {
-                        rotation = 360 + rotation
-                    }
-                },
-                onDragEnd = {
-                    start = Offset.Zero
+        modifier = modifier
+            .pointerInput(Unit) {
+                detectTapGestures {
                     scope.launch {
-                        val velocity = velocity.calculateVelocity().y
-                        animateDecay(
-                            initialValue = rotation,
-                            initialVelocity = velocity,
-                            animationSpec = SplineBasedFloatDecayAnimationSpec(density)
-                        ) { it, _ ->
-                            rotation = it % 360
-                            if (rotation < 0) {
-                                rotation = 360 + rotation
-                            }
-                        }
-                        val target = if (velocity > 0) {
-                            if (rotation >= 180f) 360f else 180f
-                        } else {
-                            if (rotation <= 180f) 0f else 180f
-                        }
                         animate(
                             initialValue = rotation,
-                            targetValue = target,
+                            targetValue = (rotation + 180f) % 360f,
                             animationSpec = tween(300)
                         ) { it, _ ->
                             rotation = it
                         }
                     }
-                },
-                onDragCancel = {
-                    start = Offset.Zero
                 }
-            )
-        },
+            }
+            .pointerInput(Unit) {
+                var start = Offset.Zero
+                val velocity = VelocityTracker()
+                detectDragGestures(
+                    onDragStart = { start = it },
+                    onDrag = { c, o ->
+                        val dragDelta = c.position.y - start.y
+                        start = c.position
+                        velocity.addPosition(c.uptimeMillis, c.position)
+
+                        val sensitivity = 0.5f
+                        rotation = (rotation + dragDelta * sensitivity) % 360
+                        if (rotation < 0) {
+                            rotation = 360 + rotation
+                        }
+                    },
+                    onDragEnd = {
+                        start = Offset.Zero
+                        scope.launch {
+                            val velocity = velocity.calculateVelocity().y
+                            animateDecay(
+                                initialValue = rotation,
+                                initialVelocity = velocity,
+                                animationSpec = SplineBasedFloatDecayAnimationSpec(density)
+                            ) { it, _ ->
+                                rotation = it % 360
+                                if (rotation < 0) {
+                                    rotation = 360 + rotation
+                                }
+                            }
+                            val target = if (velocity > 0) {
+                                if (rotation >= 180f) 360f else 180f
+                            } else {
+                                if (rotation <= 180f) 0f else 180f
+                            }
+                            animate(
+                                initialValue = rotation,
+                                targetValue = target,
+                                animationSpec = tween(300)
+                            ) { it, _ ->
+                                rotation = it
+                            }
+                        }
+                    },
+                    onDragCancel = {
+                        start = Offset.Zero
+                    }
+                )
+            },
         propagateMinConstraints = true
     ) {
         /*Box(
