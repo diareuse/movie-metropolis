@@ -79,9 +79,7 @@ fun Barcode2(
         data = code
     )
     val cached = barcodeCache.get(definition)
-    val image = if (cached != null) {
-        cached.asImageBitmap()
-    } else {
+    val image = cached?.asImageBitmap() ?: if (code.isNotEmpty()) {
         val (w, h) = definition
         val vertical = h > w
         val writer = MultiFormatWriter()
@@ -99,9 +97,9 @@ fun Barcode2(
         }
         barcodeCache.put(definition, bitmap)
         bitmap.asImageBitmap()
-    }
+    } else null
     onDrawWithContent {
-        drawImage(image)
+        if (image != null) drawImage(image)
     }
 })
 

@@ -13,6 +13,8 @@ import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import movie.style.ContentPlaceholder
+import movie.style.TextPlaceholder
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.shape.CompositeShape
@@ -34,7 +36,7 @@ fun TicketBox(
     color: Color = Color.Black
 ) {
     var contentSize by remember { mutableStateOf(DpSize.Zero) }
-    Card(
+    Surface(
         modifier = modifier,
         onClick = onClick,
         shape = CompositeShape(contentSize) {
@@ -89,6 +91,51 @@ fun TicketBox(
     }
 }
 
+@Composable
+fun TicketBox(
+    modifier: Modifier = Modifier,
+    aspectRatio: Float = DefaultPosterAspectRatio,
+    shape: Shape = MaterialTheme.shapes.medium,
+    contentColor: Color = LocalContentColor.current
+) {
+    var contentSize by remember { mutableStateOf(DpSize.Zero) }
+    Surface(
+        modifier = modifier,
+        shape = CompositeShape(contentSize) {
+            setBaseline(shape)
+            addShape(TicketShape(8.dp, contentSize.height))
+        }
+    ) {
+        val density = LocalDensity.current
+        Box(
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(aspectRatio),
+                propagateMinConstraints = true
+            ) {
+                ContentPlaceholder()
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onSizeChanged { contentSize = it.toDpSize(density) }
+                    .padding(vertical = 1.pc),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ProvideTextStyle(MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Black)) {
+                    CompositionLocalProvider(LocalContentColor provides contentColor) {
+                        TextPlaceholder(48.dp)
+                        TextPlaceholder(32.dp)
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun TicketBoxPreview() = PreviewLayout {
@@ -101,6 +148,16 @@ private fun TicketBoxPreview() = PreviewLayout {
         date = { Text("Dec 12") },
         time = { Text("18:00") },
         poster = { Box(Modifier.background(Color.Green)) }
+    )
+}
+
+@Preview
+@Composable
+private fun TicketBoxPlaceholderPreview() = PreviewLayout {
+    TicketBox(
+        modifier = Modifier
+            .padding(1.pc)
+            .width(100.dp)
     )
 }
 

@@ -17,6 +17,10 @@ import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.MovieView
 import movie.metropolis.app.model.UserView
+import movie.metropolis.app.ui.home.component.CinemaBox
+import movie.metropolis.app.ui.home.component.MovieBox
+import movie.metropolis.app.ui.home.component.TicketBox
+import movie.metropolis.app.ui.home.component.UserTopBar
 import movie.metropolis.app.ui.home.component.windowBackground
 import movie.style.layout.PreviewLayout
 import movie.style.layout.StateLayout
@@ -36,10 +40,15 @@ fun HomeScreenScaffold(
     cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
     movie: @Composable (MovieView, Shape, Float) -> Unit,
     // --- placeholders
-    userPlaceholder: @Composable () -> Unit,
-    ticketPlaceholder: @Composable () -> Unit,
-    moviePlaceholder: @Composable () -> Unit,
-    cinemaPlaceholder: @Composable () -> Unit,
+    userPlaceholder: @Composable () -> Unit = { UserTopBar() },
+    ticketPlaceholder: @Composable () -> Unit = { TicketBox() },
+    moviePlaceholder: @Composable (Shape, Float) -> Unit = { shape, fraction ->
+        MovieBox(
+            shape = shape,
+            fraction = fraction
+        )
+    },
+    cinemaPlaceholder: @Composable () -> Unit = { CinemaBox() },
     // --- errors
     userError: @Composable () -> Unit,
     ticketError: @Composable () -> Unit,
@@ -49,13 +58,12 @@ fun HomeScreenScaffold(
     modifier: Modifier = Modifier,
     ticketCount: Int = 4,
 ) = Scaffold(
-    modifier = modifier.windowBackground(),
-    contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom),
-    containerColor = Color.Transparent,
-    contentColor = LocalContentColor.current
+    modifier = modifier,
+    contentWindowInsets = WindowInsets.systemBars.only(WindowInsetsSides.Bottom)
 ) { padding ->
     Column(
         modifier = Modifier
+            .windowBackground()
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(padding)
@@ -80,32 +88,32 @@ fun HomeScreenScaffold(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
                 .padding(horizontal = 2.pc),
             horizontalArrangement = Arrangement.spacedBy(-(3).pc),
             verticalAlignment = Alignment.Top
         ) {
-            StateLayout(
-                state = state.tickets.state,
-                loaded = { _ ->
-                    MaterialTheme.colorScheme.surface
-                    for (i in 0..<ticketCount) Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .zIndex(1f * ticketCount - i)
-                            .scale(1f - i * 0.05f)
-                            .blur(2.dp * i, edgeTreatment = BlurredEdgeTreatment.Unbounded),
-                        propagateMinConstraints = true
-                    ) {
+            for (i in 0..<ticketCount) Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .zIndex(1f * ticketCount - i)
+                    .scale(1f - i * 0.05f)
+                    .blur(2.dp * i, edgeTreatment = BlurredEdgeTreatment.Unbounded),
+                propagateMinConstraints = true
+            ) {
+                StateLayout(
+                    state = state.tickets.state,
+                    loaded = { _ ->
                         val item = state.tickets.tickets.getOrNull(i)
-                        if (item == null) ticketPlaceholder()
-                        else key(item.id) {
+                        if (item != null) key(item.id) {
                             ticket(this@Row, item)
                         }
-                    }
-                },
-                error = { repeat(3) { ticketError() } },
-                loading = { repeat(3) { ticketPlaceholder() } })
+                        else ticketPlaceholder()
+                    },
+                    error = { ticketError() },
+                    loading = { ticketPlaceholder() }
+                )
+            }
+
         }
 
         // --- recommended section
@@ -119,6 +127,7 @@ fun HomeScreenScaffold(
         }
         val recommendedState = rememberCarouselState { maxOf(state.recommended.size, 5) }
         HorizontalUncontainedCarousel(
+            modifier = Modifier.fillMaxWidth(),
             state = recommendedState,
             itemWidth = 10.pc,
             itemSpacing = 1.pc,
@@ -126,9 +135,9 @@ fun HomeScreenScaffold(
             contentPadding = PaddingValues(horizontal = 2.pc)
         ) {
             val item = state.recommended.getOrNull(it)
-            if (item == null) moviePlaceholder()
+            val shape = rememberMaskShape(MaterialTheme.shapes.medium)
+            if (item == null) moviePlaceholder(shape, fraction)
             else key(item.id) {
-                val shape = rememberMaskShape(MaterialTheme.shapes.medium)
                 movie(item, shape, fraction)
             }
         }
@@ -144,6 +153,7 @@ fun HomeScreenScaffold(
         }
         val comingSoonState = rememberCarouselState { maxOf(state.comingSoon.size, 5) }
         HorizontalUncontainedCarousel(
+            modifier = Modifier.fillMaxWidth(),
             state = comingSoonState,
             itemWidth = 10.pc,
             itemSpacing = 1.pc,
@@ -151,9 +161,9 @@ fun HomeScreenScaffold(
             contentPadding = PaddingValues(horizontal = 2.pc)
         ) {
             val item = state.comingSoon.getOrNull(it)
-            if (item == null) moviePlaceholder()
+            val shape = rememberMaskShape(MaterialTheme.shapes.medium)
+            if (item == null) moviePlaceholder(shape, fraction)
             else key(item.id) {
-                val shape = rememberMaskShape(MaterialTheme.shapes.medium)
                 movie(item, shape, fraction)
             }
         }
@@ -168,6 +178,7 @@ fun HomeScreenScaffold(
             Text("Cinemas")
         }
         LazyRow(
+            modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(horizontal = 2.pc),
             horizontalArrangement = Arrangement.spacedBy(1.pc)
         ) {
@@ -217,7 +228,7 @@ private fun HomeScreenScaffoldPreview() = PreviewLayout {
         movie = { _, _, _ -> },
         userPlaceholder = {},
         ticketPlaceholder = {},
-        moviePlaceholder = {},
+        moviePlaceholder = { _, _ -> },
         cinemaPlaceholder = {},
         userError = {},
         ticketError = {},

@@ -10,10 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.util.*
 import dev.chrisbanes.haze.HazeState
 import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
 import movie.metropolis.app.screen.movie.component.MovieViewProvider
@@ -26,7 +24,7 @@ import movie.metropolis.app.ui.home.component.MovieBox
 import movie.metropolis.app.ui.home.component.RatingBox
 import movie.metropolis.app.ui.home.component.TicketBox
 import movie.metropolis.app.ui.home.component.UserTopBar
-import movie.metropolis.app.ui.home.component.windowBackground
+import movie.metropolis.app.ui.home.component.animateRatingBox
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
@@ -49,40 +47,49 @@ fun SharedTransitionScope.HomeScreen(
     onProfileClick: () -> Unit,
     onTicketsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    initialPage: Int = 0,
     haze: HazeState = remember { HazeState() }
 ) = HomeScreenScaffold(
-    modifier = modifier.windowBackground(),
+    modifier = modifier,
     state = state,
     userAccount = { user, membership ->
-        UserTopBar(modifier = Modifier.animateItemAppearance(), icon = {
-            val image by rememberUserImage(user.email)
-            val state = rememberImageState(image)
-            Image(state)
-        }, title = { Text("Morning, ${user.firstName}.") }, subtitle = {
-            if (membership == null || membership.isExpired) Text("Free account")
-            else Text("Premium account")
-        }, card = {
-            Flippable(
-                modifier = Modifier
-                    .aspectRatio(3.37f / 2.125f)
-                    .fillMaxWidth(),
-                front = {
-                    LoyaltyCardFront(
-                        title = { if (membership?.isExpired == false) Text("Premium") else Text("Expired") },
-                        name = { Text("${user.firstName} ${user.lastName}") },
-                        number = { Text(membership?.cardNumber ?: "XXXX XXXX XXXX") },
-                        expiration = { Text(membership?.memberUntil ?: "n/a") }
-                    )
-                },
-                back = {
-                    LoyaltyCardBack(
-                        id = membership?.cardNumber?.replace(" ", "").orEmpty(),
-                        name = { Text("${user.firstName} ${user.lastName}") }
-                    )
-                }
-            )
-        })
+        UserTopBar(
+            modifier = Modifier.animateItemAppearance(),
+            icon = {
+                val image by rememberUserImage(user.email)
+                val state = rememberImageState(image)
+                Image(state)
+            },
+            title = { Text("Morning, ${user.firstName}.") },
+            subtitle = {
+                if (membership == null || membership.isExpired) Text("Free account")
+                else Text("Premium account")
+            },
+            card = {
+                Flippable(
+                    modifier = Modifier
+                        .aspectRatio(3.37f / 2.125f)
+                        .fillMaxWidth(),
+                    front = {
+                        LoyaltyCardFront(
+                            title = {
+                                if (membership?.isExpired == false) Text("Premium") else Text(
+                                    "Expired"
+                                )
+                            },
+                            name = { Text("${user.firstName} ${user.lastName}") },
+                            number = { Text(membership?.cardNumber ?: "XXXX XXXX XXXX") },
+                            expiration = { Text(membership?.memberUntil ?: "n/a") }
+                        )
+                    },
+                    back = {
+                        LoyaltyCardBack(
+                            id = membership?.cardNumber?.replace(" ", "").orEmpty(),
+                            name = { Text("${user.firstName} ${user.lastName}") }
+                        )
+                    }
+                )
+            }
+        )
     },
     ticket = {
         val image = rememberPaletteImageState(it.movie.poster?.url)
@@ -132,16 +139,9 @@ fun SharedTransitionScope.HomeScreen(
             rating = {
                 val r = it.rating
                 if (r != null) RatingBox(
-                    modifier = Modifier
-                        .layout { m, c ->
-                            val p = m.measure(c)
-                            layout(p.width, p.height) {
-                                p.place(0, (-p.height + p.height * fraction).fastRoundToInt())
-                            }
-                        }
-                        .graphicsLayer {
-                            alpha = fraction
-                        }, color = image.palette.color, haze = haze
+                    modifier = Modifier.animateRatingBox(fraction),
+                    color = image.palette.color,
+                    haze = haze
                 ) {
                     Text(r)
                 }
@@ -164,14 +164,11 @@ fun SharedTransitionScope.HomeScreen(
                 )
             })
     },
-    userPlaceholder = {},
-    ticketPlaceholder = {},
-    moviePlaceholder = {},
-    cinemaPlaceholder = {},
     userError = {},
     ticketError = {},
     movieError = {},
-    cinemaError = {})
+    cinemaError = {}
+)
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @PreviewLightDark
@@ -214,7 +211,6 @@ private fun HomeScreenCinemasPreview() = PreviewLayout {
                 onMovieClick = { _, _ -> },
                 onProfileClick = {},
                 onCinemaClick = {},
-                initialPage = 1,
                 onTicketClick = {},
                 onTicketsClick = {})
         }

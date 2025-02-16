@@ -1,10 +1,12 @@
 package movie.metropolis.app.ui.home.component
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -15,9 +17,10 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.screen.cinema.component.CinemaViewProvider
-import movie.style.Image
+import movie.style.ContentPlaceholder
+import movie.style.TextPlaceholder
+import movie.style.backgroundPlaceholder
 import movie.style.layout.PreviewLayout
-import movie.style.rememberImageState
 import movie.style.util.pc
 
 @Composable
@@ -75,6 +78,40 @@ fun CinemaBox(
 }
 
 @Composable
+fun CinemaBox(
+    modifier: Modifier = Modifier
+) = Surface(
+    modifier = modifier,
+    shape = MaterialTheme.shapes.medium
+) {
+    CinemaBoxLayout(
+        image = {
+            ContentPlaceholder()
+        },
+        content = {
+            Column(
+                modifier = Modifier
+                    .backgroundPlaceholder()
+                    .padding(1.pc, 1.pc),
+                verticalArrangement = Arrangement.Bottom
+            ) {
+                ProvideTextStyle(MaterialTheme.typography.labelSmall) {
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(1.pc)
+                    ) {
+                        TextPlaceholder(48.dp)
+                        TextPlaceholder(16.dp)
+                    }
+                    Box(modifier = Modifier.alpha(.75f)) {
+                        TextPlaceholder(32.dp)
+                    }
+                }
+            }
+        }
+    )
+}
+
+@Composable
 private fun CinemaBoxLayout(
     image: @Composable () -> Unit,
     content: @Composable () -> Unit,
@@ -108,6 +145,7 @@ private fun CinemaBoxPreview(
     view: CinemaView
 ) = PreviewLayout {
     CinemaBox(
+        modifier = Modifier.width(150.dp),
         onClick = {},
         name = { Text(view.name) },
         city = { Text(view.city) },
@@ -115,6 +153,23 @@ private fun CinemaBoxPreview(
             val d = view.distance
             if (d != null) Text(d)
         },
-        image = { Image(rememberImageState(view.image)) }
+        image = {
+            Box(
+                modifier = Modifier.background(
+                    Brush.sweepGradient(
+                        listOf(
+                            Color.Green,
+                            Color.Magenta
+                        )
+                    )
+                )
+            )
+        }
     )
+}
+
+@PreviewLightDark
+@Composable
+fun CinemaBoxPlaceholderPreview() = PreviewLayout {
+    CinemaBox(modifier = Modifier.width(150.dp))
 }

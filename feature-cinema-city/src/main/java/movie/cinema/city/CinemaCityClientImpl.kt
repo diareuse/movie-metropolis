@@ -2,6 +2,7 @@ package movie.cinema.city
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
@@ -57,6 +58,11 @@ internal class CinemaCityClientImpl(
 
     private val client by lazy {
         HttpClient {
+            install(HttpTimeout) {
+                connectTimeoutMillis = 500
+                requestTimeoutMillis = Long.MAX_VALUE
+                socketTimeoutMillis = Long.MAX_VALUE
+            }
             install(ContentNegotiation) {
                 json(Json {
                     ignoreUnknownKeys = true

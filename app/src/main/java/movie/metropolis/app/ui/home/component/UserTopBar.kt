@@ -21,6 +21,8 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import androidx.compose.ui.util.*
 import movie.metropolis.app.R
+import movie.style.ContentPlaceholder
+import movie.style.TextPlaceholder
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
 
@@ -83,6 +85,7 @@ fun UserTopBar(
             ) {
                 Box(
                     modifier = Modifier
+                        .background(LocalContentColor.current, CircleShape)
                         .shadow(4.dp, CircleShape)
                         .clip(CircleShape)
                         .size(48.dp)
@@ -119,6 +122,31 @@ fun UserTopBar(
     }
 }
 
+@Composable
+fun UserTopBar(modifier: Modifier = Modifier) {
+    UserTopBar(
+        icon = { ContentPlaceholder() },
+        title = { TextPlaceholder(64.dp) },
+        subtitle = { TextPlaceholder(48.dp) },
+        card = {
+            LoyaltyCardFront(
+                modifier = Modifier.aspectRatio(3.37f / 2.125f),
+                title = { TextPlaceholder(48.dp) },
+                name = {
+                    Row {
+                        TextPlaceholder(32.dp)
+                        Spacer(Modifier.width(.5.pc))
+                        TextPlaceholder(48.dp)
+                    }
+                },
+                expiration = { TextPlaceholder(48.dp) },
+                number = { TextPlaceholder(200.dp) }
+            )
+        },
+        modifier = modifier
+    )
+}
+
 @PreviewLightDark
 @PreviewFontScale
 @Composable
@@ -130,7 +158,9 @@ private fun UserTopBarPreview() = PreviewLayout {
         subtitle = { Text("Premium account") },
         card = {
             LoyaltyCardFront(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .aspectRatio(3.37f / 2.125f)
+                    .fillMaxWidth(),
                 logo = {
                     Icon(painterResource(R.drawable.ic_logo_cinemacity), null)
                 },
@@ -140,5 +170,13 @@ private fun UserTopBarPreview() = PreviewLayout {
                 expiration = { Text("01/02/24") }
             )
         }
+    )
+}
+
+@PreviewLightDark
+@Composable
+private fun UserTopBarPlaceholderPreview() = PreviewLayout {
+    UserTopBar(
+        modifier = Modifier.background(MaterialTheme.colorScheme.background)
     )
 }

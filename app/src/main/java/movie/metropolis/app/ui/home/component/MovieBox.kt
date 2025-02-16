@@ -7,14 +7,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import androidx.compose.ui.util.*
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import movie.style.ContentPlaceholder
+import movie.style.TextPlaceholder
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
@@ -48,6 +52,53 @@ fun MovieBox(
     name = name,
     category = category
 )
+
+@Composable
+fun MovieBox(
+    modifier: Modifier = Modifier,
+    fraction: Float = 1f,
+    shape: Shape = MaterialTheme.shapes.medium,
+    color: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = MaterialTheme.colorScheme.contentColorFor(color)
+) {
+    MovieBoxLayout(
+        modifier = modifier,
+        onClick = {},
+        enabled = false,
+        shape = shape,
+        rating = {
+            RatingBox(
+                modifier = Modifier.animateRatingBox(fraction),
+                color = contentColor,
+                haze = remember { HazeState() }
+            ) {
+                TextPlaceholder(24.dp)
+            }
+        },
+        poster = {
+            Box(
+                modifier = Modifier
+                    .aspectRatio(DefaultPosterAspectRatio),
+                propagateMinConstraints = true
+            ) {
+                ContentPlaceholder()
+            }
+        },
+        name = { TextPlaceholder(32.dp, Modifier.graphicsLayer { alpha = fraction }) },
+        category = { TextPlaceholder(48.dp, Modifier.graphicsLayer { alpha = fraction }) }
+    )
+}
+
+fun Modifier.animateRatingBox(fraction: Float) = this
+    .layout { m, c ->
+        val p = m.measure(c)
+        layout(p.width, p.height) {
+            p.place(0, (-p.height + p.height * fraction).fastRoundToInt())
+        }
+    }
+    .graphicsLayer {
+        alpha = fraction
+    }
 
 @Composable
 fun RatingBox(
@@ -86,13 +137,15 @@ private fun MovieBoxLayout(
     name: @Composable () -> Unit,
     category: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     shape: Shape = MaterialTheme.shapes.medium
 ) {
     Column(modifier = modifier) {
         Box(contentAlignment = Alignment.TopCenter) {
             Surface(
                 shape = shape,
-                onClick = onClick
+                onClick = onClick,
+                enabled = enabled
             ) {
                 poster()
             }
@@ -126,4 +179,14 @@ private fun MovieBoxPreview() = PreviewLayout {
         poster = { Box(modifier = Modifier.background(Color.Green)) },
         rating = { RatingBox(Color.Green, haze) { Text("82%") } },
         category = { Text("Action/Adventure") })
+}
+
+@Preview
+@Composable
+private fun MovieBoxPlaceholderPreview() = PreviewLayout {
+    MovieBox(
+        Modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .width(10.pc)
+    )
 }
