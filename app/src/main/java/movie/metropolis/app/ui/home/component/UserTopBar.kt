@@ -56,6 +56,25 @@ fun rememberDisplayShape(): Shape {
 }
 
 @Composable
+fun rememberDisplayPadding(): Dp {
+    val insets = LocalView.current.rootWindowInsets
+    val density = LocalDensity.current
+    return remember(insets, density) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val topLeft = insets.getRoundedCorner(POSITION_TOP_LEFT)?.radius ?: 0
+            val topRight = insets.getRoundedCorner(POSITION_TOP_RIGHT)?.radius ?: 0
+            val bottomLeft = insets.getRoundedCorner(POSITION_BOTTOM_LEFT)?.radius ?: 0
+            val bottomRight = insets.getRoundedCorner(POSITION_BOTTOM_RIGHT)?.radius ?: 0
+            with(density) {
+                maxOf(topLeft, topRight, bottomLeft, bottomRight).div(3f).toDp() + 1.pc
+            }
+        } else {
+            1.pc
+        }
+    }
+}
+
+@Composable
 fun UserTopBar(
     icon: @Composable () -> Unit,
     title: @Composable () -> Unit,
@@ -72,7 +91,7 @@ fun UserTopBar(
     )
     Column(
         modifier = Modifier
-            .padding(1.pc)
+            .padding(rememberDisplayPadding())
             .statusBarsPadding(),
         verticalArrangement = Arrangement.spacedBy(2.pc)
     ) {
