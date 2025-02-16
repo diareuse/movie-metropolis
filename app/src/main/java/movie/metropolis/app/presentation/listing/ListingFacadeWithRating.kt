@@ -1,6 +1,7 @@
 package movie.metropolis.app.presentation.listing
 
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -26,6 +27,8 @@ class ListingFacadeWithRating(
                 .collect { items ->
                     emit(it.copy(items = items))
                 }
+            emit(it.copy(items = it.items.sortedByDescending { it.ratingPercent }
+                .toImmutableList()))
         }
     }
 
@@ -34,7 +37,7 @@ class ListingFacadeWithRating(
         val movies = movies.toMutableList()
         for (movie in movies) launch {
             val rating = getRating(movie) ?: return@launch
-            movie.rating = rating.rating.takeIf { it > 0 }?.let { "%d%%".format(it) }
+            movie.ratingPercent = rating.rating.toInt()
             movie.url = rating.url
             movie.poster = rating.posterImageUrl.takeUnless { it.isBlank() }?.let {
                 object : ImageView {

@@ -4,8 +4,10 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.MovieView
@@ -35,53 +37,52 @@ class HomeViewModel @Inject constructor(
     val state = HomeScreenState()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             launch {
-                booking.bookings.collect {
-                    state.tickets.tickets.updateWith(it)
-                    state.tickets.state = LayoutState.result(it.size)
-                }
+                booking.bookings
+                    .catch { state.tickets.state = LayoutState.result(null) }
+                    .collect {
+                        state.tickets.tickets.updateWith(it)
+                        state.tickets.state = LayoutState.result(it.size)
+                    }
             }
             launch {
-                state.profile.user = LayoutState.result(profile.getUser())
+                state.profile.user = profile.runCatching { getUser() }.fold(
+                    onSuccess = { LayoutState.result(it) },
+                    onFailure = { LayoutState.result(null) }
+                )
             }
             launch {
-                state.profile.cinemas.updateWith(profile.getCinemas())
-                while (true) {
-                    state.profile.cinemas.sortBy { it.distance }
-                    delay(1000)
-                }
+                val items = profile.runCatching { getCinemas() }.getOrDefault(emptyList())
+                state.profile.cinemas.updateWith(items)
             }
             launch {
-                state.profile.membership = LayoutState.result(profile.getMembership())
+                state.profile.membership = profile.runCatching { getMembership() }.fold(
+                    onSuccess = { LayoutState.result(it) },
+                    onFailure = { LayoutState.result(null) }
+                )
             }
         }
         upcoming.get()
+            .catch { it.printStackTrace() }
             .onEachLaunch { upcoming ->
                 state.comingSoon.updateWith(upcoming.items)
-                while (true) {
-                    state.comingSoon.sortByDescending { it.rating }
-                    delay(1000)
-                }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
         current.get()
+            .catch { it.printStackTrace() }
             .onEachLaunch { current ->
                 state.recommended.updateWith(current.items)
-                while (true) {
-                    state.recommended.sortByDescending { it.rating }
-                    delay(1000)
-                }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
         cinema.cinemas(null)
+            .catch { it.printStackTrace() }
             .onEachLaunch {
                 state.cinemas.updateWith(it)
-                while (true) {
-                    state.cinemas.sortBy { it.distance }
-                    delay(1000)
-                }
             }
+            .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
     }
 

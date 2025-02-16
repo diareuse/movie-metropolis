@@ -13,7 +13,8 @@ data class MovieView(
     var directors: List<String> by mutableStateOf(emptyList())
     var cast: List<String> by mutableStateOf(emptyList())
     var countryOfOrigin: String by mutableStateOf("")
-    var rating: String? by mutableStateOf(null)
+    var ratingPercent by mutableIntStateOf(0)
+    val rating by derivedStateOf { if (ratingPercent > 0) "%d%%".format(ratingPercent) else null }
     var url: String by mutableStateOf("")
     var poster: ImageView? by mutableStateOf(null)
     var posterLarge: ImageView? by mutableStateOf(null)
