@@ -62,6 +62,6 @@ internal data class MovieFromResponse(
 
     companion object {
         private val Technology = Regex("(IMAX|(?:[2-4]DX?))")
-        private val Sound = Regex("\\s*-\\s*((?:(d|s)ub(?:titles)?)|original)")
+        private val Sound = Regex("\\s*-\\s*((?:(?:d|s)ub(?:titles)?)|original)")
     }
 }
