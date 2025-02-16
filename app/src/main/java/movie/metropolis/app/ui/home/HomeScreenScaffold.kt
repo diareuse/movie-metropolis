@@ -24,6 +24,7 @@ import movie.metropolis.app.ui.home.component.UserTopBar
 import movie.metropolis.app.ui.home.component.windowBackground
 import movie.style.layout.PreviewLayout
 import movie.style.layout.StateLayout
+import movie.style.modifier.animateItemAppearance
 import movie.style.util.pc
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,16 +70,19 @@ fun HomeScreenScaffold(
             .padding(padding)
             .systemBarsPadding()
     ) {
-        StateLayout(
-            state = state.profile.user,
-            loaded = { userAccount(it, state.profile.membership.getOrNull()) },
-            error = userError,
-            loading = userPlaceholder
-        )
+        Box(modifier = Modifier.animateItemAppearance()) {
+            StateLayout(
+                state = state.profile.user,
+                loaded = { userAccount(it, state.profile.membership.getOrNull()) },
+                error = userError,
+                loading = userPlaceholder
+            )
+        }
 
         // --- tickets section
         OpenableSection(
             modifier = Modifier
+                .animateItemAppearance()
                 .padding(horizontal = 2.pc)
                 .padding(top = 2.pc),
             onClick = onShowAllTicketsClick
@@ -87,6 +91,7 @@ fun HomeScreenScaffold(
         }
         Row(
             modifier = Modifier
+                .animateItemAppearance()
                 .fillMaxWidth()
                 .padding(horizontal = 2.pc),
             horizontalArrangement = Arrangement.spacedBy(-(3).pc),
@@ -119,6 +124,7 @@ fun HomeScreenScaffold(
         // --- recommended section
         OpenableSection(
             modifier = Modifier
+                .animateItemAppearance()
                 .padding(horizontal = 2.pc)
                 .padding(top = 2.pc),
             onClick = onShowAllRecommendedClick
@@ -127,7 +133,9 @@ fun HomeScreenScaffold(
         }
         val recommendedState = rememberCarouselState { maxOf(state.recommended.size, 5) }
         HorizontalUncontainedCarousel(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateItemAppearance(),
             state = recommendedState,
             itemWidth = 10.pc,
             itemSpacing = 1.pc,
@@ -145,6 +153,7 @@ fun HomeScreenScaffold(
         // --- coming soon section
         OpenableSection(
             modifier = Modifier
+                .animateItemAppearance()
                 .padding(horizontal = 2.pc)
                 .padding(top = 2.pc),
             onClick = onShowAllComingSoonClick
@@ -153,7 +162,9 @@ fun HomeScreenScaffold(
         }
         val comingSoonState = rememberCarouselState { maxOf(state.comingSoon.size, 5) }
         HorizontalUncontainedCarousel(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateItemAppearance(),
             state = comingSoonState,
             itemWidth = 10.pc,
             itemSpacing = 1.pc,
@@ -171,6 +182,7 @@ fun HomeScreenScaffold(
         // --- cinemas section
         OpenableSection(
             modifier = Modifier
+                .animateItemAppearance()
                 .padding(horizontal = 2.pc)
                 .padding(top = 2.pc),
             onClick = onShowAllCinemasClick
@@ -178,7 +190,9 @@ fun HomeScreenScaffold(
             Text("Cinemas")
         }
         LazyRow(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateItemAppearance(),
             contentPadding = PaddingValues(horizontal = 2.pc),
             horizontalArrangement = Arrangement.spacedBy(1.pc)
         ) {

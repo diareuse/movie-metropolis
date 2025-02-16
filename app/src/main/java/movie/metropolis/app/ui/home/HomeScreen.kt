@@ -95,7 +95,6 @@ fun SharedTransitionScope.HomeScreen(
         val image = rememberPaletteImageState(it.movie.poster?.url)
         TicketBox(
             modifier = Modifier
-                .animateItemAppearance()
                 .sharedElement(
                     rememberSharedContentState("ticket-${it.id}"), animationScope
                 ),
@@ -128,7 +127,6 @@ fun SharedTransitionScope.HomeScreen(
         val image = rememberPaletteImageState(it.poster?.url)
         MovieBox(
             modifier = Modifier
-                .animateItemAppearance()
                 .sharedElement(
                     rememberSharedContentState("movie-${it.id}"), animationScope
                 ),
