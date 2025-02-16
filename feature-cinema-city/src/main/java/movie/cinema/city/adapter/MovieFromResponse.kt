@@ -55,5 +55,13 @@ internal data class MovieFromResponse(
             get() = movie.name
         override val original: String
             get() = movie.nameOriginal
+                .replace(Technology, "")
+                .replace(Sound, "")
+                .trim()
+    }
+
+    companion object {
+        private val Technology = Regex("(IMAX|(?:[2-4]DX?))")
+        private val Sound = Regex("\\s*-\\s*((?:(d|s)ub(?:titles)?)|original)")
     }
 }
