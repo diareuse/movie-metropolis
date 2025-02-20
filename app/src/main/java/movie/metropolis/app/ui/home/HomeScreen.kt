@@ -126,10 +126,7 @@ fun SharedTransitionScope.HomeScreen(
     movie = { it, mask, fraction ->
         val image = rememberPaletteImageState(it.poster?.url)
         MovieBox(
-            modifier = Modifier
-                .sharedElement(
-                    rememberSharedContentState("movie-${it.id}"), animationScope
-                ),
+            modifier = Modifier,
             onClick = { onMovieClick(it.id, true) },
             haze = haze,
             shape = mask,
@@ -144,10 +141,25 @@ fun SharedTransitionScope.HomeScreen(
                     Text(r)
                 }
             },
-            poster = { Image(image, Modifier.clip(mask)) },
+            poster = {
+                Image(
+                    modifier = Modifier
+                        .clip(mask)
+                        .sharedElement(
+                            state = rememberSharedContentState("movie-${it.id}"),
+                            animatedVisibilityScope = animationScope
+                        ),
+                    state = image
+                )
+            },
             name = {
                 Text(
-                    modifier = Modifier.graphicsLayer { alpha = fraction },
+                    modifier = Modifier
+                        .graphicsLayer { alpha = fraction }
+                        .sharedElement(
+                            state = rememberSharedContentState("name-${it.id}"),
+                            animatedVisibilityScope = animationScope
+                        ),
                     text = it.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

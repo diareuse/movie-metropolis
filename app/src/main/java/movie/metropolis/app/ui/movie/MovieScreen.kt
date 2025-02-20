@@ -38,14 +38,23 @@ fun SharedTransitionScope.MovieScreen(
     poster = {
         Image(
             modifier = Modifier.sharedElement(
-                rememberSharedContentState("movie-${detail.id}"),
-                animationScope,
+                state = rememberSharedContentState("movie-${detail.id}"),
+                animatedVisibilityScope = animationScope,
                 placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize
             ),
             state = rememberImageState(detail.poster?.url)
         )
     },
-    name = { Text(detail.nameOriginal) },
+    name = {
+        Text(
+            text = detail.nameOriginal,
+            modifier = Modifier.sharedElement(
+                state = rememberSharedContentState("name-${detail.id}"),
+                animatedVisibilityScope = animationScope,
+                placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize
+            )
+        )
+    },
     duration = { Text(detail.duration) },
     releasedAt = { Text(detail.releasedAt) },
     availableFrom = { Text(detail.availableFrom) },
