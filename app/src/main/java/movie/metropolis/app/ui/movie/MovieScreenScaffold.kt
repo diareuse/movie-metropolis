@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.*
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import movie.metropolis.app.ui.movie.component.ActorColumn
 import movie.metropolis.app.ui.movie.component.BackdropLayout
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
@@ -109,12 +110,14 @@ fun MovieScreenScaffold(
                 .verticalScroll(scrollState)
                 .padding(padding)
                 .padding(it)
-                .padding(2.pc),
+                .padding(vertical = 2.pc),
             verticalArrangement = Arrangement.spacedBy(.5.pc)
         ) {
             purchase()
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.pc),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -128,6 +131,10 @@ fun MovieScreenScaffold(
                 }
             }
             FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 2.pc)
+                    .alpha(.5f),
                 horizontalArrangement = Arrangement.spacedBy(.5.pc),
                 verticalArrangement = Arrangement.spacedBy(.5.pc)
             ) {
@@ -141,13 +148,39 @@ fun MovieScreenScaffold(
                     country()
                 }
             }
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            val titleMod = Modifier
+                .padding(horizontal = 2.pc)
+                .padding(top = 1.pc)
+            Text(
+                modifier = Modifier.then(titleMod),
+                text = "Cast",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(vertical = 1.pc, horizontal = 2.pc),
+                horizontalArrangement = Arrangement.spacedBy(1.pc)
+            ) {
+                directors()
+                Spacer(
+                    Modifier
+                        .background(LocalContentColor.current)
+                        .fillMaxHeight()
+                        .width(1.dp)
+                )
                 cast()
             }
-            Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                directors()
+            Text(
+                modifier = Modifier.then(titleMod),
+                text = "Description",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Box(modifier = Modifier.padding(horizontal = 2.pc)) {
+                description()
             }
-            description()
         }
     }
 }
@@ -184,8 +217,22 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
         releasedAt = { Text("2024") },
         availableFrom = { Text("12 Dec 2024") },
         country = { Text("CZ") },
-        cast = {},
-        directors = {},
+        cast = {
+            repeat(5) {
+                ActorColumn(
+                    icon = { Box(Modifier.background(Color.Blue)) },
+                    name = { Text("Já jsem herec") }
+                )
+            }
+        },
+        directors = {
+            repeat(1) {
+                ActorColumn(
+                    icon = { Box(Modifier.background(Color.Blue)) },
+                    name = { Text("Já jsem herec") }
+                )
+            }
+        },
         description = { Text(LoremIpsum().values.first()) },
         trailer = {
             IconButton({}) {

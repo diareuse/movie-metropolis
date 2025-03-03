@@ -9,9 +9,12 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
+import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.movie.component.MovieDetailViewProvider
+import movie.metropolis.app.ui.movie.component.ActorColumn
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.rememberImageState
@@ -51,12 +54,28 @@ fun SharedTransitionScope.MovieScreen(
     country = { Text(detail.countryOfOrigin) },
     cast = {
         for (cast in detail.cast) {
-            Text(cast.name)
+            ActorColumn(
+                icon = {
+                    Image(
+                        state = rememberImageState(cast.image),
+                        placeholderError = painterResource(R.drawable.ic_person)
+                    )
+                },
+                name = { Text(cast.name, minLines = 2) }
+            )
         }
     },
     directors = {
         for (director in detail.directors) {
-            Text(director.name)
+            ActorColumn(
+                icon = {
+                    Image(
+                        state = rememberImageState(director.image),
+                        placeholderError = painterResource(R.drawable.ic_person)
+                    )
+                },
+                name = { Text(director.name, minLines = 2) }
+            )
         }
     },
     description = { Text(detail.description) },
