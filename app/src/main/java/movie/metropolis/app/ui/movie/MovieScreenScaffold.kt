@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.tooling.preview.datasource.*
 import androidx.compose.ui.unit.*
@@ -46,7 +47,7 @@ fun MovieScreenScaffold(
     topBar = {
         Row(
             modifier = Modifier
-                .padding(1.pc)
+                .padding(2.pc)
                 .statusBarsPadding()
         ) {
             Box(
@@ -107,20 +108,37 @@ fun MovieScreenScaffold(
                 .verticalScroll(scrollState)
                 .padding(padding)
                 .padding(it)
-                .padding(1.pc),
-            verticalArrangement = Arrangement.spacedBy(1.pc)
+                .padding(2.pc),
+            verticalArrangement = Arrangement.spacedBy(.5.pc)
         ) {
             purchase()
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(1.pc),
-                verticalArrangement = Arrangement.spacedBy(1.pc)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
             ) {
-                name()
-                rating()
-                duration()
-                releasedAt()
-                availableFrom()
-                country()
+                Box(modifier = Modifier.weight(1f)) {
+                    ProvideTextStyle(MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)) {
+                        name()
+                    }
+                }
+                ProvideTextStyle(MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)) {
+                    rating()
+                }
+            }
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(.5.pc),
+                verticalArrangement = Arrangement.spacedBy(.5.pc)
+            ) {
+                ProvideTextStyle(MaterialTheme.typography.labelMedium) {
+                    duration()
+                    Text("•")
+                    releasedAt()
+                    Text("•")
+                    availableFrom()
+                    Text("•")
+                    country()
+                }
             }
             Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                 cast()

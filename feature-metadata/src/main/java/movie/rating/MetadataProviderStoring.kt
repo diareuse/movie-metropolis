@@ -15,7 +15,10 @@ internal class MetadataProviderStoring(
             rating = it.rating,
             poster = it.posterImageUrl,
             overlay = it.overlayImageUrl,
-            id = it.id
+            id = it.id,
+            releaseDate = it.releaseDate,
+            description = it.description,
+            trailer = it.trailerUrl
         )
         dao.insertOrUpdate(stored)
     }

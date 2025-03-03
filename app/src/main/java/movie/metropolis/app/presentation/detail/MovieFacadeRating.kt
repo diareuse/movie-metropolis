@@ -3,12 +3,14 @@ package movie.metropolis.app.presentation.detail
 import kotlinx.coroutines.flow.Flow
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieDetailView
+import movie.metropolis.app.model.VideoView
 import movie.metropolis.app.util.onEachLaunch
 import movie.metropolis.app.util.retryOnNetworkError
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
 import movie.rating.MovieMetadata
 import movie.style.layout.DefaultPosterAspectRatio
+import java.text.DateFormat
 import java.util.Calendar
 
 class MovieFacadeRating(
@@ -26,6 +28,14 @@ class MovieFacadeRating(
             object : ImageView {
                 override val aspectRatio: Float
                     get() = DefaultPosterAspectRatio
+                override val url: String
+                    get() = it
+            }
+        }
+        it.description = m.description
+        it.availableFrom = m.releaseDate?.let(DateFormat.getInstance()::format) ?: it.availableFrom
+        it.trailer = m.trailerUrl?.let {
+            object : VideoView {
                 override val url: String
                     get() = it
             }

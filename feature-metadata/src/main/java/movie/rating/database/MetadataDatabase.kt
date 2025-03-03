@@ -12,7 +12,7 @@ import androidx.room.TypeConverters
         ActorReferenceConnection::class,
         ActorReferenceStored::class
     ],
-    version = 4
+    version = 5
 )
 internal abstract class MetadataDatabase : RoomDatabase() {
 

@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import movie.metropolis.app.model.ImageView
 import movie.metropolis.app.model.MovieView
+import movie.metropolis.app.model.VideoView
 import movie.rating.MetadataProvider
 import movie.rating.MovieDescriptor
 import movie.rating.MovieMetadata
@@ -48,6 +49,12 @@ class ListingFacadeWithRating(
                 }
             }
             movie.posterLarge = movie.poster
+            movie.video = rating.trailerUrl?.let {
+                object : VideoView {
+                    override val url: String
+                        get() = it
+                }
+            }
         }
     }
 

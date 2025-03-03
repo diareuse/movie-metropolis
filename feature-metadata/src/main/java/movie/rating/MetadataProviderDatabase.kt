@@ -16,7 +16,10 @@ internal class MetadataProviderDatabase(
         rating = rating.rating,
         posterImageUrl = rating.poster,
         overlayImageUrl = rating.overlay,
-        url = TMDB.url("/movie/${rating.id}")
+        url = TMDB.url("/movie/${rating.id}"),
+        releaseDate = rating.releaseDate,
+        description = rating.description,
+        trailerUrl = rating.trailer
     )
 
 }
