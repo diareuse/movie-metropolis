@@ -1,4 +1,4 @@
-package movie.metropolis.app.ui.movie
+package movie.metropolis.app.ui.movie.component
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*

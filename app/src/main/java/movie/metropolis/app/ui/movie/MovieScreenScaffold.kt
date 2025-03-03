@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.*
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import movie.metropolis.app.ui.movie.component.BackdropLayout
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
