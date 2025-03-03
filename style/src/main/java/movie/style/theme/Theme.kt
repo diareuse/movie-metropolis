@@ -7,8 +7,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.*
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.LocalHazeStyle
 import movie.style.haptic.PlatformHapticFeedback
 import movie.style.haptic.rememberVibrateIndication
+import movie.style.util.pc
 
 @Composable
 fun Theme(
@@ -28,7 +32,13 @@ fun Theme(
     ) {
         CompositionLocalProvider(
             LocalTextStyle provides Theme.textStyle.body,
-            LocalContentColor provides Theme.color.content.background
+            LocalContentColor provides Theme.color.content.background,
+            LocalHazeStyle provides HazeStyle(
+                backgroundColor = MaterialTheme.colorScheme.background,
+                tint = HazeTint(MaterialTheme.colorScheme.background.copy(alpha = .5f)),
+                blurRadius = 1.pc,
+                noiseFactor = .25f
+            )
         ) {
             content()
         }
