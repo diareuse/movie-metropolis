@@ -145,21 +145,17 @@ fun SharedTransitionScope.HomeScreen(
                 Image(
                     modifier = Modifier
                         .clip(mask)
-                        .sharedElement(
-                            state = rememberSharedContentState("movie-${it.id}"),
-                            animatedVisibilityScope = animationScope
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState("movie-${it.id}"),
+                            animatedVisibilityScope = animationScope,
+                            clipInOverlayDuringTransition = OverlayClip(mask)
                         ),
                     state = image
                 )
             },
             name = {
                 Text(
-                    modifier = Modifier
-                        .graphicsLayer { alpha = fraction }
-                        .sharedElement(
-                            state = rememberSharedContentState("name-${it.id}"),
-                            animatedVisibilityScope = animationScope
-                        ),
+                    modifier = Modifier.graphicsLayer { alpha = fraction },
                     text = it.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

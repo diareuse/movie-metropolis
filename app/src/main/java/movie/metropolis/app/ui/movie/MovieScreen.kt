@@ -27,7 +27,10 @@ fun SharedTransitionScope.MovieScreen(
     onLinkClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) = MovieScreenScaffold(
-    modifier = modifier,
+    modifier = modifier.sharedBounds(
+        rememberSharedContentState("movie-${detail.id}"),
+        animationScope
+    ),
     title = { Text(detail.name) },
     navigationIcon = {
         IconButton(onBackClick) {
@@ -37,24 +40,11 @@ fun SharedTransitionScope.MovieScreen(
     backdrop = { Image(rememberImageState(detail.backdrop?.url)) },
     poster = {
         Image(
-            modifier = Modifier.sharedElement(
-                state = rememberSharedContentState("movie-${detail.id}"),
-                animatedVisibilityScope = animationScope,
-                placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize
-            ),
+            modifier = Modifier,
             state = rememberImageState(detail.poster?.url)
         )
     },
-    name = {
-        Text(
-            text = detail.nameOriginal,
-            modifier = Modifier.sharedElement(
-                state = rememberSharedContentState("name-${detail.id}"),
-                animatedVisibilityScope = animationScope,
-                placeHolderSize = SharedTransitionScope.PlaceHolderSize.animatedSize
-            )
-        )
-    },
+    name = { Text(detail.nameOriginal) },
     duration = { Text(detail.duration) },
     releasedAt = { Text(detail.releasedAt) },
     availableFrom = { Text(detail.availableFrom) },
