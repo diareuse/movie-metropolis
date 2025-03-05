@@ -15,6 +15,7 @@ import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.movie.component.MovieDetailViewProvider
 import movie.metropolis.app.ui.movie.component.ActorColumn
+import movie.metropolis.app.ui.movie.component.RatingText
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.rememberImageState
@@ -93,7 +94,7 @@ fun SharedTransitionScope.MovieScreen(
     },
     rating = {
         val r = detail.rating
-        if (r != null) Text(r)
+        if (r != null) RatingText(r, detail.ratingNumber)
     },
     purchase = {
         if (showPurchase) IconButton(onBuyClick) {

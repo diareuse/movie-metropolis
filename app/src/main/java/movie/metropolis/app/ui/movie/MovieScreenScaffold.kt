@@ -19,6 +19,7 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import movie.metropolis.app.ui.movie.component.ActorColumn
 import movie.metropolis.app.ui.movie.component.BackdropLayout
+import movie.metropolis.app.ui.movie.component.RatingText
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
@@ -121,7 +122,11 @@ fun MovieScreenScaffold(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Bottom
             ) {
-                Box(modifier = Modifier.weight(1f)) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 1.pc)
+                ) {
                     ProvideTextStyle(MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)) {
                         name()
                     }
@@ -166,8 +171,9 @@ fun MovieScreenScaffold(
                 directors()
                 Spacer(
                     Modifier
-                        .background(LocalContentColor.current)
-                        .fillMaxHeight()
+                        .align(Alignment.CenterVertically)
+                        .background(LocalContentColor.current.copy(.5f))
+                        .height(64.dp)
                         .width(1.dp)
                 )
                 cast()
@@ -212,7 +218,7 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
             )
         },
         poster = { Box(Modifier.background(Color.Blue)) },
-        name = { Text("Já jsem film") },
+        name = { Text("I am so long long movie very long") },
         duration = { Text("2h 15m") },
         releasedAt = { Text("2024") },
         availableFrom = { Text("12 Dec 2024") },
@@ -221,7 +227,7 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
             repeat(5) {
                 ActorColumn(
                     icon = { Box(Modifier.background(Color.Blue)) },
-                    name = { Text("Já jsem herec") }
+                    name = { Text("John Doenashov") }
                 )
             }
         },
@@ -229,7 +235,7 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
             repeat(1) {
                 ActorColumn(
                     icon = { Box(Modifier.background(Color.Blue)) },
-                    name = { Text("Já jsem herec") }
+                    name = { Text("Derek Directoric") }
                 )
             }
         },
@@ -245,6 +251,6 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
             }
         },
         purchase = {},
-        rating = { Text("74%") }
+        rating = { RatingText("74%", .74f) }
     )
 }

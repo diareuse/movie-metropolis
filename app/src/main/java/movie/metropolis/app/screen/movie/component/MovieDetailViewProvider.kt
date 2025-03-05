@@ -31,7 +31,7 @@ class MovieDetailViewProvider : CollectionPreviewParameterProvider<MovieDetailVi
             poster = ImageViewPreview()
             backdrop = ImageViewPreview()
             trailer = null
-            rating = "78%"
+            ratingNumber = .78f
         }
     }
 )

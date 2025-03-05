@@ -18,6 +18,11 @@ data class MovieDetailView(
     var poster: ImageView? by mutableStateOf(null)
     var backdrop: ImageView? by mutableStateOf(null)
     var trailer: VideoView? by mutableStateOf(null)
-    var rating: String? by mutableStateOf(null)
+    val rating: String? by derivedStateOf {
+        if (ratingNumber > 0) "${
+            ratingNumber.times(100).toInt()
+        }%" else null
+    }
+    var ratingNumber: Float by mutableFloatStateOf(-1f)
     var url: String by mutableStateOf("")
 }

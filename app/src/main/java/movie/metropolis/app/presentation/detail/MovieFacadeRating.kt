@@ -23,7 +23,7 @@ class MovieFacadeRating(
     override val movie: Flow<MovieDetailView> = origin.movie.onEachLaunch {
         val m = getMetadata(it) ?: return@onEachLaunch
         it.url = m.url
-        it.rating = m.rating.takeIf { it > 0 }?.let { "%d%%".format(it) }
+        it.ratingNumber = m.rating.takeIf { it > 0 }?.div(100f) ?: -1f
         it.poster = m.posterImageUrl.let {
             object : ImageView {
                 override val aspectRatio: Float

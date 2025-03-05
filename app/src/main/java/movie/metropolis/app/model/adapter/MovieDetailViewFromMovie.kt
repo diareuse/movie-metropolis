@@ -26,6 +26,6 @@ fun MovieDetailViewFromMovie(
     poster = movie.images.maxBy { it.height * it.width }.let(::ImageViewFromMovie)
     backdrop = movie.images.maxBy { it.height * it.width }.let(::ImageViewFromMovie)
     trailer = movie.videos.firstOrNull()?.let(::VideoViewFromMovie)
-    rating = null
+    ratingNumber = -1f
     url = movie.link.toString()
 }
