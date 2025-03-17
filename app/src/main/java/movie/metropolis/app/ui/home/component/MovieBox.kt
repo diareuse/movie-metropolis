@@ -7,11 +7,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.layout.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
-import androidx.compose.ui.util.*
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -90,14 +88,9 @@ fun MovieBox(
 }
 
 fun Modifier.animateRatingBox(fraction: Float) = this
-    .layout { m, c ->
-        val p = m.measure(c)
-        layout(p.width, p.height) {
-            p.place(0, (-p.height + p.height * fraction).fastRoundToInt())
-        }
-    }
     .graphicsLayer {
         alpha = fraction
+        translationY = with(size.height) { -this + this * fraction }
     }
 
 @Composable
