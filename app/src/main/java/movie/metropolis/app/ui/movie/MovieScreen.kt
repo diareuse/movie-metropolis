@@ -12,10 +12,12 @@ import androidx.compose.ui.*
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
+import dev.chrisbanes.haze.HazeState
 import movie.metropolis.app.R
 import movie.metropolis.app.model.MovieDetailView
 import movie.metropolis.app.screen.movie.component.MovieDetailViewProvider
 import movie.metropolis.app.ui.movie.component.ActorColumn
+import movie.metropolis.app.ui.movie.component.FindTicketButton
 import movie.metropolis.app.ui.movie.component.RatingText
 import movie.style.Image
 import movie.style.layout.PreviewLayout
@@ -31,6 +33,7 @@ fun SharedTransitionScope.MovieScreen(
     onBuyClick: () -> Unit,
     onLinkClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    haze: HazeState = remember { HazeState() }
 ) = MovieScreenScaffold(
     modifier = modifier.sharedBounds(
         rememberSharedContentState("movie-${detail.id}"),
@@ -38,6 +41,7 @@ fun SharedTransitionScope.MovieScreen(
         clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
         resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop)
     ),
+    haze = haze,
     title = { Text(detail.name) },
     navigationIcon = {
         IconButton(onBackClick) {
@@ -100,8 +104,12 @@ fun SharedTransitionScope.MovieScreen(
         if (r != null) RatingText(r, detail.ratingNumber)
     },
     purchase = {
-        if (showPurchase) IconButton(onBuyClick) {
+        if (showPurchase) FindTicketButton(
+            onClick = onBuyClick,
+            haze = haze
+        ) {
             Icon(Icons.Default.ShoppingCart, null)
+            Text("Find tickets")
         }
     }
 )

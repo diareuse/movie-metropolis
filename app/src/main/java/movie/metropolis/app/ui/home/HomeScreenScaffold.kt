@@ -39,7 +39,7 @@ fun HomeScreenScaffold(
     onShowAllComingSoonClick: () -> Unit,
     onShowAllCinemasClick: () -> Unit,
     cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
-    movie: @Composable (MovieView, Shape, Float) -> Unit,
+    movie: @Composable (m: MovieView, shape: Shape, fraction: Float, upcoming: Boolean) -> Unit,
     // --- placeholders
     userPlaceholder: @Composable () -> Unit = { UserTopBar() },
     ticketPlaceholder: @Composable () -> Unit = { TicketBox() },
@@ -146,7 +146,7 @@ fun HomeScreenScaffold(
             val shape = rememberMaskShape(MaterialTheme.shapes.medium)
             if (item == null) moviePlaceholder(shape, fraction)
             else key(item.id) {
-                movie(item, shape, fraction)
+                movie(item, shape, fraction, false)
             }
         }
 
@@ -175,7 +175,7 @@ fun HomeScreenScaffold(
             val shape = rememberMaskShape(MaterialTheme.shapes.medium)
             if (item == null) moviePlaceholder(shape, fraction)
             else key(item.id) {
-                movie(item, shape, fraction)
+                movie(item, shape, fraction, true)
             }
         }
 
@@ -239,7 +239,7 @@ private fun HomeScreenScaffoldPreview() = PreviewLayout {
         onShowAllComingSoonClick = {},
         onShowAllCinemasClick = {},
         cinema = {},
-        movie = { _, _, _ -> },
+        movie = { _, _, _, _ -> },
         userPlaceholder = {},
         ticketPlaceholder = {},
         moviePlaceholder = { _, _ -> },

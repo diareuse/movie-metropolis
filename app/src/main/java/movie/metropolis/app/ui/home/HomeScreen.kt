@@ -122,23 +122,23 @@ fun SharedTransitionScope.HomeScreen(
             },
             image = { Image(rememberImageState(it.image)) })
     },
-    movie = { it, mask, fraction ->
-        val image = rememberPaletteImageState(it.poster?.url)
+    movie = { movie, mask, fraction, upcoming ->
+        val image = rememberPaletteImageState(movie.poster?.url)
         MovieBox(
             modifier = Modifier
                 .sharedBounds(
-                    sharedContentState = rememberSharedContentState("movie-${it.id}"),
+                    sharedContentState = rememberSharedContentState("movie-${movie.id}"),
                     animatedVisibilityScope = animationScope,
                     clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
                     renderInOverlayDuringTransition = false,
                     resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
                 ),
-            onClick = { onMovieClick(it.id, true) },
+            onClick = { onMovieClick(movie.id, upcoming) },
             haze = haze,
             shape = MaterialTheme.shapes.medium,//mask,
-            aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
+            aspectRatio = movie.poster?.aspectRatio ?: DefaultPosterAspectRatio,
             rating = {
-                val r = it.rating
+                val r = movie.rating
                 if (r != null) RatingBox(
                     modifier = Modifier.animateRatingBox(fraction),
                     color = image.palette.color,
@@ -156,7 +156,7 @@ fun SharedTransitionScope.HomeScreen(
             name = {
                 Text(
                     modifier = Modifier.graphicsLayer { alpha = fraction },
-                    text = it.name,
+                    text = movie.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -164,7 +164,7 @@ fun SharedTransitionScope.HomeScreen(
             category = {
                 Text(
                     modifier = Modifier.graphicsLayer { alpha = fraction },
-                    text = it.genre.orEmpty(),
+                    text = movie.genre.orEmpty(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

@@ -19,6 +19,7 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import movie.metropolis.app.ui.movie.component.ActorColumn
 import movie.metropolis.app.ui.movie.component.BackdropLayout
+import movie.metropolis.app.ui.movie.component.FindTicketButton
 import movie.metropolis.app.ui.movie.component.RatingText
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
@@ -70,6 +71,17 @@ fun MovieScreenScaffold(
                 link()
             }
         }
+    },
+    bottomBar = {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(2.pc)
+                .navigationBarsPadding(),
+            propagateMinConstraints = true
+        ) {
+            purchase()
+        }
     }
 ) { padding ->
     val scrollState = rememberScrollState()
@@ -114,7 +126,6 @@ fun MovieScreenScaffold(
                 .padding(vertical = 2.pc),
             verticalArrangement = Arrangement.spacedBy(.5.pc)
         ) {
-            purchase()
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -196,8 +207,10 @@ fun MovieScreenScaffold(
 @PreviewFontScale
 @Composable
 private fun MovieScreenScaffoldPreview() = PreviewLayout {
+    val haze = remember { HazeState() }
     MovieScreenScaffold(
         title = { Text("I am movie") },
+        haze = haze,
         navigationIcon = {
             IconButton({}) {
                 Icon(Icons.AutoMirrored.Default.ArrowBack, null)
@@ -250,7 +263,11 @@ private fun MovieScreenScaffoldPreview() = PreviewLayout {
                 Icon(Icons.Default.Info, null)
             }
         },
-        purchase = {},
+        purchase = {
+            FindTicketButton({}, haze) {
+                Text("Buy now")
+            }
+        },
         rating = { RatingText("74%", .74f) }
     )
 }
