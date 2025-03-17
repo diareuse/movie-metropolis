@@ -6,6 +6,7 @@ import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Precision
 import coil.size.Scale
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun rememberImageRequest(url: Any?): ImageRequest {
@@ -16,9 +17,13 @@ fun rememberImageRequest(url: Any?): ImageRequest {
             .data(url)
             .diskCachePolicy(CachePolicy.ENABLED)
             .lifecycle(owner)
-            .precision(Precision.INEXACT)
+            .precision(Precision.AUTOMATIC)
             .scale(Scale.FILL)
-            .crossfade(true)
+            .crossfade(false)
+            .allowHardware(true)
+            .dispatcher(Dispatchers.IO)
+            .allowConversionToBitmap(false)
+            .allowRgb565(true)
             .build()
     }
 }

@@ -146,4 +146,8 @@
     <string name="open_in_browser">Open in Browser</string>
     <string name="mark_favorite">Mark favorite</string>
     <string name="remove_favorite">Remove favorite</string>
+    <string name="time_of_day_intro_morning">Good morning, %s!</string>
+    <string name="time_of_day_intro_noon">Pleasure, %s!</string>
+    <string name="time_of_day_intro_afternoon">Good afternoon, %s!</string>
+    <string name="time_of_day_intro_evening">Nice evening, %s!</string>
 </resources>

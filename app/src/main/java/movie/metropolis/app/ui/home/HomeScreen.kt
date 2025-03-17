@@ -24,6 +24,7 @@ import movie.metropolis.app.ui.home.component.RatingBox
 import movie.metropolis.app.ui.home.component.TicketBox
 import movie.metropolis.app.ui.home.component.UserTopBar
 import movie.metropolis.app.ui.home.component.animateRatingBox
+import movie.metropolis.app.ui.home.component.rememberTimeOfDayString
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
 import movie.style.layout.PreviewLayout
@@ -52,13 +53,14 @@ fun SharedTransitionScope.HomeScreen(
     state = state,
     userAccount = { user, membership ->
         UserTopBar(
-            modifier = Modifier.animateItemAppearance(),
             icon = {
                 val image by rememberUserImage(user.email)
                 val state = rememberImageState(image)
-                Image(state)
+                IconButton(onClick = onProfileClick) {
+                    Image(state)
+                }
             },
-            title = { Text("Morning, ${user.firstName}.") },
+            title = { Text(rememberTimeOfDayString(user.firstName)) },
             subtitle = {
                 if (membership == null || membership.isExpired) Text("Free account")
                 else Text("Premium account")
@@ -94,6 +96,7 @@ fun SharedTransitionScope.HomeScreen(
         val image = rememberPaletteImageState(it.movie.poster?.url)
         TicketBox(
             modifier = Modifier
+                .animateItemAppearance()
                 .sharedElement(
                     rememberSharedContentState("ticket-${it.id}"), animationScope
                 ),
@@ -126,6 +129,7 @@ fun SharedTransitionScope.HomeScreen(
         val image = rememberPaletteImageState(movie.poster?.url)
         MovieBox(
             modifier = Modifier
+                .animateItemAppearance()
                 .sharedBounds(
                     sharedContentState = rememberSharedContentState("movie-${movie.id}"),
                     animatedVisibilityScope = animationScope,
