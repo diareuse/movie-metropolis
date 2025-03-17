@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
@@ -126,10 +125,17 @@ fun SharedTransitionScope.HomeScreen(
     movie = { it, mask, fraction ->
         val image = rememberPaletteImageState(it.poster?.url)
         MovieBox(
-            modifier = Modifier,
+            modifier = Modifier
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState("movie-${it.id}"),
+                    animatedVisibilityScope = animationScope,
+                    clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
+                    renderInOverlayDuringTransition = false,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                ),
             onClick = { onMovieClick(it.id, true) },
             haze = haze,
-            shape = mask,
+            shape = MaterialTheme.shapes.medium,//mask,
             aspectRatio = it.poster?.aspectRatio ?: DefaultPosterAspectRatio,
             rating = {
                 val r = it.rating
@@ -143,13 +149,7 @@ fun SharedTransitionScope.HomeScreen(
             },
             poster = {
                 Image(
-                    modifier = Modifier
-                        .clip(mask)
-                        .sharedBounds(
-                            sharedContentState = rememberSharedContentState("movie-${it.id}"),
-                            animatedVisibilityScope = animationScope,
-                            clipInOverlayDuringTransition = OverlayClip(mask)
-                        ),
+                    //modifier = Modifier.clip(mask),
                     state = image
                 )
             },

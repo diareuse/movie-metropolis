@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.res.*
 import androidx.compose.ui.tooling.preview.*
 import movie.metropolis.app.R
@@ -33,7 +34,9 @@ fun SharedTransitionScope.MovieScreen(
 ) = MovieScreenScaffold(
     modifier = modifier.sharedBounds(
         rememberSharedContentState("movie-${detail.id}"),
-        animationScope
+        animationScope,
+        clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
+        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop)
     ),
     title = { Text(detail.name) },
     navigationIcon = {
