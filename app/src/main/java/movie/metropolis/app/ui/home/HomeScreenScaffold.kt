@@ -4,13 +4,12 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.pager.*
 import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.draw.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.BookingView
 import movie.metropolis.app.model.CinemaView
 import movie.metropolis.app.model.MembershipView
@@ -32,7 +31,7 @@ fun HomeScreenScaffold(
     state: HomeScreenState,
     // --- main content
     userAccount: @Composable (UserView, MembershipView?) -> Unit,
-    ticket: @Composable RowScope.(BookingView) -> Unit,
+    ticket: @Composable (BookingView) -> Unit,
     onShowAllTicketsClick: () -> Unit,
     cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
     movie: @Composable (m: MovieView, upcoming: Boolean) -> Unit,
@@ -78,27 +77,22 @@ fun HomeScreenScaffold(
         ) {
             Text("Tickets")
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 2.pc),
-            horizontalArrangement = Arrangement.spacedBy(-(3).pc),
-            verticalAlignment = Alignment.Top
+        val pagerState = rememberPagerState { maxOf(state.tickets.tickets.size, 5) }
+        HorizontalPager(
+            state = pagerState,
+            pageSize = PageSize.Fixed(10.pc),
+            contentPadding = PaddingValues(horizontal = 2.pc),
+            pageSpacing = 1.pc
         ) {
-            for (i in 0..<ticketCount) Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .zIndex(1f * ticketCount - i)
-                    .scale(1f - i * 0.05f)
-                    .blur(2.dp * i, edgeTreatment = BlurredEdgeTreatment.Unbounded),
-                propagateMinConstraints = true
+            Box(
+                modifier = Modifier.zIndex(1f * ticketCount - it)
             ) {
                 StateLayout(
                     state = state.tickets.state,
                     loaded = { _ ->
-                        val item = state.tickets.tickets.getOrNull(i)
+                        val item = state.tickets.tickets.getOrNull(it)
                         if (item != null) key(item.id) {
-                            ticket(this@Row, item)
+                            ticket(item)
                         }
                         else ticketPlaceholder()
                     },
@@ -106,7 +100,6 @@ fun HomeScreenScaffold(
                     loading = { ticketPlaceholder() }
                 )
             }
-
         }
 
         // --- recommended section
