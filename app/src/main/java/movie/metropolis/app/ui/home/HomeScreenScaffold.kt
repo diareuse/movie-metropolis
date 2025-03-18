@@ -34,9 +34,6 @@ fun HomeScreenScaffold(
     userAccount: @Composable (UserView, MembershipView?) -> Unit,
     ticket: @Composable RowScope.(BookingView) -> Unit,
     onShowAllTicketsClick: () -> Unit,
-    onShowAllRecommendedClick: () -> Unit,
-    onShowAllComingSoonClick: () -> Unit,
-    onShowAllCinemasClick: () -> Unit,
     cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
     movie: @Composable (m: MovieView, upcoming: Boolean) -> Unit,
     // --- errors
@@ -113,12 +110,11 @@ fun HomeScreenScaffold(
         }
 
         // --- recommended section
-        OpenableSection(
+        Section(
             modifier = Modifier
                 .animateItemAppearance(scale = 1.25f)
                 .padding(horizontal = 2.pc)
-                .padding(top = 2.pc),
-            onClick = onShowAllRecommendedClick
+                .padding(top = 2.pc)
         ) {
             Text("Recommended")
         }
@@ -150,12 +146,11 @@ fun HomeScreenScaffold(
         }
 
         // --- coming soon section
-        OpenableSection(
+        Section(
             modifier = Modifier
                 .animateItemAppearance(scale = 1.25f)
                 .padding(horizontal = 2.pc)
-                .padding(top = 2.pc),
-            onClick = onShowAllComingSoonClick
+                .padding(top = 2.pc)
         ) {
             Text("Coming Soon")
         }
@@ -185,12 +180,11 @@ fun HomeScreenScaffold(
         }
 
         // --- cinemas section
-        OpenableSection(
+        Section(
             modifier = Modifier
                 .animateItemAppearance(scale = 1.25f)
                 .padding(horizontal = 2.pc)
-                .padding(top = 2.pc),
-            onClick = onShowAllCinemasClick
+                .padding(top = 2.pc)
         ) {
             Text("Cinemas")
         }
@@ -215,7 +209,9 @@ val CarouselItemScope.fraction get() = with(carouselItemInfo) { (size - minSize)
 
 @Composable
 fun OpenableSection(
-    onClick: () -> Unit, modifier: Modifier = Modifier, content: @Composable () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
 ) = Row(
     modifier = modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically,
@@ -229,6 +225,22 @@ fun OpenableSection(
     }
 }
 
+@Composable
+fun Section(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) = Row(
+    modifier = modifier
+        .fillMaxWidth()
+        .padding(vertical = 1.pc),
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.SpaceBetween
+) {
+    ProvideTextStyle(MaterialTheme.typography.titleSmall) {
+        content()
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @PreviewFontScale
@@ -239,9 +251,6 @@ private fun HomeScreenScaffoldPreview() = PreviewLayout {
         userAccount = { _, _ -> },
         ticket = {},
         onShowAllTicketsClick = {},
-        onShowAllRecommendedClick = {},
-        onShowAllComingSoonClick = {},
-        onShowAllCinemasClick = {},
         cinema = {},
         movie = { _, _ -> },
         userPlaceholder = {},

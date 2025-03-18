@@ -108,9 +108,6 @@ fun SharedTransitionScope.HomeScreen(
         )
     },
     onShowAllTicketsClick = onTicketsClick,
-    onShowAllRecommendedClick = {},
-    onShowAllComingSoonClick = {},
-    onShowAllCinemasClick = {},
     cinema = {
         CinemaBox(
             modifier = Modifier.animateItemAppearance(),
