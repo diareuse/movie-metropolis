@@ -28,9 +28,7 @@ import movie.style.util.pc
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun MovieScreenScaffold(
-    title: @Composable () -> Unit,
     navigationIcon: @Composable () -> Unit,
-    backdrop: @Composable () -> Unit,
     poster: @Composable () -> Unit,
     name: @Composable () -> Unit,
     duration: @Composable () -> Unit,
@@ -209,26 +207,11 @@ fun MovieScreenScaffold(
 private fun MovieScreenScaffoldPreview() = PreviewLayout {
     val haze = remember { HazeState() }
     MovieScreenScaffold(
-        title = { Text("I am movie") },
         haze = haze,
         navigationIcon = {
             IconButton({}) {
                 Icon(Icons.AutoMirrored.Default.ArrowBack, null)
             }
-        },
-        backdrop = {
-            Box(
-                Modifier.background(
-                    Brush.sweepGradient(
-                        listOf(
-                            Color.Green,
-                            Color.Yellow,
-                            Color.Blue,
-                            Color.Magenta
-                        )
-                    )
-                )
-            )
         },
         poster = { Box(Modifier.background(Color.Blue)) },
         name = { Text("I am so long long movie very long") },

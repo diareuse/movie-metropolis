@@ -42,13 +42,11 @@ fun SharedTransitionScope.MovieScreen(
         resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop)
     ),
     haze = haze,
-    title = { Text(detail.name) },
     navigationIcon = {
         IconButton(onBackClick) {
             Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
         }
     },
-    backdrop = { Image(rememberImageState(detail.backdrop?.url)) },
     poster = {
         Image(
             modifier = Modifier,
