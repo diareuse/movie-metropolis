@@ -8,7 +8,6 @@ import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import dev.chrisbanes.haze.HazeState
@@ -23,7 +22,6 @@ import movie.metropolis.app.ui.home.component.MovieBox
 import movie.metropolis.app.ui.home.component.RatingBox
 import movie.metropolis.app.ui.home.component.TicketBox
 import movie.metropolis.app.ui.home.component.UserTopBar
-import movie.metropolis.app.ui.home.component.animateRatingBox
 import movie.metropolis.app.ui.home.component.rememberTimeOfDayString
 import movie.style.Image
 import movie.style.layout.DefaultPosterAspectRatio
@@ -125,18 +123,18 @@ fun SharedTransitionScope.HomeScreen(
             },
             image = { Image(rememberImageState(it.image)) })
     },
-    movie = { movie, mask, fraction, upcoming ->
+    movie = { movie, upcoming ->
         val image = rememberPaletteImageState(movie.poster?.url)
         MovieBox(
             modifier = Modifier
-                .animateItemAppearance()
                 .sharedBounds(
                     sharedContentState = rememberSharedContentState("movie-${movie.id}"),
                     animatedVisibilityScope = animationScope,
                     clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
                     renderInOverlayDuringTransition = false,
                     resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
-                ),
+                )
+                .animateItemAppearance(),
             onClick = { onMovieClick(movie.id, upcoming) },
             haze = haze,
             shape = MaterialTheme.shapes.medium,//mask,
@@ -144,22 +142,15 @@ fun SharedTransitionScope.HomeScreen(
             rating = {
                 val r = movie.rating
                 if (r != null) RatingBox(
-                    modifier = Modifier.animateRatingBox(fraction),
                     color = image.palette.color,
                     haze = haze
                 ) {
                     Text(r)
                 }
             },
-            poster = {
-                Image(
-                    //modifier = Modifier.clip(mask),
-                    state = image
-                )
-            },
+            poster = { Image(image) },
             name = {
                 Text(
-                    modifier = Modifier.graphicsLayer { alpha = fraction },
                     text = movie.name,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -167,7 +158,6 @@ fun SharedTransitionScope.HomeScreen(
             },
             category = {
                 Text(
-                    modifier = Modifier.graphicsLayer { alpha = fraction },
                     text = movie.genre.orEmpty(),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis

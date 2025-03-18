@@ -9,7 +9,6 @@ import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
-import androidx.compose.ui.graphics.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.BookingView
@@ -39,17 +38,7 @@ fun HomeScreenScaffold(
     onShowAllComingSoonClick: () -> Unit,
     onShowAllCinemasClick: () -> Unit,
     cinema: @Composable LazyItemScope.(CinemaView) -> Unit,
-    movie: @Composable (m: MovieView, shape: Shape, fraction: Float, upcoming: Boolean) -> Unit,
-    // --- placeholders
-    userPlaceholder: @Composable () -> Unit = { UserTopBar() },
-    ticketPlaceholder: @Composable () -> Unit = { TicketBox() },
-    moviePlaceholder: @Composable (Shape, Float) -> Unit = { shape, fraction ->
-        MovieBox(
-            shape = shape,
-            fraction = fraction
-        )
-    },
-    cinemaPlaceholder: @Composable () -> Unit = { CinemaBox() },
+    movie: @Composable (m: MovieView, upcoming: Boolean) -> Unit,
     // --- errors
     userError: @Composable () -> Unit,
     ticketError: @Composable () -> Unit,
@@ -57,6 +46,11 @@ fun HomeScreenScaffold(
     cinemaError: @Composable () -> Unit,
     // ---
     modifier: Modifier = Modifier,
+    // --- placeholders
+    userPlaceholder: @Composable () -> Unit = { UserTopBar() },
+    ticketPlaceholder: @Composable () -> Unit = { TicketBox() },
+    moviePlaceholder: @Composable () -> Unit = { MovieBox() },
+    cinemaPlaceholder: @Composable () -> Unit = { CinemaBox() },
     ticketCount: Int = 4,
 ) = Scaffold(
     modifier = modifier,
@@ -128,21 +122,30 @@ fun HomeScreenScaffold(
         ) {
             Text("Recommended")
         }
-        val recommendedState = rememberCarouselState { maxOf(state.recommended.size, 5) }
-        HorizontalUncontainedCarousel(
-            modifier = Modifier
-                .fillMaxWidth(),
-            state = recommendedState,
-            itemWidth = 10.pc,
-            itemSpacing = 1.pc,
-            flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(recommendedState),
-            contentPadding = PaddingValues(horizontal = 2.pc)
+        val recommendedState = rememberLazyListState()
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(1.pc),
+            contentPadding = PaddingValues(horizontal = 2.pc),
+            state = recommendedState
         ) {
-            val item = state.recommended.getOrNull(it)
-            val shape = rememberMaskShape(MaterialTheme.shapes.medium)
-            if (item == null) moviePlaceholder(shape, fraction)
-            else key(item.id) {
-                movie(item, shape, fraction, false)
+            items(state.recommended, key = { it.id }) { item ->
+                Box(
+                    modifier = Modifier
+                        .animateItem()
+                        .width(10.pc),
+                    propagateMinConstraints = true
+                ) {
+                    movie(item, false)
+                }
+            }
+            items(5 - state.recommended.size.coerceAtMost(5)) {
+                Box(
+                    modifier = Modifier.width(10.pc),
+                    propagateMinConstraints = true
+                ) {
+                    moviePlaceholder()
+                }
             }
         }
 
@@ -156,21 +159,28 @@ fun HomeScreenScaffold(
         ) {
             Text("Coming Soon")
         }
-        val comingSoonState = rememberCarouselState { maxOf(state.comingSoon.size, 5) }
-        HorizontalUncontainedCarousel(
-            modifier = Modifier
-                .fillMaxWidth(),
-            state = comingSoonState,
-            itemWidth = 10.pc,
-            itemSpacing = 1.pc,
-            flingBehavior = CarouselDefaults.multiBrowseFlingBehavior(comingSoonState),
+        LazyRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(1.pc),
             contentPadding = PaddingValues(horizontal = 2.pc)
         ) {
-            val item = state.comingSoon.getOrNull(it)
-            val shape = rememberMaskShape(MaterialTheme.shapes.medium)
-            if (item == null) moviePlaceholder(shape, fraction)
-            else key(item.id) {
-                movie(item, shape, fraction, true)
+            items(state.comingSoon, key = { it.id }) { item ->
+                Box(
+                    modifier = Modifier
+                        .animateItem()
+                        .width(10.pc),
+                    propagateMinConstraints = true
+                ) {
+                    movie(item, false)
+                }
+            }
+            items(5 - state.comingSoon.size.coerceAtMost(5)) {
+                Box(
+                    modifier = Modifier.width(10.pc),
+                    propagateMinConstraints = true
+                ) {
+                    moviePlaceholder()
+                }
             }
         }
 
@@ -233,10 +243,10 @@ private fun HomeScreenScaffoldPreview() = PreviewLayout {
         onShowAllComingSoonClick = {},
         onShowAllCinemasClick = {},
         cinema = {},
-        movie = { _, _, _, _ -> },
+        movie = { _, _ -> },
         userPlaceholder = {},
         ticketPlaceholder = {},
-        moviePlaceholder = { _, _ -> },
+        moviePlaceholder = {},
         cinemaPlaceholder = {},
         userError = {},
         ticketError = {},
