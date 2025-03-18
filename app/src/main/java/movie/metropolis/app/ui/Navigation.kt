@@ -173,6 +173,7 @@ fun Navigation(
             composable(Route.Tickets.route) {
                 val vm = hiltViewModel<TicketViewModel>()
                 TicketScreen(
+                    animationScope = this@composable,
                     state = vm.state,
                     onBackClick = navController::navigateUp
                 )
