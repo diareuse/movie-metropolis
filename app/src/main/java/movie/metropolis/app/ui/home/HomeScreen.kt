@@ -4,6 +4,7 @@ package movie.metropolis.app.ui.home
 
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.*
 import androidx.compose.material3.*
 import androidx.compose.material3.carousel.*
 import androidx.compose.runtime.*
@@ -55,7 +56,15 @@ fun SharedTransitionScope.HomeScreen(
                 val image by rememberUserImage(user.email)
                 val state = rememberImageState(image)
                 IconButton(onClick = onProfileClick) {
-                    Image(state)
+                    Image(
+                        modifier = Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState("profile"),
+                            animatedVisibilityScope = animationScope,
+                            clipInOverlayDuringTransition = OverlayClip(CircleShape),
+                            resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                        ),
+                        state = state
+                    )
                 }
             },
             title = { Text(rememberTimeOfDayString(user.firstName)) },

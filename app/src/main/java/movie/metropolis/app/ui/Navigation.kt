@@ -119,6 +119,7 @@ fun Navigation(
             composable(Route.User.route) {
                 val vm = hiltViewModel<ProfileViewModel>()
                 ProfileScreen(
+                    animationScope = this@composable,
                     state = vm.state,
                     onBackClick = navController::navigateUp,
                     onPhoneChange = vm::onPhoneChange,
