@@ -10,6 +10,7 @@ import movie.metropolis.app.model.adapter.ImageViewFromMovie
 import movie.metropolis.app.model.adapter.VideoViewFromMovie
 import movie.metropolis.app.util.retryOnNetworkError
 import java.util.Locale
+import kotlin.time.Duration.Companion.seconds
 
 class ListingFacadeCinemaCity(
     private val future: Boolean,
@@ -22,7 +23,7 @@ class ListingFacadeCinemaCity(
                 MovieView(movie.id).apply {
                     name = movie.name.original
                     releasedAt = movie.releasedAt.toString()
-                    duration = movie.length?.toString().orEmpty()
+                    durationTime = movie.length ?: 0.seconds
                     availableFrom = movie.screeningFrom.toString()
                     directors = movie.directors
                     cast = movie.cast

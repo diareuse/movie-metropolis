@@ -1,6 +1,9 @@
 package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
+import movie.metropolis.app.util.toStringComponents
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 @Stable
 data class MovieView(
@@ -8,7 +11,8 @@ data class MovieView(
 ) {
     var name: String by mutableStateOf("")
     var releasedAt: String by mutableStateOf("")
-    var duration: String by mutableStateOf("")
+    var durationTime: Duration by mutableStateOf(0.seconds)
+    val duration: String by derivedStateOf { durationTime.toStringComponents() }
     var availableFrom: String by mutableStateOf("")
     var directors: List<String> by mutableStateOf(emptyList())
     var cast: List<String> by mutableStateOf(emptyList())

@@ -1,7 +1,7 @@
 package movie.metropolis.app.ui.booking
 
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
@@ -11,15 +11,18 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.metropolis.app.model.TimeView
 import movie.metropolis.app.screen.booking.LazyTimeViewProvider
-import movie.metropolis.app.screen.booking.component.ProjectionTypeRow
-import movie.metropolis.app.screen.booking.component.ProjectionTypeRowDefaults
+import movie.metropolis.app.ui.booking.component.BookingBox
+import movie.metropolis.app.ui.booking.component.BookingTable
+import movie.metropolis.app.ui.booking.component.BookingTableRow
 import movie.metropolis.app.ui.booking.component.FiltersColumn
 import movie.style.Image
 import movie.style.layout.PreviewLayout
-import movie.style.layout.plus
 import movie.style.rememberImageState
-import movie.style.util.pc
-import java.util.Locale
+import java.util.Calendar
+import java.util.Date
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,71 +47,67 @@ fun BookingScreen(
         }
     }
 ) { padding ->
-    val locale = remember { Locale.getDefault() }
-    val horizontalPadding = Modifier.padding(horizontal = 1.pc)
-    LazyColumn(
-        contentPadding = padding + PaddingValues(vertical = 1.pc),
-        verticalArrangement = Arrangement.spacedBy(1.pc)
+    Column(
+        modifier = Modifier
+            .padding(padding)
+            .fillMaxSize()
     ) {
-        for (times in state.items) {
-            // fixme replace with a time-table view
-            if (times.isEmpty) continue
-            item { Text(times.dateString, Modifier.then(horizontalPadding)) }
-            for (time in times.content) {
-                if (time.filteredTimes.isEmpty()) continue
-                when (time) {
-                    is TimeView.Cinema -> item {
-                        Column(Modifier.then(horizontalPadding)) {
-                            Text(time.cinema.name)
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(150.dp),
-                                state = rememberImageState(time.cinema.image)
-                            )
-                        }
-                    }
-
-                    is TimeView.Movie -> item {
-                        Column(Modifier.then(horizontalPadding)) {
-                            Text(time.movie.name)
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(150.dp),
-                                state = rememberImageState(time.movie.poster?.url)
-                            )
-                        }
+        Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+            for ((index, item) in state.items.withIndex()) {
+                Column {
+                    Checkbox(checked = index == state.selectedIndex, onCheckedChange = null)
+                    Button(onClick = { state.selectedIndex = index }) {
+                        Text(item.dateString)
                     }
                 }
-                for ((type, v) in time.filteredTimes) item {
-                    LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(1.pc),
-                        verticalAlignment = Alignment.CenterVertically,
-                        contentPadding = PaddingValues(horizontal = 1.pc)
-                    ) {
-                        item {
-                            ProjectionTypeRow(
-                                modifier = Modifier.fillMaxWidth(),
-                                language = {
-                                    ProjectionTypeRowDefaults.Speech {
-                                        Text(type.language.getDisplayLanguage(locale))
-                                    }
-                                },
-                                subtitle = {
-                                    if (type.subtitles != null) ProjectionTypeRowDefaults.Subtitle {
-                                        Text(type.subtitles.getDisplayLanguage(locale))
-                                    }
-                                }
-                            ) {
-                                for (p in type.projection)
-                                    ProjectionTypeRow(type = p)
-                            }
+            }
+        }
+        val scroll = rememberScrollState()
+        BookingTable(
+            state = scroll
+        ) {
+            for (time in state.selectedView) {
+                val duration = when (time) {
+                    is TimeView.Movie -> time.movie.durationTime.run { if (this == Duration.ZERO) 1.hours else this }
+                    else -> state.duration.run { if (this == Duration.ZERO) 1.hours else this }
+                }
+                val scrollModifier = Modifier.offset { IntOffset(x = scroll.value, y = 0) }
+                BookingTableRow(
+                    title = {
+                        when (time) {
+                            is TimeView.Cinema -> Text(
+                                time.cinema.name,
+                                scrollModifier
+                            )
+
+                            is TimeView.Movie -> Text(
+                                time.movie.name,
+                                scrollModifier
+                            )
                         }
-                        items(v) {
-                            Button({ onTimeClick(it.url) }) {
-                                Text(it.formatted)
+                    }
+                ) {
+                }
+
+                for ((type, v) in time.filteredTimes) {
+                    BookingTableRow({
+                        Text(
+                            type.toString(),
+                            scrollModifier
+                        )
+                    }) {
+                        for (v in v) {
+                            val time = remember(v.time) {
+                                Calendar.getInstance().apply { this.time = Date(v.time) }.run {
+                                    get(Calendar.HOUR_OF_DAY).hours + get(Calendar.MINUTE).minutes
+                                }
                             }
+                            BookingBox(
+                                start = time,
+                                duration = duration,
+                                onClick = { onTimeClick(v.formatted) },
+                                time = { Text(v.formatted) }
+                            )
                         }
                     }
                 }

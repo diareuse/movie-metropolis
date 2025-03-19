@@ -22,11 +22,11 @@ import movie.metropolis.app.model.adapter.ImageViewFromMovie
 import movie.metropolis.app.model.adapter.SpecificTimeViewFromFeature
 import movie.metropolis.app.model.adapter.VideoViewFromFeature
 import movie.metropolis.app.util.retryOnNetworkError
-import movie.metropolis.app.util.toStringComponents
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.seconds
 
 class TicketFacadeCinemaCinemaCity(
     private val id: String,
@@ -58,7 +58,7 @@ class TicketFacadeCinemaCinemaCity(
                             val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
                             name = ref.name.localized
                             releasedAt = yearFormat.format(ref.releasedAt)
-                            duration = ref.length?.toStringComponents().orEmpty()
+                            durationTime = ref.length ?: 0.seconds
                             availableFrom = releasedAt
                             poster = ref.images.first().let(::ImageViewFromMovie)
                             posterLarge = poster

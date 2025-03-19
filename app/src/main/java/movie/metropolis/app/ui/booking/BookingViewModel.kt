@@ -54,11 +54,14 @@ class BookingViewModel private constructor(
                     facade.poster
                         .onEach { state.poster = it }
                         .launchIn(this)
-                    facade.times
-                        .onEach {
+                    launch {
+                        facade.times.collectLatest {
+                            val wasEmpty = state.items.isEmpty()
                             state.items.updateWith(it)
+                            if (wasEmpty)
+                                state.selectFirstNonEmpty()
                         }
-                        .launchIn(this)
+                    }
                     state.filters = facade.filters
                 }
             }
