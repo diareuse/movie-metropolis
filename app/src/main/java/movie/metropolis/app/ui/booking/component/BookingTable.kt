@@ -9,6 +9,7 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.platform.*
+import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import movie.style.layout.PreviewLayout
@@ -28,13 +29,22 @@ fun BookingTable(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(state)
+            .padding(horizontal = 2.pc),
+        verticalArrangement = Arrangement.spacedBy(1.pc)
     ) {
         BookingTableRow({}) {
             repeat(24) {
                 BookingTableHead(it)
             }
         }
-        rows()
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(1.pc)
+        ) {
+            rows()
+        }
     }
 }
 
@@ -43,11 +53,50 @@ fun ColumnScope.BookingTableRow(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
-) = Column(modifier = modifier.width(24.hours.inWholeMinutes.times(multiplier).dp)) {
-    title()
+) = Column(
+    modifier = modifier.width(24.hours.inWholeMinutes.times(multiplier).dp),
+    verticalArrangement = Arrangement.spacedBy(1.pc)
+) {
+    Box(modifier = Modifier.padding(horizontal = 2.pc)) {
+        ProvideTextStyle(MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)) {
+            title()
+        }
+    }
     Box {
         content()
     }
+}
+
+@Composable
+fun ColumnScope.BookingTableSection(
+    backdrop: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) = Box(
+    modifier = modifier.width(24.hours.inWholeMinutes.times(multiplier).dp)
+) {
+    val backgroundColor = MaterialTheme.colorScheme.background
+    Box(
+        modifier = Modifier
+            .matchParentSize()
+            .clip(MaterialTheme.shapes.medium)
+            .drawWithCache {
+                onDrawWithContent {
+                    drawContent()
+                    drawRect(
+                        color = backgroundColor.copy(.5f),
+                        blendMode = if (backgroundColor.luminance() > .5) BlendMode.Lighten else BlendMode.Darken
+                    )
+                }
+            },
+        propagateMinConstraints = true
+    ) {
+        backdrop()
+    }
+    Column(
+        modifier = Modifier.padding(vertical = 1.pc),
+        content = content
+    )
 }
 
 @Composable
@@ -138,7 +187,9 @@ private fun BookingTablePreview() = PreviewLayout {
         modifier = Modifier.background(MaterialTheme.colorScheme.background),
         state = state
     ) {
-        BookingTableRow({ Text("Title", Modifier.offset { IntOffset(x = state.value, y = 0) }) }) {
+        BookingTableRow(
+            title = { Text("Title", Modifier.offset { IntOffset(x = state.value, y = 0) }) }
+        ) {
             BookingBox(6.hours, 1.5.hours, {}, { Text("06:00") })
         }
     }

@@ -9,15 +9,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.nestedscroll.*
-import androidx.compose.ui.layout.*
-import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.unit.*
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.launch
 import movie.style.layout.PreviewLayout
-import movie.style.layout.plus
 import movie.style.util.pc
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,57 +36,75 @@ fun BookingScreenScaffold(
         )
     ),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
-    content: @Composable (PaddingValues) -> Unit,
+    haze: HazeState = remember { HazeState() },
+    content: @Composable () -> Unit,
 ) = BottomSheetScaffold(
     modifier = modifier,
     sheetContent = filters,
     scaffoldState = scaffoldState
 ) { padding ->
     Box {
+        val color = MaterialTheme.colorScheme.background
         Box(
             modifier = Modifier
+                .hazeSource(haze)
                 .fillMaxSize()
-                .alpha(.25f)
-                .blur(1.pc),
+                .blur(1.pc)
+                .drawWithCache {
+                    val brush = Brush.radialGradient(
+                        listOf(Color.Transparent, color),
+                        center = Offset.Zero,
+                        radius = size.maxDimension
+                    )
+                    onDrawWithContent {
+                        drawContent()
+                        drawRect(brush)
+                    }
+                },
             propagateMinConstraints = true
         ) {
             backdrop()
         }
-        var height by remember { mutableStateOf(0.dp) }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .nestedScroll(scrollBehavior.nestedScrollConnection),
-            propagateMinConstraints = true
-        ) {
-            content(padding + PaddingValues(top = height))
-        }
-        val density = LocalDensity.current
-        LargeTopAppBar(
-            modifier = Modifier
-                .onSizeChanged { height = with(density) { it.height.toDp() } }
-                .windowInsetsPadding(
-                    WindowInsets.systemBars.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top)
-                )
-                .padding(1.pc)
-                .clip(MaterialTheme.shapes.medium),
-            windowInsets = WindowInsets(0),
-            title = title,
-            scrollBehavior = scrollBehavior,
-            navigationIcon = navigationIcon,
-            actions = {
+        Column(modifier = Modifier.padding(padding)) {
+            Row(
+                modifier = Modifier
+                    .padding(2.pc)
+                    .statusBarsPadding()
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .hazeEffect(haze)
+                ) {
+                    navigationIcon()
+                }
+                Spacer(Modifier.weight(1f))
                 BadgedBox(badge = { activeFilters() }) {
-                    val scope = rememberCoroutineScope()
-                    IconButton({
-                        scope.launch {
-                            scaffoldState.bottomSheetState.show()
+                    Row(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.medium)
+                            .hazeEffect(haze)
+                    ) {
+                        val scope = rememberCoroutineScope()
+                        IconButton({
+                            scope.launch {
+                                scaffoldState.bottomSheetState.show()
+                            }
+                        }) {
+                            Icon(Icons.Default.MoreVert, null)
                         }
-                    }) {
-                        Icon(Icons.Default.MoreVert, null)
                     }
                 }
             }
-        )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(scrollBehavior.nestedScrollConnection),
+                propagateMinConstraints = true
+            ) {
+                content()
+            }
+        }
     }
 }
 
@@ -99,9 +117,13 @@ private fun BookingScreenScaffoldPreview() = PreviewLayout {
         filters = {},
         backdrop = { Box(Modifier.background(Color.Green)) },
         title = { Text("I am booking") },
-        content = { Box(Modifier
-            .padding(it)
-            .background(Color.Blue)) },
+        content = {
+            Box(
+                Modifier
+                    .padding(2.pc)
+                    .background(Color.Blue)
+            )
+        },
         activeFilters = { Badge { Text("3") } },
         navigationIcon = {
             IconButton({}) {
