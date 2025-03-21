@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.*
 import androidx.compose.ui.*
+import androidx.compose.ui.draw.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -26,6 +27,7 @@ import movie.metropolis.app.ui.booking.component.FiltersColumn
 import movie.style.Image
 import movie.style.layout.PreviewLayout
 import movie.style.rememberImageState
+import movie.style.rememberPaletteImageState
 import movie.style.util.pc
 import java.util.Calendar
 import java.util.Date
@@ -138,8 +140,11 @@ private fun BookingTableContent(
                 is TimeView.Cinema -> time.cinema.image
             }
             val scrollModifier = Modifier.offset { IntOffset(x = scroll.value, y = 0) }
+            val imageState = rememberPaletteImageState(image)
             BookingTableSection(
-                backdrop = { Image(rememberImageState(image)) }) {
+                backdrop = { Image(imageState, Modifier.blur(24.dp)) },
+                borderColor = imageState.palette.color
+            ) {
                 BookingTableRow(
                     title = {
                         when (time) {

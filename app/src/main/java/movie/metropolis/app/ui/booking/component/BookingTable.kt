@@ -27,26 +27,22 @@ fun BookingTable(
     haze: HazeState = remember { HazeState() },
     contentPadding: PaddingValues = PaddingValues(),
     state: ScrollState = rememberScrollState(),
+    tableHeadPadding: PaddingValues = PaddingValues(1.pc),
+    tablePadding: PaddingValues = PaddingValues(1.pc),
     rows: @Composable ColumnScope.() -> Unit
 ) {
-    LocalLayoutDirection.current
     Column(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(state)
-            .padding(contentPadding)
-        /*.padding(
-            top = contentPadding.calculateTopPadding(),
-            start = contentPadding.calculateStartPadding(dir),
-            end = contentPadding.calculateEndPadding(dir)
-        )*/,
+            .padding(contentPadding),
         verticalArrangement = Arrangement.spacedBy(1.pc)
     ) {
         Box(
             modifier = Modifier
                 .clip(MaterialTheme.shapes.medium)
                 .hazeEffect(haze)
-                .padding(1.pc)
+                .padding(tableHeadPadding)
                 .widthOfDay(),
         ) {
             repeat(24) {
@@ -58,10 +54,32 @@ fun BookingTable(
                 .weight(1f)
                 .clip(MaterialTheme.shapes.large)
                 .hazeEffect(state = haze)
+                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                .drawWithCache {
+                    onDrawWithContent {
+                        val colors = listOf(Color.Transparent, Color.Black)
+                        drawContent()
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                colors,
+                                startY = 0f,
+                                endY = tablePadding.calculateTopPadding().toPx()
+                            ),
+                            blendMode = BlendMode.DstIn
+                        )
+                        drawRect(
+                            brush = Brush.verticalGradient(
+                                colors.reversed(),
+                                startY = size.height - tablePadding.calculateBottomPadding().toPx(),
+                                endY = size.height
+                            ),
+                            blendMode = BlendMode.DstIn
+                        )
+                    }
+                }
                 .verticalScroll(rememberScrollState())
-                .padding(1.pc)
-                .widthOfDay()
-            /*.padding(bottom = contentPadding.calculateBottomPadding())*/,
+                .padding(tablePadding)
+                .widthOfDay(),
             verticalArrangement = Arrangement.spacedBy(1.pc)
         ) {
             rows()
@@ -92,9 +110,16 @@ fun ColumnScope.BookingTableRow(
 fun ColumnScope.BookingTableSection(
     backdrop: @Composable () -> Unit,
     modifier: Modifier = Modifier,
+    borderColor: Color = MaterialTheme.colorScheme.outline,
     content: @Composable ColumnScope.() -> Unit,
 ) = Box(
-    modifier = modifier.widthOfDay()
+    modifier = modifier
+        .widthOfDay()
+        .border(
+            2.dp,
+            borderColor.copy(.5f).compositeOver(MaterialTheme.colorScheme.background),
+            MaterialTheme.shapes.medium
+        )
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     Box(
@@ -102,11 +127,14 @@ fun ColumnScope.BookingTableSection(
             .matchParentSize()
             .clip(MaterialTheme.shapes.medium)
             .drawWithCache {
+                val color = backgroundColor.copy(.75f)
+                val mode =
+                    if (backgroundColor.luminance() > .5) BlendMode.Lighten else BlendMode.Darken
                 onDrawWithContent {
                     drawContent()
                     drawRect(
-                        color = backgroundColor.copy(.75f),
-                        blendMode = if (backgroundColor.luminance() > .5) BlendMode.Lighten else BlendMode.Darken
+                        color = color,
+                        blendMode = mode
                     )
                 }
             },
@@ -116,6 +144,7 @@ fun ColumnScope.BookingTableSection(
     }
     Column(
         modifier = Modifier.padding(vertical = 1.pc),
+        verticalArrangement = Arrangement.spacedBy(1.pc),
         content = content
     )
 }

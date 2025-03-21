@@ -20,7 +20,7 @@ fun rememberImageRequest(url: Any?): ImageRequest {
             .precision(Precision.AUTOMATIC)
             .scale(Scale.FILL)
             .crossfade(false)
-            .allowHardware(true)
+            //.allowHardware(true)
             .dispatcher(Dispatchers.IO)
             .allowConversionToBitmap(false)
             .allowRgb565(true)

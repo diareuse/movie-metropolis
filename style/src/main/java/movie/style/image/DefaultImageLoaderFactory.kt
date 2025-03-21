@@ -10,7 +10,7 @@ internal class DefaultImageLoaderFactory(
 ) : ImageLoaderFactory {
 
     override fun newImageLoader() = ImageLoader.Builder(context)
-        .allowHardware(true)
+        //.allowHardware(true)
         .allowRgb565(true)
         .crossfade(true)
         .networkCachePolicy(CachePolicy.ENABLED)

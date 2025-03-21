@@ -59,7 +59,7 @@ class TicketFacadeCinemaCinemaCity(
                             name = ref.name.localized
                             releasedAt = yearFormat.format(ref.releasedAt)
                             durationTime = ref.length ?: 0.seconds
-                            availableFrom = releasedAt
+                            availableFromTime = ref.releasedAt
                             poster = ref.images.first().let(::ImageViewFromMovie)
                             posterLarge = poster
                             video = ref.videos.firstOrNull()?.let(Any::toString)

@@ -28,7 +28,7 @@ class ListingFacadeWithRating(
                 .collect { items ->
                     emit(it.copy(items = items))
                 }
-            emit(it.copy(items = it.items.sortedByDescending { it.ratingPercent }
+            emit(it.copy(items = it.items.sortedByDescending { it.availableFromTime }
                 .toImmutableList()))
         }
     }

@@ -2,6 +2,7 @@ package movie.metropolis.app.model
 
 import androidx.compose.runtime.*
 import movie.metropolis.app.util.toStringComponents
+import java.util.Date
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -13,7 +14,8 @@ data class MovieView(
     var releasedAt: String by mutableStateOf("")
     var durationTime: Duration by mutableStateOf(0.seconds)
     val duration: String by derivedStateOf { durationTime.toStringComponents() }
-    var availableFrom: String by mutableStateOf("")
+    var availableFromTime: Date by mutableStateOf(Date(0))
+    val availableFrom: String by derivedStateOf { availableFromTime.toString() }
     var directors: List<String> by mutableStateOf(emptyList())
     var cast: List<String> by mutableStateOf(emptyList())
     var countryOfOrigin: String by mutableStateOf("")

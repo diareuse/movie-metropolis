@@ -24,7 +24,7 @@ class ListingFacadeCinemaCity(
                     name = movie.name.original
                     releasedAt = movie.releasedAt.toString()
                     durationTime = movie.length ?: 0.seconds
-                    availableFrom = movie.screeningFrom.toString()
+                    availableFromTime = movie.screeningFrom
                     directors = movie.directors
                     cast = movie.cast
                     countryOfOrigin = movie.originCountry.orEmpty()
