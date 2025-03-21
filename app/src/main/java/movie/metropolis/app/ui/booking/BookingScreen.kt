@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSharedTransitionApi::class)
+
 package movie.metropolis.app.ui.booking
 
 import androidx.compose.animation.*
@@ -10,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
@@ -38,14 +41,20 @@ import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookingScreen(
+fun SharedTransitionScope.BookingScreen(
+    animationScope: AnimatedContentScope,
     state: BookingScreenState,
     onBackClick: () -> Unit,
     onTimeClick: (String) -> Unit,
     modifier: Modifier = Modifier,
     haze: HazeState = remember { HazeState() }
 ) = BookingScreenScaffold(
-    modifier = modifier,
+    modifier = modifier.sharedBounds(
+        rememberSharedContentState("booking"),
+        animationScope,
+        clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
+        resizeMode = SharedTransitionScope.ResizeMode.ScaleToBounds(contentScale = ContentScale.Crop)
+    ),
     filters = { FiltersColumn(state.filters) },
     backdrop = { Image(rememberImageState(state.poster)) },
     title = { Text(state.title) },
@@ -96,7 +105,7 @@ fun BookingScreen(
             }
         ) {
             BookingTableContent(
-                items = state.items.getOrNull(it)?.content ?: mutableStateListOf(),
+                items = state.items.getOrNull(it)?.content ?: remember { mutableStateListOf() },
                 defaultDuration = state.duration.run { if (this == Duration.ZERO) 1.hours else this },
                 scroll = scroll,
                 haze = haze,
@@ -202,6 +211,7 @@ private fun BookingTableContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @PreviewLightDark
 @PreviewFontScale
 @Composable
@@ -212,5 +222,9 @@ private fun BookingScreenPreview() = PreviewLayout {
             items += LazyTimeViewProvider().values
         }
     }
-    BookingScreen(state, {}, {})
+    SharedTransitionLayout {
+        AnimatedContent(state) { state ->
+            BookingScreen(this, state, {}, {})
+        }
+    }
 }

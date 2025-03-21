@@ -148,6 +148,7 @@ fun Navigation(
             composable(Route.Booking.Movie.route) {
                 val vm = hiltViewModel<BookingViewModel>()
                 BookingScreen(
+                    animationScope = this@composable,
                     state = vm.state,
                     onBackClick = navController::navigateUp,
                     onTimeClick = { navController.navigate(Route.Order(it)) }
@@ -156,6 +157,7 @@ fun Navigation(
             composable(Route.Booking.Cinema.route) {
                 val vm = hiltViewModel<BookingViewModel>()
                 BookingScreen(
+                    animationScope = this@composable,
                     state = vm.state,
                     onBackClick = navController::navigateUp,
                     onTimeClick = { navController.navigate(Route.Order(it)) }

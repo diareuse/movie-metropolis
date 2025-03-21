@@ -103,6 +103,14 @@ fun SharedTransitionScope.MovieScreen(
     },
     purchase = {
         if (showPurchase) FindTicketButton(
+            modifier = Modifier
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState("booking"),
+                    animatedVisibilityScope = animationScope,
+                    clipInOverlayDuringTransition = OverlayClip(MaterialTheme.shapes.medium),
+                    renderInOverlayDuringTransition = false,
+                    resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+                ),
             onClick = onBuyClick,
             haze = haze
         ) {
