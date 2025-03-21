@@ -1,12 +1,15 @@
 package movie.metropolis.app.ui.booking
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.*
 import androidx.compose.material.icons.automirrored.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.*
 import androidx.compose.ui.*
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import dev.chrisbanes.haze.HazeState
@@ -55,9 +58,11 @@ fun BookingScreen(
         }
     },
     haze = haze
-) {
+) { padding ->
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = padding.calculateTopPadding())
     ) {
         Row(
             modifier = Modifier
@@ -75,39 +80,85 @@ fun BookingScreen(
             }
         }
         val scroll = rememberScrollState()
-        BookingTable(
-            state = scroll
+        val dir = LocalLayoutDirection.current
+        AnimatedContent(
+            targetState = state.selectedIndex,
+            transitionSpec = {
+                when {
+                    initialState > targetState -> slideInHorizontally { -it } togetherWith
+                            slideOutHorizontally { it }
+
+                    else -> slideInHorizontally { it } togetherWith
+                            slideOutHorizontally { -it }
+                }
+            }
         ) {
-            for (time in state.selectedView) {
-                val duration = when (time) {
-                    is TimeView.Movie -> time.movie.durationTime.run { if (this == Duration.ZERO) 1.hours else this }
-                    else -> state.duration.run { if (this == Duration.ZERO) 1.hours else this }
+            BookingTableContent(
+                items = state.items.getOrNull(it)?.content ?: mutableStateListOf(),
+                defaultDuration = state.duration.run { if (this == Duration.ZERO) 1.hours else this },
+                scroll = scroll,
+                haze = haze,
+                padding = padding,
+                dir = dir,
+                onTimeClick = onTimeClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun BookingTableContent(
+    items: SnapshotStateList<TimeView>,
+    defaultDuration: Duration,
+    scroll: ScrollState,
+    haze: HazeState,
+    padding: PaddingValues,
+    dir: LayoutDirection,
+    onTimeClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BookingTable(
+        modifier = modifier
+            .padding(top = 1.pc),
+        state = scroll,
+        haze = haze,
+        contentPadding = PaddingValues(
+            start = padding.calculateStartPadding(dir) + 2.pc,
+            end = padding.calculateEndPadding(dir) + 2.pc,
+            bottom = padding.calculateBottomPadding() + 2.pc
+        )
+    ) {
+        for (time in items) {
+            val duration = when (time) {
+                is TimeView.Movie -> time.movie.durationTime.run { if (this == Duration.ZERO) 1.hours else this }
+                else -> defaultDuration
+            }
+            val image = when (time) {
+                is TimeView.Movie -> time.movie.poster
+                is TimeView.Cinema -> time.cinema.image
+            }
+            val scrollModifier = Modifier.offset { IntOffset(x = scroll.value, y = 0) }
+            BookingTableSection(
+                backdrop = { Image(rememberImageState(image)) }) {
+                BookingTableRow(
+                    title = {
+                        when (time) {
+                            is TimeView.Cinema -> Text(
+                                modifier = scrollModifier,
+                                text = time.cinema.name
+                            )
+
+                            is TimeView.Movie -> Text(
+                                modifier = scrollModifier,
+                                text = time.movie.name
+                            )
+                        }
+                    }
+                ) {
                 }
-                val image = when (time) {
-                    is TimeView.Movie -> time.movie.poster
-                    is TimeView.Cinema -> time.cinema.image
-                }
-                val scrollModifier = Modifier.offset { IntOffset(x = scroll.value, y = 0) }
-                BookingTableSection(
-                    backdrop = { Image(rememberImageState(image)) }) {
+                for ((type, v) in time.filteredTimes) {
                     BookingTableRow(
                         title = {
-                            when (time) {
-                                is TimeView.Cinema -> Text(
-                                    modifier = scrollModifier,
-                                    text = time.cinema.name
-                                )
-
-                                is TimeView.Movie -> Text(
-                                    modifier = scrollModifier,
-                                    text = time.movie.name
-                                )
-                            }
-                        }
-                    ) {
-                    }
-                    for ((type, v) in time.filteredTimes) {
-                        BookingTableRow({
                             val locale = remember { Locale.getDefault() }
                             Row(
                                 modifier = scrollModifier,
@@ -123,25 +174,25 @@ fun BookingScreen(
                                 for (t in type.projection)
                                     ProjectionTypeRow(t)
                             }
-                        }) {
-                            for (v in v) {
-                                val time = remember(v.time) {
-                                    Calendar.getInstance().apply { this.time = Date(v.time) }.run {
-                                        get(Calendar.HOUR_OF_DAY).hours + get(Calendar.MINUTE).minutes
-                                    }
+                        }
+                    ) {
+                        for (v in v) {
+                            val time = remember(v.time) {
+                                Calendar.getInstance().apply { this.time = Date(v.time) }.run {
+                                    get(Calendar.HOUR_OF_DAY).hours + get(Calendar.MINUTE).minutes
                                 }
-                                BookingBox(
-                                    start = time,
-                                    duration = duration,
-                                    onClick = { onTimeClick(v.formatted) },
-                                    time = { Text(v.formatted) }
-                                )
                             }
+                            BookingBox(
+                                start = time,
+                                duration = duration,
+                                onClick = { onTimeClick(v.formatted) },
+                                time = { Text(v.formatted) }
+                            )
                         }
                     }
                 }
-
             }
+
         }
     }
 }

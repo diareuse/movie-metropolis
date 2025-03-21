@@ -7,32 +7,48 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.hazeEffect
 import movie.style.layout.PreviewLayout
 import movie.style.util.pc
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 
 private const val multiplier = 1f
+private fun Modifier.widthOfDay() = width(24.hours.inWholeMinutes.times(multiplier).dp)
 
 @Composable
 fun BookingTable(
     modifier: Modifier = Modifier,
+    haze: HazeState = remember { HazeState() },
+    contentPadding: PaddingValues = PaddingValues(),
     state: ScrollState = rememberScrollState(),
     rows: @Composable ColumnScope.() -> Unit
 ) {
+    LocalLayoutDirection.current
     Column(
         modifier = modifier
             .fillMaxWidth()
             .horizontalScroll(state)
-            .padding(horizontal = 2.pc),
+            .padding(contentPadding)
+        /*.padding(
+            top = contentPadding.calculateTopPadding(),
+            start = contentPadding.calculateStartPadding(dir),
+            end = contentPadding.calculateEndPadding(dir)
+        )*/,
         verticalArrangement = Arrangement.spacedBy(1.pc)
     ) {
-        BookingTableRow({}) {
+        Box(
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.medium)
+                .hazeEffect(haze)
+                .padding(1.pc)
+                .widthOfDay(),
+        ) {
             repeat(24) {
                 BookingTableHead(it)
             }
@@ -40,7 +56,12 @@ fun BookingTable(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState()),
+                .clip(MaterialTheme.shapes.large)
+                .hazeEffect(state = haze)
+                .verticalScroll(rememberScrollState())
+                .padding(1.pc)
+                .widthOfDay()
+            /*.padding(bottom = contentPadding.calculateBottomPadding())*/,
             verticalArrangement = Arrangement.spacedBy(1.pc)
         ) {
             rows()
@@ -54,10 +75,10 @@ fun ColumnScope.BookingTableRow(
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) = Column(
-    modifier = modifier.width(24.hours.inWholeMinutes.times(multiplier).dp),
+    modifier = modifier.widthOfDay(),
     verticalArrangement = Arrangement.spacedBy(1.pc)
 ) {
-    Box(modifier = Modifier.padding(horizontal = 2.pc)) {
+    Box(modifier = Modifier.padding(horizontal = 1.pc)) {
         ProvideTextStyle(MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold)) {
             title()
         }
@@ -73,7 +94,7 @@ fun ColumnScope.BookingTableSection(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) = Box(
-    modifier = modifier.width(24.hours.inWholeMinutes.times(multiplier).dp)
+    modifier = modifier.widthOfDay()
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     Box(
@@ -84,7 +105,7 @@ fun ColumnScope.BookingTableSection(
                 onDrawWithContent {
                     drawContent()
                     drawRect(
-                        color = backgroundColor.copy(.5f),
+                        color = backgroundColor.copy(.75f),
                         blendMode = if (backgroundColor.luminance() > .5) BlendMode.Lighten else BlendMode.Darken
                     )
                 }
@@ -111,7 +132,8 @@ fun BoxScope.BookingBox(
         modifier = modifier
             .background(MaterialTheme.colorScheme.secondaryContainer, MaterialTheme.shapes.small)
             .clickable(onClick = onClick)
-            .padding(vertical = .5.pc, horizontal = .5.pc),
+            .padding(vertical = .5.pc, horizontal = .5.pc)
+            .basicMarquee(),
         start = start,
         duration = duration
     ) {
@@ -133,23 +155,11 @@ fun BoxScope.BookingTableHead(
         start = hour.hours,
         duration = 1.hours
     ) {
-        val color = LocalContentColor.current.copy(.5f)
         Box(
             modifier = Modifier
-                .drawWithCache {
-                    val strokeWidth = 2.dp.toPx()
-                    val path = Path().apply {
-                        moveTo(0f, size.height / 2)
-                        quadraticTo(0f, size.height, size.height / 2, size.height)
-                        lineTo(size.width - 1.pc.toPx(), size.height)
-                    }
-                    onDrawWithContent {
-                        drawPath(path, color, style = Stroke(width = strokeWidth))
-                        drawContent()
-                    }
-                }
-                .padding(horizontal = .5.pc, vertical = .25.pc),
-            contentAlignment = Alignment.CenterStart) {
+                .padding(horizontal = 1.pc, vertical = .25.pc),
+            contentAlignment = Alignment.CenterStart
+        ) {
             Text("${hour}h")
         }
     }

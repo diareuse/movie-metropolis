@@ -11,7 +11,8 @@ import androidx.compose.ui.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.input.nestedscroll.*
+import androidx.compose.ui.text.font.*
+import androidx.compose.ui.text.style.*
 import androidx.compose.ui.tooling.preview.*
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeEffect
@@ -37,11 +38,57 @@ fun BookingScreenScaffold(
     ),
     scrollBehavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
     haze: HazeState = remember { HazeState() },
-    content: @Composable () -> Unit,
-) = BottomSheetScaffold(
+    content: @Composable (PaddingValues) -> Unit,
+) = Scaffold(
     modifier = modifier,
-    sheetContent = filters,
-    scaffoldState = scaffoldState
+    topBar = {
+        Row(
+            modifier = Modifier
+                .padding(2.pc)
+                .statusBarsPadding(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.medium)
+                    .hazeEffect(haze)
+            ) {
+                navigationIcon()
+            }
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 2.pc),
+                contentAlignment = Alignment.Center
+            ) {
+                ProvideTextStyle(
+                    MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                ) {
+                    title()
+                }
+            }
+            BadgedBox(badge = { activeFilters() }) {
+                Row(
+                    modifier = Modifier
+                        .clip(MaterialTheme.shapes.medium)
+                        .hazeEffect(haze)
+                ) {
+                    val scope = rememberCoroutineScope()
+                    IconButton({
+                        scope.launch {
+                            scaffoldState.bottomSheetState.show()
+                        }
+                    }) {
+                        Icon(Icons.Default.MoreVert, null)
+                    }
+                }
+            }
+        }
+    },
+    bottomBar = {}
 ) { padding ->
     Box {
         val color = MaterialTheme.colorScheme.background
@@ -65,46 +112,7 @@ fun BookingScreenScaffold(
         ) {
             backdrop()
         }
-        Column(modifier = Modifier.padding(padding)) {
-            Row(
-                modifier = Modifier
-                    .padding(2.pc)
-                    .statusBarsPadding()
-            ) {
-                Box(
-                    modifier = Modifier
-                        .clip(MaterialTheme.shapes.medium)
-                        .hazeEffect(haze)
-                ) {
-                    navigationIcon()
-                }
-                Spacer(Modifier.weight(1f))
-                BadgedBox(badge = { activeFilters() }) {
-                    Row(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.medium)
-                            .hazeEffect(haze)
-                    ) {
-                        val scope = rememberCoroutineScope()
-                        IconButton({
-                            scope.launch {
-                                scaffoldState.bottomSheetState.show()
-                            }
-                        }) {
-                            Icon(Icons.Default.MoreVert, null)
-                        }
-                    }
-                }
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .nestedScroll(scrollBehavior.nestedScrollConnection),
-                propagateMinConstraints = true
-            ) {
-                content()
-            }
-        }
+        content(padding)
     }
 }
 

@@ -56,11 +56,9 @@ class BookingViewModel private constructor(
                         .launchIn(this)
                     launch {
                         facade.times.collectLatest {
-                            val wasEmpty = state.items.isEmpty()
                             state.items.updateWith(it)
-                            if (wasEmpty)
-                                state.selectFirstNonEmpty()
                         }
+                        state.selectFirstNonEmpty()
                     }
                     state.filters = facade.filters
                 }

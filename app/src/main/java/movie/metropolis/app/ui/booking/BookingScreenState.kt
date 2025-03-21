@@ -15,12 +15,13 @@ class BookingScreenState {
     var duration by mutableStateOf(0.seconds)
     val items = mutableStateListOf<LazyTimeView>()
     var selectedIndex by mutableIntStateOf(0)
-    val selectedView by derivedStateOf {
-        items.getOrNull(selectedIndex)?.content ?: mutableStateListOf()
-    }
 
     fun selectFirstNonEmpty() {
-        selectedIndex = items.indexOfFirst { !it.isEmpty }
+        if (selectedIndex == 0) {
+            val index = items.indexOfFirst { !it.isEmpty }
+            if (index == -1) return
+            selectedIndex = index
+        }
     }
 
 }
