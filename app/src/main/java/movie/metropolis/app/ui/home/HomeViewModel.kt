@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import movie.metropolis.app.model.MembershipView
 import movie.metropolis.app.model.MovieView
+import movie.metropolis.app.model.UserView
 import movie.metropolis.app.presentation.booking.BookingFacade
 import movie.metropolis.app.presentation.cinema.CinemasFacade
 import movie.metropolis.app.presentation.listing.ListingFacade
@@ -42,45 +45,62 @@ class HomeViewModel @Inject constructor(
                 booking.bookings
                     .catch { state.tickets.state = LayoutState.result(null) }
                     .collect {
-                        state.tickets.tickets.updateWith(it)
-                        state.tickets.state = LayoutState.result(it.size)
+                        withContext(Dispatchers.Main) {
+                            state.tickets.tickets.updateWith(it)
+                            state.tickets.state = LayoutState.result(it.size)
+                        }
                     }
             }
             launch {
-                state.profile.user = profile.runCatching { getUser() }.fold(
+                val user: LayoutState<UserView> = profile.runCatching { getUser() }.fold(
                     onSuccess = { LayoutState.result(it) },
                     onFailure = { LayoutState.result(null) }
                 )
+                withContext(Dispatchers.Main) {
+                    state.profile.user = user
+                }
             }
             launch {
                 val items = profile.runCatching { getCinemas() }.getOrDefault(emptyList())
-                state.profile.cinemas.updateWith(items)
+                withContext(Dispatchers.Main) {
+                    state.profile.cinemas.updateWith(items)
+                }
             }
             launch {
-                state.profile.membership = profile.runCatching { getMembership() }.fold(
-                    onSuccess = { LayoutState.result(it) },
-                    onFailure = { LayoutState.result(null) }
-                )
+                val membership: LayoutState<MembershipView> =
+                    profile.runCatching { getMembership() }.fold(
+                        onSuccess = { LayoutState.result(it) },
+                        onFailure = { LayoutState.result(null) }
+                    )
+                withContext(Dispatchers.Main) {
+                    state.profile.membership = membership
+                }
             }
         }
         upcoming.get()
             .catch { it.printStackTrace() }
             .onEachLaunch { upcoming ->
-                state.comingSoon.updateWith(upcoming.items)
+                withContext(Dispatchers.Main) {
+                    state.comingSoon.updateWith(upcoming.items)
+                }
             }
             .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
         current.get()
             .catch { it.printStackTrace() }
             .onEachLaunch { current ->
-                state.recommended.updateWith(current.items)
+                withContext(Dispatchers.Main) {
+                    state.recommended.updateWith(current.items)
+                }
             }
             .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
         cinema.cinemas(null)
             .catch { it.printStackTrace() }
             .onEachLaunch {
-                state.cinemas.updateWith(it)
+                withContext(Dispatchers.Main) {
+                    state.cinemas.updateWith(it)
+                }
             }
             .flowOn(Dispatchers.IO)
             .launchIn(viewModelScope)
