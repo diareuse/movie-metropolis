@@ -1,3 +1,6 @@
+> Repository is now archived due to ticket prices soaring to the point I cannot personally afford
+> going to the movies that often to justify the time spend developing this app. No new updates are planned.
+
 <p align="center">
   <img src="app/src/main/ic_launcher-playstore.png" width="128px" style="border-radius: 25%" />
 </p>
